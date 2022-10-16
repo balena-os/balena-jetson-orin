@@ -13,3 +13,6 @@
 [submodule "layers/meta-openembedded"]
 	path = layers/meta-openembedded
 	url = https://github.com/openembedded/meta-openembedded.git
+[submodule "contracts"]
+	path = contracts
+	url = https://github.com/balena-io/contracts.git
