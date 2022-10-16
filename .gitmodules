@@ -4,3 +4,6 @@
 [submodule "layers/meta-balena"]
 	path = layers/meta-balena
 	url = https://github.com/balena-os/meta-balena.git
+[submodule "layers/meta-tegra"]
+	path = layers/meta-tegra
+	url = https://github.com/OE4T/meta-tegra.git
