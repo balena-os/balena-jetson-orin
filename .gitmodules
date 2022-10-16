@@ -7,3 +7,6 @@
 [submodule "layers/meta-tegra"]
 	path = layers/meta-tegra
 	url = https://github.com/OE4T/meta-tegra.git
+[submodule "layers/poky"]
+	path = layers/poky
+	url = https://github.com/balena-os/poky.git
