@@ -1,0 +1,5 @@
+A_kernel:none.bin:262144
+A_kernel-dtb:none.bin:768
+B_kernel:none.bin:262144
+B_kernel-dtb:none.bin:768
+esp:none.bin:131072
