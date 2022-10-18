@@ -58,25 +58,6 @@ BALENA_CONFIGS[rtl8822ce] = " \
 		CONFIG_RTK_BTUSB=m \
 "
 
-# Switch nfs and backlight drivers as modules
-# to shrink down the kernel image size starting
-# with BalenaOS 2.65.0
-BALENA_CONFIGS:append = " nfsfs backlight "
-BALENA_CONFIGS[nfsfs] = " \
-    CONFIG_NFS_FS=m \
-    CONFIG_NFS_V2=y \
-    CONFIG_NFS_V3=y \
-    CONFIG_NFS_V4=y \
-    CONFIG_NFSD_V3=y \
-    CONFIG_NFSD_V4=y \
-"
-
-BALENA_CONFIGS[backlight] = " \
-    CONFIG_BACKLIGHT_PWM=m \
-    CONFIG_BACKLIGHT_LP855X=m \
-    CONFIG_BACKLIGHT_CLASS_DEVICE=m \
-"
-
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 net.ifnames=0"
@@ -92,12 +73,10 @@ LABEL primary
       MENU LABEL primary ${KERNEL_IMAGETYPE}
       FDT default
       LINUX /boot/${KERNEL_IMAGETYPE}
-      APPEND \${cbootargs} ${kernelRootspec} \${os_cmdline} sdhci_tegra.en_boot_part_access=1 rootwait
+      APPEND \${cbootargs} ${kernelRootspec} sdhci_tegra.en_boot_part_access=1 rootwait
 EOF
 
 }
-
-###RDEPENDS:${KERNEL_PACKAGE_NAME}-base = "${@'' if d.getVar('PREFERRED_PROVIDER_virtual/bootloader').startswith('cboot') else '${KERNEL_PACKAGE_NAME}-image-initramfs'}"
 
 do_deploy[nostamp] = "1"
 do_deploy[postfuncs] += "generate_extlinux_conf"
