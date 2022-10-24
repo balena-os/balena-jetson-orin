@@ -11,7 +11,6 @@
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-            <align_boundary> 65536 </align_boundary>
         </partition>
         <partition name="A_mb1" type="mb1_bootloader">
             <allocation_policy> sequential </allocation_policy>
@@ -21,17 +20,7 @@
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
             <filename> MB1FILE </filename>
-            <align_boundary> 65536 </align_boundary>
-        </partition>
-        <partition name="B_mb1" type="mb1_bootloader">
-            <allocation_policy> sequential </allocation_policy>
-            <filesystem_type> basic </filesystem_type>
-            <size> 524288 </size>
-            <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 8 </allocation_attribute>
-            <percent_reserved> 0 </percent_reserved>
-            <filename> MB1FILE </filename>
-            <align_boundary> 65536 </align_boundary>
+            <align_boundary> 262144 </align_boundary>
         </partition>
         <partition name="A_psc_bl1" type="psc_bl1">
             <allocation_policy> sequential </allocation_policy>
@@ -84,7 +73,7 @@
         <partition name="A_mb2" type="mb2_bootloader" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 458752 </size>
+            <size> 524288 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -104,7 +93,7 @@
         <partition name="A_bpmp-fw" type="bpmp_fw" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 1048576 </size>
+            <size> 1572864 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -114,7 +103,7 @@
         <partition name="A_bpmp-fw-dtb" type="bpmp_fw_dtb" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 1048576 </size>
+            <size> 4194304 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -124,7 +113,7 @@
         <partition name="A_psc-fw" type="psc_fw" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 524288 </size>
+            <size> 786432 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -144,7 +133,7 @@
         <partition name="A_sc7" type="WB0">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 131072 </size>
+            <size> 196608 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -171,7 +160,7 @@
             <filename> MB2RF_IMAGE </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="A_cpu-bootloader" type="bootloader" oem_sign="true">
+        <partition name="A_cpu-bootloader" type="bootloader_stage2" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 3670016 </size>
@@ -181,7 +170,7 @@
             <filename> TBCDTB-FILE </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="A_secure-os" type="data" oem_sign="true">
+        <partition name="A_secure-os" type="tos" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 4194304 </size>
@@ -200,7 +189,7 @@
             <percent_reserved> 0 </percent_reserved>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="A_eks" type="data" oem_sign="true">
+        <partition name="A_eks" type="eks" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 262144 </size>
@@ -210,10 +199,10 @@
             <filename> EKSFILE </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="A_dce-fw" type="dce_fw" oem_sign="true">
+        <partition name="A_dce-fw" type="dce_fw" oem_sign="true" compress="true" comp_algo="lz4">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 9437184 </size>
+            <size> 5242880 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -230,7 +219,7 @@
             <filename> SPEFILE </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="A_rce-fw" type="data" oem_sign="true">
+        <partition name="A_rce-fw" type="rce_fw" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 1048576 </size>
@@ -240,7 +229,7 @@
             <filename> CAMERAFW </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="A_adsp-fw" type="data" oem_sign="true">
+        <partition name="A_adsp-fw" type="ape_fw" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 2097152 </size>
@@ -253,11 +242,21 @@
         <partition name="A_reserved_on_boot" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 1048576 </size>
+            <size> 1376256 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
             <align_boundary> 65536 </align_boundary>
+        </partition>
+        <partition name="B_mb1" type="mb1_bootloader">
+            <allocation_policy> sequential </allocation_policy>
+            <filesystem_type> basic </filesystem_type>
+            <size> 524288 </size>
+            <file_system_attribute> 0 </file_system_attribute>
+            <allocation_attribute> 8 </allocation_attribute>
+            <percent_reserved> 0 </percent_reserved>
+            <filename> MB1FILE </filename>
+            <align_boundary> 262144 </align_boundary>
         </partition>
         <partition name="B_psc_bl1" type="psc_bl1">
             <allocation_policy> sequential </allocation_policy>
@@ -310,7 +309,7 @@
         <partition name="B_mb2" type="mb2_bootloader" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 458752 </size>
+            <size> 524288 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -330,7 +329,7 @@
         <partition name="B_bpmp-fw" type="bpmp_fw" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 1048576 </size>
+            <size> 1572864 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -340,7 +339,7 @@
         <partition name="B_bpmp-fw-dtb" type="bpmp_fw_dtb" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 1048576 </size>
+            <size> 4194304 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -350,7 +349,7 @@
         <partition name="B_psc-fw" type="psc_fw" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 524288 </size>
+            <size> 786432 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -370,7 +369,7 @@
         <partition name="B_sc7" type="WB0">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 131072 </size>
+            <size> 196608 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -397,7 +396,7 @@
             <filename> MB2RF_IMAGE </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="B_cpu-bootloader" type="bootloader" oem_sign="true">
+        <partition name="B_cpu-bootloader" type="bootloader_stage2" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 3670016 </size>
@@ -407,7 +406,7 @@
             <filename> TBCDTB-FILE </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="B_secure-os" type="data" oem_sign="true">
+        <partition name="B_secure-os" type="tos" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 4194304 </size>
@@ -426,7 +425,7 @@
             <percent_reserved> 0 </percent_reserved>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="B_eks" type="data" oem_sign="true">
+        <partition name="B_eks" type="eks" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 262144 </size>
@@ -436,10 +435,10 @@
             <filename> EKSFILE </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="B_dce-fw" type="dce_fw" oem_sign="true">
+        <partition name="B_dce-fw" type="dce_fw" oem_sign="true" compress="true" comp_algo="lz4">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 9437184 </size>
+            <size> 5242880 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -456,7 +455,7 @@
             <filename> SPEFILE </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="B_rce-fw" type="data" oem_sign="true">
+        <partition name="B_rce-fw" type="rce_fw" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 1048576 </size>
@@ -466,7 +465,7 @@
             <filename> CAMERAFW </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="B_adsp-fw" type="data" oem_sign="true">
+        <partition name="B_adsp-fw" type="ape_fw" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 2097152 </size>
@@ -479,7 +478,7 @@
         <partition name="B_reserved_on_boot" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 1048576 </size>
+            <size> 1376256 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
@@ -503,17 +502,17 @@
             <percent_reserved> 0 </percent_reserved>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="mb2-applet" type="mb2_applet">
+        <partition name="worm" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 327680 </size>
+            <start_location> 0x3F70000 </start_location>
+            <size> 196608 </size>
             <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 8 </allocation_attribute>
+            <allocation_attribute> 0x8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-            <filename> applet_t234.bin </filename>
             <align_boundary> 65536 </align_boundary>
         </partition>
-        <partition name="BR_BCT_A_backup" type="boot_config_table">
+        <partition name="BCT-boot-chain_backup" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <start_location> 0x3FA0000 </start_location>
@@ -523,7 +522,7 @@
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
         </partition>
-        <partition name="BR_BCT_B_backup" type="boot_config_table">
+        <partition name="reserved_partition" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 65536 </size>
@@ -541,7 +540,7 @@
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
         </partition>
-        <partition name="VER_b" type="data">
+        <partition name="B_VER" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <start_location> 0x3FD0000 </start_location>
@@ -553,7 +552,7 @@
             <percent_reserved> 0 </percent_reserved>
             <filename> VERFILE </filename>
         </partition>
-        <partition name="VER" type="data">
+        <partition name="A_VER" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 65536 </size>
@@ -590,14 +589,13 @@
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
         </partition>
-        <partition name="A_kernel" id="2" type="data">
+        <partition name="A_kernel" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 67108864 </size>
+            <size> 134217728 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-            <filename> LNXFILE </filename>
         </partition>
         <partition name="A_kernel-dtb" type="data">
             <allocation_policy> sequential </allocation_policy>
@@ -606,26 +604,14 @@
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-            <filename> DTB_FILE </filename>
         </partition>
-	<!--
-        <partition name="A_reserved_on_user" type="data">
-            <allocation_policy> sequential </allocation_policy>
-            <filesystem_type> basic </filesystem_type>
-            <size> 33554432 </size>
-            <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 8 </allocation_attribute>
-            <percent_reserved> 0 </percent_reserved>
-        </partition>
-	-->
         <partition name="B_kernel" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 67108864 </size>
+            <size> 134217728 </size>
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-            <filename> LNXFILE </filename>
         </partition>
         <partition name="B_kernel-dtb" type="data">
             <allocation_policy> sequential </allocation_policy>
@@ -634,18 +620,7 @@
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-            <filename> DTB_FILE </filename>
         </partition>
-	<!--
-        <partition name="B_reserved_on_user" type="data">
-            <allocation_policy> sequential </allocation_policy>
-            <filesystem_type> basic </filesystem_type>
-            <size> 33554432 </size>
-            <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 8 </allocation_attribute>
-            <percent_reserved> 0 </percent_reserved>
-        </partition>
-	removed RECFILE !!! 
         <partition name="esp" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
@@ -653,44 +628,31 @@
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 0x8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-            <filename> ESP_FILE </filename>
             <partition_type_guid> C12A7328-F81F-11D2-BA4B-00A0C93EC93B </partition_type_guid>
             <description> **Required.** EFI system partition with L4T Launcher. </description>
         </partition>
-        <partition name="reserved" type="data">
-            <allocation_policy> sequential </allocation_policy>
-            <filesystem_type> basic </filesystem_type>
-            <size> 1073741824 </size>
-            <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 8 </allocation_attribute>
-            <percent_reserved> 0 </percent_reserved>
-            <description> **Required.** Reserve space in case there is any partition change
-              required in the future, for example, adding new partitions or increasing size
-              of some partitions. </description>
-        </partition>
-	-->
         <partition name="resin-boot" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 125829120 </size>
+            <size> 41943040 </size>
             <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 0x8 </allocation_attribute>
+	    <allocation_attribute> 0x8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
         </partition>
         <partition name="resin-rootA" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 499122176 </size>
+            <size> 750780416 </size>
             <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 0x8 </allocation_attribute>
+	    <allocation_attribute> 0x8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-        </partition>
+    	</partition>
         <partition name="resin-rootB" type="data">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
-            <size> 499122176 </size>
+            <size> 750780416 </size>
             <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 0x8 </allocation_attribute>
+	    <allocation_attribute> 0x8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
         </partition>
         <partition name="resin-state" type="data">
@@ -698,7 +660,7 @@
             <filesystem_type> basic </filesystem_type>
             <size> 20971520 </size>
             <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 0x8 </allocation_attribute>
+	    <allocation_attribute> 0x8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
         </partition>
         <partition name="resin-data" type="data">
@@ -706,9 +668,9 @@
             <filesystem_type> basic </filesystem_type>
             <size> 212860928 </size>
             <file_system_attribute> 0 </file_system_attribute>
-            <allocation_attribute> 0x808 </allocation_attribute>
+	    <allocation_attribute> 0x808 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-        </partition>
+	</partition>
         <partition name="secondary_gpt" type="secondary_gpt">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>

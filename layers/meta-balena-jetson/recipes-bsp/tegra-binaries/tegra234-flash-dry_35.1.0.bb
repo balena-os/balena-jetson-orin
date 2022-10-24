@@ -24,6 +24,8 @@ SRC_URI = " \
     file://resinOS-flash234.xml \
     file://partition_specification234.txt \
     file://custinfo_234.bin \
+    file://T234_devkit_patch.bin \
+    file://create_blob.sh \
 "
 
 DTBNAME = "tegra234-p3701-0000-p3737-0000"
@@ -76,6 +78,7 @@ BOOTFILES:tegra234 = "\
     gpio.h \
     readinfo_t234_min_prod.xml \
     camera-rtcpu-sce.img \
+    mb2rf_t234.bin \
 "
 
 
@@ -106,7 +109,7 @@ signfile() {
         -e"s,MCE_IMAGE,mce_flash_o10_cr_prod.bin," \
         -e"s,WB0FILE,sc7_t234_prod.bin," \
         -e"s,PSCRF_IMAGE,psc_rf_t234_prod.bin," \
-        -e"s,MB2RF_IMAGE,nvtboot_cpurf_t234.bin," \
+        -e"s,MB2RF_IMAGE,mb2rf_t234.bin," \
         -e"s,TBCDTB-FILE,uefi_jetson_with_dtb.bin," \
         -e"s,DCE,display-t234-dce.bin," \
         -e"s,APPUUID,," \
@@ -187,6 +190,7 @@ do_configure() {
     for f in ${STAGING_DATADIR}/tegraflash/tegra234-bpmp-*.dtb; do
         cp $f .
     done
+    cp ${STAGING_DATADIR}/tegraflash/mb2rf_t234.bin .
 
     for f in ${STAGING_BINDIR_NATIVE}/${FLASHTOOLS_DIR}/*.py; do
         cp $f .
@@ -195,25 +199,17 @@ do_configure() {
     echo "35.1.0" > VERFILE
 
     cp ${WORKDIR}/custinfo_234.bin ./custinfo_out.bin
+    cp ${WORKDIR}/T234_devkit_patch.bin .
     cp "${DEPLOY_DIR_IMAGE}/${DTBFILE}" ./${DTBFILE}
-    cp ./${DTBFILE} ./${DTBNAME}-rootA.dtb
-    cp ./${DTBFILE} ./${DTBNAME}-rootB.dtb
-
-    # Add rootA/rootB and save as separate dtbs to be used when
-    # switching partitions
-    bootargs="`fdtget ./${DTBFILE} /chosen bootargs 2>/dev/null`"
 
     # Make bootable image from kernel and sign it
     cp ${DEPLOY_DIR_IMAGE}/${LNXFILE} ${LNXFILE}
-
-    touch initrd
-    ${STAGING_BINDIR_NATIVE}/tegra-flash/mkbootimg --kernel ${LNXFILE} --ramdisk initrd --board mmcblk0p1 --output boot.img
 
     # prepare flash.xml.in to be used in signing
     cp ${WORKDIR}/resinOS-flash234.xml flash.xml.in
     sed -i "s, DTB_FILE, ${DTBFILE},g" flash.xml.in
     cp ${WORKDIR}/partition_specification234.txt .
-    cat partition_specification234.txt
+    cp ${WORKDIR}/create_blob.sh .
     sed -i -e "s/DTB_FILE/$(echo ${DTBFILE})/g" partition_specification234.txt
     sed -i -e "s/LNXFILE/$(echo ${LNXFILE})/g" partition_specification234.txt
     
@@ -231,17 +227,13 @@ do_configure() {
     # Sign all tegra bins
     signfile " "
 
-    # any binary written to a partition that
-    # has signing mandatory needs to be signed
+    DEPLOY_DIR_IMAGE=${DEPLOY_DIR_IMAGE} bash create_blob.sh
 
-    # Needed to embedd plain initramfs kernel and dtb to main image
     mkdir -p ${DEPLOY_DIR_IMAGE}/bootfiles
-    cp -r Image* ${DEPLOY_DIR_IMAGE}/bootfiles/
+    cp boot0.img ${DEPLOY_DIR_IMAGE}/bootfiles
     cp -r *.txt ${DEPLOY_DIR_IMAGE}/bootfiles/
-    cp -r ${DTBNAME}-root*.dtb ${DEPLOY_DIR_IMAGE}/bootfiles/
     cp -r *xml* ${DEPLOY_DIR_IMAGE}/bootfiles/
     cp -r signed/* ${DEPLOY_DIR_IMAGE}/bootfiles/
-    cp boot.img ${DEPLOY_DIR_IMAGE}/bootfiles/
     dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=70
 }
 
@@ -250,9 +242,8 @@ do_install() {
     install -d ${D}/${BINARY_INSTALL_PATH}
     cp -r ${S}/tegraflash/signed/* ${D}/${BINARY_INSTALL_PATH}
     rm ${D}/${BINARY_INSTALL_PATH}/boot*im* || true
-    cp ${S}/tegraflash/${DTBNAME}-rootA.dtb ${D}/${BINARY_INSTALL_PATH}/
+    cp ${DEPLOY_DIR_IMAGE}/bootfiles/boot0.img ${D}/${BINARY_INSTALL_PATH}/
     cp ${S}/tegraflash/partition_specification234.txt ${D}/${BINARY_INSTALL_PATH}/
-    cp ${S}/tegraflash/boot.img ${D}/${BINARY_INSTALL_PATH}/
     cp ${S}/tegraflash/Image-initramfs* ${D}/${BINARY_INSTALL_PATH}/
 }
 
