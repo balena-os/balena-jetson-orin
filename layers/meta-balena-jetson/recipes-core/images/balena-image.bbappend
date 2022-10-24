@@ -21,7 +21,7 @@ check_size() {
 do_image:balenaos-img:jetson-agx-orin-devkit[depends] += " tegra234-flash-dry:do_install"
 device_specific_configuration:jetson-agx-orin-devkit() {
     partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification234.txt)
-    NVIDIA_PART_OFFSET=20480
+    NVIDIA_PART_OFFSET=40
     START=${NVIDIA_PART_OFFSET}
     for n in ${partitions}; do
       part_name=$(echo $n | cut -d ':' -f 1)
