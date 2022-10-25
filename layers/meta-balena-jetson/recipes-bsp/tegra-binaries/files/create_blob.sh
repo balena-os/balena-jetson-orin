@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o errexit
+
 ##### Patch creation from existing boot blob
 # dd if=mtd0ro.bin of=T234_devkit_patch.bin bs=1 skip=4 count=64
 # dd if=mtd0ro.bin of=T234_devkit_patch.bin bs=1 seek=64 skip=452 count=64
