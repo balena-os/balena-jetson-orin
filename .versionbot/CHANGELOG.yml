@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update meta-balena submodule from v2.105.11 to v2.105.12
+      hash: 88b21bac3ee0463e5682bbf2baf63fd28fe3cff2
+      body: |
+        Update meta-balena submodule from 2.105.11 to 2.105.12
+      footer:
+        Changelog-entry: Update meta-balena submodule from v2.105.11 to v2.105.12
+        changelog-entry: Update meta-balena submodule from v2.105.11 to v2.105.12
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.105.12
+  title: ""
+  date: 2022-10-25T11:19:17.281Z
+- commits:
     - subject: "VERSION: Add version files, change log and license"
       hash: 77638e96977ab3a9b30c46af8c3d1dee586a9bcf
       body: ""

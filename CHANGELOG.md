@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.105.12
+## (2022-10-25)
+
+* Update meta-balena submodule from v2.105.11 to v2.105.12 [Alexandru Costache]
+
 # v2.105.11
 ## (2022-10-25)
 
