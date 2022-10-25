@@ -1,0 +1,14 @@
+
+  _           _                   ___  ____
+ | |__   __ _| | ___ _ __   __ _ / _ \/ ___|
+ | '_ \ / _` | |/ _ \ '_ \ / _` | | | \___ \
+ | |_) | (_| | |  __/ | | | (_| | |_| |___) |
+ |_.__/ \__,_|_|\___|_| |_|\__,_|\___/|____/
+
+ -------------------------------------------- 
+
+Resin specific images available:
+	balena-image
+
+Nvidia Jetson AGX Orin Devkit            : $ MACHINE=jetson-agx-orin-devkit bitbake balena-image
+
