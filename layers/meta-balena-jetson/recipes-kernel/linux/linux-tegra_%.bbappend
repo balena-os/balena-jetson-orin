@@ -52,10 +52,20 @@ BALENA_CONFIGS_DEPS[cdc-ncm] = " \
 
 BALENA_CONFIGS:append = " mii"
 
-BALENA_CONFIGS:append:jetson = " rtl8822ce "
+BALENA_CONFIGS:append = " rtl8822ce "
 BALENA_CONFIGS[rtl8822ce] = " \
 		CONFIG_RTL8822CE=m \
 		CONFIG_RTK_BTUSB=m \
+"
+
+BALENA_CONFIGS:append = " nfsfs"
+BALENA_CONFIGS[nfsfs] = " \
+    CONFIG_NFS_FS=m \
+    CONFIG_NFS_V2=m \
+    CONFIG_NFS_V3=m \
+    CONFIG_NFS_V4=m \
+    CONFIG_NFSD_V3=y \
+    CONFIG_NFSD_V4=y \
 "
 
 L4TVER=" l4tver=${L4T_VERSION}"

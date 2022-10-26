@@ -13,27 +13,9 @@ do_install() {
 	install -d ${D}/boot/
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
         install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3701-0004-p3737-0000.dtb" "${D}/boot/tegra234-p3701-0004-p3737-0000.dtb"
-	install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3737-a03-overlay.dtbo" "${D}/boot/tegra234-p3737-a03-overlay.dtbo"
-	install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3737-a04-overlay.dtbo" "${D}/boot/tegra234-p3737-a04-overlay.dtbo"
-	install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3737-audio-codec-rt5658-40pin.dtbo" "${D}/boot/tegra234-p3737-audio-codec-rt5658-40pin.dtbo"
-	install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3737-camera-dual-imx274-overlay.dtbo" "${D}/boot/tegra234-p3737-camera-dual-imx274-overlay.dtbo"
-	install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3737-camera-e3331-overlay.dtbo" "${D}/boot/tegra234-p3737-camera-e3331-overlay.dtbo"
-	install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3737-camera-e3333-overlay.dtbo" "${D}/boot/tegra234-p3737-camera-e3333-overlay.dtbo"
-	install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3737-camera-imx185-overlay.dtbo" "${D}/boot/tegra234-p3737-camera-imx185-overlay.dtbo"
-	install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3737-camera-imx390-overlay.dtbo" "${D}/boot/tegra234-p3737-camera-imx390-overlay.dtbo"
-	install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3737-overlay-pcie.dtbo" "${D}/boot/tegra234-p3737-overlay-pcie.dtbo"
 }
 
 FILES:${PN} += " \
 	/boot/tegra234-p3701-0000-p3737-0000.dtb \
 	/boot/tegra234-p3701-0004-p3737-0000.dtb \
-	/boot/tegra234-p3737-a03-overlay.dtbo \
-	/boot/tegra234-p3737-a04-overlay.dtbo \
-	/boot/tegra234-p3737-audio-codec-rt5658-40pin.dtbo \
-	/boot/tegra234-p3737-camera-dual-imx274-overlay.dtbo \
-	/boot/tegra234-p3737-camera-e3331-overlay.dtbo \
-	/boot/tegra234-p3737-camera-e3333-overlay.dtbo \
-	/boot/tegra234-p3737-camera-imx185-overlay.dtbo \
-	/boot/tegra234-p3737-camera-imx390-overlay.dtbo \
-	/boot/tegra234-p3737-overlay-pcie.dtbo \
 "

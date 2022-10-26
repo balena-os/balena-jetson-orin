@@ -227,14 +227,15 @@ do_configure() {
     # Sign all tegra bins
     signfile " "
 
-    DEPLOY_DIR_IMAGE=${DEPLOY_DIR_IMAGE} bash create_blob.sh
-
     mkdir -p ${DEPLOY_DIR_IMAGE}/bootfiles
-    cp boot0.img ${DEPLOY_DIR_IMAGE}/bootfiles
     cp -r *.txt ${DEPLOY_DIR_IMAGE}/bootfiles/
     cp -r *xml* ${DEPLOY_DIR_IMAGE}/bootfiles/
     cp -r signed/* ${DEPLOY_DIR_IMAGE}/bootfiles/
     dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=70
+
+    DEPLOY_DIR_IMAGE=${DEPLOY_DIR_IMAGE} /bin/bash ./create_blob.sh
+
+    cp boot0.img ${DEPLOY_DIR_IMAGE}/bootfiles/
 }
 
 
