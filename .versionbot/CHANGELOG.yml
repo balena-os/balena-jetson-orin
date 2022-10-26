@@ -1,4 +1,39 @@
 - commits:
+    - subject: "l4t-launcher-extlinux: Create extra_uEnv.txt"
+      hash: 333f62251f41cd5238136853eb55f840d32173f9
+      body: |
+        This is usually created in meta-balena for
+        boards that use u-boot. However, the orin
+        uses UEFI L4TLauncher which is capable of
+        parsing extra_uEnv.txt, so we include this
+        file for it too.
+      footer:
+        Changelog-entry: "l4t-launcher-extlinux: Create extra_uEnv.txt"
+        changelog-entry: "l4t-launcher-extlinux: Create extra_uEnv.txt"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "tegra234-flash-dry: Fix generating boot0.img in Jenkins"
+      hash: 720f7304340d478b679e785d2e7b20d3d659d500
+      body: |
+        The boot0.img was generated incorrectly because the
+        signed binaries were not present at that point. This caused
+        failure in booting after the update. The issue was not visible
+        on a local yocto setup which had multiple builds done because
+        the files were already deployed from previous tegra234-flash-dry
+        runs.
+      footer:
+        Changelog-entry: "tegra234-flash-dry: Fix generating boot0.img in Jenkins"
+        changelog-entry: "tegra234-flash-dry: Fix generating boot0.img in Jenkins"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.105.19+rev1
+  title: ""
+  date: 2022-10-26T13:23:46.492Z
+- commits:
     - subject: Update layers/meta-balena to 38055be70d9113801797d97ddeac00012c5b151c
       hash: 227b2888ae1c338284bcfbfa707e18cf4b110935
       body: Update layers/meta-balena

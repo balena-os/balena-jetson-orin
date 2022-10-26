@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.105.19+rev1
+## (2022-10-26)
+
+* l4t-launcher-extlinux: Create extra_uEnv.txt [Alexandru Costache]
+* tegra234-flash-dry: Fix generating boot0.img in Jenkins [Alexandru Costache]
+
 # v2.105.19
 ## (2022-10-26)
 
