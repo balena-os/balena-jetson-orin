@@ -5,6 +5,7 @@ DEVICE_SPECIFIC_SPACE = "983040"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
+    extra_uEnv.txt:/extra_uEnv.txt \
 "
 
 check_size() {
