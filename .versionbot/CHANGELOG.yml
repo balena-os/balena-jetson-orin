@@ -1,4 +1,33 @@
 - commits:
+    - subject: Update layers/meta-balena to a2b5edbaf873fce9fb0dbe6564aaa590af9849dc
+      hash: c259e7d111f112511d64c94de2809b52e53e6f5c
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to a2b5edbaf873fce9fb0dbe6564aaa590af9849dc
+        changelog-entry: Update layers/meta-balena to a2b5edbaf873fce9fb0dbe6564aaa590af9849dc
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "tests: hup: handle exception when unwrapping non-flasher image"
+              hash: 4d020e008232c29a8d9ab316f7c71d7fb161d98e
+              body: >
+                Handle ENOENT ErrnoException when attempting to unwrap a non-flasher
+
+                image in HUP tests. This mirrors a similar change made in ce2d33ad8.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: meta-balena-2.105.23
+          title: ""
+          date: 2022-11-01T00:42:23.029Z
+  version: 2.105.23
+  title: ""
+  date: 2022-11-01T04:45:11.339Z
+- commits:
     - subject: Update layers/meta-balena to 24deb5194be2c96b14f8bd4343555bf855f6ca06
       hash: 04408a8cc69933a50f0bf4208a55006cb2b4973a
       body: Update layers/meta-balena
