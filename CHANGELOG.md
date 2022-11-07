@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.105.29
+## (2022-11-07)
+
+
+<details>
+<summary> Update layers/meta-balena to ba7bbfb01a96a2dea3d02f01ea37f8bb4b3cb0d8 [renovate[bot]] </summary>
+
+> ## meta-balena-2.105.29
+> ### (2022-11-07)
+> 
+> * prepare-openvpn: do not use cached configuration [Alex Gonzalez]
+> 
+</details>
+
 # v2.105.28+rev1
 ## (2022-11-07)
 

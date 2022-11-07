@@ -1,4 +1,33 @@
 - commits:
+    - subject: Update layers/meta-balena to ba7bbfb01a96a2dea3d02f01ea37f8bb4b3cb0d8
+      hash: 6240f45bbc0954dfca765c279f12b49052e006f9
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to ba7bbfb01a96a2dea3d02f01ea37f8bb4b3cb0d8
+        changelog-entry: Update layers/meta-balena to ba7bbfb01a96a2dea3d02f01ea37f8bb4b3cb0d8
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "prepare-openvpn: do not use cached configuration"
+              hash: 021495a07f736c7a80497e18dea33e23ac63318b
+              body: >
+                This script needs to update the VPN authentication with the currently
+
+                configured keys so do not use cached values.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-2.105.29
+          title: ""
+          date: 2022-11-07T15:30:37.789Z
+  version: 2.105.29
+  title: ""
+  date: 2022-11-07T17:28:10.348Z
+- commits:
     - subject: Update contracts to 29ecc3f3077027524ea9540cbaa81a12b265d42c
       hash: 00f18898d283da95a6ea3b9f55b81bc4d83fbc7a
       body: Update contracts
