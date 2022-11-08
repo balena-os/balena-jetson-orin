@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update layers/meta-balena to 0d399dcb9ac7ece013f76a119e8643228eb114b7
+      hash: ff51d28973c32b82cf67502864100f226927a0f3
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 0d399dcb9ac7ece013f76a119e8643228eb114b7
+        changelog-entry: Update layers/meta-balena to 0d399dcb9ac7ece013f76a119e8643228eb114b7
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "tests: os: ensure by-state links are created"
+              hash: 724fa0e549fa6752c2f00acf52549255037f1fbd
+              body: |
+                These links are required for HUP, ensure they're created by udev
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: meta-balena-2.105.30
+          title: ""
+          date: 2022-11-08T05:28:07.419Z
+  version: 2.105.30
+  title: ""
+  date: 2022-11-08T10:12:52.610Z
+- commits:
     - subject: Update layers/meta-balena to ba7bbfb01a96a2dea3d02f01ea37f8bb4b3cb0d8
       hash: 6240f45bbc0954dfca765c279f12b49052e006f9
       body: Update layers/meta-balena
