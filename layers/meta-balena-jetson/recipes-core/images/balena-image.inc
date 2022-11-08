@@ -23,6 +23,7 @@ IMAGE_INSTALL:append = " \
     tegra-firmware-rtl8822 \
     l4t-launcher-extlinux \
     jetson-dtbs \
+    nvidia-display-driver \
 "
 
 IMAGE_INSTALL:remove = "kernel-image-image"
