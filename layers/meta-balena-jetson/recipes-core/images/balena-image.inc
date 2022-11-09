@@ -6,10 +6,6 @@ do_rootfs:balenaos-img:jetson-agx-orin-devkit[depends] += " tegra234-flash-dry:d
 
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
-# The space resinOS takes will amount to 1GiB
-# TODO: Shrink boot part, include dtb and kernel in rootfs
-IMAGE_ROOTFS_SIZE = "733184"
-
 IMAGE_INSTALL:append = " \
     tegra234-flash-dry \
     parted \
