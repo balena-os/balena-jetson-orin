@@ -1,7 +1,7 @@
 include balena-image.inc
 
-# TODO: Decrease this 
-DEVICE_SPECIFIC_SPACE = "983040"
+DEVICE_SPECIFIC_SPACE = "331776"
+IMAGE_ROOTFS_SIZE = "1003520"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
