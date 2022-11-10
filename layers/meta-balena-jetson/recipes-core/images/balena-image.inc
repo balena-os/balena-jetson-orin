@@ -20,6 +20,7 @@ IMAGE_INSTALL:append = " \
     l4t-launcher-extlinux \
     jetson-dtbs \
     nvidia-display-driver \
+    tegra-nvfancontrol \
 "
 
 IMAGE_INSTALL:remove = "kernel-image-image"
