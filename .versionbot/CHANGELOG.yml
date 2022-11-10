@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update layers/meta-balena to bf237c4f76c4026ed3aea2f30edc7c6a484fcef6
+      hash: e17561f73c8df6542fda178b45714f0d8e695521
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to bf237c4f76c4026ed3aea2f30edc7c6a484fcef6
+        changelog-entry: Update layers/meta-balena to bf237c4f76c4026ed3aea2f30edc7c6a484fcef6
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "tests: cloud: use cloud ssh to avoid race cond"
+              hash: 970d504c2fec7f82d8a87b1203702cb4320fbe9b
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: meta-balena-2.106.1
+          title: ""
+          date: 2022-11-10T17:19:31.839Z
+  version: 2.106.1
+  title: ""
+  date: 2022-11-10T21:21:52.333Z
+- commits:
     - subject: Fix AGX Orin fan running at high speed
       hash: 9223aef4536bddcaaedfc5655bbd3365fa695f60
       body: |
