@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.106.0+rev2
+## (2022-11-10)
+
+* Fix AGX Orin fan running at high speed [Alexandru Costache]
+
 # v2.106.0+rev1
 ## (2022-11-10)
 

@@ -1,4 +1,19 @@
 - commits:
+    - subject: Fix AGX Orin fan running at high speed
+      hash: 9223aef4536bddcaaedfc5655bbd3365fa695f60
+      body: |
+        This fixes the noisy fan running at high speed continuously
+      footer:
+        Changelog-entry: Fix AGX Orin fan running at high speed
+        changelog-entry: Fix AGX Orin fan running at high speed
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.106.0+rev2
+  title: ""
+  date: 2022-11-10T16:37:57.533Z
+- commits:
     - subject: "balena-image: fix monitor not detected on display port"
       hash: 57c0ce393e62ef413bb98e5f4f59b6a1147481b1
       body: |
