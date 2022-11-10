@@ -1,4 +1,22 @@
 - commits:
+    - subject: "balena-image: fix monitor not detected on display port"
+      hash: 57c0ce393e62ef413bb98e5f4f59b6a1147481b1
+      body: |
+        We now include the nvidia display package which installs
+        the modules nvidia.ko, nvidia-drm.ko and nvidia-modeset.ko,
+        whic are needed for a monitor connected to the display port
+        to be detected for X to work from inside a container.
+      footer:
+        Changelog-entry: "balena-image: fix monitor not detected on display port"
+        changelog-entry: "balena-image: fix monitor not detected on display port"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.106.0+rev1
+  title: ""
+  date: 2022-11-10T12:13:04.999Z
+- commits:
     - subject: Update layers/meta-balena to c5f580c7bd8e7d1391331c1611ab340be68d8d6a
       hash: 408f3b4d137d89e8ee1335b05036c8b58e6590bd
       body: Update layers/meta-balena

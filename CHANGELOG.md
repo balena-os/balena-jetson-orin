@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.106.0+rev1
+## (2022-11-10)
+
+* balena-image: fix monitor not detected on display port [Alexandru Costache]
+
 # v2.106.0
 ## (2022-11-10)
 
