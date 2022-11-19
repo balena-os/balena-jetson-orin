@@ -1,4 +1,38 @@
 - commits:
+    - subject: Update layers/meta-balena to 8aed005616dd0baa4605440cca234be049354070
+      hash: 0f1486d1746a4f6d3bf5144d342e9252dac2b42f
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 8aed005616dd0baa4605440cca234be049354070
+        changelog-entry: Update layers/meta-balena to 8aed005616dd0baa4605440cca234be049354070
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "kernel-balena: Kernel version check should include provided version"
+              hash: 42ec259c4d1c6e9a7c8171f21157562ed3a07cc9
+              body: >
+                When adding a kernel configuration conditional in a provided kernel
+
+                version, make the check include the provided kernel version as that is
+
+                the intuitive way to understand it.
+
+
+                The two places that use this function already used it in this way.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-2.107.3
+          title: ""
+          date: 2022-11-19T14:52:45.759Z
+  version: 2.107.3
+  title: ""
+  date: 2022-11-19T16:53:36.139Z
+- commits:
     - subject: Update layers/meta-balena to a2d882935a9f80b1b685784d7f83d9d81c9805ee
       hash: 3920950403ff8251076670eeba830c59ade1c2fd
       body: Update layers/meta-balena
