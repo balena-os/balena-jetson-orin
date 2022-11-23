@@ -1,6 +1,22 @@
 Change log
 -----------
 
+# v2.107.7
+## (2022-11-23)
+
+
+<details>
+<summary> Update layers/meta-balena to 417b9c6fc8fb6423c9ed71cd7cc098b0b8e97f2b [renovate[bot]] </summary>
+
+> ## meta-balena-2.107.7
+> ### (2022-11-23)
+> 
+> * tests: ssh-auth: rework local authentication with cloud keys to work in testbots [Alex Gonzalez]
+> * ssh-auth: do not use a separate custom key [Alex Gonzalez]
+> * Revert "test: ssh-auth: fix test cases using custom keys" [Alex Gonzalez]
+> 
+</details>
+
 # v2.107.6
 ## (2022-11-22)
 
