@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update layers/meta-balena to a539a5fb1d5c036bf513e52e243634722344d4c7
+      hash: fc9372887c1d19b0fbba24fd512aa7d640877405
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to a539a5fb1d5c036bf513e52e243634722344d4c7
+        changelog-entry: Update layers/meta-balena to a539a5fb1d5c036bf513e52e243634722344d4c7
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: add os testing docs
+              hash: f3f16f956cd2c0dad6cf9ae2c07d295a41f22999
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: meta-balena-2.107.11
+          title: ""
+          date: 2022-11-25T20:17:32.926Z
+  version: 2.107.11
+  title: ""
+  date: 2022-11-25T23:18:46.712Z
+- commits:
     - subject: Update layers/meta-balena to fbf651fead37336e826d709f48255897962bdbd5
       hash: 9c4f47d2ae273631fe30c126878f22a599bd1fba
       body: Update layers/meta-balena
