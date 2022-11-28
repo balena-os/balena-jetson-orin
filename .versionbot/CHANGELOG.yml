@@ -1,4 +1,57 @@
 - commits:
+    - subject: Update layers/meta-balena to 3e67facb7e983b198f29a67ae70a3ff5d9e7a90c
+      hash: fcb31e6b36a2c0de6c218970c52d513921700b3d
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 3e67facb7e983b198f29a67ae70a3ff5d9e7a90c
+        changelog-entry: Update layers/meta-balena to 3e67facb7e983b198f29a67ae70a3ff5d9e7a90c
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: Update tests/leviathan digest to 61016ad
+              hash: a40308833e556d9d5c0a8db88ca17c6376e6caab
+              body: Update tests/leviathan
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: renovate[bot]
+              nested:
+                - commits:
+                    - subject: bump contracts to 2.0.27
+                      hash: 3ff1c8e5bf93d185b2f048579ad86539abbfd420
+                      body: ""
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Signed-off-by: Ryan Cooke <ryan@balena.io>
+                        signed-off-by: Ryan Cooke <ryan@balena.io>
+                      author: rcooke-warwick
+                      nested: []
+                  version: leviathan-2.10.4
+                  title: ""
+                  date: 2022-11-25T12:20:52.662Z
+                - commits:
+                    - subject: On Apple Silicon we should install balena CLI via npm
+                      hash: ccdd4ff5b3255738f24e91ea3202fbf43706acfa
+                      body: >
+                        On x86 we should use the standalone package to save time.
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Signed-off-by: Kyle Harding <kyle@balena.io>
+                        signed-off-by: Kyle Harding <kyle@balena.io>
+                      author: Kyle Harding
+                      nested: []
+                  version: leviathan-2.10.3
+                  title: ""
+                  date: 2022-11-24T14:41:23.842Z
+          version: meta-balena-2.107.12
+          title: ""
+          date: 2022-11-28T12:47:31.350Z
+  version: 2.107.12
+  title: ""
+  date: 2022-11-28T19:21:55.135Z
+- commits:
     - subject: Update layers/meta-balena to a539a5fb1d5c036bf513e52e243634722344d4c7
       hash: fc9372887c1d19b0fbba24fd512aa7d640877405
       body: Update layers/meta-balena
