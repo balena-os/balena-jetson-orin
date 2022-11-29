@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.107.13
+## (2022-11-29)
+
+
+<details>
+<summary> Update layers/meta-balena to e3888e2b46676499f47c148431d9d457535c6871 [renovate[bot]] </summary>
+
+> ## meta-balena-2.107.13
+> ### (2022-11-29)
+> 
+> * balena-image-flasher: Include LUKS variant of GRUB config with FDE in place [Michal Toman]
+> 
+</details>
+
 # v2.107.12
 ## (2022-11-28)
 
