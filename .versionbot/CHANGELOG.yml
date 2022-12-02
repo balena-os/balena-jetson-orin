@@ -1,4 +1,33 @@
 - commits:
+    - subject: Update layers/meta-balena to 4b2fb9d832801f84f90147ec2a5b3fba56cd194e
+      hash: c9253ba4773ccf146a8919a99f0f862720e37e5f
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 4b2fb9d832801f84f90147ec2a5b3fba56cd194e
+        changelog-entry: Update layers/meta-balena to 4b2fb9d832801f84f90147ec2a5b3fba56cd194e
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: Refactor and clean up the purge data tests
+              hash: 65b0e02ec72ab1b68448f9546e5e5c570b1fe01a
+              body: |
+                Clean up some duplicated code and avoid test comments
+                that to not write to logs when called but instead await
+                the next test command.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: meta-balena-2.107.16
+          title: ""
+          date: 2022-12-01T23:40:57.700Z
+  version: 2.107.16
+  title: ""
+  date: 2022-12-02T02:26:16.121Z
+- commits:
     - subject: Update layers/meta-balena to 57b65123e0804b4447c6808db5780dd26cd31dc0
       hash: 692a960e06fcb6875316cd7fd0b92d73a76ccd1b
       body: Update layers/meta-balena

@@ -1,6 +1,20 @@
 Change log
 -----------
 
+# v2.107.16
+## (2022-12-02)
+
+
+<details>
+<summary> Update layers/meta-balena to 4b2fb9d832801f84f90147ec2a5b3fba56cd194e [renovate[bot]] </summary>
+
+> ## meta-balena-2.107.16
+> ### (2022-12-01)
+> 
+> * Refactor and clean up the purge data tests [Kyle Harding]
+> 
+</details>
+
 # v2.107.15
 ## (2022-12-01)
 
