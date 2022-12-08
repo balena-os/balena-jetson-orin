@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.107.21
+## (2022-12-08)
+
+
+<details>
+<summary> Update layers/meta-balena to be29271a011eec9121d17db5be03824ff78163cd [renovate[bot]] </summary>
+
+> ## meta-balena-2.107.21
+> ### (2022-12-08)
+> 
+> * tests/connectivity: Run the proxy tests with the actual redsocks uid of the DUT [Florin Sarbu]
+> 
+
+</details>
+
 # v2.107.20
 ## (2022-12-08)
 
