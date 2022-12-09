@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update layers/meta-balena to 0b95d62f50f71a7aea94e383812cb8fcd0927b0b
+      hash: 130ad23691d9c92f46413332f74805bae0c6714d
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 0b95d62f50f71a7aea94e383812cb8fcd0927b0b
+        changelog-entry: Update layers/meta-balena to 0b95d62f50f71a7aea94e383812cb8fcd0927b0b
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "tests: os: fsck: make compatible with old yocto releaes"
+              hash: 1e57154d1f3eedd82c20bbe463006783d63bc668
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: meta-balena-2.107.22
+          title: ""
+          date: 2022-12-09T12:55:56.317Z
+  version: 2.107.22
+  title: ""
+  date: 2022-12-09T14:45:17.805Z
+- commits:
     - subject: Update layers/meta-balena to be29271a011eec9121d17db5be03824ff78163cd
       hash: 0aecb3af97d9f2fe49186a071fc8608b2725e72c
       body: Update layers/meta-balena

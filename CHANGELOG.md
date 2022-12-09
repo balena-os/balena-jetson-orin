@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.107.22
+## (2022-12-09)
+
+
+<details>
+<summary> Update layers/meta-balena to 0b95d62f50f71a7aea94e383812cb8fcd0927b0b [renovate[bot]] </summary>
+
+> ## meta-balena-2.107.22
+> ### (2022-12-09)
+> 
+> * tests: os: fsck: make compatible with old yocto releaes [rcooke-warwick]
+> 
+
+</details>
+
 # v2.107.21
 ## (2022-12-08)
 
