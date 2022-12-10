@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update contracts to 0357433005e9ea7ace7876530d910eeb8386c980
+      hash: d8693dae229fcdbfd6a8ac81142da163ec0dbdd2
+      body: Update contracts
+      footer:
+        Changelog-entry: Update contracts to 0357433005e9ea7ace7876530d910eeb8386c980
+        changelog-entry: Update contracts to 0357433005e9ea7ace7876530d910eeb8386c980
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: Add partials for dotnet v7
+              hash: b6e275498276319e59b8210e5d62f8c86804919d
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Trong Nghia Nguyen <nghiant2710@gmail.com>
+                signed-off-by: Trong Nghia Nguyen <nghiant2710@gmail.com>
+              author: Trong Nghia Nguyen
+          version: contracts-2.0.31
+          title: ""
+          date: 2022-12-10T03:49:36.476Z
+  version: 2.107.24+rev1
+  title: ""
+  date: 2022-12-10T05:47:19.353Z
+- commits:
     - subject: Update layers/meta-balena to 5cb3c1438d6959dc31e77851fb070143ef1a82a6
       hash: 9980a11efef6c9568350330b28993ce183a6525e
       body: Update layers/meta-balena
