@@ -1,6 +1,21 @@
 Change log
 -----------
 
+# v2.107.25
+## (2022-12-11)
+
+
+<details>
+<summary> Update layers/meta-balena to 1b077510cb474b222865c24677995d59687af06a [renovate[bot]] </summary>
+
+> ## meta-balena-2.107.25
+> ### (2022-12-11)
+> 
+> * image_types_balena: fix inconsistency with flasher image partition naming [Alex Gonzalez]
+> 
+
+</details>
+
 # v2.107.24+rev1
 ## (2022-12-10)
 
