@@ -1,4 +1,36 @@
 - commits:
+    - subject: Update layers/meta-balena to d5e33e207a60caaf8fe6b83326cad8b6e94a47e5
+      hash: 23a141ccb1092d4e597bd79baa87b2e4d26bad6d
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to d5e33e207a60caaf8fe6b83326cad8b6e94a47e5
+        changelog-entry: Update layers/meta-balena to d5e33e207a60caaf8fe6b83326cad8b6e94a47e5
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "connectivity: Add linux firmware for iwlwifi 9260"
+              hash: 6857496c1a03282375f40a5621ea1ee39171cb0d
+              body: >
+                Some device types are being sold with this WiFi chipset so let's include
+
+                the firmware.
+
+
+                Fixes #2059
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-2.107.26
+          title: ""
+          date: 2022-12-12T06:07:30.516Z
+  version: 2.107.26
+  title: ""
+  date: 2022-12-12T09:55:41.806Z
+- commits:
     - subject: Update layers/meta-balena to 1b077510cb474b222865c24677995d59687af06a
       hash: 7a4fd3af5165db029209275b8d2c36b6e31325f0
       body: Update layers/meta-balena
