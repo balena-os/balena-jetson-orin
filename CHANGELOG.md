@@ -1,6 +1,28 @@
 Change log
 -----------
 
+# v2.107.26+rev2
+## (2022-12-16)
+
+
+<details>
+<summary> Update contracts to b6bdc537c9f9d224301152a0291682172320bf6a [renovate[bot]] </summary>
+
+> ## contracts-2.0.34
+> ### (2022-12-16)
+> 
+> * Flowzone: Allow external contributions [Florin Sarbu]
+> 
+> ## contracts-2.0.33
+> ### (2022-12-16)
+> 
+> * Flowzone: Use inherited secrets [Florin Sarbu]
+> 
+
+</details>
+
+* Update balena-yocto-scripts to 67cb61f9209482ddd22b3f98ebf6cb3609f0acb7 [renovate[bot]]
+
 # v2.107.26+rev1
 ## (2022-12-15)
 
