@@ -1,5 +1,5 @@
-kernel:boot_sigheader.img.encrypt:67108864
-kernel_b:boot_sigheader.img.encrypt:67108864
+kernel:none.bin:67108864
+kernel_b:none.bin:67108864
 kernel-dtb:[DTBNAME]_sigheader.dtb.encrypt:524288
 kernel-dtb_b:[DTBNAME]_sigheader.dtb.encrypt:524288
 recovery-dtb:[DTBNAME]_sigheader.dtb.encrypt:524288

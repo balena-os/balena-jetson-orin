@@ -4,6 +4,12 @@ do_rootfs:balenaos-img:jetson-agx-orin-devkit[depends] += " tegra234-flash-dry:d
                                                 linux-tegra:do_deploy \
 "
 
+do_rootfs:balenaos-img:jetson-xavier-nx-devkit[depends] += " tegra194-nxde-sdcard-flash:do_deploy \
+                                                edk2-firmware-tegra:do_deploy \
+                                                linux-tegra:do_deploy \
+"
+
+
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
 IMAGE_INSTALL:append:jetson-agx-orin-devkit = " \

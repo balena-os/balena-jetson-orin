@@ -12,6 +12,10 @@ SRC_URI:append:jetson-xavier = " \
     file://0006-Add-hup-and-rollback-support-agx-xav.patch \
 "
 
+SRC_URI:append:jetson-xavier-nx-devkit = " \
+    file://0007-Add-hup-and-rollback-support-xav-nx-sd.patch \
+"
+
 do_deploy:append() {
      mkdir -p ${DEPLOYDIR}/bootfiles/EFI/BOOT/
      cp ${WORKDIR}/build/images/BOOTAA64.efi ${DEPLOYDIR}/bootfiles/EFI/BOOT/BOOTAA64.efi
