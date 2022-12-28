@@ -2,7 +2,14 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI:append = " \
     file://0004-Add-symbolic-links-support.patch \
+"
+
+SRC_URI:append:jetson-agx-orin-devkit = " \
     file://0005-Add-hup-and-rollback-support.patch \
+"
+
+SRC_URI:append:jetson-xavier = " \
+    file://0006-Add-hup-and-rollback-support-agx-xav.patch \
 "
 
 do_deploy:append() {

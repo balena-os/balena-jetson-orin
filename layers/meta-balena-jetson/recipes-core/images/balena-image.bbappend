@@ -1,7 +1,16 @@
 include balena-image.inc
 
-DEVICE_SPECIFIC_SPACE = "331776"
-IMAGE_ROOTFS_SIZE = "1003520"
+DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit = "331776"
+IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit = "1003520"
+
+BALENA_BOOT_SIZE:jetson-xavier = "121440"
+BALENA_BOOT_SIZE:jetson-xavier-nx-devkit-emmc = "121440"
+BALENA_BOOT_SIZE:jetson-xavier-nx-devkit = "121440"
+
+IMAGE_ROOTFS_SIZE:jetson-xavier = "487424"
+IMAGE_ROOTFS_SIZE:jetson-xavier-nx-devkit-emmc = "733184"
+IMAGE_ROOTFS_SIZE:jetson-xavier-nx-devkit = "733184"
+
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
@@ -39,4 +48,39 @@ device_specific_configuration:jetson-agx-orin-devkit() {
       START=$(expr ${END} \+ 1)
     done
 } 
+
+do_rootfs:balenaos-img:jetson-xavier[depends] += " tegra194-flash-dry:do_deploy "
+# We leave this space way larger than currently
+# needed because other larger partitions are
+# added from one Jetpack release to another
+DEVICE_SPECIFIC_SPACE:jetson-xavier = "458752"
+
+# Binaries are signed and packed into
+# a partition and the flaser script
+# gets them from there. Can't store them
+# raw due to partition alignments which
+# trigger checksum mismatches during flash
+
+do_image:balenaos-img:jetson-xavier[depends] += " tegra194-flash-dry:do_deploy"
+device_specific_configuration:jetson-xavier() {
+    partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification194.txt)
+    NVIDIA_PART_OFFSET=20480
+    START=${NVIDIA_PART_OFFSET}
+    for n in ${partitions}; do
+      part_name=$(echo $n | cut -d ':' -f 1)
+      file_name=$(echo $n | cut -d ':' -f 2)
+      part_size=$(echo $n | cut -d ':' -f 3)
+      file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
+      END=$(expr ${START} \+ ${part_size} \- 1)
+      echo "Will write $part_name from ${START} to ${END} part size: $part_size"
+      parted -s ${BALENA_RAW_IMG} unit B mkpart $part_name ${START} ${END}
+      # The padding partition exists to allow for the device specific space to
+      # be a multiple of 4096. We don't write anything to it for the moment.
+      if [ ! "$file_name" = "none.bin" ]; then
+        check_size ${file_path} ${part_size}
+        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=$(expr ${START} \/ 512) bs=512
+      fi
+      START=$(expr ${END} \+ 1)
+    done
+}
 

@@ -9,13 +9,25 @@ do_install[depends] += " linux-tegra:do_deploy "
 S = "${WORKDIR}"
 DTBNAME = "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
-do_install() {
+do_install:jetson-agx-orin-devkit() {
 	install -d ${D}/boot/
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
         install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3701-0004-p3737-0000.dtb" "${D}/boot/tegra234-p3701-0004-p3737-0000.dtb"
 }
 
-FILES:${PN} += " \
+FILES:${PN}:jetson-agx-orin-devkit += " \
 	/boot/tegra234-p3701-0000-p3737-0000.dtb \
 	/boot/tegra234-p3701-0004-p3737-0000.dtb \
 "
+
+do_install:jetson-xavier() {
+        install -d ${D}/boot/
+        install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
+        install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3701-0004-p3737-0000.dtb" "${D}/boot/tegra234-p3701-0004-p3737-0000.dtb"
+}
+
+FILES:${PN}:jetson-xavier += " \
+        /boot/tegra234-p3701-0000-p3737-0000.dtb \
+        /boot/tegra234-p3701-0004-p3737-0000.dtb \
+"
+
