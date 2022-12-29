@@ -13,7 +13,11 @@ SRC_URI:append:jetson-xavier = " \
 "
 
 SRC_URI:append:jetson-xavier-nx-devkit = " \
-    file://0007-Add-hup-and-rollback-support-xav-nx-sd.patch \
+    file://0007-Add-hup-and-rollback-support-xav-nx.patch \
+"
+
+SRC_URI:append:jetson-xavier-nx-devkit-emmc = " \
+    file://0007-Add-hup-and-rollback-support-xav-nx.patch \
 "
 
 do_deploy:append() {

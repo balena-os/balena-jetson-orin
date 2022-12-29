@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 
 IMAGE_ROOTFS_ALIGNMENT ?= "4"
 
-BOOT_BINDIFF="boot0_t194_agx.bindiff"
+BOOT_BINDIFF="boot0_t194_nx.bindiff"
 
 DEPENDS = " \
     coreutils-native \

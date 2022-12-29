@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 
 IMAGE_ROOTFS_ALIGNMENT ?= "4"
 
-BOOT_BINDIFF="boot0_t194_agx_sd.bindiff"
+BOOT_BINDIFF="boot0_t194_nx_sd.bindiff"
 
 DEPENDS = " \
     coreutils-native \
@@ -207,13 +207,13 @@ do_install() {
     install -d ${D}/${BINARY_INSTALL_PATH}
     cp -r ${S}/tegraflash/signed/* ${D}/${BINARY_INSTALL_PATH}
     rm ${D}/${BINARY_INSTALL_PATH}/boot*im* || true
-    cp ${WORKDIR}/partition_specification194_nxde_sdcard.txt ${D}/${BINARY_INSTALL_PATH}/ 
 }
 
 do_deploy() {
     rm -rf ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
     mkdir -p ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
     cp -r ${D}/${BINARY_INSTALL_PATH}/* ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
+    cp ${WORKDIR}/partition_specification194_nxde_sdcard.txt ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
 }
 
 FILES:${PN} += "${BINARY_INSTALL_PATH}"
