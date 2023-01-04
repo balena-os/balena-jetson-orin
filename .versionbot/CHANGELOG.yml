@@ -1,4 +1,34 @@
 - commits:
+    - subject: Update layers/meta-balena to 576d3f249fbab16bf93a4dd5d158bae6f2ad9f9b
+      hash: 0651510bc2c97a6a1a86caa1aeec8a466fb98c17
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 576d3f249fbab16bf93a4dd5d158bae6f2ad9f9b
+        changelog-entry: Update layers/meta-balena to 576d3f249fbab16bf93a4dd5d158bae6f2ad9f9b
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "tests/hup: Avoid an old engine bug when pulling multiarch images on
+                rpi"
+              hash: 6a47531bd8c1a3a032e57efe6b1c2d764d6d0570
+              body: >
+                This has since been fixed in the engine but since it impacts the HUP from
+
+                version we need to handle it in the test suite.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: meta-balena-2.108.12
+          title: ""
+          date: 2023-01-04T03:22:27.475Z
+  version: 2.108.12
+  title: ""
+  date: 2023-01-04T06:23:34.835Z
+- commits:
     - subject: Update layers/meta-balena to df321d4ad4831d27188ac9bf538600ccaaabc9b3
       hash: 2354352231105413cb84572cdd4f506bf492c675
       body: Update layers/meta-balena
