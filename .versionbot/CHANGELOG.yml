@@ -1,4 +1,45 @@
 - commits:
+    - subject: Update layers/meta-balena to 8347887ab69018c1e4bcf0a7aecbf6faf85af2bd
+      hash: 67d13a8bcca1263ab54624175146fb14f6cc281e
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 8347887ab69018c1e4bcf0a7aecbf6faf85af2bd
+        changelog-entry: Update layers/meta-balena to 8347887ab69018c1e4bcf0a7aecbf6faf85af2bd
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: Update balena-os/balena-supervisor to v14.4.10
+              hash: ee049573aecb9004d53fd4134ec4aa8c21c99e6c
+              body: Update balena-supervisor
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: renovate[bot]
+              nested: []
+          version: meta-balena-2.108.17
+          title: ""
+          date: 2023-01-09T15:58:47.708Z
+        - commits:
+            - subject: "balena-supervisor: Set the supervisor package version"
+              hash: 950cbe5dd708511e37d707d4121032cc06376d1a
+              body: >
+                This should reflect the included supervisor version in the hostapp
+
+                manifest.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: meta-balena-2.108.16
+          title: ""
+          date: 2023-01-09T10:35:58.184Z
+  version: 2.108.17
+  title: ""
+  date: 2023-01-09T18:45:04.526Z
+- commits:
     - subject: Update contracts to cbc450a40296e716e50344b3d625fb9a9b6975f6
       hash: d26d45bbb377c41efd257bb3bd40042731cbdc3e
       body: Update contracts
