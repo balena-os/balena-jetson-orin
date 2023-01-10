@@ -1,4 +1,36 @@
 - commits:
+    - subject: Update layers/meta-balena to 707ed18ca071fb7d7d557e0774f9f479323892af
+      hash: 8f0fed120a3dac08f9c388fd7a6f7173c3a7614e
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 707ed18ca071fb7d7d557e0774f9f479323892af
+        changelog-entry: Update layers/meta-balena to 707ed18ca071fb7d7d557e0774f9f479323892af
+      author: renovate[bot]
+      nested:
+        - commits:
+            - subject: "redsocks: Increase maximum number of open files"
+              hash: e90b9159ed5f0dac3d9fe1b1b486201ee85f1161
+              body: >
+                This increases the number of open connections that redsocks can support
+
+                to a new maximum of 2048.
+
+
+                See https://github.com/darkk/redsocks/blob/19b822e345f6a291f6cff6b168f1cfdfeeb2cd7d/base.c#L419
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-2.108.19
+          title: ""
+          date: 2023-01-10T18:47:46.842Z
+  version: 2.108.19
+  title: ""
+  date: 2023-01-10T20:06:51.160Z
+- commits:
     - subject: Update balena-yocto-scripts to 56bb055d91481023a6b6cff92d61ebfffa884139
       hash: d37febfa58de9fc908bdb3d3d2b227ea37c06a21
       body: Update balena-yocto-scripts
