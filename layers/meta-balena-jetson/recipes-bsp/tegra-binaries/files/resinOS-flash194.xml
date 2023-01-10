@@ -372,7 +372,7 @@
             <percent_reserved> 0 </percent_reserved>
             <description> **Required.** Chain A; contains the Linux kernel. </description>
         </partition>
-        <partition name="kernel-dtb" type="kernel_dtb" oem_sign=true>
+        <partition name="kernel-dtb" type="kernel_dtb" oem_sign="true">
             <allocation_policy> sequential </allocation_policy>
             <filesystem_type> basic </filesystem_type>
             <size> 524288 </size>

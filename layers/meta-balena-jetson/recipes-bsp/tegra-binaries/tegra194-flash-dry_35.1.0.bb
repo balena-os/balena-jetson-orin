@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d9
 
 IMAGE_ROOTFS_ALIGNMENT ?= "4"
 
-BOOT_BINDIFF="boot0_t194_nx.bindiff"
+BOOT_BINDIFF="boot0_t194_agx.bindiff"
 
 DEPENDS = " \
     coreutils-native \
@@ -164,11 +164,6 @@ do_configure() {
         > flash.xml
     # prep env for tegraflash
 
-#    ln -sf ${STAGING_BINDIR_NATIVE}/tegra186-flash/rollback_parser.py ./rollback/
-#    ln -snf ${STAGING_DATADIR}/nv_tegra/rollback/t${@d.getVar('NVIDIA_CHIP')[2:]}x ./rollback/
-#    ln -sf ${STAGING_BINDIR_NATIVE}/tegra186-flash/BUP_generator.py ./
-#    ln -sf ${STAGING_BINDIR_NATIVE}/tegra186-flash/${SOC_FAMILY}-flash-helper.sh ./
-
     # bup is based on the rootfs, which is not built at this point
     # not using it for the moment
     # sed -e 's,^function ,,' ${STAGING_BINDIR_NATIVE}/tegra186-flash/l4t_bup_gen.func > ./l4t_bup_gen.func
@@ -177,14 +172,82 @@ do_configure() {
     # Sign all tegra bins
     signfile ""
 
-    # Needed to embedd plain initramfs kernel and dtb to main image
-    cp ${LNXFILE} ${DEPLOY_DIR_IMAGE}/bootfiles/Image
+    rm ${DEPLOY_DIR_IMAGE}/Image || true
     cp ${WORKDIR}/resinOS-flash194.xml ${DEPLOY_DIR_IMAGE}/bootfiles/flash.xml
     cp -r signed/* ${DEPLOY_DIR_IMAGE}/bootfiles/
 
     dd if=/dev/zero of=boot0.img bs=8388608 count=1
-    #TODO: Signed binary
+    # BCT (a)
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/br_bct_BR.bct of=boot0.img conv=notrunc
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/br_bct_BR.bct of=boot0.img seek=3072 bs=1 conv=notrunc
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/br_bct_BR.bct of=boot0.img seek=16384 bs=1 conv=notrunc
 
+    # mb1 (a + b)
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/mb1_t194_prod_aligned_sigheader.bin.encrypt of=boot0.img seek=32768 bs=1 conv=notrunc
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/mb1_t194_prod_aligned_sigheader.bin.encrypt of=boot0.img seek=294912 bs=1 conv=notrunc
+
+    #MB1_BCT
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/mb1_cold_boot_bct_MB1_sigheader.bct.encrypt of=boot0.img seek=557056 bs=1 conv=notrunc
+
+    #MEM_BCT
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/mem_coldboot_sigheader.bct.encrypt of=boot0.img seek=622592 bs=1 conv=notrunc
+
+    #spe_fw
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/spe_t194_sigheader.bin.encrypt of=boot0.img seek=851968 bs=1 conv=notrunc
+
+    #mb2
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/nvtboot_t194_sigheader.bin.encrypt of=boot0.img seek=1114112 bs=1 conv=notrunc
+
+    #mts-preboot
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/preboot_c10_prod_cr_sigheader.bin.encrypt of=boot0.img seek=1343488 bs=1 conv=notrunc
+
+    #MB1_BCT_b
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/mb1_cold_boot_bct_MB1_sigheader.bct.encrypt of=boot0.img seek=3473408 bs=1 conv=notrunc
+
+    #MEM_BCT_b
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/mem_coldboot_sigheader.bct.encrypt of=boot0.img seek=3538944 bs=1 conv=notrunc
+
+    #spe_fw_b
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/spe_t194_sigheader.bin.encrypt of=boot0.img seek=3768320 bs=1 conv=notrunc
+
+    #mb2_b
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/nvtboot_t194_sigheader.bin.encrypt of=boot0.img seek=4030464 bs=1 conv=notrunc
+
+    #mts-preboot_b
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/preboot_c10_prod_cr_sigheader.bin.encrypt of=boot0.img seek=4259840 bs=1 conv=notrunc
+
+    #BCT-boot-chain_backup
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/bct_backup.img of=boot0.img seek=7995392 bs=1 conv=notrunc
+
+    #secondary_gpt_backup
+    dd if=${DEPLOY_DIR_IMAGE}/bootfiles/gpt_secondary_0_3.bin of=boot0.img seek=8126464 bs=1 conv=notrunc
+
+    cp ${WORKDIR}/${BOOT_BINDIFF} .
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=32784 skip=0 bs=1 count=32 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=35776 skip=32 bs=1 count=32 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8126480 skip=64 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8126608 skip=80 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8126736 skip=96 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8126864 skip=112 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8126992 skip=128 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8127120 skip=144 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8127248 skip=160 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8127376 skip=176 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8127504 skip=192 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8127632 skip=208 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8127760 skip=224 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8127888 skip=240 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8128016 skip=256 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8128144 skip=272 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8128272 skip=288 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8128400 skip=304 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8128528 skip=320 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8128656 skip=336 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8128784 skip=352 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8128912 skip=368 bs=1 count=16 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8142864 skip=496 bs=1 count=128 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8192000 skip=624 bs=1 count=128 conv=notrunc
+    dd if=${BOOT_BINDIFF} of=boot0.img seek=8257536 skip=756 bs=1 count=128 conv=notrunc
     cp boot0.img ${DEPLOY_DIR_IMAGE}/bootfiles/
 }
 
@@ -193,13 +256,16 @@ do_install() {
     install -d ${D}/${BINARY_INSTALL_PATH}
     cp -r ${S}/tegraflash/signed/* ${D}/${BINARY_INSTALL_PATH}
     rm ${D}/${BINARY_INSTALL_PATH}/boot*im* || true
-    cp ${WORKDIR}/partition_specification194.txt ${D}/${BINARY_INSTALL_PATH}/    
+    cp -r ${DEPLOY_DIR_IMAGE}/bootfiles/* ${D}/${BINARY_INSTALL_PATH}/
+    cp ${WORKDIR}/partition_specification194.txt ${D}/${BINARY_INSTALL_PATH}/
+    rm ${D}/${BINARY_INSTALL_PATH}/Image || true 
 }
 
 do_deploy() {
     rm -rf ${DEPLOYDIR}/$(basename ${BINARY_INSTALL_PATH})
     mkdir -p ${DEPLOYDIR}/$(basename ${BINARY_INSTALL_PATH})
     cp -r ${D}/${BINARY_INSTALL_PATH}/* ${DEPLOYDIR}/$(basename ${BINARY_INSTALL_PATH})
+    rm ${DEPLOYDIR}/$(basename ${BINARY_INSTALL_PATH})/Image || true
 }
 
 FILES:${PN} += "${BINARY_INSTALL_PATH}"
