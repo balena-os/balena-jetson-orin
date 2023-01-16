@@ -25,3 +25,4 @@ do_deploy:append() {
      cp ${WORKDIR}/build/images/BOOTAA64.efi ${DEPLOYDIR}/bootfiles/EFI/BOOT/BOOTAA64.efi
 }
 
+NVDISPLAY_INIT_DEFAULT:tegra194=""
