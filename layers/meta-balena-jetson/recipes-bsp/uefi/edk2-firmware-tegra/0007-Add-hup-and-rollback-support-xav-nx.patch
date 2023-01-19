@@ -14,6 +14,8 @@ is the same as the one that exists in balenaOS u-boot and is
 compatible with the dtb selection mechanism implemented in the
 Supervisor for the rest of the boards that use u-boot.
 
+This patch uses the Xavier NX Devkit eMMC partition layout.
+
 Upstream-status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
@@ -458,8 +460,8 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +    CleanLine = CleanExtLinuxLine (FileLine);
 +    if (*CleanLine != CHAR_NULL) {
 +      if (StrStr(CleanLine, L"resin_root_part=")) {
-+       *RootPart = StrDecimalToUintn(CleanLine + 16);
-+       Print(L"RootPart is %d\r\n", *RootPart);
++       *RootPart = StrHexToUintn(CleanLine + 16);
++       Print(L"RootPart is 0x%x\r\n", *RootPart);
 +      } else if (StrStr(CleanLine, L"upgrade_available=")) {
 +        *UpgradeAvailable = StrDecimalToUintn(CleanLine + 18);
 +        Print(L"UpgradeAvailable is %d\r\n", *UpgradeAvailable);
@@ -565,8 +567,8 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +#define BALENA_BOOT_CONF_PATH          L"resinOS_uEnv.txt"
 +#define BALENA_BOOTCOUNT_FILE_PATH     L"bootcount.env"
 +#define MAX_RESINOS_UENV_SIZE          256
-+#define BALENA_ROOTFS_INDEX_A          7
-+#define BALENA_ROOTFS_INDEX_B          8
++#define BALENA_ROOTFS_INDEX_A          16
++#define BALENA_ROOTFS_INDEX_B          17
 +#define BALENA_OS_BC_LIM               3
 +#define BALENA_EXTRA_UENV_FILE         L"extra_uEnv.txt"
  #define BOOTIMG_BASE_NAME              L"kernel"

@@ -51,6 +51,7 @@ IMAGE_INSTALL:append:jetson-xavier-nx-devkit-emmc = " \
     tegra-nvfancontrol \
     l4t-launcher-extlinux \
     tegra194-nxde-flash-dry \
+    jetson-dtbs \
 "
 
 IMAGE_INSTALL:append:jetson-xavier-nx-devkit = " \

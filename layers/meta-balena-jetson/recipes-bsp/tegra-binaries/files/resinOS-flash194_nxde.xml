@@ -156,7 +156,7 @@
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-            <filename> DTB_NAME </filename>
+            <filename> tegra194-p3668-all-p3509-0000.dtb </filename>
             <description> **Required.** Chain A; contains Bootloader device tree blob
               (DTB). </description>
         </partition>
@@ -370,7 +370,7 @@
             <file_system_attribute> 0 </file_system_attribute>
             <allocation_attribute> 8 </allocation_attribute>
             <percent_reserved> 0 </percent_reserved>
-            <filename> DTB_NAME </filename>
+            <filename> tegra194-p3668-all-p3509-0000.dtb </filename>
             <description> **Required.** Chain B; contains Bootloader device tree blob
               (DTB). </description>
         </partition>

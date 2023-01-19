@@ -13,3 +13,7 @@ HOSTAPP_HOOKS:append:jetson-xavier    = " 99-resin-uboot \
 DEPENDS:append:jetson-agx-orin-devkit = " tegra234-flash-dry"
 
 DEPENDS:append:jetson-xavier = " tegra194-flash-dry"
+
+
+HOSTAPP_HOOKS:append:jetson-xavier-nx-devkit-emmc = " 99-resin-uboot 99-resin-bootfiles-jetson-xavier-nx-devkit-emmc"
+DEPENDS:append:jetson-xavier = " tegra194-nxde-flash-dry"

@@ -25,4 +25,6 @@ do_deploy:append() {
      cp ${WORKDIR}/build/images/BOOTAA64.efi ${DEPLOYDIR}/bootfiles/EFI/BOOT/BOOTAA64.efi
 }
 
+# We generate the final nvdisp-init.bin file in tegra194-flash* using
+# the original one provided in the tegra BSP archive
 NVDISPLAY_INIT_DEFAULT:tegra194=""

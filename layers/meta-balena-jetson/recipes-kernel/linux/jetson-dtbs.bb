@@ -31,3 +31,12 @@ FILES:${PN}:jetson-xavier += " \
         /boot/tegra234-p3701-0004-p3737-0000.dtb \
 "
 
+do_install:jetson-xavier-nx-devkit-emmc() {
+        install -d ${D}/boot/
+        install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
+}
+
+FILES:${PN}:jetson-xavier-nx-devkit-emmc += " \
+        /boot/tegra194-p3668-all-p3509-0000.dtb \
+"
+
