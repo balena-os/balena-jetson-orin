@@ -1,7 +1,9 @@
 From 9deae564cfa83e4396d661fc93eae9b518aba24e Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
 Date: Mon, 17 Oct 2022 14:13:52 +0200
-Subject: [PATCH] Not loadable
+Subject: [PATCH] Switch NVMAP_CONFIG_LOADABLE_MODULE to n
+
+To fix a kernel modules headers build error
 
 ---
  nvidia/drivers/video/tegra/nvmap/Makefile.memory.configs | 2 +-

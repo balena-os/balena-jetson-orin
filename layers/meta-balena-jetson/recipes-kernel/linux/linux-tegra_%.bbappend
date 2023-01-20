@@ -6,6 +6,7 @@ SCMVERSION="n"
 
 # Switch nvmap to built-in to fix the kernel headers
 SRC_URI:append = " file://0001-fix-kernel-headers-test.patch "
+SRC_URI:append:forecr-dsb-nx2-xavier-nx-emmc = " file://0001-Port-Forecr-DSBOARD-NX2-patches.patch "
 
 BALENA_CONFIGS:remove = " mdraid"
 
@@ -68,9 +69,27 @@ BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFSD_V4=y \
 "
 
+BALENA_CONFIGS:append:forecr-dsb-nx2-xavier-nx-emmc = " pcf8574 lan743x xr17v35x usbserial"
+BALENA_CONFIGS[pcf8574] = " \
+    CONFIG_GPIO_PCF857X=m \
+"
+
+BALENA_CONFIGS[lan743x] = " \
+    CONFIG_LAN743X=m \
+"
+
+BALENA_CONFIGS[xr17v35x] = " \
+    CONFIG_SERIAL_8250_XR17V35X=m \
+"
+
+BALENA_CONFIGS[usbserial] = " \
+    CONFIG_USB_SERIAL_WWAN=m \
+"
+
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
-KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 net.ifnames=0"
+KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 "
 KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=tty0 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} "
 
 generate_extlinux_conf() {
@@ -87,6 +106,10 @@ LABEL primary
 EOF
 
 }
+
+#do_deploy:append:forecr-dsb-nx2-xavier-nx-emmc() {
+#    cp ${WORKDIR}/tegra194-p3668-dsboard-nx2-0000.dtb "${DEPLOYDIR}"
+#}
 
 do_deploy[nostamp] = "1"
 do_deploy[postfuncs] += "generate_extlinux_conf"
