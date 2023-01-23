@@ -1,4 +1,18 @@
 - commits:
+    - subject: "forecr-dsboard-nx2: Add coffee file and yocto machine"
+      hash: 18f423b21ef084efaedb5bcd12ae396fa5baddbf
+      body: ""
+      footer:
+        Changelog-entry: "forecr-dsboard-nx2: Add coffee file and yocto machine"
+        changelog-entry: "forecr-dsboard-nx2: Add coffee file and yocto machine"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.108.19+rev2
+  title: ""
+  date: 2023-01-23T09:32:18.129Z
+- commits:
     - subject: Add ESR workflow
       hash: 9fadfa05d0c1071ef538cd971f3db1f8adcf15cd
       body: |

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.108.19+rev2
+## (2023-01-23)
+
+* forecr-dsboard-nx2: Add coffee file and yocto machine [Alexandru Costache]
+
 # v2.108.19+rev1
 ## (2023-01-12)
 
