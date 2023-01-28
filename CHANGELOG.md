@@ -1,6 +1,33 @@
 Change log
 -----------
 
+# v2.108.29
+## (2023-01-28)
+
+
+<details>
+<summary> Update layers/meta-balena to bdfe242725e83784931987d85f83a35e861683d8 [Renovate Bot] </summary>
+
+> ## meta-balena-2.108.29
+> ### (2023-01-28)
+> 
+> * bluez: Update to v5.66 [Alex Gonzalez]
+> 
+
+</details>
+
+
+<details>
+<summary> Update layers/meta-balena to 00324bf0a842b63ee46b24ab5a19bff68d4b3799 [Renovate Bot] </summary>
+
+> ## meta-balena-2.108.29
+> ### (2023-01-28)
+> 
+> * bluez: Update to v5.66 [Alex Gonzalez]
+> 
+
+</details>
+
 # v2.108.27+rev1
 ## (2023-01-26)
 

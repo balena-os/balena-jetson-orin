@@ -1,4 +1,58 @@
 - commits:
+    - subject: Update layers/meta-balena to bdfe242725e83784931987d85f83a35e861683d8
+      hash: 50119debd5b8ee438f1d43267e7bb409f73c575b
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to bdfe242725e83784931987d85f83a35e861683d8
+        changelog-entry: Update layers/meta-balena to bdfe242725e83784931987d85f83a35e861683d8
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "bluez: Update to v5.66"
+              hash: 00342a7702226dc071f6b690bd68fdab5c9996c2
+              body: |
+                Update from v5.64 to v5.66
+
+                Fixes #2981
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-2.108.29
+          title: ""
+          date: 2023-01-28T09:44:05.026Z
+    - subject: Update layers/meta-balena to 00324bf0a842b63ee46b24ab5a19bff68d4b3799
+      hash: 34113afd81fd2c77546b4bc99bbc069072bf250f
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 00324bf0a842b63ee46b24ab5a19bff68d4b3799
+        changelog-entry: Update layers/meta-balena to 00324bf0a842b63ee46b24ab5a19bff68d4b3799
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "bluez: Update to v5.66"
+              hash: 00342a7702226dc071f6b690bd68fdab5c9996c2
+              body: |
+                Update from v5.64 to v5.66
+
+                Fixes #2981
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-2.108.29
+          title: ""
+          date: 2023-01-28T09:44:05.026Z
+  version: 2.108.29
+  title: ""
+  date: 2023-01-28T11:17:39.550Z
+- commits:
     - subject: add meta-perl to bblayers.conf
       hash: 1113deb5ec686ea4bd916dec5ef5cf88b218a1d1
       body: |
