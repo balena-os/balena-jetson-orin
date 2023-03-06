@@ -28,8 +28,7 @@ SRC_URI = " \
     file://create_blob.sh \
 "
 
-DTBNAME = "tegra234-p3701-0000-p3737-0000"
-DTBNAME:jetson-orin-nx-xavier-nx-devkit = "tegra234-p3767-0000-p3509-a02"
+DTBNAME = "tegra234-p3767-0000-p3509-a02"
 KERNEL_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${DTBNAME}.dtb"
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 FLASHTOOLS_DIR = "tegra-flash"
@@ -45,7 +44,8 @@ BINARY_INSTALL_PATH = "/opt/tegra-binaries"
 DTB_OVERLAYS = "L4TConfiguration.dtbo tegra234-p3767-0000-p3509-a02-hdr40.dtbo"
 
 TOSIMGFILENAME = "tos-optee_t234.img"
-
+BPF_FILE="bpmp_t234-TE990M-A1_prod.bin"
+BPFDTB_FILE="tegra234-bpmp-3767-0000-a02-3509-a02.dtb"
 BOOTFILES:tegra234 = "\
     adsp-fw.bin \
     applet_t234.bin \
