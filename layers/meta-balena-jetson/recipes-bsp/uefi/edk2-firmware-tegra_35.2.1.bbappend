@@ -1,33 +1,34 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-#SRC_URI:append = " 
-#    file://0004-Add-symbolic-links-support.patch 
-#"
+SRC_URI:append = " \ 
+    file://0004-Add-symbolic-links-support-32-5-2.patch;patchdir=.. \
+"
 
 SRC_URI:append:jetson-agx-orin-devkit = " \
     file://0005-Add-hup-and-rollback-support-32-5-2.patch;patchdir=.. \
+    file://enable-qspi.patch;patchdir=.. \
 "
 
 SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \ 
-    file://0004-Add-symbolic-links-support-32-5-2.patch;patchdir=.. \
     file://0005-L4TLauncher-hup-rollback-support-orin-nx.patch;patchdir=.. \
+    file://0006-boot.patch;patchdir=.. \
 "
 
 SRC_URI:append:jetson-xavier = " \
-    file://0006-Add-hup-and-rollback-support-agx-xav.patch \
+    file://0006-Add-hup-and-rollback-support-agx-xav.patch;patchdir=.. \
 "
 
 SRC_URI:append:jetson-xavier-nx-devkit = " \
-    file://0007-Add-hup-and-rollback-support-xav-nx.patch \
+    file://0007-Add-hup-and-rollback-support-xav-nx.patch;patchdir=.. \
 "
 
 SRC_URI:append:jetson-xavier-nx-devkit-emmc = " \
-    file://0007-Add-hup-and-rollback-support-xav-nx.patch \
+    file://0007-Add-hup-and-rollback-support-xav-nx.patch;patchdir=.. \
 "
-SRC_URI:remove:forecr-dsb-nx2-xavier-nx-emmc = "file://0007-Add-hup-and-rollback-support-xav-nx.patch"
+SRC_URI:remove:forecr-dsb-nx2-xavier-nx-emmc = "file://0007-Add-hup-and-rollback-support-xav-nx.patch;patchdir=.."
 
 SRC_URI:append:forecr-dsb-nx2-xavier-nx-emmc = " \
-    file://0008-Add-hup-and-rollback-support-forecr-dsb-nx2.patch \
+    file://0008-Add-hup-and-rollback-support-forecr-dsb-nx2.patch;patchdir=.. \
 "
 
 do_deploy:append() {
