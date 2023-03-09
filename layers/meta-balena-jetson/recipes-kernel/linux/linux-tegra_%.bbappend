@@ -37,6 +37,7 @@ BALENA_CONFIGS[cdc-wdm] = " \
 BALENA_CONFIGS:append = " sierra-net"
 BALENA_CONFIGS[sierra-net] = " \
                 CONFIG_USB_SIERRA_NET=m \
+		CONFIG_PROC_KCORE=y \
 "
 
 BALENA_CONFIGS_DEPS[sierra-net] = " \

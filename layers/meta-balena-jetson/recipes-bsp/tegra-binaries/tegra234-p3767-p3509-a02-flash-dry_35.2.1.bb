@@ -23,9 +23,9 @@ inherit deploy python3native perlnative l4t_bsp
 SRC_URI = " \
     file://resinOS-flash234.xml \
     file://partition_specification234.txt \
-    file://custinfo_234.bin \
-    file://T234_devkit_patch.bin \
-    file://create_blob.sh \
+    file://T234_devkit_patch_orin_nx_xav_dvk.bin \
+    file://create_blob_orin_nx.sh \
+    file://custinfo_234_orin_nx.bin \
 "
 
 DTBNAME = "tegra234-p3767-0000-p3509-a02"
@@ -110,12 +110,38 @@ signfile() {
         -e"s,ESP_FILE,esp.img," -e"/VARSTORE_FILE/d" \
         > $destdir/flash.xml
 
-	./tegraflash.py  --bl uefi_jetson_with_dtb.bin \
+#	./tegraflash.py  --bl uefi_jetson_with_dtb.bin \
+#		--odmdata gbe-uphy-config-8,hsstp-lane-map-3,hsio-uphy-config-0 \
+#		--overlay_dtb L4TConfiguration.dtbo,  --bldtb ${DTBFILE} --applet mb1_t234_prod.bin --cmd "sign" \
+#		--cfg flash.xml \
+#		--chip 0x23 \
+#		--concat_cpubl_bldtb --cpubl uefi_jetson.bin --device_config tegra234-mb1-bct-device-p3767-0000.dts --misc_config tegra234-mb1-bct-misc-p3767-0000.dts --pinmux_config tegra234-mb1-bct-pinmux-p3767-hdmi-a03.dtsi --gpioint_config tegra234-mb1-bct-gpioint-p3767-0000.dts --pmic_config tegra234-mb1-bct-pmic-p3767-0000-a02.dts --pmc_config tegra234-mb1-bct-padvoltage-p3767-hdmi-a03.dtsi --deviceprod_config tegra234-mb1-bct-cprod-p3767-0000.dts --prod_config tegra234-mb1-bct-prod-p3767-0000.dts --scr_config tegra234-mb2-bct-scr-p3767-0000.dts --wb0sdram_config tegra234-p3767-0000-wb0sdram-l4t.dts --br_cmd_config tegra234-mb1-bct-reset-p3767-0000.dts --dev_params tegra234-br-bct-p3767-0000-l4t.dts,tegra234-br-bct_b-p3767-0000-l4t.dts --mb2bct_cfg tegra234-mb2-bct-misc-p3767-0000.dts  --bins "psc_fw pscfw_t234_prod.bin; mts_mce mce_flash_o10_cr_prod.bin; mb2_applet applet_t234.bin; mb2_bootloader mb2_t234.bin; xusb_fw xusb_t234_prod.bin; dce_fw display-t234-^Ce.bin; nvdec nvdec_t234_prod.fw; bpmp_fw bpmp_t234-TE990M-A1_prod.bin; bpmp_fw_dtb tegra234-bpmp-3767-0000-a02-3509-a02.dtb; sce_fw camera-rtcpu-sce.img; rce_fw camera-rtcpu-t234-rce.img; ape_fw adsp-fw.bin; spe_fw spe_t234.bin; tos tos-optee_t234.img; eks eks_t234.img"  --sdram_config tegra234-p3767-0000-sdram-l4t.dts  --cust_info custinfo_out.bin --external_device  --boot_chain A
+
+	./tegraflash.py  \
+		--bl uefi_jetson_with_dtb.bin \
+		--concat_cpubl_bldtb --cpubl uefi_jetson.bin \
+		--sdram_config tegra234-p3767-0000-sdram-l4t.dts \
+		--cust_info custinfo_out.bin \
 		--odmdata gbe-uphy-config-8,hsstp-lane-map-3,hsio-uphy-config-0 \
-		--overlay_dtb L4TConfiguration.dtbo,  --bldtb ${DTBFILE} --applet mb1_t234_prod.bin --cmd "sign" \
-		--cfg flash.xml \
-		--chip 0x23 \
-		--concat_cpubl_bldtb --cpubl uefi_jetson.bin --device_config tegra234-mb1-bct-device-p3767-0000.dts --misc_config tegra234-mb1-bct-misc-p3767-0000.dts --pinmux_config tegra234-mb1-bct-pinmux-p3767-hdmi-a03.dtsi --gpioint_config tegra234-mb1-bct-gpioint-p3767-0000.dts --pmic_config tegra234-mb1-bct-pmic-p3767-0000-a02.dts --pmc_config tegra234-mb1-bct-padvoltage-p3767-hdmi-a03.dtsi --deviceprod_config tegra234-mb1-bct-cprod-p3767-0000.dts --prod_config tegra234-mb1-bct-prod-p3767-0000.dts --scr_config tegra234-mb2-bct-scr-p3767-0000.dts --wb0sdram_config tegra234-p3767-0000-wb0sdram-l4t.dts --br_cmd_config tegra234-mb1-bct-reset-p3767-0000.dts --dev_params tegra234-br-bct-p3767-0000-l4t.dts,tegra234-br-bct_b-p3767-0000-l4t.dts --mb2bct_cfg tegra234-mb2-bct-misc-p3767-0000.dts  --bins "psc_fw pscfw_t234_prod.bin; mts_mce mce_flash_o10_cr_prod.bin; mb2_applet applet_t234.bin; mb2_bootloader mb2_t234.bin; xusb_fw xusb_t234_prod.bin; dce_fw display-t234-^Ce.bin; nvdec nvdec_t234_prod.fw; bpmp_fw bpmp_t234-TE990M-A1_prod.bin; bpmp_fw_dtb tegra234-bpmp-3767-0000-a02-3509-a02.dtb; sce_fw camera-rtcpu-sce.img; rce_fw camera-rtcpu-t234-rce.img; ape_fw adsp-fw.bin; spe_fw spe_t234.bin; tos tos-optee_t234.img; eks eks_t234.img"  --sdram_config tegra234-p3767-0000-sdram-l4t.dts  --cust_info custinfo_out.bin --external_device  --boot_chain A
+		--overlay_dtb L4TConfiguration.dtbo, \
+		--bldtb ${DTBFILE} \
+		--applet mb1_t234_prod.bin --cmd "sign" \
+		--cfg flash.xml --chip 0x23 --device_config tegra234-mb1-bct-device-p3767-0000.dts \
+		--misc_config tegra234-mb1-bct-misc-p3767-0000.dts \
+		--pinmux_config tegra234-mb1-bct-pinmux-p3767-hdmi-a03.dtsi \
+		--gpioint_config tegra234-mb1-bct-gpioint-p3767-0000.dts \
+		--pmic_config tegra234-mb1-bct-pmic-p3767-0000-a02.dts \
+		--pmc_config tegra234-mb1-bct-padvoltage-p3767-hdmi-a03.dtsi \
+		--deviceprod_config tegra234-mb1-bct-cprod-p3767-0000.dts \
+		--prod_config tegra234-mb1-bct-prod-p3767-0000.dts \
+		--scr_config tegra234-mb2-bct-scr-p3767-0000.dts \
+		--wb0sdram_config tegra234-p3767-0000-wb0sdram-l4t.dts \
+		--br_cmd_config tegra234-mb1-bct-reset-p3767-0000.dts \
+		--dev_params tegra234-br-bct-p3767-0000-l4t.dts,tegra234-br-bct_b-p3767-0000-l4t.dts \
+		--mb2bct_cfg tegra234-mb2-bct-misc-p3767-0000.dts \
+		--bins "psc_fw pscfw_t234_prod.bin; mts_mce mce_flash_o10_cr_prod.bin; mb2_applet applet_t234.bin; mb2_bootloader mb2_t234.bin; xusb_fw xusb_t234_prod.bin; dce_fw display-t234-dce.bin; nvdec nvdec_t234_prod.fw; bpmp_fw bpmp_t234-TE990M-A1_prod.bin; bpmp_fw_dtb tegra234-bpmp-3767-0000-a02-3509-a02.dtb; sce_fw camera-rtcpu-sce.img; rce_fw camera-rtcpu-t234-rce.img; ape_fw adsp-fw.bin; spe_fw spe_t234.bin; tos tos-optee_t234.img; eks eks.img; kernel boot.img; kernel_dtb ${DTBFILE}" \
+		--secondary_gpt_backup \
+		--bct_backup --boot_chain A
 }
 
 do_configure() {
@@ -165,6 +191,10 @@ do_configure() {
     for f in ${STAGING_DATADIR}/tegraflash/tegra234-bpmp-*.dtb; do
         cp $f .
     done
+    for f in ${STAGING_DATADIR}/tegraflash/eks*img; do
+        cp $f .
+    done
+
     cp ${STAGING_DATADIR}/tegraflash/mb2rf_t234.bin .
 
     for f in ${STAGING_BINDIR_NATIVE}/${FLASHTOOLS_DIR}/*.py; do
@@ -173,8 +203,8 @@ do_configure() {
 
     echo "35.1.0" > VERFILE
 
-    cp ${WORKDIR}/custinfo_234.bin ./custinfo_out.bin
-    cp ${WORKDIR}/T234_devkit_patch.bin .
+    cp ${WORKDIR}/custinfo_234_orin_nx.bin ./custinfo_out.bin
+    cp ${WORKDIR}/T234_devkit_patch_orin_nx_xav_dvk.bin .
     cp "${DEPLOY_DIR_IMAGE}/${DTBFILE}" ./${DTBFILE}
 
     # Make bootable image from kernel and sign it
@@ -184,7 +214,7 @@ do_configure() {
     cp ${WORKDIR}/resinOS-flash234.xml flash.xml.in
     sed -i "s, DTB_FILE, ${DTBFILE},g" flash.xml.in
     cp ${WORKDIR}/partition_specification234.txt .
-    cp ${WORKDIR}/create_blob.sh .
+    cp ${WORKDIR}/create_blob_orin_nx.sh  .
     sed -i -e "s/DTB_FILE/$(echo ${DTBFILE})/g" partition_specification234.txt
     sed -i -e "s/LNXFILE/$(echo ${LNXFILE})/g" partition_specification234.txt
     
@@ -196,7 +226,6 @@ do_configure() {
     ln -sf ${STAGING_BINDIR_NATIVE}/${FLASHTOOLS_DIR}/BUP_generator.py ./
     ln -sf ${STAGING_BINDIR_NATIVE}/${FLASHTOOLS_DIR}/${SOC_FAMILY}-flash-helper.sh ./
     ln -sf ${STAGING_BINDIR_NATIVE}/${FLASHTOOLS_DIR}/tegraflash.py ./
-
     rm -rf signed || true
 
     # Sign all tegra bins
@@ -208,9 +237,9 @@ do_configure() {
     cp -r signed/* ${DEPLOY_DIR_IMAGE}/bootfiles/
     dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=70
 
-    #DEPLOY_DIR_IMAGE=${DEPLOY_DIR_IMAGE} /bin/bash ./create_blob.sh
+    DEPLOY_DIR_IMAGE=${DEPLOY_DIR_IMAGE} /bin/bash ./create_blob_orin_nx.sh
 
-    #cp boot0.img ${DEPLOY_DIR_IMAGE}/bootfiles/
+    cp boot0.img ${DEPLOY_DIR_IMAGE}/bootfiles/
 }
 
 
@@ -218,7 +247,7 @@ do_install() {
     install -d ${D}/${BINARY_INSTALL_PATH}
     cp -r ${S}/tegraflash/signed/* ${D}/${BINARY_INSTALL_PATH}
     rm ${D}/${BINARY_INSTALL_PATH}/boot*im* || true
-    #cp ${DEPLOY_DIR_IMAGE}/bootfiles/boot0.img ${D}/${BINARY_INSTALL_PATH}/
+    cp ${DEPLOY_DIR_IMAGE}/bootfiles/boot0.img ${D}/${BINARY_INSTALL_PATH}/
     cp ${S}/tegraflash/partition_specification234.txt ${D}/${BINARY_INSTALL_PATH}/
     cp ${S}/tegraflash/Image-initramfs* ${D}/${BINARY_INSTALL_PATH}/
 }
@@ -251,4 +280,4 @@ do_populate_lic[depends] += "tegra-binaries:do_unpack"
 
 addtask do_deploy before do_package after do_install
 
-#COMPATIBLE_MACHINE = "jetson-agx-orin-devkit"
+COMPATIBLE_MACHINE = "jetson-orin-nx-xavier-nx-devkit"

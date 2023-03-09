@@ -25,7 +25,7 @@ SRC_URI = " \
     file://partition_specification234.txt \
     file://custinfo_234.bin \
     file://T234_devkit_patch.bin \
-    file://create_blob.sh \
+    file://create_blob_orin_agx.sh \
 "
 
 DTBNAME = "tegra234-p3701-0000-p3737-0000"
@@ -209,7 +209,7 @@ do_configure() {
     cp ${WORKDIR}/resinOS-flash234.xml flash.xml.in
     sed -i "s, DTB_FILE, ${DTBFILE},g" flash.xml.in
     cp ${WORKDIR}/partition_specification234.txt .
-    cp ${WORKDIR}/create_blob.sh .
+    cp ${WORKDIR}/create_blob_orin_agx.sh .
     sed -i -e "s/DTB_FILE/$(echo ${DTBFILE})/g" partition_specification234.txt
     sed -i -e "s/LNXFILE/$(echo ${LNXFILE})/g" partition_specification234.txt
     
@@ -233,7 +233,7 @@ do_configure() {
     cp -r signed/* ${DEPLOY_DIR_IMAGE}/bootfiles/
     dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=70
 
-    DEPLOY_DIR_IMAGE=${DEPLOY_DIR_IMAGE} /bin/bash ./create_blob.sh
+    DEPLOY_DIR_IMAGE=${DEPLOY_DIR_IMAGE} /bin/bash ./create_blob_orin_agx.sh
 
     cp boot0.img ${DEPLOY_DIR_IMAGE}/bootfiles/
 }
