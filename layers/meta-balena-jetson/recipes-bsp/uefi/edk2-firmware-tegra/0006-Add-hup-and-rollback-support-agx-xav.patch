@@ -1,4 +1,4 @@
-L4TLauncher: Add HUP and rollbacks support
+
 
 L4TLauncher is loaded by the UEFI firmware from
 the resin-boot partition. The launcher's name
@@ -16,27 +16,12 @@ Supervisor for the rest of the boards that use u-boot.
 
 Upstream-status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
+
 Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 ===================================================================
 --- edk2-tegra.orig/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 +++ edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-@@ -395,6 +395,7 @@ UpdateBootCfgFile (
-   }
- 
-   Status = FileHandleWrite (FileHandle, &CorrectSize, CorrectPartitionContent);
-+
-   if (EFI_ERROR (Status)) {
-     ErrorPrint (L"%a: Failed to write file content\r\n", __FUNCTION__);
-     return Status;
-@@ -906,6 +907,7 @@ CheckCommandString (
- 
-   if (StrnCmp (CommandLine, Key, StrLen (Key)) == 0) {
-     Value = CleanExtLinuxLine (CommandLine + StrLen (Key));
-+
-     if (Buffer != NULL) {
-       *Buffer = AllocateCopyPool (StrSize (Value), Value);
-       if (*Buffer == NULL) {
-@@ -919,6 +921,130 @@ CheckCommandString (
+@@ -986,6 +986,130 @@ CheckCommandString (
    return EFI_NOT_FOUND;
  }
  
@@ -167,7 +152,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
  /**
    Process the extlinux.conf file
  
-@@ -936,6 +1062,7 @@ EFIAPI
+@@ -1003,6 +1127,7 @@ EFIAPI
  ProcessExtLinuxConfig (
    IN EFI_HANDLE             DeviceHandle,
    IN UINT32                 BootChain,
@@ -175,7 +160,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
    OUT EXTLINUX_BOOT_CONFIG  *BootConfig,
    OUT EFI_HANDLE            *RootFsHandle
    )
-@@ -949,8 +1076,11 @@ ProcessExtLinuxConfig (
+@@ -1015,8 +1140,11 @@ ProcessExtLinuxConfig (
    CHAR16           *Timeout      = NULL;
    CHAR16           *CbootArg     = NULL;
    CHAR16           *PostCbootArg = NULL;
@@ -187,7 +172,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
  
    ZeroMem (BootConfig, sizeof (EXTLINUX_BOOT_CONFIG));
  
-@@ -958,21 +1088,11 @@ ProcessExtLinuxConfig (
+@@ -1024,12 +1152,8 @@ ProcessExtLinuxConfig (
      return EFI_INVALID_PARAMETER;
    }
  
@@ -196,35 +181,23 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 -    ErrorPrint (L"%a: Unable to find partition info\r\n", __FUNCTION__);
 -    return Status;
 -  }
+-
 +  /* Load extlinux.conf from the selected BalenaOS root filesystem */
 +  Status = FindPartitionInfo (DeviceHandle, BalenaOSRootFs, BootChain, NULL, RootFsHandle);
- 
--  Status = VerifyDetachedCertificateFile (
--             EXTLINUX_CONF_PATH,
--             *RootFsHandle,
--             &FileHandle,
--             NULL,
--             NULL
--             );
-   if (EFI_ERROR (Status)) {
--    ErrorPrint (L"%a:sds Failed to Authenticate %s (%r)\r\n", __FUNCTION__, EXTLINUX_CONF_PATH, Status);
-+    ErrorPrint (L"%a: Unable to find partition info\r\n", __FUNCTION__);
-     return Status;
-   }
- 
-@@ -1050,11 +1170,48 @@ ProcessExtLinuxConfig (
-         }
+   Status = OpenAndReadFileToBuffer (
+              *RootFsHandle,
+              EXTLINUX_CONF_PATH,
+@@ -1101,10 +1225,44 @@ ProcessExtLinuxConfig (
  
          Status = CheckCommandString (CleanLine, EXTLINUX_KEY_FDT, &BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
-+
          if (!EFI_ERROR (Status)) {
 +          /* extlinux.conf contains a "FDT default" entry */
 +          if (0 == StrnCmp(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, EXTLINUX_GENERIC_FDT, StrLen (EXTLINUX_GENERIC_FDT))) {
 +            if (NULL != BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath) {
-+              /* Replace "FDT default" with the default Oring AGX device-tree path as fall-back in case the extra_uEnv.txt-defined dtb cannot be loaded */
++              /* Replace "FDT default" with the default AGX device-tree path as fall-back in case the extra_uEnv.txt-defined dtb cannot be loaded */
 +              FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
 +              BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath = AllocateZeroPool(MAX_DTB_PATH_LEN);
-+              UnicodeSPrint (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, MAX_DTB_PATH_LEN - 1, L"/boot/%s\0", DEFAULT_AGX_ORIN_DTB_NAME);
++              UnicodeSPrint (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, MAX_DTB_PATH_LEN - 1, L"/boot/%s\0", DEFAULT_AGX_DTB_NAME);
 +
 +              /* Check if a device-tree name is set in extra_uEnv.txt */
 +              CHAR16 *ExtrauEnvDtb = NULL;
@@ -239,7 +212,6 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +         } else {
 +             Print(L"Kernel device-tree is %s\n", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
 +         }
-+
            continue;
          }
  
@@ -257,11 +229,10 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +          FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs);
 +        }
 +        BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs = UpdatedCmdline;
-+
          if (!EFI_ERROR (Status)) {
            CbootArg = StrStr (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs, EXTLINUX_CBOOT_ARG);
            if (CbootArg != NULL) {
-@@ -2321,6 +2478,221 @@ Exit:
+@@ -1972,6 +2130,220 @@ Exit:
    return Status;
  }
  
@@ -356,7 +327,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +  Status = EfiOpenFileByDevicePath (&TmpFullDevicePath, &FileHandle, EFI_FILE_MODE_READ, 0);
 +  if (EFI_ERROR (Status)) {
 +    *BootCountValue = 1;
-+    Status = WriteBootCountFile (DeviceHandle, BootChain, *BootCountValue);
++    Status = WriteBootCountFile (DeviceHandle, BootChain, *BootCountValue); ErrorPrint (L"%a: Writing bootcount\r\n", __FUNCTION__);
 +
 +    if (EFI_ERROR (Status)) {
 +      ErrorPrint (L"%a: Failed to write bootcount file contents\r\n", __FUNCTION__);
@@ -380,7 +351,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +       if (*CleanLine != CHAR_NULL) {
 +         if (StrStr(CleanLine, L"bootcount=")) {
 +           *BootCountValue = StrDecimalToUintn(CleanLine + 10);
-+           Print(L"%a: BootCount is %d : %s\r\n", __FUNCTION__, *BootCountValue);
++           ErrorPrint(L"%a: BootCount is %d\r\n", __FUNCTION__, *BootCountValue);
 +
 +           if (FileHandle != NULL) {
 +             FileHandleClose (FileHandle);
@@ -458,11 +429,11 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +    CleanLine = CleanExtLinuxLine (FileLine);
 +    if (*CleanLine != CHAR_NULL) {
 +      if (StrStr(CleanLine, L"resin_root_part=")) {
-+       *RootPart = StrDecimalToUintn(CleanLine + 16);
-+       Print(L"RootPart is %d\r\n", *RootPart);
++       *RootPart = StrHexToUintn(CleanLine + 16);
++       ErrorPrint(L"RootPart is %d\r\n", *RootPart);
 +      } else if (StrStr(CleanLine, L"upgrade_available=")) {
 +        *UpgradeAvailable = StrDecimalToUintn(CleanLine + 18);
-+        Print(L"UpgradeAvailable is %d\r\n", *UpgradeAvailable);
++        ErrorPrint(L"UpgradeAvailable is %d\r\n", *UpgradeAvailable);
 +      }
 +    }
 +  }
@@ -479,11 +450,10 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +  return EFI_SUCCESS;
 +}
 +
-+
  /**
    This is the declaration of an EFI image entry point. This entry point is
    the same for UEFI Applications, UEFI OS Loaders, and UEFI Drivers, including
-@@ -2350,7 +2722,10 @@ L4TLauncher (
+@@ -2001,7 +2373,10 @@ L4TLauncher (
    EXTLINUX_BOOT_CONFIG       ExtLinuxConfig;
    UINTN                      ExtLinuxBootOption;
    UINTN                      Index;
@@ -495,16 +465,17 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
    if (EFI_ERROR (Status)) {
      ErrorPrint (L"%a: Unable to locate loaded image: %r\r\n", __FUNCTION__, Status);
-@@ -2363,6 +2738,8 @@ L4TLauncher (
+@@ -2014,6 +2389,9 @@ L4TLauncher (
      return Status;
    }
  
 +  ErrorPrint(L"BalenaOS: Set BootMode to NVIDIA_L4T_BOOTMODE_DIRECT\r\r\n");
 +  BootParams.BootMode = NVIDIA_L4T_BOOTMODE_DIRECT;
++
    if (BootParams.BootMode == NVIDIA_L4T_BOOTMODE_GRUB) {
      ErrorPrint (L"%a: Attempting GRUB Boot\r\n", __FUNCTION__);
      do {
-@@ -2406,11 +2783,41 @@ L4TLauncher (
+@@ -2057,11 +2435,41 @@ L4TLauncher (
    }
  
    if (BootParams.BootMode == NVIDIA_L4T_BOOTMODE_DIRECT) {
@@ -545,7 +516,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +      Status = ProcessExtLinuxConfig (LoadedImage->DeviceHandle, BootParams.BootChain, BalenaOSRootFs, &ExtLinuxConfig, &RootFsDeviceHandle);
        if (EFI_ERROR (Status)) {
 -        ErrorPrint (L"%a: Unable to process extlinux config: %r\r\n", __FUNCTION__, Status);
-+        ErrorPrint (L"%a: ProcessExtLinuxConfig failed on partition %s: %r\r\n", __FUNCTION__, BalenaOSRootFs, Status);
++	ErrorPrint (L"%a: ProcessExtLinuxConfig failed on partition %s: %r\r\n", __FUNCTION__, BalenaOSRootFs, Status);
          BootParams.BootMode = NVIDIA_L4T_BOOTMODE_BOOTIMG;
          break;
        }
@@ -553,40 +524,38 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 ===================================================================
 --- edk2-tegra.orig/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
 +++ edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
-@@ -31,13 +31,22 @@
- #define BOOT_OS_VARIABLE_NAME          L"BootChainOsCurrent"
- #define BOOT_OS_OVERRIDE_VARIABLE_NAME L"BootChainOsOverride"
- #define ROOTFS_INFO_VARIABLE_NAME      L"RootfsInfo"
--
- #define ROOTFS_BASE_NAME               L"APP"
+@@ -31,11 +31,21 @@
+ #define BOOT_OS_VARIABLE_NAME  L"BootChainOsCurrent"
+ 
+ #define ROOTFS_BASE_NAME        L"APP"
 +#define BALENA_ROOTFS_BASE_NAME_A      L"resin-rootA"
 +#define BALENA_ROOTFS_BASE_NAME_B      L"resin-rootB"
 +#define BALENA_BOOT_PARTITION          L"resin-boot"
 +#define BALENA_BOOT_CONF_PATH          L"resinOS_uEnv.txt"
 +#define BALENA_BOOTCOUNT_FILE_PATH     L"bootcount.env"
 +#define MAX_RESINOS_UENV_SIZE          256
-+#define BALENA_ROOTFS_INDEX_A          7
-+#define BALENA_ROOTFS_INDEX_B          8
++#define BALENA_ROOTFS_INDEX_A          35
++#define BALENA_ROOTFS_INDEX_B          36
 +#define BALENA_OS_BC_LIM               3
 +#define BALENA_EXTRA_UENV_FILE         L"extra_uEnv.txt"
- #define BOOTIMG_BASE_NAME              L"kernel"
- #define BOOTIMG_DTB_BASE_NAME          L"kernel-dtb"
- #define RECOVERY_BASE_NAME             L"recovery"
- #define RECOVERY_DTB_BASE_NAME         L"recovery-dtb"
+ #define BOOTIMG_BASE_NAME       L"kernel"
+ #define BOOTIMG_DTB_BASE_NAME   L"kernel-dtb"
+ #define RECOVERY_BASE_NAME      L"recovery"
+ #define RECOVERY_DTB_BASE_NAME  L"recovery-dtb"
 -
-+#define DEFAULT_AGX_ORIN_DTB_NAME      L"tegra194-p2888-0001-p2822-0000.dtb"
- #define EXTLINUX_KEY_TIMEOUT           L"TIMEOUT"
- #define EXTLINUX_KEY_DEFAULT           L"DEFAULT"
- #define EXTLINUX_KEY_MENU_TITLE        L"MENU TITLE"
-@@ -47,9 +56,10 @@
- #define EXTLINUX_KEY_INITRD            L"INITRD"
- #define EXTLINUX_KEY_FDT               L"FDT"
- #define EXTLINUX_KEY_APPEND            L"APPEND"
-+#define EXTLINUX_GENERIC_FDT           L"default"
++#define DEFAULT_AGX_DTB_NAME      L"tegra194-p2888-0001-p2822-0000.dtb"
+ #define EXTLINUX_KEY_TIMEOUT     L"TIMEOUT"
+ #define EXTLINUX_KEY_DEFAULT     L"DEFAULT"
+ #define EXTLINUX_KEY_MENU_TITLE  L"MENU TITLE"
+@@ -45,9 +55,10 @@
+ #define EXTLINUX_KEY_INITRD      L"INITRD"
+ #define EXTLINUX_KEY_FDT         L"FDT"
+ #define EXTLINUX_KEY_APPEND      L"APPEND"
+-
++#define EXTLINUX_GENERIC_FDT     L"default"
+ #define EXTLINUX_CBOOT_ARG  L"${cbootargs}"
  
- #define EXTLINUX_CBOOT_ARG             L"${cbootargs}"
--
 +#define MAX_DTB_PATH_LEN               512 * 2
- #define MAX_EXTLINUX_OPTIONS           10
+ #define MAX_EXTLINUX_OPTIONS  10
  
- /*
+ typedef struct {

@@ -16,6 +16,7 @@ SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \
 
 SRC_URI:append:jetson-xavier = " \
     file://0006-Add-hup-and-rollback-support-agx-xav.patch;patchdir=.. \
+    file://0006-boot.patch;patchdir=.. \
 "
 
 SRC_URI:append:jetson-xavier-nx-devkit = " \

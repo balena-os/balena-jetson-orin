@@ -81,7 +81,7 @@ signfile() {
     ./tegraflash.py --bl nvtboot_recovery_cpu_t194.bin \
         --sdram_config tegra194-mb1-bct-memcfg-p2888.cfg,tegra194-memcfg-sw-override.cfg  \
         --odmdata 0x9190000  \
-        --overlay_dtb L4TConfiguration.dtbo,L4TRootfsInfo.dtbo,tegra194-p2822-camera-dual-imx274-overlay.dtbo,tegra194-p2822-camera-e3331-overlay.dtbo,tegra194-p2822-camera-e3333-overlay.dtbo,tegra194-p2822-camera-imx185-overlay.dtbo,tegra194-p2822-camera-imx390-overlay.dtbo,tegra194-p2888-0005-overlay.dtbo,tegra194-p2888-0001-p2822-0000-overlay.dtbo  \
+        --overlay_dtb L4TConfiguration.dtbo,tegra194-p2822-camera-dual-imx274-overlay.dtbo,tegra194-p2822-camera-e3331-overlay.dtbo,tegra194-p2822-camera-e3333-overlay.dtbo,tegra194-p2822-camera-imx185-overlay.dtbo,tegra194-p2822-camera-imx390-overlay.dtbo,tegra194-p2888-0005-overlay.dtbo,tegra194-p2888-0001-p2822-0000-overlay.dtbo  \
         --bldtb tegra194-p2888-0001-p2822-0000.dtb \
         --applet mb1_t194_prod.bin --cmd "sign" \
         --soft_fuses tegra194-mb1-soft-fuses-l4t.cfg  \
@@ -285,7 +285,7 @@ do_configure[depends] += " tegra-binaries:do_preconfigure"
 do_configure[depends] += " virtual/kernel:do_deploy \
                            virtual/bootloader:do_deploy \
 "
-do_configure[depends] += " tos-prebuilt:do_deploy"
+do_configure[depends] += " tos-optee:do_deploy"
 
 do_install[depends] += " virtual/kernel:do_deploy"
 do_populate_lic[depends] += "tegra-binaries:do_unpack"
