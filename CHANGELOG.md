@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.112.14+rev5
+## (2023-03-18)
+
+* remove recovery module from balena-image-initramfs [Alexandru Costache]
+
 # v2.112.14+rev4
 ## (2023-03-17)
 
