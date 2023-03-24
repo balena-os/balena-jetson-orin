@@ -1,6 +1,43 @@
 Change log
 -----------
 
+# v2.113.27
+## (2023-03-24)
+
+
+<details>
+<summary> Update layers/meta-balena to ead4a8fb7c11d565ca2be168b2bf33a69f1bc7f6 [Renovate Bot] </summary>
+
+> ## meta-balena-2.113.27
+> ### (2023-03-24)
+> 
+> 
+> <details>
+> <summary> Update balena-supervisor to v14.9.7 [Renovate Bot] </summary>
+> 
+>> ### balena-supervisor-14.9.7
+>> #### (2023-03-23)
+>> 
+>> * Add missing log backend field assignment in logger init [Christina Ying Wang]
+>> 
+>> ### balena-supervisor-14.9.6
+>> #### (2023-03-23)
+>> 
+>> * Update deploy-to-balena action to 0.26.2 [Felipe Lalanne]
+>> * Use multi-arch in dockerfile [Felipe Lalanne]
+>> 
+>> ### balena-supervisor-14.9.5
+>> #### (2023-03-20)
+>> 
+>> * Use log endpoint subdomain if it exists in config.json [Christina Ying Wang]
+>> 
+> 
+> </details>
+> 
+> 
+
+</details>
+
 # v2.113.26
 ## (2023-03-24)
 
