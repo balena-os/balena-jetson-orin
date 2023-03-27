@@ -1,4 +1,47 @@
 - commits:
+    - subject: Update layers/meta-balena to 5841b817cd3a0f2ffc063e586b7ed215655afb1c
+      hash: f54a177db18d4c61e694b08b4ade6a27b3e92d4b
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 5841b817cd3a0f2ffc063e586b7ed215655afb1c
+        changelog-entry: Update layers/meta-balena to 5841b817cd3a0f2ffc063e586b7ed215655afb1c
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-supervisor to v14.9.8
+              hash: 52b8dee720722c0e917810676321a713075e09e1
+              body: |
+                Update balena-supervisor from 14.9.7 to 14.9.8
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Renovate Bot
+              nested:
+                - commits:
+                    - subject: Revert "Use multi-arch in dockerfile"
+                      hash: 75eeac5ed4b7ec076482c0cace2d2cfca8b6b2d4
+                      body: >
+                        This reverts commit 00e389e5f559dd10e49cfa411784b89498c3c0eb.
+
+
+                        Images generated using this dockerfile still don't have the right
+
+                        architecture. More testing is needed
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Felipe Lalanne
+                      nested: []
+                  version: balena-supervisor-14.9.8
+                  title: ""
+                  date: 2023-03-27T08:05:44.148Z
+          version: meta-balena-2.113.29
+          title: ""
+          date: 2023-03-27T14:11:59.453Z
+  version: 2.113.29
+  title: ""
+  date: 2023-03-27T16:22:49.664Z
+- commits:
     - subject: Update layers/meta-balena to 30a8878dc207e4b9a8654ee715d36440e8a1a5d0
       hash: 876ab73786c28b832c50b38836853ddcae038ccb
       body: Update layers/meta-balena
