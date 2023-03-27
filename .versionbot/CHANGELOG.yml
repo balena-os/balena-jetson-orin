@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update layers/meta-balena to 30a8878dc207e4b9a8654ee715d36440e8a1a5d0
+      hash: 876ab73786c28b832c50b38836853ddcae038ccb
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 30a8878dc207e4b9a8654ee715d36440e8a1a5d0
+        changelog-entry: Update layers/meta-balena to 30a8878dc207e4b9a8654ee715d36440e8a1a5d0
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "README: modify migration documentation to match module"
+              hash: f237b34bd6510d106202461b78da7fa0f2637ca0
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-2.113.28
+          title: ""
+          date: 2023-03-27T09:42:22.974Z
+  version: 2.113.28
+  title: ""
+  date: 2023-03-27T13:49:07.028Z
+- commits:
     - subject: Update layers/meta-balena to ead4a8fb7c11d565ca2be168b2bf33a69f1bc7f6
       hash: 443ef50fff2c5627bddec2cfa9d362b2d6b10726
       body: Update layers/meta-balena
