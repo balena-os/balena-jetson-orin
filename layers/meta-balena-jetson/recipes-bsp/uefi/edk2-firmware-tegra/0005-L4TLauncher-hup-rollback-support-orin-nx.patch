@@ -194,7 +194,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +          /* extlinux.conf contains a "FDT default" entry */
 +          if (0 == StrnCmp(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, EXTLINUX_GENERIC_FDT, StrLen (EXTLINUX_GENERIC_FDT))) {
 +            if (NULL != BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath) {
-+              /* Replace "FDT default" with the default Oring Orin NX device-tree path as fall-back in case the extra_uEnv.txt-defined dtb cannot be loaded */
++              /* Replace "FDT default" with the default Orin NX device-tree path as fall-back in case the extra_uEnv.txt-defined dtb cannot be loaded */
 +              FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
 +              BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath = AllocateZeroPool(MAX_DTB_PATH_LEN);
 +              UnicodeSPrint (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, MAX_DTB_PATH_LEN - 1, L"/boot/%s\0", DEFAULT_ORIN_NX_DVK_DTB_NAME);

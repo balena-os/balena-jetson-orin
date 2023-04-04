@@ -26,11 +26,12 @@ SRC_URI:append:jetson-xavier-nx-devkit = " \
 SRC_URI:append:jetson-xavier-nx-devkit-emmc = " \
     file://0007-Add-hup-and-rollback-support-xav-nx.patch;patchdir=.. \
 "
-SRC_URI:remove:forecr-dsb-nx2-xavier-nx-emmc = "file://0007-Add-hup-and-rollback-support-xav-nx.patch;patchdir=.."
 
-SRC_URI:append:forecr-dsb-nx2-xavier-nx-emmc = " \
-    file://0008-Add-hup-and-rollback-support-forecr-dsb-nx2.patch;patchdir=.. \
-"
+# Removed for now, pending test results
+#SRC_URI:remove:forecr-dsb-nx2-xavier-nx-emmc = "file://0007-Add-hup-and-rollback-support-xav-nx.patch;patchdir=.."
+#SRC_URI:append:forecr-dsb-nx2-xavier-nx-emmc = " 
+#    file://0008-Add-hup-and-rollback-support-forecr-dsb-nx2.patch;patchdir=.. 
+#"
 
 do_deploy:append() {
      mkdir -p ${DEPLOYDIR}/bootfiles/EFI/BOOT/
