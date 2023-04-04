@@ -194,10 +194,10 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +          /* extlinux.conf contains a "FDT default" entry */
 +          if (0 == StrnCmp(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, EXTLINUX_GENERIC_FDT, StrLen (EXTLINUX_GENERIC_FDT))) {
 +            if (NULL != BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath) {
-+              /* Replace "FDT default" with the default AGX device-tree path as fall-back in case the extra_uEnv.txt-defined dtb cannot be loaded */
++              /* Replace "FDT default" with the default Orin NX device-tree path as fall-back in case the extra_uEnv.txt-defined dtb cannot be loaded */
 +              FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
 +              BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath = AllocateZeroPool(MAX_DTB_PATH_LEN);
-+              UnicodeSPrint (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, MAX_DTB_PATH_LEN - 1, L"/boot/%s\0", DEFAULT_AGX_DTB_NAME);
++              UnicodeSPrint (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, MAX_DTB_PATH_LEN - 1, L"/boot/%s\0", DEFAULT_ORIN_NX_DVK_DTB_NAME);
 +
 +              /* Check if a device-tree name is set in extra_uEnv.txt */
 +              CHAR16 *ExtrauEnvDtb = NULL;
@@ -327,7 +327,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +  Status = EfiOpenFileByDevicePath (&TmpFullDevicePath, &FileHandle, EFI_FILE_MODE_READ, 0);
 +  if (EFI_ERROR (Status)) {
 +    *BootCountValue = 1;
-+    Status = WriteBootCountFile (DeviceHandle, BootChain, *BootCountValue); ErrorPrint (L"%a: Writing bootcount\r\n", __FUNCTION__);
++    Status = WriteBootCountFile (DeviceHandle, BootChain, *BootCountValue);
 +
 +    if (EFI_ERROR (Status)) {
 +      ErrorPrint (L"%a: Failed to write bootcount file contents\r\n", __FUNCTION__);
@@ -351,7 +351,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +       if (*CleanLine != CHAR_NULL) {
 +         if (StrStr(CleanLine, L"bootcount=")) {
 +           *BootCountValue = StrDecimalToUintn(CleanLine + 10);
-+           ErrorPrint(L"%a: BootCount is %d\r\n", __FUNCTION__, *BootCountValue);
++           Print(L"%a: BootCount is %d : %s\r\n", __FUNCTION__, *BootCountValue);
 +
 +           if (FileHandle != NULL) {
 +             FileHandleClose (FileHandle);
@@ -429,11 +429,11 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +    CleanLine = CleanExtLinuxLine (FileLine);
 +    if (*CleanLine != CHAR_NULL) {
 +      if (StrStr(CleanLine, L"resin_root_part=")) {
-+       *RootPart = StrHexToUintn(CleanLine + 16);
-+       ErrorPrint(L"RootPart is %d\r\n", *RootPart);
++       *RootPart = StrDecimalToUintn(CleanLine + 16);
++       Print(L"RootPart is %d\r\n", *RootPart);
 +      } else if (StrStr(CleanLine, L"upgrade_available=")) {
 +        *UpgradeAvailable = StrDecimalToUintn(CleanLine + 18);
-+        ErrorPrint(L"UpgradeAvailable is %d\r\n", *UpgradeAvailable);
++        Print(L"UpgradeAvailable is %d\r\n", *UpgradeAvailable);
 +      }
 +    }
 +  }
@@ -534,8 +534,8 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +#define BALENA_BOOT_CONF_PATH          L"resinOS_uEnv.txt"
 +#define BALENA_BOOTCOUNT_FILE_PATH     L"bootcount.env"
 +#define MAX_RESINOS_UENV_SIZE          256
-+#define BALENA_ROOTFS_INDEX_A          35
-+#define BALENA_ROOTFS_INDEX_B          36
++#define BALENA_ROOTFS_INDEX_A          7
++#define BALENA_ROOTFS_INDEX_B          8
 +#define BALENA_OS_BC_LIM               3
 +#define BALENA_EXTRA_UENV_FILE         L"extra_uEnv.txt"
  #define BOOTIMG_BASE_NAME       L"kernel"
@@ -543,7 +543,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
  #define RECOVERY_BASE_NAME      L"recovery"
  #define RECOVERY_DTB_BASE_NAME  L"recovery-dtb"
 -
-+#define DEFAULT_AGX_DTB_NAME      L"tegra194-p2888-0001-p2822-0000.dtb"
++#define DEFAULT_ORIN_NX_DVK_DTB_NAME      L"tegra234-p3767-0000-p3509-a02.dtb"
  #define EXTLINUX_KEY_TIMEOUT     L"TIMEOUT"
  #define EXTLINUX_KEY_DEFAULT     L"DEFAULT"
  #define EXTLINUX_KEY_MENU_TITLE  L"MENU TITLE"

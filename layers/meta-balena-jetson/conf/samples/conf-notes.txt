@@ -10,5 +10,8 @@
 Resin specific images available:
 	balena-image
 
+Forecr DSBOARD NX2 Xavier NX eMMC        : $ MACHINE=forecr-dsb-nx2-xavier-nx-emmc bitbake balena-image
 Nvidia Jetson AGX Orin Devkit            : $ MACHINE=jetson-agx-orin-devkit bitbake balena-image
+Nvidia Jetson Orin NX in Xavier NX Devkit : $ MACHINE=jetson-orin-nx-xavier-nx-devkit bitbake balena-image
+Nvidia Jetson Xavier AGX                 : $ MACHINE=jetson-xavier bitbake balena-image
 

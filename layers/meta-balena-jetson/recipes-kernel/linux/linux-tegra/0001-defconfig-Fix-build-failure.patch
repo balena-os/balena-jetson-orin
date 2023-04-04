@@ -1,0 +1,33 @@
+From 38748fc4606ef11a1d1a7407e6aaf910566fe891 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Wed, 1 Mar 2023 10:04:01 +0100
+Subject: [PATCH] defconfig: Fix build failure
+
+---
+ arch/arm64/configs/defconfig | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index de31fedcaee3..3b1c5d69beea 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -52,6 +52,7 @@ CONFIG_ARMV8_DEPRECATED=y
+ CONFIG_SWP_EMULATION=y
+ CONFIG_CP15_BARRIER_EMULATION=y
+ CONFIG_SETEND_EMULATION=y
++CONFIG_KERNEL_ZSTD=y
+ # CONFIG_ARM64_HW_AFDBM is not set
+ CONFIG_RANDOMIZE_BASE=y
+ CONFIG_PM_AUTOSLEEP=y
+@@ -63,6 +64,8 @@ CONFIG_ARM_PSCI_CPUIDLE=y
+ CONFIG_CPU_IDLE_TEGRA_AUTO=y
+ CONFIG_CPU_FREQ=y
+ CONFIG_CPU_FREQ_STAT=y
++CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=y
++CONFIG_NF_TABLES_SET=m \
+ CONFIG_CPU_FREQ_DEFAULT_GOV_PERFORMANCE=y
+ CONFIG_CPU_FREQ_GOV_POWERSAVE=y
+ CONFIG_CPU_FREQ_GOV_USERSPACE=y
+-- 
+2.37.2
+

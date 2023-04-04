@@ -24,7 +24,7 @@ update_bootloader_md5sum=$(md5sum $bootloader_blob | awk '{print $1}')
 if [ ! "$existing_bootloader_md5sum" = "$update_bootloader_md5sum" ]; then
     info_log "Will clear bootloader device before the update"
     flash_erase /dev/mtd0 0 0 || true
-    info_log "Updating bootloader device"
+    info_log "Updating update bootloader device"
     dd if=$bootloader_blob of=$bootloader_device bs=1M
     info_log "Updated bootloader device"
 else
@@ -32,5 +32,4 @@ else
 fi
 
 # Sync internal memory
-sync /dev/mmcblk0
 sync /dev/mtdblock0

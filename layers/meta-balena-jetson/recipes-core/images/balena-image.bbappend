@@ -3,14 +3,20 @@ include balena-image.inc
 DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit = "331776"
 IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit = "1003520"
 
+DEVICE_SPECIFIC_SPACE:jetson-orin-nx-xavier-nx-devkit = "331776"
+IMAGE_ROOTFS_SIZE:jetson-orin-nx-xavier-nx-devkit = "1003520"
+
 BALENA_BOOT_SIZE:jetson-xavier = "121440"
 BALENA_BOOT_SIZE:jetson-xavier-nx-devkit-emmc = "121440"
 BALENA_BOOT_SIZE:jetson-xavier-nx-devkit = "121440"
 
+# The Orin NX runs on a NVME which offers plenty of space
+BALENA_BOOT_SIZE:jetson-orin-nx-xavier-nx-devkit = "242880"
+
 IMAGE_ROOTFS_SIZE:jetson-xavier = "487424"
 IMAGE_ROOTFS_SIZE:jetson-xavier-nx-devkit-emmc = "733184"
 IMAGE_ROOTFS_SIZE:jetson-xavier-nx-devkit = "733184"
-
+IMAGE_ROOTFS_SIZE:jetson-orin-nx-xavier-nx-devkit = "1228800"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
@@ -48,6 +54,28 @@ device_specific_configuration:jetson-agx-orin-devkit() {
       START=$(expr ${END} \+ 1)
     done
 } 
+
+do_image:balenaos-img:jetson-orin-nx-xavier-nx-devkit[depends] += " tegra234-p3767-p3509-a02-flash-dry:do_install"
+device_specific_configuration:jetson-orin-nx-xavier-nx-devkit() {
+    partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification234.txt)
+    NVIDIA_PART_OFFSET=40
+    START=${NVIDIA_PART_OFFSET}
+    for n in ${partitions}; do
+      part_name=$(echo $n | cut -d ':' -f 1)
+      file_name=$(echo $n | cut -d ':' -f 2)
+      part_size=$(echo $n | cut -d ':' -f 3)
+      file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
+      END=$(expr ${START} \+ ${part_size} \- 1)
+      echo ">>> file: ${file_path}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
+      parted -s ${BALENA_RAW_IMG} unit s mkpart $part_name ${START} ${END}
+      if [ ! "$file_name" = "none.bin" ]; then
+        check_size ${file_path} $(expr ${part_size} \* 512)
+        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512
+      fi
+      START=$(expr ${END} \+ 1)
+    done
+}
+
 
 do_rootfs:balenaos-img:jetson-xavier[depends] += " tegra194-flash-dry:do_deploy "
 # We leave this space way larger than currently

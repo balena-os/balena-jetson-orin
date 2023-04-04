@@ -62,7 +62,7 @@ dd if=${DEPLOY_DIR_IMAGE}/bootfiles/mb2rf_t234_sigheader.bin.encrypt of=boot0.im
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/uefi_jetson_with_dtb_sigheader.bin.encrypt of=boot0.img bs=1 seek=12713984 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/tos-optee_t234_sigheader.img.encrypt of=boot0.img bs=1 seek=16384000 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/eks_sigheader.img.encrypt of=boot0.img bs=1 seek=22675456 conv=notrunc
-dd if=${DEPLOY_DIR_IMAGE}/bootfiles/display-t234-dce_aligned_blob_w_bin_sigheader.bin.encrypt of=boot0.img bs=1 seek=22937600 conv=notrunc
+dd if=${DEPLOY_DIR_IMAGE}/bootfiles/display-t234-dce_with_tegra234-p3701-0000-p3737-0000_with_odm_aligned_blob_w_bin_sigheader.bin.encrypt of=boot0.img bs=1 seek=22937600 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/spe_t234_sigheader.bin.encrypt of=boot0.img bs=1 seek=28180480 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/camera-rtcpu-t234-rce_sigheader.img.encrypt of=boot0.img bs=1 seek=28770304 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/adsp-fw_sigheader.bin.encrypt of=boot0.img bs=1 seek=29818880 conv=notrunc
@@ -92,7 +92,7 @@ dd if=${DEPLOY_DIR_IMAGE}/bootfiles/mb2rf_t234_sigheader.bin.encrypt of=boot0.im
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/uefi_jetson_with_dtb_sigheader.bin.encrypt of=boot0.img bs=1 seek=44957696 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/tos-optee_t234_sigheader.img.encrypt of=boot0.img bs=1 seek=48627712 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/eks_sigheader.img.encrypt of=boot0.img bs=1 seek=54919168 conv=notrunc
-dd if=${DEPLOY_DIR_IMAGE}/bootfiles/display-t234-dce_aligned_blob_w_bin_sigheader.bin.encrypt of=boot0.img bs=1 seek=55181312 conv=notrunc
+dd if=${DEPLOY_DIR_IMAGE}/bootfiles/display-t234-dce_with_tegra234-p3701-0000-p3737-0000_with_odm_aligned_blob_w_bin_sigheader.bin.encrypt of=boot0.img bs=1 seek=55181312 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/spe_t234_sigheader.bin.encrypt of=boot0.img bs=1 seek=60424192 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/camera-rtcpu-t234-rce_sigheader.img.encrypt of=boot0.img bs=1 seek=61014016 conv=notrunc
 dd if=${DEPLOY_DIR_IMAGE}/bootfiles/adsp-fw_sigheader.bin.encrypt of=boot0.img bs=1 seek=62062592 conv=notrunc

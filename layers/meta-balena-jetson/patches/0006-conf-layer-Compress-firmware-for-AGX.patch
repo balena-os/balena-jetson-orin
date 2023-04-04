@@ -1,0 +1,25 @@
+From b1f89100d3e36e2880fc6261b595e54943d7cfe6 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Tue, 10 Jan 2023 16:59:16 +0100
+Subject: [PATCH 06/11] conf/layer: Compress firmware for AGX
+
+because the existing space is not sufficient
+
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ layers/meta-balena-jetson/conf/layer.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/layers/meta-balena-jetson/conf/layer.conf b/layers/meta-balena-jetson/conf/layer.conf
+index eb73e3e..2026005 100644
+--- a/layers/meta-balena-jetson/conf/layer.conf
++++ b/layers/meta-balena-jetson/conf/layer.conf
+@@ -35,4 +35,4 @@ KERNEL_IMAGETYPES = "Image"
+ KERNEL_IMAGETYPE = "Image"
+ PARTITION_TABLE_TYPE = "gpt"
+ PREFERRED_PROVIDER_virtual/bootloader =  "edk2-firmware-tegra"
+-
++FIRMWARE_COMPRESSION:jetson-xavier ?= "1"
+-- 
+2.37.2
+

@@ -1,0 +1,117 @@
+From 61a49bb8be1e374e71acdddae742262dfec14d8c Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Mon, 16 Jan 2023 16:58:35 +0100
+Subject: [PATCH 08/11] tegra-binaries: Set expected partitions sizes for
+ Xavier NX Devkit eMMC
+
+The Xavier NX Devkit eMMC generated image now resembles the one
+created on the device by the flashing tools.
+
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ .../files/partition_specification194_nxde.txt | 15 ++++++++----
+ .../files/resinOS-flash194_nxde.xml           | 24 ++++++-------------
+ 2 files changed, 17 insertions(+), 22 deletions(-)
+
+diff --git a/layers/meta-balena-jetson/recipes-bsp/tegra-binaries/files/partition_specification194_nxde.txt b/layers/meta-balena-jetson/recipes-bsp/tegra-binaries/files/partition_specification194_nxde.txt
+index 2c563c4..3a6d42b 100644
+--- a/layers/meta-balena-jetson/recipes-bsp/tegra-binaries/files/partition_specification194_nxde.txt
++++ b/layers/meta-balena-jetson/recipes-bsp/tegra-binaries/files/partition_specification194_nxde.txt
+@@ -1,8 +1,13 @@
+ kernel:none.bin:67108864
+-kernel_b:none.bin:67108864
+ kernel-dtb:[DTB_NAME].dtb:524288
++reserved_for_chain_A_user:none.bin:163010560
++secure-os_b:tos-optee_t194_sigheader.img.encrypt:2621440
++eks_b:eks_sigheader.img.encrypt:65536
++adsp_fw_b:adsp-fw_sigheader.bin.encrypt:1048576
++rce-fw_b:camera-rtcpu-t194-rce_sigheader.img.encrypt:1048576
++sce-fw_b:none.bin:1048576
++bpmp-fw_b:bpmp-2_t194_sigheader.bin.encrypt:1572864
++bpmp-fw-dtb_b:tegra194-a02-bpmp-p2888-a04_lz4_sigheader.dtb.encrypt:1048576
++kernel_b:none.bin:67108864
+ kernel-dtb_b:[DTB_NAME].dtb:524288
+-recovery-dtb:[DTB_NAME].dtb:524288
+-kernel-bootctrl:none.bin:262144
+-kernel-bootctrl_b:none.bin:262144
+-PADDING:none.bin:333426688
++reserved_for_chain_B_user:none.bin:163010560
+diff --git a/layers/meta-balena-jetson/recipes-bsp/tegra-binaries/files/resinOS-flash194_nxde.xml b/layers/meta-balena-jetson/recipes-bsp/tegra-binaries/files/resinOS-flash194_nxde.xml
+index 700aaab..1a8047c 100644
+--- a/layers/meta-balena-jetson/recipes-bsp/tegra-binaries/files/resinOS-flash194_nxde.xml
++++ b/layers/meta-balena-jetson/recipes-bsp/tegra-binaries/files/resinOS-flash194_nxde.xml
+@@ -511,10 +511,10 @@
+               which is loaded in when cpu-bootloader failes to launch the kernel
+               from the rootfs at `/boot`. </description>
+         </partition>
+-        <partition name="kernel-dtb" type="kernel_dtb">
++        <partition name="kernel-dtb" type="kernel_dtb" oem_sign="true">
+             <allocation_policy> sequential </allocation_policy>
+             <filesystem_type> basic </filesystem_type>
+-            <size> 458752 </size>
++            <size> 524288 </size>
+             <file_system_attribute> 0 </file_system_attribute>
+             <allocation_attribute> 8 </allocation_attribute>
+             <percent_reserved> 0 </percent_reserved>
+@@ -524,7 +524,7 @@
+         <partition name="reserved_for_chain_A_user" type="data">
+             <allocation_policy> sequential </allocation_policy>
+             <filesystem_type> basic </filesystem_type>
+-            <size> 34123776 </size>
++            <size> 163010560 </size>
+             <file_system_attribute> 0 </file_system_attribute>
+             <allocation_attribute> 8 </allocation_attribute>
+             <percent_reserved> 0 </percent_reserved>
+@@ -613,10 +613,10 @@
+               which is loaded in when cpu-bootloader failes to launch the kernel
+               from the rootfs at `/boot`. </description>
+         </partition>
+-        <partition name="kernel-dtb_b" type="kernel_dtb">
++        <partition name="kernel-dtb_b" type="kernel_dtb" oem_sign="true">
+             <allocation_policy> sequential </allocation_policy>
+             <filesystem_type> basic </filesystem_type>
+-            <size> 458752 </size>
++            <size> 524288 </size>
+             <file_system_attribute> 0 </file_system_attribute>
+             <allocation_attribute> 8 </allocation_attribute>
+             <percent_reserved> 0 </percent_reserved>
+@@ -626,21 +626,12 @@
+         <partition name="reserved_for_chain_B_user" type="data">
+             <allocation_policy> sequential </allocation_policy>
+             <filesystem_type> basic </filesystem_type>
+-            <size> 34078720 </size>
++            <size> 163010560 </size>
+             <file_system_attribute> 0 </file_system_attribute>
+             <allocation_attribute> 8 </allocation_attribute>
+             <percent_reserved> 0 </percent_reserved>
+             <description> **Required.** Reserved space for chain B on user device. </description>
+         </partition>
+-	<partition name="PADDING" type="data">
+-            <allocation_policy> sequential </allocation_policy>
+-            <filesystem_type> basic </filesystem_type>
+-            <size> 333426688 </size>
+-            <file_system_attribute> 0 </file_system_attribute>
+-            <allocation_attribute> 8 </allocation_attribute>
+-            <percent_reserved> 0 </percent_reserved>
+-            <description> Allows for adding new partitions before resin-boot in the future. </description>
+-        </partition>
+         <partition name="resin-boot" type="data">
+             <allocation_policy> sequential </allocation_policy>
+             <filesystem_type> basic </filesystem_type>
+@@ -676,12 +667,11 @@
+         <partition name="resin-data" type="data">
+             <allocation_policy> sequential </allocation_policy>
+             <filesystem_type> basic </filesystem_type>
+-            <size> FILESIZE </size>
++            <size> 212860928 </size>
+             <file_system_attribute> 0 </file_system_attribute>
+             <allocation_attribute> 0x8 </allocation_attribute>
+             <percent_reserved> 0 </percent_reserved>
+         </partition>
+-
+         <partition name="secondary_gpt" type="secondary_gpt">
+             <allocation_policy> sequential </allocation_policy>
+             <filesystem_type> basic </filesystem_type>
+-- 
+2.37.2
+

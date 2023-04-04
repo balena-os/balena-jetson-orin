@@ -5,7 +5,9 @@ FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 SCMVERSION="n"
 
 # Switch nvmap to built-in to fix the kernel headers
-SRC_URI:append = " file://0001-fix-kernel-headers-test.patch "
+SRC_URI:append = " file://0001-fix-kernel-headers-test.patch \
+		file://0001-defconfig-Fix-build-failure.patch \
+"
 SRC_URI:append:forecr-dsb-nx2-xavier-nx-emmc = " file://0001-Port-Forecr-DSBOARD-NX2-patches.patch "
 
 BALENA_CONFIGS:remove = " mdraid"
@@ -16,7 +18,6 @@ BALENA_CONFIGS[debug_kmemleak] = " \
     CONFIG_HAVE_DEBUG_KMEMLEAK=n \
     CONFIG_DEBUG_KMEMLEAK=n \
     CONFIG_HAVE_DEBUG_KMEMLEAK=n \
-    CONFIG_DEBUG_KMEMLEAK_DEFAULT_OFF=y \
     CONFIG_DEBUG_KMEMLEAK_SCAN_ON=n \
     CONFIG_FUNCTION_TRACER=n \
     CONFIG_HAVE_FUNCTION_TRACER=n \
@@ -36,6 +37,7 @@ BALENA_CONFIGS[cdc-wdm] = " \
 BALENA_CONFIGS:append = " sierra-net"
 BALENA_CONFIGS[sierra-net] = " \
                 CONFIG_USB_SIERRA_NET=m \
+		CONFIG_PROC_KCORE=y \
 "
 
 BALENA_CONFIGS_DEPS[sierra-net] = " \
