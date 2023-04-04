@@ -42,11 +42,7 @@ LNXFILE="${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin"
 IMAGE_TEGRAFLASH_KERNEL ?= "${DEPLOY_DIR_IMAGE}/${LNXFILE}"
 BINARY_INSTALL_PATH = "/opt/tegra-binaries"
 DTB_OVERLAYS = "\
-   AcpiBoot.dtbo \
    L4TConfiguration.dtbo \
-   L4TRootfsInfo.dtbo \
-   L4TRootfsABInfo.dtbo \
-   L4TRootfsBrokenInfo.dtbo \
 "
 
 TOSIMGFILENAME = "tos-optee_t234.img"
@@ -75,7 +71,6 @@ BOOTFILES:tegra234 = "\
     tegrabl_carveout_id.h \
     pinctrl-tegra.h \
     tegra234-gpio.h \
-    gpio.h \
     readinfo_t234_min_prod.xml \
     camera-rtcpu-sce.img \
     mb2rf_t234.bin \
