@@ -269,7 +269,7 @@ do_configure[nostamp] = "1"
 
 do_configure[depends] += " tegra-binaries:do_preconfigure"
 do_configure[depends] += " virtual/kernel:do_deploy "
-do_configure[depends] += " tos-prebuilt:do_deploy"
+do_configure[depends] += " tos-optee:do_deploy"
 configure[depends] += "dosfstools-native:do_populate_sysroot mtools-native:do_populate_sysroot"
 do_install[depends] += " virtual/kernel:do_deploy"
 do_populate_lic[depends] += "tegra-binaries:do_unpack"
