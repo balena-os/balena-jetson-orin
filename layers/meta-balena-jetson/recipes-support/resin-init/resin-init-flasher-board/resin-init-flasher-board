@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+flash_erase /dev/mtd0 0 0
+dd if=/opt/tegra-binaries/boot0.img of=/dev/mtdblock0 bs=1M; sync
+
+# Relocate secondary gpt after writing image to the emmc with dd
+sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/nvme0n1
+    v
+    w
+EOF
