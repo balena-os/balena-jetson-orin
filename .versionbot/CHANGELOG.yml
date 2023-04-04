@@ -1,4 +1,18 @@
 - commits:
+    - subject: Update meta-balena submodule to v2.113.32
+      hash: beb57e4a60e711d42775bd259623b4eac21936ba
+      body: ""
+      footer:
+        Changelog-entry: Update meta-balena submodule to v2.113.32
+        changelog-entry: Update meta-balena submodule to v2.113.32
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.113.32
+  title: ""
+  date: 2023-04-04T18:28:12.194Z
+- commits:
     - subject: Specify NVME as internal storage
       hash: e116981177d5314550e553f08634adc52c1148d8
       body: |

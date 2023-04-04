@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.32
+## (2023-04-04)
+
+* Update meta-balena submodule to v2.113.32 [Alexandru Costache]
+
 # v2.113.31+rev1
 ## (2023-04-04)
 
