@@ -28,6 +28,7 @@ SRC_URI = " \
     file://create_blob_orin_agx.sh \
 "
 
+BPFDTB_FILE = "tegra234-bpmp-3701-0000-3737-0000.dtb"
 DTBNAME = "tegra234-p3701-0000-p3737-0000"
 KERNEL_DEVICETREE = "${DEPLOY_DIR_IMAGE}/${DTBNAME}.dtb"
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
@@ -50,7 +51,6 @@ TOSIMGFILENAME = "tos-optee_t234.img"
 BOOTFILES:tegra234 = "\
     adsp-fw.bin \
     applet_t234.bin \
-    ${BPF_FILE} \
     camera-rtcpu-t234-rce.img \
     eks.img \
     mb1_t234_prod.bin \
@@ -98,8 +98,6 @@ signfile() {
         -e"s,NVHOSTNVDEC,nvdec_t234_prod.fw," \
         -e"s,MB2BLFILE,mb2_t234.bin," \
         -e"s,XUSB_FW,xusb_t234_prod.bin," \
-        -e"s,BPFFILE,${BPF_FILE}," \
-        -e"s,BPFDTB_FILE,${BPFDTB_FILE}," \
         -e"s,PSCFW,pscfw_t234_prod.bin," \
         -e"s,MCE_IMAGE,mce_flash_o10_cr_prod.bin," \
         -e"s,WB0FILE,sc7_t234_prod.bin," \
@@ -107,12 +105,14 @@ signfile() {
         -e"s,MB2RF_IMAGE,mb2rf_t234.bin," \
         -e"s,TBCDTB-FILE,uefi_jetson_with_dtb.bin," \
         -e"s,DCE,display-t234-dce.bin," \
+	-e"s, DTB_FILE,$kernel_dtbfile," -e"s,BPFFILE,$BPF_FILE," \
+        -e"s,BPFDTB_FILE,${BPFDTB_FILE}," \
         -e"s,APPUUID,," \
         -e"s,ESP_FILE,esp.img," -e"/VARSTORE_FILE/d" \
         > $destdir/flash.xml
 
 	./tegraflash.py  --bl uefi_jetson_with_dtb.bin \
-			 --odmdata gbe-uphy-config-22,hsstp-lane-map-3,nvhs-uphy-config-0,hsio-uphy-config-0,gbe0-enable-10g  --overlay_dtb L4TConfiguration.dtbo,tegra234-p3737-overlay-pcie.dtbo,tegra234-p3737-audio-codec-rt5658-40pin.dtbo,tegra234-p3737-a03-overlay.dtbo,tegra234-p3737-a04-overlay.dtbo,L4TRootfsInfo.dtbo,tegra234-p3737-camera-dual-imx274-overlay.dtbo,tegra234-p3737-camera-e3331-overlay.dtbo,tegra234-p3737-camera-e3333-overlay.dtbo,tegra234-p3737-camera-imx185-overlay.dtbo,tegra234-p3737-camera-imx390-overlay.dtbo  \
+			 --odmdata gbe-uphy-config-22,hsstp-lane-map-3,nvhs-uphy-config-0,hsio-uphy-config-0,gbe0-enable-10g  --overlay_dtb L4TConfiguration.dtbo,tegra234-p3737-audio-codec-rt5658-40pin.dtbo,tegra234-p3737-camera-dual-imx274-overlay.dtbo,tegra234-p3737-camera-e3331-overlay.dtbo,tegra234-p3737-camera-e3333-overlay.dtbo,tegra234-p3737-camera-imx185-overlay.dtbo,tegra234-p3737-camera-imx390-overlay.dtbo  \
 					--bldtb ${DTBFILE} \
 					--applet mb1_t234_prod.bin \
 					--cmd "sign"  \
@@ -129,12 +129,12 @@ signfile() {
 					--deviceprod_config tegra234-mb1-bct-cprod-p3701-0000.dts \
 					--prod_config tegra234-mb1-bct-prod-p3701-0000.dts \
 					--scr_config tegra234-mb2-bct-scr-p3701-0000.dts \
-					--wb0sdram_config tegra234-p3701-0000-p3737-0000-TE990M-wb0sdram.dts \
+					--wb0sdram_config tegra234-p3701-0000-wb0sdram-l4t.dts \
 					--br_cmd_config tegra234-mb1-bct-reset-p3701-0000.dts \
 					--dev_params tegra234-br-bct-p3701-0000.dts,tegra234-br-bct_b-p3701-0000.dts \
 					--mb2bct_cfg tegra234-mb2-bct-misc-p3701-0000.dts  \
 					--bins "psc_fw pscfw_t234_prod.bin; mts_mce mce_flash_o10_cr_prod.bin; mb2_applet applet_t234.bin; mb2_bootloader mb2_t234.bin; xusb_fw xusb_t234_prod.bin; dce_fw display-t234-dce.bin; nvdec nvdec_t234_prod.fw; bpmp_fw bpmp_t234-TE990M-A1_prod.bin; bpmp_fw_dtb tegra234-bpmp-3701-0000-3737-0000.dtb; sce_fw camera-rtcpu-sce.img; rce_fw camera-rtcpu-t234-rce.img; ape_fw adsp-fw.bin; spe_fw spe_t234.bin; tos tos-optee_t234.img; eks eks.img"  \
-					--sdram_config tegra234-p3701-0000-p3737-0000-TE990M-sdram.dts  \
+					--sdram_config tegra234-p3767-0001-sdram-l4t.dts \
 					--cust_info custinfo_out.bin  --secondary_gpt_backup  --boot_chain A
 }
 
@@ -165,12 +165,11 @@ do_configure() {
 
     # Copy and update flashvars
     cp ${STAGING_DATADIR}/tegraflash/flashvars .
-    sed -i -e "s/@BPF_FILE@/${BPF_FILE}/" \
-    -e "s/@BPFDTB_FILE@/${BPFDTB_FILE}/" \
-    -e "s/@TBCDTB_FILE@/${TBCDTB_FILE}/" \
-    -e "s/@WB0SDRAM_BCT@/${WB0SDRAM_BCT}/" \
-    -e "s/@OVERLAY_DTB_FILE@/${OVERLAY_DTB_FILE}/" \
-    ./flashvars
+    sed -i -e "s/@OVERLAY_DTB_FILE@/${OVERLAY_DTB_FILE}/" ./flashvars
+
+    for f in ${STAGING_DATADIR}/tegraflash/bpmp_t234-*.bin; do
+        cp $f .
+    done
 
     cp -r ${DEPLOY_DIR_IMAGE}/*.dtbo .
     for dtbo in ${DTB_OVERLAYS}; do
