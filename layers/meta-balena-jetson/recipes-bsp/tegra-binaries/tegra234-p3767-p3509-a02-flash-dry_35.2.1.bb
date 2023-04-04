@@ -110,13 +110,6 @@ signfile() {
         -e"s,ESP_FILE,esp.img," -e"/VARSTORE_FILE/d" \
         > $destdir/flash.xml
 
-#	./tegraflash.py  --bl uefi_jetson_with_dtb.bin \
-#		--odmdata gbe-uphy-config-8,hsstp-lane-map-3,hsio-uphy-config-0 \
-#		--overlay_dtb L4TConfiguration.dtbo,  --bldtb ${DTBFILE} --applet mb1_t234_prod.bin --cmd "sign" \
-#		--cfg flash.xml \
-#		--chip 0x23 \
-#		--concat_cpubl_bldtb --cpubl uefi_jetson.bin --device_config tegra234-mb1-bct-device-p3767-0000.dts --misc_config tegra234-mb1-bct-misc-p3767-0000.dts --pinmux_config tegra234-mb1-bct-pinmux-p3767-hdmi-a03.dtsi --gpioint_config tegra234-mb1-bct-gpioint-p3767-0000.dts --pmic_config tegra234-mb1-bct-pmic-p3767-0000-a02.dts --pmc_config tegra234-mb1-bct-padvoltage-p3767-hdmi-a03.dtsi --deviceprod_config tegra234-mb1-bct-cprod-p3767-0000.dts --prod_config tegra234-mb1-bct-prod-p3767-0000.dts --scr_config tegra234-mb2-bct-scr-p3767-0000.dts --wb0sdram_config tegra234-p3767-0000-wb0sdram-l4t.dts --br_cmd_config tegra234-mb1-bct-reset-p3767-0000.dts --dev_params tegra234-br-bct-p3767-0000-l4t.dts,tegra234-br-bct_b-p3767-0000-l4t.dts --mb2bct_cfg tegra234-mb2-bct-misc-p3767-0000.dts  --bins "psc_fw pscfw_t234_prod.bin; mts_mce mce_flash_o10_cr_prod.bin; mb2_applet applet_t234.bin; mb2_bootloader mb2_t234.bin; xusb_fw xusb_t234_prod.bin; dce_fw display-t234-^Ce.bin; nvdec nvdec_t234_prod.fw; bpmp_fw bpmp_t234-TE990M-A1_prod.bin; bpmp_fw_dtb tegra234-bpmp-3767-0000-a02-3509-a02.dtb; sce_fw camera-rtcpu-sce.img; rce_fw camera-rtcpu-t234-rce.img; ape_fw adsp-fw.bin; spe_fw spe_t234.bin; tos tos-optee_t234.img; eks eks_t234.img"  --sdram_config tegra234-p3767-0000-sdram-l4t.dts  --cust_info custinfo_out.bin --external_device  --boot_chain A
-
 	./tegraflash.py  \
 		--bl uefi_jetson_with_dtb.bin \
 		--concat_cpubl_bldtb --cpubl uefi_jetson.bin \
@@ -201,7 +194,7 @@ do_configure() {
         cp $f .
     done
 
-    echo "35.1.0" > VERFILE
+    echo "35.2.1" > VERFILE
 
     cp ${WORKDIR}/custinfo_234_orin_nx.bin ./custinfo_out.bin
     cp ${WORKDIR}/T234_devkit_patch_orin_nx_xav_dvk.bin .
