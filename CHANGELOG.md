@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.31+rev1
+## (2023-04-04)
+
+* Specify NVME as internal storage [Alexandru Costache]
+
 # v2.113.31
 ## (2023-03-28)
 

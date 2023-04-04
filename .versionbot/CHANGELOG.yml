@@ -1,4 +1,19 @@
 - commits:
+    - subject: Specify NVME as internal storage
+      hash: e116981177d5314550e553f08634adc52c1148d8
+      body: |
+        ... and add QSPI provisioning script
+      footer:
+        Changelog-entry: Specify NVME as internal storage
+        changelog-entry: Specify NVME as internal storage
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.113.31+rev1
+  title: ""
+  date: 2023-04-04T16:15:35.099Z
+- commits:
     - subject: Update layers/meta-balena to c06fe0336f8582acf95c0615c48deafd4bed2731
       hash: 61e02bc5b9b91b70feb757c2911a6b4ed5bc86b0
       body: Update layers/meta-balena
