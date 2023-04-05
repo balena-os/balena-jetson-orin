@@ -1,4 +1,21 @@
 - commits:
+    - subject: "balena-image: Shrink partition sizes"
+      hash: 0f461c0273dbbd4d31bfd0cb535cfb19d10c4094
+      body: |
+        The image-maker appears to fail in staging,
+        perhaps the image is too large. Let's shrink the
+        partition sizes a bit to investigate the root cause.
+      footer:
+        Changelog-entry: "balena-image: Shrink partition sizes"
+        changelog-entry: "balena-image: Shrink partition sizes"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.113.34+rev1
+  title: ""
+  date: 2023-04-05T15:24:25.250Z
+- commits:
     - subject: Update layers/meta-balena to c2d483b3e07138f6b0f34cd2b32c916133a5929d
       hash: 3ba4a80775954f86561cdc336d807ac2ea5b14ff
       body: Update layers/meta-balena
