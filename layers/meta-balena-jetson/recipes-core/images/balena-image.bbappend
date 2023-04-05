@@ -11,12 +11,12 @@ BALENA_BOOT_SIZE:jetson-xavier-nx-devkit-emmc = "121440"
 BALENA_BOOT_SIZE:jetson-xavier-nx-devkit = "121440"
 
 # The Orin NX runs on a NVME which offers plenty of space
-BALENA_BOOT_SIZE:jetson-orin-nx-xavier-nx-devkit = "242880"
+BALENA_BOOT_SIZE:jetson-orin-nx-xavier-nx-devkit = "121440"
 
 IMAGE_ROOTFS_SIZE:jetson-xavier = "487424"
 IMAGE_ROOTFS_SIZE:jetson-xavier-nx-devkit-emmc = "733184"
 IMAGE_ROOTFS_SIZE:jetson-xavier-nx-devkit = "733184"
-IMAGE_ROOTFS_SIZE:jetson-orin-nx-xavier-nx-devkit = "1228800"
+IMAGE_ROOTFS_SIZE:jetson-orin-nx-xavier-nx-devkit = "901120"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
