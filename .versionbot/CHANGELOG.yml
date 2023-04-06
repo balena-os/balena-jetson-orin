@@ -1,4 +1,18 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v2.113.33"
+      hash: 4a12a9700cc1bb63d11585af73dddce93bf06de7
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v2.113.33"
+        changelog-entry: "layers/meta-balena: Update to v2.113.33"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.113.33
+  title: ""
+  date: 2023-04-06T10:23:57.840Z
+- commits:
     - subject: "balena-image: Shrink partition sizes"
       hash: cdb218261ebe8daf7f0b272c5094dcf06416ff5c
       body: |
