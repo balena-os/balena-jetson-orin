@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.113.32+rev1
+## (2023-04-06)
+
+* balena-image: Shrink partition sizes [Alexandru Costache]
+
 # v2.113.32
 ## (2023-04-04)
 
