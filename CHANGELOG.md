@@ -1,6 +1,98 @@
 Change log
 -----------
 
+# v2.114.0
+## (2023-04-07)
+
+
+<details>
+<summary> Update layers/meta-balena to 3f0e4743516442227387bb9fc55d97fdf7d57a12 [Renovate Bot] </summary>
+
+> ## meta-balena-2.114.0
+> ### (2023-04-07)
+> 
+> 
+> <details>
+> <summary> Update balena-supervisor to v14.10.1 [Renovate Bot] </summary>
+> 
+>> ### balena-supervisor-14.10.1
+>> #### (2023-04-07)
+>> 
+>> * Use dbus-send to get current boot block device instead of fdisk [Christina Ying Wang]
+>> 
+>> ### balena-supervisor-14.10.0
+>> #### (2023-03-28)
+>> 
+>> * Mount boot partition into container on Supervisor start [Christina Ying Wang]
+>> 
+> 
+> </details>
+> 
+> 
+> ## meta-balena-2.113.35
+> ### (2023-04-05)
+> 
+> 
+> <details>
+> <summary> Update balena-engine to v20.10.34 [Renovate Bot] </summary>
+> 
+>> ### balena-engine-20.10.34
+>> #### (2023-04-05)
+>> 
+>> * Update librsync-go to v0.8.5, circbuf to v0.1.3 [Leandro Motta Barros]
+>> 
+> 
+> </details>
+> 
+> 
+> ## meta-balena-2.113.34
+> ### (2023-04-04)
+> 
+> 
+> <details>
+> <summary> Update tests/leviathan digest to 5785e44 [Renovate Bot] </summary>
+> 
+>> ### leviathan-2.24.1
+>> #### (2023-04-04)
+>> 
+>> * Deprecate worker release env var (again) [Kyle Harding]
+>> 
+>> ### leviathan-2.24.0
+>> #### (2023-04-03)
+>> 
+>> * minor: Add Leviathan Test Helpers [Vipul Gupta (@vipulgupta2048)]
+>> 
+>> ### leviathan-2.23.6
+>> #### (2023-04-01)
+>> 
+>> * patch: Output final-result in the end [Vipul Gupta (@vipulgupta2048)]
+>> 
+>> ### leviathan-2.23.5
+>> #### (2023-04-01)
+>> 
+>> * update default worker version [rcooke-warwick]
+>> 
+>> ### leviathan-2.23.4
+>> #### (2023-03-29)
+>> 
+>> * swtpm: store state in tmpfs [Joseph Kogut]
+>> 
+>> ### leviathan-2.23.3
+>> #### (2023-03-29)
+>> 
+>> * Update core/contracts digest to fa51fae [Renovate Bot]
+>> 
+> 
+> </details>
+> 
+> 
+
+</details>
+
+* layers/meta-balena: Update to v2.113.33 [Alexandru Costache]
+* balena-image: Shrink partition sizes [Alexandru Costache]
+* Update meta-balena submodule to v2.113.32 [Alexandru Costache]
+
 # v2.113.33
 ## (2023-04-06)
 
