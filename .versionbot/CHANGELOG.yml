@@ -1,4 +1,46 @@
 - commits:
+    - subject: Update layers/meta-balena to cca4a5e7e9523bbe5892af3846ff8b3f03d6c749
+      hash: 105a4c5f9c7dd7882704d53ee73b4d4d4a7a2d2e
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to cca4a5e7e9523bbe5892af3846ff8b3f03d6c749
+        changelog-entry: Update layers/meta-balena to cca4a5e7e9523bbe5892af3846ff8b3f03d6c749
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: Ship separate GRUB images for secure boot
+              hash: 1eb49acca051d7c34fa0e48bd673fc764320b2e9
+              body: >
+                Shipping a single image with signature checks enabled will enforce
+
+                the signatures on non-secure-boot systems as well. GRUB does not have
+
+                a simple method to check whether secure boot is enabled that could
+
+                be embedded with the default built-in config.
+
+
+                With this patch we build two separate images - one enforcing
+
+                the signatures and the other one not, keeping the original behavior.
+
+                HUP and flasher both can detect if secure boot is enabled so they
+
+                put the correct image in place when installing/updating GRUB.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Michal Toman <michalt@balena.io>
+                signed-off-by: Michal Toman <michalt@balena.io>
+              author: Michal Toman
+              nested: []
+          version: meta-balena-2.114.5
+          title: ""
+          date: 2023-04-19T10:14:40.931Z
+  version: 2.114.5
+  title: ""
+  date: 2023-04-19T13:13:28.482Z
+- commits:
     - subject: Update layers/meta-balena to 1264f58c432b7d87523a59ff27e246c2d6a3f903
       hash: e5e9bc1a6c8631c1054d7c2f98f82c68ec68290a
       body: Update layers/meta-balena
