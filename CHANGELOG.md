@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v2.114.11
+## (2023-04-25)
+
+* recipes-bsp/tegra-binaries: Update AGX Orin Devkit to L4T 35.2.1 [Alexandru Costache]
+* Update layers/meta-balena to 945c6af54ac4f637418ec812747e4fe4e43e8844 [Renovate Bot]
+
 # v2.114.10
 ## (2023-04-24)
 

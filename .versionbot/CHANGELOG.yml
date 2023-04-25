@@ -1,4 +1,26 @@
 - commits:
+    - subject: "recipes-bsp/tegra-binaries: Update AGX Orin Devkit to L4T 35.2.1"
+      hash: 3ee00d90a1c615a293861d573da359822f97a8ff
+      body: ""
+      footer:
+        Changelog-entry: "recipes-bsp/tegra-binaries: Update AGX Orin Devkit to L4T 35.2.1"
+        changelog-entry: "recipes-bsp/tegra-binaries: Update AGX Orin Devkit to L4T 35.2.1"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: Update layers/meta-balena to 945c6af54ac4f637418ec812747e4fe4e43e8844
+      hash: b5d264375c5a031c1fbf3bf44ace9fbaea55c30a
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 945c6af54ac4f637418ec812747e4fe4e43e8844
+        changelog-entry: Update layers/meta-balena to 945c6af54ac4f637418ec812747e4fe4e43e8844
+      author: Renovate Bot
+      nested: []
+  version: 2.114.11
+  title: ""
+  date: 2023-04-25T10:51:23.856Z
+- commits:
     - subject: Update layers/meta-balena to 6f38c16dea7e006ee20b90a089574505fbce4a25
       hash: 096045a8042a2ebe1ffa2af1c7ab6b4b80a414d1
       body: Update layers/meta-balena
