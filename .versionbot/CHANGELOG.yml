@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tegra234-flash-dry: Update AGX Orin boot bindiff for L4T 35.2.1"
+      hash: 2887cefd32801cc2894eb0208d096805b70bd0d4
+      body: ""
+      footer:
+        Changelog-entry: "tegra234-flash-dry: Update AGX Orin boot bindiff for L4T 35.2.1"
+        changelog-entry: "tegra234-flash-dry: Update AGX Orin boot bindiff for L4T 35.2.1"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.114.12+rev1
+  title: ""
+  date: 2023-04-26T14:40:58.522Z
+- commits:
     - subject: Update layers/meta-balena to 0396b07b2119b2c1a3cdf2bbd107e08de2110671
       hash: 6976635aab722dc4e0d301115187d4db2b52bd4e
       body: Update layers/meta-balena

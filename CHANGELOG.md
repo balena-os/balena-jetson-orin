@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.12+rev1
+## (2023-04-26)
+
+* tegra234-flash-dry: Update AGX Orin boot bindiff for L4T 35.2.1 [Alexandru Costache]
+
 # v2.114.12
 ## (2023-04-26)
 
