@@ -1,4 +1,63 @@
 - commits:
+    - subject: Update layers/meta-balena to 0396b07b2119b2c1a3cdf2bbd107e08de2110671
+      hash: 6976635aab722dc4e0d301115187d4db2b52bd4e
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 0396b07b2119b2c1a3cdf2bbd107e08de2110671
+        changelog-entry: Update layers/meta-balena to 0396b07b2119b2c1a3cdf2bbd107e08de2110671
+      author: Renovate Bot
+      nested:
+        - commits:
+            - subject: "classes: kernel-balena: force recompilation if signing variables
+                change"
+              hash: ed976cd342d7f70236a683bdf179a8490862f747
+              body: >
+                If they signing variables change, we need to rebuild and resign
+                kernel
+
+                and modules.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "balena-keys: make tasks depends on signing variables"
+              hash: 421d737c200915787e5bc6c6829254cf5b4976f1
+              body: >
+                To avoid unneeded rebuilds, just make the actual key fetching
+                tags
+
+                depend on the signing variables.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "classes: sign: make signing task depends on signing variables"
+              hash: a17f312bea7302577b7c739d57474e9014d4b8d1
+              body: >
+                The signing process order depends on the package to be signed,
+                so let's
+
+                make sure the re-signing happens.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-2.114.12
+          title: ""
+          date: 2023-04-26T10:01:38.568Z
+  version: 2.114.12
+  title: ""
+  date: 2023-04-26T12:54:23.945Z
+- commits:
     - subject: "recipes-bsp/tegra-binaries: Update AGX Orin Devkit to L4T 35.2.1"
       hash: 3ee00d90a1c615a293861d573da359822f97a8ff
       body: ""
