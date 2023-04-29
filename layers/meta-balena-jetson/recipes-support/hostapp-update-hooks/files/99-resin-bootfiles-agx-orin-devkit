@@ -25,12 +25,11 @@ if [ ! "$existing_bootloader_md5sum" = "$update_bootloader_md5sum" ]; then
     info_log "Will clear bootloader device before the update"
     flash_erase /dev/mtd0 0 0 || true
     info_log "Updating bootloader device"
-    dd if=$bootloader_blob of=$bootloader_device bs=1M
+    dd if=$bootloader_blob of=$bootloader_device bs=512
     info_log "Updated bootloader device"
 else
     info_log "No need to update bootloader device"
 fi
 
 # Sync internal memory
-sync /dev/mmcblk0
-sync /dev/mtdblock0
+sync
