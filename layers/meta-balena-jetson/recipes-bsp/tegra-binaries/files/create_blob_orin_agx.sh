@@ -150,3 +150,6 @@ dd if=T234_devkit_patch.bin of=boot0.img bs=1 seek=44962912 skip=87936 count=64 
 dd if=T234_devkit_patch.bin of=boot0.img bs=1 seek=44965600 skip=88000 count=144 conv=notrunc
 echo -n -e '\x80' | dd of=boot0.img seek=48352142 bs=1 conv=notrunc count=1
 dd if=T234_devkit_patch.bin of=boot0.img bs=1 seek=37006403 skip=88144 count=2 conv=notrunc
+dd if=T234_devkit_patch.bin of=boot0.img bs=1 seek=12722208 skip=88146 count=2829440 conv=notrunc
+dd if=T234_devkit_patch.bin of=boot0.img bs=1 seek=44957696 skip=12810354 count=2829440 conv=notrunc
+
