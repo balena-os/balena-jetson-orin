@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.15+rev1
+## (2023-04-30)
+
+* Update boot partition bind diff for AGX Orin Devkit 32GB [Alexandru Costache]
+
 # v2.114.15
 ## (2023-04-28)
 

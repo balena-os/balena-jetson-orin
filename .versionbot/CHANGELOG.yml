@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update boot partition bind diff for AGX Orin Devkit 32GB
+      hash: 787baabde46e02296c603a856f2e7c919bd69e26
+      body: |
+        for L4T 35.2.1
+      footer:
+        Changelog-entry: Update boot partition bind diff for AGX Orin Devkit 32GB
+        changelog-entry: Update boot partition bind diff for AGX Orin Devkit 32GB
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.114.15+rev1
+  title: ""
+  date: 2023-04-30T00:54:27.515Z
+- commits:
     - subject: Update layers/meta-balena to 6dea3e6c37f789704d95485ed1ddab2b63226111
       hash: ec3cc7ae5a4a24f2a267d723eed7db2049964a48
       body: Update layers/meta-balena
