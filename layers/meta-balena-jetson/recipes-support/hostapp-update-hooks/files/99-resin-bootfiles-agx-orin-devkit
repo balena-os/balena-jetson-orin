@@ -18,6 +18,27 @@ info_log()
     echo "[INFO] $@"
 }
 
+check_disable_xudc()
+{
+    extlinuxfile="/mnt/sysroot/active/current/boot/extlinux/extlinux.conf"
+
+    if [ -e $extlinuxfile ]; then
+       if grep -q "l4tver=35.1.0" "${extlinuxfile}"; then
+           if grep -q "tegra-xudc.blacklist=yes" "${extlinuxfile}"; then
+               info_log "tegra-xudc already disabled, no need to do anything"
+           else
+               info_log "Need to disable xudc in L4T 35.1.0 when booting with 35.2.1 bootloaders"
+               sed -i "s/l4tver=35.1.0/& initcall_blacklist=usb_target_gadget_init,usb_udc_init tegra-xudc.blacklist=yes modprobe.blacklist=tegra-xudc/g" $extlinuxfile
+               info_log "Updated extlinux in old 35.1.0 to disable xudc"
+           fi;
+        else
+            info_log "extlinux file not found in old rootfs"
+        fi;
+    fi;
+}
+
+check_disable_xudc
+
 existing_bootloader_md5sum=$(dd if=$bootloader_device bs=1M status=none | md5sum | awk '{print $1}')
 update_bootloader_md5sum=$(md5sum $bootloader_blob | awk '{print $1}')
 
