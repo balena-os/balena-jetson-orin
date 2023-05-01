@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.15+rev2
+## (2023-05-01)
+
+* hostapp-update-hooks: Fix potential crash in old 35.1.0 on altboot [Alexandru Costache]
+
 # v2.114.15+rev1
 ## (2023-04-30)
 

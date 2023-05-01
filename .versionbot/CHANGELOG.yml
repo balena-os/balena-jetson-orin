@@ -1,4 +1,25 @@
 - commits:
+    - subject: "hostapp-update-hooks: Fix potential crash in old 35.1.0 on altboot"
+      hash: ad0eb0bf528da7f9dc77f7ee68adf0a69f70d6b9
+      body: |
+        The built-in tegra-xudc driver crashes on altboot from
+        35.2.1 to 35.1.0 as it isn't compatible with the newer firmware,
+        leaving the board in an inconsistent state.
+
+        We thus blacklist and disable tegra-xudc and disable all potential
+        calls to its' functions from the usb gadget driver, which could cause
+        altboot to fail.
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Changelog-entry: "hostapp-update-hooks: Fix potential crash in old 35.1.0 on altboot"
+        changelog-entry: "hostapp-update-hooks: Fix potential crash in old 35.1.0 on altboot"
+      author: Alexandru Costache
+      nested: []
+  version: 2.114.15+rev2
+  title: ""
+  date: 2023-05-01T17:39:00.963Z
+- commits:
     - subject: Update boot partition bind diff for AGX Orin Devkit 32GB
       hash: 787baabde46e02296c603a856f2e7c919bd69e26
       body: |
