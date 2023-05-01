@@ -24,7 +24,7 @@ SRC_URI = " \
     file://resinOS-flash234.xml \
     file://partition_specification234.txt \
     file://custinfo_234.bin \
-    file://T234_devkit_patch.bin \
+    file://boot0_agx_orin_dvk.img.gz \
     file://create_blob_orin_agx.sh \
 "
 
@@ -194,7 +194,7 @@ do_configure() {
     echo "35.1.0" > VERFILE
 
     cp ${WORKDIR}/custinfo_234.bin ./custinfo_out.bin
-    cp ${WORKDIR}/T234_devkit_patch.bin .
+    #cp ${WORKDIR}/T234_devkit_patch.bin .
     cp "${DEPLOY_DIR_IMAGE}/${DTBFILE}" ./${DTBFILE}
 
     # Make bootable image from kernel and sign it
@@ -219,7 +219,7 @@ do_configure() {
 
     rm -rf signed || true
 
-    # Sign all tegra bins
+    # Sign all bins, they may be needed at a later point
     signfile " "
 
     mkdir -p ${DEPLOY_DIR_IMAGE}/bootfiles
@@ -228,9 +228,9 @@ do_configure() {
     cp -r signed/* ${DEPLOY_DIR_IMAGE}/bootfiles/
     dd if=/dev/zero of="${DEPLOY_DIR_IMAGE}/bootfiles/bmp.blob" bs=1K count=70
 
-    DEPLOY_DIR_IMAGE=${DEPLOY_DIR_IMAGE} /bin/bash ./create_blob_orin_agx.sh
+    #DEPLOY_DIR_IMAGE=${DEPLOY_DIR_IMAGE} /bin/bash ./create_blob_orin_agx.sh
 
-    cp boot0.img ${DEPLOY_DIR_IMAGE}/bootfiles/
+    cp ${WORKDIR}/boot0_agx_orin_dvk.img ${DEPLOY_DIR_IMAGE}/bootfiles/boot0.img
 }
 
 
@@ -238,7 +238,9 @@ do_install() {
     install -d ${D}/${BINARY_INSTALL_PATH}
     cp -r ${S}/tegraflash/signed/* ${D}/${BINARY_INSTALL_PATH}
     rm ${D}/${BINARY_INSTALL_PATH}/boot*im* || true
-    cp ${DEPLOY_DIR_IMAGE}/bootfiles/boot0.img ${D}/${BINARY_INSTALL_PATH}/
+    rm ${DEPLOY_DIR_IMAGE}/bootfiles/boot0.img.gz || true
+    gzip ${DEPLOY_DIR_IMAGE}/bootfiles/boot0.img
+    cp ${DEPLOY_DIR_IMAGE}/bootfiles/boot0.img.gz ${D}/${BINARY_INSTALL_PATH}/
     cp ${S}/tegraflash/partition_specification234.txt ${D}/${BINARY_INSTALL_PATH}/
     cp ${S}/tegraflash/Image-initramfs* ${D}/${BINARY_INSTALL_PATH}/
 }
