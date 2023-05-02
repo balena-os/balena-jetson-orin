@@ -24,13 +24,14 @@ check_disable_xudc()
 
     if [ -e $extlinuxfile ]; then
        if grep -q "l4tver=35.1.0" "${extlinuxfile}"; then
-           if grep -q "tegra-xudc.blacklist=yes" "${extlinuxfile}"; then
-               info_log "tegra-xudc already disabled, no need to do anything"
-           else
-               info_log "Need to disable xudc in L4T 35.1.0 when booting with 35.2.1 bootloaders"
-               sed -i "s/l4tver=35.1.0/& initcall_blacklist=usb_target_gadget_init,usb_udc_init tegra-xudc.blacklist=yes modprobe.blacklist=tegra-xudc/g" $extlinuxfile
-               info_log "Updated extlinux in old 35.1.0 to disable xudc"
-           fi;
+            info_log "Old root is running L4T 35.1.0, will disable tegra-xudc from the device-trees"
+            for dtbfile in `find /mnt/sysroot/active/ -name "*.dtb" -type f`; do
+                info_log "Disabling tegra-xudc in $dtbfile ...";
+                fdtput -t s $dtbfile /xudc status disabled
+                fdtput -t s $dtbfile / nvidia,dtsfilename "tegra234-p3701-0000-p3737-0000_xudc_disabled.dts"
+                current_xudc_status=$(fdtget $dtbfile /xudc status)
+                info_log "$dtbfile now has xudc $current_xudc_status"
+            done
         else
             info_log "extlinux file not found in old rootfs"
         fi;
@@ -53,4 +54,5 @@ else
 fi
 
 # Sync internal memory
-sync
+sync /dev/mmcblk0
+sync /dev/mtdblock0
