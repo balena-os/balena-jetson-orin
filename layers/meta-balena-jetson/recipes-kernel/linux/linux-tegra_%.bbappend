@@ -61,7 +61,7 @@ BALENA_CONFIGS[rtl8822ce] = " \
 		CONFIG_RTK_BTUSB=m \
 "
 
-BALENA_CONFIGS:append = " nfsfs"
+BALENA_CONFIGS:append = " nfsfs xudc"
 BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_FS=m \
     CONFIG_NFS_V2=m \
@@ -88,6 +88,9 @@ BALENA_CONFIGS[usbserial] = " \
     CONFIG_USB_SERIAL_WWAN=m \
 "
 
+BALENA_CONFIGS[xudc] = " \
+    USB_TEGRA_XUDC=m \
+"
 
 L4TVER=" l4tver=${L4T_VERSION}"
 
