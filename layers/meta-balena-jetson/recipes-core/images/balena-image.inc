@@ -25,6 +25,7 @@ IMAGE_INSTALL:append:jetson-agx-orin-devkit = " \
     jetson-dtbs \
     nvidia-display-driver \
     tegra-nvfancontrol \
+    dtc \
 "
 
 IMAGE_INSTALL:append:jetson-orin-nx-xavier-nx-devkit = " \
