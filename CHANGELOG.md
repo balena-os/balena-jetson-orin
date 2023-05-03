@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v2.114.17+rev2
+## (2023-05-03)
+
+* tegra-binaries: switch to using a prebuilt bootimg [Alexandru Costache]
+* hostapp-update-hooks: Disable xudc in the old dtbs [Alexandru Costache]
+* recipes-core/images: Install dtc for the AGX Orin [Alexandru Costache]
+
 # v2.114.17+rev1
 ## (2023-05-03)
 

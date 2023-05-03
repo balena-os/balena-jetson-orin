@@ -1,4 +1,44 @@
 - commits:
+    - subject: "tegra-binaries: switch to using a prebuilt bootimg"
+      hash: 4712db2874ad13cafe61d8e0dfaf672987891de2
+      body: ""
+      footer:
+        Changelog-entry: "tegra-binaries: switch to using a prebuilt bootimg"
+        changelog-entry: "tegra-binaries: switch to using a prebuilt bootimg"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "hostapp-update-hooks: Disable xudc in the old dtbs"
+      hash: c13d2f4d293b2e62f1318c3d48c6f8a449d4861a
+      body: |
+        when updating from 35.1.0 to 35.2.1, to prevent
+        rollback altboot from failing due to the tegra-xudc
+        kernel panic.
+      footer:
+        Changelog-entry: "hostapp-update-hooks: Disable xudc in the old dtbs"
+        changelog-entry: "hostapp-update-hooks: Disable xudc in the old dtbs"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "recipes-core/images: Install dtc for the AGX Orin"
+      hash: f2fe85bf10d9cc5a4c51ec9c123365eb42471589
+      body: |
+        so it can disable xudc and allow rollback altboot to work
+        when loading the l4t 35.1.0 kernel with the newer L4T 35.2.1
+        firmware.
+      footer:
+        Changelog-entry: "recipes-core/images: Install dtc for the AGX Orin"
+        changelog-entry: "recipes-core/images: Install dtc for the AGX Orin"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.114.17+rev2
+  title: ""
+  date: 2023-05-03T20:53:09.956Z
+- commits:
     - subject: Update contracts to 75cd5e9f19d49b8723b7e39033763ca698e1254f
       hash: e37da5d412f113fb0edd8155a465756da146c6a5
       body: Update contracts
