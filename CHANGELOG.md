@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.19+rev1
+## (2023-05-04)
+
+* edk2-firmware-tegra: Fix dtb parsing for AGX Orin Devkit [Alexandru Costache]
+
 # v2.114.19
 ## (2023-05-04)
 

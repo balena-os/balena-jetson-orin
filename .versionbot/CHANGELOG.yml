@@ -1,4 +1,18 @@
 - commits:
+    - subject: "edk2-firmware-tegra: Fix dtb parsing for AGX Orin Devkit"
+      hash: 427558161b7171685bc3d85e22accf6745800f07
+      body: ""
+      footer:
+        Changelog-entry: "edk2-firmware-tegra: Fix dtb parsing for AGX Orin Devkit"
+        changelog-entry: "edk2-firmware-tegra: Fix dtb parsing for AGX Orin Devkit"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.114.19+rev1
+  title: ""
+  date: 2023-05-04T15:09:24.048Z
+- commits:
     - subject: Update layers/meta-balena to 35a34d76f441fe37ea3d2cbd911558973fdec30c
       hash: 05659dd6e4afda243733de1207944bed5f2d402e
       body: Update layers/meta-balena
