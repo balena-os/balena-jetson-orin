@@ -92,7 +92,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +
 +  // Set default dtb as fail-safe
 +  *CustomFdtName = AllocateZeroPool(MAX_DTB_PATH_LEN);
-+  UnicodeSPrint (*CustomFdtName, MAX_DTB_PATH_LEN - 1, L"boot\\%s\0", DEFAULT_AGX_ORIN_DTB_NAME);
++  UnicodeSPrint (*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_AGX_ORIN_DTB_NAME);
 +
 +  Status = FindPartitionInfo (DeviceHandle, BALENA_BOOT_PARTITION, BootChain, NULL, &BootPartHandle);
 +  if (EFI_ERROR (Status)) {
@@ -126,7 +126,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +      break;
 +    }
 +
-+    UnicodeSPrint (LineCopy, (MAX_DTB_PATH_LEN - 1) > StrLen(FileLine) ? StrLen(FileLine) : (MAX_DTB_PATH_LEN - 1) , L"%s\0", FileLine);
++    UnicodeSPrint (LineCopy, MAX_DTB_PATH_LEN, L"%s\0", FileLine);
 +    Print(L"Processing entry: %s\n", LineCopy);
 +
 +    len = StrLen(LineCopy);
@@ -140,13 +140,13 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +
 +    if (NULL != DtbName) {
 +      DtbName += StrLen(L"custom_fdt_file=");
-+      UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN - 1, L"boot\\%s\0", DtbName);
++      UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DtbName);
 +      Print(L"Selected dtb name is %s:\n", CustomFdtName);
 +      Status = CheckDtbExists(DeviceHandle, BootChain, BalenaOSRootFs, *CustomFdtName);
 +
 +      if (EFI_ERROR(Status)) {
 +        ErrorPrint(L"Selected dtb not found! Using the default DTB for this device type\n");
-+        UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN - 1, L"boot\\%s\0", DEFAULT_AGX_ORIN_DTB_NAME);
++        UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_AGX_ORIN_DTB_NAME);
 +        return Status;
 +      }
 +    }
