@@ -11,7 +11,7 @@ set -o errexit
 DURING_UPDATE=${DURING_UPDATE:-0}
 bootloader_device="/dev/mmcblk0boot0"
 partspec="/opt/tegra-binaries/partition_specification194.txt"
-bootloader_blob="/opt/tegra-binaries/boot0.img"
+bootloader_blob="/opt/tegra-binaries/boot0.img.gz"
 
 info_log()
 {
@@ -71,7 +71,7 @@ update_bootloader_md5sum=$(md5sum $bootloader_blob | awk '{print $1}')
 
 if [ ! "$existing_bootloader_md5sum" = "$update_bootloader_md5sum" ]; then
     echo 0 > /sys/block/mmcblk0boot0/force_ro
-    dd if=$bootloader_blob of=$bootloader_device
+    zcat $bootloader_blob > $bootloader_device
     sync
     echo 1 > /sys/block/mmcblk0boot0/force_ro
 fi
