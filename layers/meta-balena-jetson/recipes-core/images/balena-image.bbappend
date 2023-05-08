@@ -1,5 +1,7 @@
 include balena-image.inc
 
+do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy"
+
 DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit = "331776"
 IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit = "1003520"
 
@@ -34,7 +36,6 @@ check_size() {
     fi;
 }
 
-do_image:balenaos-img:jetson-agx-orin-devkit[depends] += " tegra234-flash-dry:do_install"
 device_specific_configuration:jetson-agx-orin-devkit() {
     partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification234.txt)
     NVIDIA_PART_OFFSET=40
@@ -55,7 +56,6 @@ device_specific_configuration:jetson-agx-orin-devkit() {
     done
 } 
 
-do_image:balenaos-img:jetson-orin-nx-xavier-nx-devkit[depends] += " tegra234-p3767-p3509-a02-flash-dry:do_install"
 device_specific_configuration:jetson-orin-nx-xavier-nx-devkit() {
     partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification234.txt)
     NVIDIA_PART_OFFSET=40
@@ -76,8 +76,6 @@ device_specific_configuration:jetson-orin-nx-xavier-nx-devkit() {
     done
 }
 
-
-do_rootfs:balenaos-img:jetson-xavier[depends] += " tegra194-flash-dry:do_deploy "
 # We leave this space way larger than currently
 # needed because other larger partitions are
 # added from one Jetpack release to another
@@ -89,7 +87,6 @@ DEVICE_SPECIFIC_SPACE:jetson-xavier = "458752"
 # raw due to partition alignments which
 # trigger checksum mismatches during flash
 
-do_image:balenaos-img:jetson-xavier[depends] += " tegra194-flash-dry:do_deploy"
 device_specific_configuration:jetson-xavier() {
     partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification194.txt)
     NVIDIA_PART_OFFSET=20480
@@ -106,7 +103,8 @@ device_specific_configuration:jetson-xavier() {
       # be a multiple of 4096. We don't write anything to it for the moment.
       if [ ! "$file_name" = "none.bin" ]; then
         check_size ${file_path} ${part_size}
-        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=$(expr ${START} \/ 512) bs=512
+        # TODO: Secondary blobs with signed kernel, dtb and other bootloaders that need to be written to specific partitions are needed for the AGX Xavier
+        #dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=$(expr ${START} \/ 512) bs=512
       fi
       START=$(expr ${END} \+ 1)
     done
@@ -133,7 +131,8 @@ write_jetson_nx_partitions() {
       # be a multiple of 4096. We don't write anything to it for the moment.
       if [ ! "$file_name" = "none.bin" ]; then
         check_size ${file_path} ${part_size}
-        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=$(expr ${START} \/ 512) bs=512
+        # TODO: Secondary blobs with signed kernel, dtb and other bootloaders that need to be written to specific partitions are needed for the Xavier NX (Forecr DSB)
+        #dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=$(expr ${START} \/ 512) bs=512
       fi
       START=$(expr ${END} \+ 1)
     done
@@ -143,13 +142,11 @@ write_jetson_nx_partitions() {
 # needed because other larger partitions can be
 # added from one Jetpack release to another
 DEVICE_SPECIFIC_SPACE:jetson-xavier-nx-devkit-emmc = "458752"
-do_image:balenaos-img:jetson-xavier-nx-devkit-emmc[depends] += " tegra194-nxde-flash-dry:do_deploy"
 device_specific_configuration:jetson-xavier-nx-devkit-emmc() {
     write_jetson_nx_partitions "partition_specification194_nxde.txt"
 }
 
 DEVICE_SPECIFIC_SPACE:jetson-xavier-nx-devkit = "458752"
-do_image:balenaos-img:jetson-xavier-nx-devkit[depends] += " tegra194-nxde-sdcard-flash:do_deploy"
 device_specific_configuration:jetson-xavier-nx-devkit() {
     write_jetson_nx_partitions "partition_specification194_nxde_sdcard.txt"
 }
