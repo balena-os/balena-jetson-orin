@@ -11,7 +11,7 @@ set -o errexit
 DURING_UPDATE=${DURING_UPDATE:-0}
 declare -a UPDATED_PARTITIONS=()
 bootloader_device="/dev/mtdblock0"
-bootloader_blob="/opt/tegra-binaries/boot0.img"
+bootloader_blob="/opt/tegra-binaries/boot0.img.gz"
 partspec="/opt/tegra-binaries/partition_specification194_nxde.txt"
 
 info_log()
@@ -70,7 +70,7 @@ done
 # write to the SPI flash
 info_log "Will update bootloader device"
 flash_erase /dev/mtd0 0 0 || true
-dd if=$bootloader_blob of=$bootloader_device bs=512K
+zcat $bootloader_blob > $bootloader_device
 
 # Sync internal memory
 sync /dev/mmcblk0
