@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.23+rev2
+## (2023-05-08)
+
+* balena-image: Use simplified boot files recipe [Alexandru Costache]
+
 # v2.114.23+rev1
 ## (2023-05-08)
 

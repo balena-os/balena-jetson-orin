@@ -1,4 +1,19 @@
 - commits:
+    - subject: "balena-image: Use simplified boot files recipe"
+      hash: 7879407ac7f78a0084bdbcc4814b9a5ff84fea11
+      body: |
+        for each of the device-types included in this repository
+      footer:
+        Changelog-entry: "balena-image: Use simplified boot files recipe"
+        changelog-entry: "balena-image: Use simplified boot files recipe"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.114.23+rev2
+  title: ""
+  date: 2023-05-08T19:48:11.278Z
+- commits:
     - subject: "edk2-firmware-tegra: Update all uefi integration patches to L4T 35.2.1"
       hash: 01414e7b40ea577af7905823dba9a99d4fe61670
       body: ""
