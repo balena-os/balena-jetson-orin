@@ -1,4 +1,20 @@
 - commits:
+    - subject: "edk2-firmware-tegra: Update all uefi integration patches to L4T 35.2.1"
+      hash: 01414e7b40ea577af7905823dba9a99d4fe61670
+      body: ""
+      footer:
+        Changelog-entry: "edk2-firmware-tegra: Update all uefi integration patches to
+          L4T 35.2.1"
+        changelog-entry: "edk2-firmware-tegra: Update all uefi integration patches to
+          L4T 35.2.1"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.114.23+rev1
+  title: ""
+  date: 2023-05-08T12:53:33.630Z
+- commits:
     - subject: Update layers/meta-balena to 3f2f215e39c39fc3ef227db665c99fb8ad77ee08
       hash: d12a9314f5ee2058b4f9eeaef48a5ed8e53b1d98
       body: Update layers/meta-balena

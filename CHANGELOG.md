@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.23+rev1
+## (2023-05-08)
+
+* edk2-firmware-tegra: Update all uefi integration patches to L4T 35.2.1 [Alexandru Costache]
+
 # v2.114.23
 ## (2023-05-06)
 
