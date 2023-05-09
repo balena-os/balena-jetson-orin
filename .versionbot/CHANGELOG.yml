@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tegra-binaries: Add Orin NX boot file for 35.2.1"
+      hash: cb3b8908bec4ac8a695effc5e5e05cf5e12ef30b
+      body: ""
+      footer:
+        Changelog-entry: "tegra-binaries: Add Orin NX boot file for 35.2.1"
+        changelog-entry: "tegra-binaries: Add Orin NX boot file for 35.2.1"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.114.23+rev3
+  title: ""
+  date: 2023-05-09T09:30:57.574Z
+- commits:
     - subject: "balena-image: Use simplified boot files recipe"
       hash: 7879407ac7f78a0084bdbcc4814b9a5ff84fea11
       body: |

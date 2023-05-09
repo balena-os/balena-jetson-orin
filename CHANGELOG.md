@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.114.23+rev3
+## (2023-05-09)
+
+* tegra-binaries: Add Orin NX boot file for 35.2.1 [Alexandru Costache]
+
 # v2.114.23+rev2
 ## (2023-05-08)
 
