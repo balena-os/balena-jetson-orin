@@ -28,16 +28,9 @@ SRC_URI = " \
 "
 
 do_install() {
-    # Ensure install is not executed until
-    # do_unpack copies the archive
-    while [ ! -f ${WORKDIR}/${BOOTBLOB} ]
-    do
-        sleep 1
-    done
-
     install -d ${D}/${BINARY_INSTALL_PATH}
-    install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
-    install ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
+    install -m 0644 ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
+    install -m 0644 ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
 }
 
 do_deploy() {
@@ -60,5 +53,7 @@ do_deploy[nostamp] = "1"
 do_unpack[nostamp] = "1"
 deltask do_configure
 deltask do_compile
+
+do_install[depends] += "tegra-flash-dry:do_unpack"
 
 addtask do_deploy before do_package after do_install
