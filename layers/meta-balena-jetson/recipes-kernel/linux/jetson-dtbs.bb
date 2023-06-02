@@ -63,3 +63,13 @@ FILES:${PN}:forecr-dsb-nx2-xavier-nx-emmc += " \
 	/boot/tegra194-p3668-dsboard-nx2-0000-rev121.dtb \
 	/boot/tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb \
 "
+
+do_install:append:custom-xavier-nx-emmc() {
+        install -m 0644 ${DEPLOY_DIR_IMAGE}/tegra194-p3668-custom-0000.dtb ${D}/boot/tegra194-p3668-custom-0000.dtb
+}
+
+FILES:${PN}:custom-xavier-nx-emmc += " \
+	/boot/tegra194-p3668-all-p3509-0000.dtb \
+        /boot/tegra194-p3668-custom-0000.dtb \
+"
+
