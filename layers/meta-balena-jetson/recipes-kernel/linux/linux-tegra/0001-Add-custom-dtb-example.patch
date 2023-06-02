@@ -1,0 +1,60 @@
+From c30ee3e4256e4cd42185f24473fa1bfdf7e16646 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Fri, 2 Jun 2023 10:26:06 +0200
+Subject: [PATCH] Add custom dtb example
+
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ .../platform/t19x/jakku/kernel-dts/Makefile   |  2 +-
+ .../kernel-dts/tegra194-p3668-custom-0000.dts | 26 +++++++++++++++++++
+ 2 files changed, 27 insertions(+), 1 deletion(-)
+ create mode 100644 nvidia/platform/t19x/jakku/kernel-dts/tegra194-p3668-custom-0000.dts
+
+diff --git a/nvidia/platform/t19x/jakku/kernel-dts/Makefile b/nvidia/platform/t19x/jakku/kernel-dts/Makefile
+index 925e46f55615..c37c305611c1 100644
+--- a/nvidia/platform/t19x/jakku/kernel-dts/Makefile
++++ b/nvidia/platform/t19x/jakku/kernel-dts/Makefile
+@@ -24,7 +24,7 @@ dtbo-$(BUILD_ENABLE) += tegra194-p3668-all-p3509-0000-camera-imx477-imx219.dtbo
+ dtbo-$(BUILD_ENABLE) += tegra194-p3668-all-p3509-0000-camera-imx477-dual.dtbo
+ dtbo-$(BUILD_ENABLE) += tegra194-p3668-all-p3509-0000-camera-imx219-dual.dtbo
+ dtbo-$(BUILD_ENABLE) += tegra194-p3668-p3509-overlay.dtbo
+-
++dtb-$(BUILD_ENABLE) += tegra194-p3668-custom-0000.dtb
+ ifneq ($(dtb-y),)
+ dtb-y := $(addprefix $(makefile-path)/,$(dtb-y))
+ endif
+diff --git a/nvidia/platform/t19x/jakku/kernel-dts/tegra194-p3668-custom-0000.dts b/nvidia/platform/t19x/jakku/kernel-dts/tegra194-p3668-custom-0000.dts
+new file mode 100644
+index 000000000000..37a00cff04a6
+--- /dev/null
++++ b/nvidia/platform/t19x/jakku/kernel-dts/tegra194-p3668-custom-0000.dts
+@@ -0,0 +1,26 @@
++/*
++ * Top level DTS file for custom xavier nx carrier board.
++ *
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ */
++
++/dts-v1/;
++#include "common/tegra194-p3668-common.dtsi"
++#include "common/tegra194-p3509-0000-a00.dtsi"
++
++
++/ {
++       nvidia,dtsfilename = __FILE__;
++       nvidia,dtbbuildtime = __DATE__, __TIME__;
++       model = "NVIDIA Jetson Xavier NX custom dtb";
++
++       compatible = "nvidia,p3449-0000+p3668-0000", "nvidia,p3449-0000+p3668-0001", "nvidia,p3509-0000+p3668-0000", "nvidia,p3509-0000+p3668-0001", "nvidia,tegra194";
++};
+-- 
+2.37.2
+

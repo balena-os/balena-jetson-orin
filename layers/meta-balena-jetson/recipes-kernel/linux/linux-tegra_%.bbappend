@@ -10,6 +10,10 @@ SRC_URI:append = " file://0001-fix-kernel-headers-test.patch \
 "
 SRC_URI:append:forecr-dsb-nx2-xavier-nx-emmc = " file://0001-Port-Forecr-DSBOARD-NX2-patches.patch "
 
+# To create a custom dtb in the sources, navigate to <build_dir>/build_custom/tmp/work-shared/custom-xavier-nx-emmc/kernel-source/
+# and create a git patch there which adds the device-tree to be built. Export the patch with git format-patch HEAD -1
+# copy it in ${THISDIR}/${PN} and include it in this recipe the same way as 0001-Add-custom-dtb-example.patch
+SRC_URI:append:custom-xavier-nx-emmc = " file://0001-Add-custom-dtb-example.patch "
 BALENA_CONFIGS:remove = " mdraid"
 
 BALENA_CONFIGS:append = " debug_kmemleak "
