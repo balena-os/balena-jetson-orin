@@ -1,9 +1,13 @@
 IMAGE_FSTYPES += "balenaos-img"
 
-do_rootfs:balenaos-img[depends] += " linux-tegra:do_deploy edk2-firmware-tegra:do_deploy l4t-launcher-extlinux:do_deploy tegra-flash-dry:do_install "
+do_rootfs:balenaos-img[depends] += " linux-tegra:do_deploy edk2-firmware-tegra:do_deploy l4t-launcher-extlinux:do_deploy "
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
-IMAGE_INSTALL:append = " \
+IMAGE_INSTALL:append:jetson-agx-orin-devkit = " \
+    tegra-flash-dry \
+"
+
+IMAGE_INSTALL:append:jetson-orin-nx-xavier-nx-devkit = " \
     tegra-flash-dry \
 "
 
@@ -53,6 +57,7 @@ IMAGE_INSTALL:append:jetson-xavier = " \
 "
 
 IMAGE_INSTALL:append:jetson-xavier-nx-devkit-emmc = " \
+    tegra194-nxde-flash-dry \
     parted \
     gptfdisk \
     tegra-nvpmodel \

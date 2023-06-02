@@ -1,6 +1,7 @@
 include balena-image.inc
 
-do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy"
+do_image:balenaos-img:jetson-agx-orin-devkit[depends] += " tegra-flash-dry:do_deploy"
+do_image:balenaos-img:jetson-orin-nx-xavier-nx-devkit[depends] += " tegra-flash-dry:do_deploy"
 
 DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit = "331776"
 IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit = "1003520"
@@ -132,7 +133,7 @@ write_jetson_nx_partitions() {
       if [ ! "$file_name" = "none.bin" ]; then
         check_size ${file_path} ${part_size}
         # TODO: Secondary blobs with signed kernel, dtb and other bootloaders that need to be written to specific partitions are needed for the Xavier NX (Forecr DSB)
-        #dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=$(expr ${START} \/ 512) bs=512
+        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=$(expr ${START} \/ 512) bs=512
       fi
       START=$(expr ${END} \+ 1)
     done
@@ -141,6 +142,7 @@ write_jetson_nx_partitions() {
 # We leave this space way larger than currently
 # needed because other larger partitions can be
 # added from one Jetpack release to another
+do_image:balenaos-img:jetson-xavier-nx-devkit-emmc[depends] += "tegra194-nxde-flash-dry:do_deploy"
 DEVICE_SPECIFIC_SPACE:jetson-xavier-nx-devkit-emmc = "458752"
 device_specific_configuration:jetson-xavier-nx-devkit-emmc() {
     write_jetson_nx_partitions "partition_specification194_nxde.txt"
