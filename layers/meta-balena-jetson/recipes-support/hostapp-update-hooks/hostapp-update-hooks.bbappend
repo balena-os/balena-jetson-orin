@@ -1,6 +1,8 @@
 FILESEXTRAPATHS:append := ":${THISDIR}/files"
 
-DEPENDS:append = " tegra-flash-dry"
+DEPENDS:append:jetson-agx-orin-devkit  = " tegra-flash-dry"
+DEPENDS:append:jetson-orin-nx-xavier-nx-devkit  = " tegra-flash-dry"
+DEPENDS:append:jetson-xavier-nx-devkit-emmc = "tegra194-nxde-flash-dry"
 
 HOSTAPP_HOOKS:append:jetson-agx-orin-devkit = " \
     99-resin-uboot \
