@@ -25,6 +25,12 @@ SRC_URI:append:jetson-xavier-nx-devkit-emmc = " \
     file://0007-Add-hup-and-rollback-support-xav-nx.patch;patchdir=.. \
 "
 
+# Remove patch inherited from base Xavier NX
+SRC_URI:remove:custom-xavier-nx-emmc = "file://0007-Add-hup-and-rollback-support-xav-nx.patch;patchdir=.."
+SRC_URI:append:custom-xavier-nx-emmc = " \
+    file://0007-Add-hup-and-rollback-support-custom-xav-nx.patch;patchdir=.. \
+"
+
 # Removed for now, pending test results
 #SRC_URI:remove:forecr-dsb-nx2-xavier-nx-emmc = "file://0007-Add-hup-and-rollback-support-xav-nx.patch;patchdir=.."
 #SRC_URI:append:forecr-dsb-nx2-xavier-nx-emmc = " 
