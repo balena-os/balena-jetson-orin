@@ -13,6 +13,10 @@ SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \
     file://0005-L4TLauncher-hup-rollback-support-orin-nx.patch;patchdir=.. \
 "
 
+SRC_URI:append:jetson-orin-nano-devkit-nvme = " \
+    file://0005-Add-hup-and-rollback-support-orin-nano-35-3-1.patch;patchdir=.. \
+"
+
 SRC_URI:append:jetson-xavier = " \
     file://0006-Add-hup-and-rollback-support-agx-xav.patch;patchdir=.. \
 "
@@ -39,3 +43,6 @@ do_deploy:append() {
 # We generate the final nvdisp-init.bin file in tegra194-flash* using
 # the original one provided in the tegra BSP archive
 NVDISPLAY_INIT_DEFAULT:tegra194=""
+
+
+#tegra234-p3767-0003-p3768-0000-a0.dtb
