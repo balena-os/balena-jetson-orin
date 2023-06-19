@@ -1,4 +1,44 @@
 - commits:
+    - subject: Update layers/meta-balena to 4a9a1b6ce3abacf025fe01b5b4292be2f791c13b
+      hash: 65b35bda724bab429ee7304d60b471dd78383806
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 4a9a1b6ce3abacf025fe01b5b4292be2f791c13b
+        changelog-entry: Update layers/meta-balena to 4a9a1b6ce3abacf025fe01b5b4292be2f791c13b
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-supervisor to v14.11.3
+              hash: 1d9f52fee5040b952077846bef79ea99bdf465e0
+              body: |
+                Update balena-supervisor from 14.11.2 to 14.11.3
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: Update balena-io/deploy-to-balena-action to v0.27.0
+                      hash: 1675c16622d861ce6e6e445400b5440a447688f7
+                      body: |
+                        Update balena-io/deploy-to-balena-action
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Changelog-entry: Update balena-io/deploy-to-balena-action to v0.27.0
+                        changelog-entry: Update balena-io/deploy-to-balena-action to v0.27.0
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: balena-supervisor-14.11.3
+                  title: ""
+                  date: 2023-06-15T19:49:42.493Z
+          version: meta-balena-2.115.9
+          title: ""
+          date: 2023-06-15T23:43:34.815Z
+  version: 2.115.9
+  title: ""
+  date: 2023-06-19T21:51:07.769Z
+- commits:
     - subject: Update balena-yocto-scripts to 91474e62b74d6390c285d1033b34f77092fe1824
       hash: f68a91ff0a33a9fe7a91fd2ef5e1842a9c238eb4
       body: Update balena-yocto-scripts
