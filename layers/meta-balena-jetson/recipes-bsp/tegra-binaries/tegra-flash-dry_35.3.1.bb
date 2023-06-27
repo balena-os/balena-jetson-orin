@@ -20,7 +20,7 @@ PARTSPEC:jetson-xavier-nx-devkit-emmc = "partition_specification194_nxde.txt"
 PARTSPEC:jetson-xavier-nx-devkit = "partition_specification194_nxde_sdcard.txt"
 PARTSPEC:jetson-agx-orin-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nx-xavier-nx-devkit = "partition_specification234.txt"
-PARTSPEC:jetson-orin-nano-devkit-nvme = "partition_specification234.txt"
+PARTSPEC:jetson-orin-nano-devkit-nvme = "partition_specification234_orin_nano.txt"
 
 BINARY_INSTALL_PATH = "/opt/tegra-binaries/"
 
@@ -43,9 +43,9 @@ do_install() {
 }
 
 do_deploy() {
-    rm -rf ${DEPLOYDIR}/$(basename ${BINARY_INSTALL_PATH}) || true
-    mkdir -p ${DEPLOYDIR}/$(basename ${BINARY_INSTALL_PATH})
-    cp -r ${D}/${BINARY_INSTALL_PATH}/* ${DEPLOYDIR}/$(basename ${BINARY_INSTALL_PATH})
+    rm -rf ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH}) || true
+    mkdir -p ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
+    cp -r ${D}/${BINARY_INSTALL_PATH}/* ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
 }
 
 FILES:${PN} += " \
