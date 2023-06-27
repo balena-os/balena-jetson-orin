@@ -2,7 +2,7 @@ do_install:tegra234() {
     install -d ${D}/boot/extlinux
     cp ${DEPLOY_DIR_IMAGE}/extlinux/extlinux.conf ${B}/
     install -m 0644 ${B}/extlinux.conf ${D}/boot/extlinux/
-    install -m 0644 ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${D}/boot/${KERNEL_IMAGETYPE}
+    #install -m 0644 ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${D}/boot/${KERNEL_IMAGETYPE}
     touch ${DEPLOY_DIR_IMAGE}/extra_uEnv.txt
 }
 
@@ -10,7 +10,7 @@ do_install:tegra194() {
     install -d ${D}/boot/extlinux
     cp ${DEPLOY_DIR_IMAGE}/extlinux/extlinux.conf ${B}/
     install -m 0644 ${B}/extlinux.conf ${D}/boot/extlinux/
-    install -m 0644 ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${D}/boot/${KERNEL_IMAGETYPE}
+    #install -m 0644 ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${D}/boot/${KERNEL_IMAGETYPE}
     touch ${DEPLOY_DIR_IMAGE}/extra_uEnv.txt
 }
 
@@ -25,4 +25,4 @@ do_compile() {
     fi
 }
 
-FILES:${PN} = "/boot/extlinux/extlinux.conf /boot/Image"
+FILES:${PN} = "/boot/extlinux/extlinux.conf"
