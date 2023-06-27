@@ -5,7 +5,7 @@ DONE_FLASHING  = 'After flashing is completed, please wait until the board is re
 module.exports =
 	version: 1
 	slug: 'jetson-orin-nano-devkit-nvme'
-	name: 'Nvidia Jetson Orin Nano Devkit NVME'
+	name: 'Nvidia Jetson Orin Nano 8GB (SD) Devkit NVME'
 	arch: 'aarch64'
 	state: 'released'
 
