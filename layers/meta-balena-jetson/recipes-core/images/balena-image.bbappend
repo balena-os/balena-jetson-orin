@@ -6,7 +6,7 @@ do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy"
 # All values are in KiB
 DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit = "331776"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nx-xavier-nx-devkit = "331776"
-DEVICE_SPECIFIC_SPACE:jetson-orin-nano-devkit-nvme = "331776"
+DEVICE_SPECIFIC_SPACE:jetson-orin-nano-devkit-nvme = "802816"
 
 BALENA_BOOT_SIZE:jetson-xavier = "121440"
 BALENA_BOOT_SIZE:jetson-xavier-nx-devkit-emmc = "121440"
@@ -59,7 +59,7 @@ device_specific_configuration:jetson-agx-orin-devkit() {
 } 
 
 device_specific_configuration:jetson-orin-nano-devkit-nvme() {
-    partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification234.txt)
+    partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification234_orin_nano.txt)
     NVIDIA_PART_OFFSET=40
     START=${NVIDIA_PART_OFFSET}
     for n in ${partitions}; do
@@ -173,3 +173,4 @@ DEVICE_SPECIFIC_SPACE:jetson-xavier-nx-devkit = "458752"
 device_specific_configuration:jetson-xavier-nx-devkit() {
     write_jetson_nx_partitions "partition_specification194_nxde_sdcard.txt"
 }
+

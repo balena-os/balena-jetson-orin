@@ -5,7 +5,11 @@ DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}
 
 IMAGE_INSTALL:append = " \
     tegra-flash-dry \
+    kernel-image-initramfs \
 "
+
+MACHINE_EXTRA_RRECOMMENDS += " kernel-image-initramfs"
+MACHINE_EXTRA_RDEPENDS += " kernel-image-initramfs"
 
 IMAGE_INSTALL:append:jetson-orin-nano-devkit-nvme = " \
     parted \
@@ -21,6 +25,7 @@ IMAGE_INSTALL:append:jetson-orin-nano-devkit-nvme = " \
     jetson-dtbs \
     nvidia-display-driver \
     tegra-nvfancontrol \
+    tegra-nvpower \
 "
 
 IMAGE_INSTALL:append:jetson-agx-orin-devkit = " \
@@ -98,5 +103,4 @@ IMAGE_INSTALL:append:jetson-xavier-nx-devkit = " \
 "
 
 IMAGE_INSTALL:remove = "kernel-image-image"
-IMAGE_INSTALL:remove = "kernel-image-initramfs"
 
