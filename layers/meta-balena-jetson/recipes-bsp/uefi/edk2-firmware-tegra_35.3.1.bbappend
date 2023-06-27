@@ -44,5 +44,3 @@ do_deploy:append() {
 # the original one provided in the tegra BSP archive
 NVDISPLAY_INIT_DEFAULT:tegra194=""
 
-
-#tegra234-p3767-0003-p3768-0000-a0.dtb
