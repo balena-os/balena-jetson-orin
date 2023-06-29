@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tegra-flash-dry: Update to 35.3.1 and include placeholder bootblob"
+      hash: 85ac34d50f6879bcba5bb104d1cef1d03c1b4983
+      body: ""
+      footer:
+        Changelog-entry: "tegra-flash-dry: Update to 35.3.1 and include placeholder bootblob"
+        changelog-entry: "tegra-flash-dry: Update to 35.3.1 and include placeholder bootblob"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 2.115.13+rev1
+  title: ""
+  date: 2023-06-29T15:15:31.447Z
+- commits:
     - subject: Update layers/meta-balena to 87c91cdae3ca87e44a9417627c260701a5f85df9
       hash: 02e3642bf87d33448517b23e49bc62b260f6fc71
       body: Update layers/meta-balena

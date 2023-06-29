@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v2.115.13+rev1
+## (2023-06-29)
+
+* tegra-flash-dry: Update to 35.3.1 and include placeholder bootblob [Alexandru Costache]
+
 # v2.115.13
 ## (2023-06-26)
 
