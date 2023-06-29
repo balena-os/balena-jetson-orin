@@ -24,7 +24,6 @@ IMAGE_INSTALL:append:jetson-orin-nano-devkit-nvme = " \
     l4t-launcher-extlinux \
     jetson-dtbs \
     nvidia-display-driver \
-    tegra-nvfancontrol \
     tegra-nvpower \
 "
 
