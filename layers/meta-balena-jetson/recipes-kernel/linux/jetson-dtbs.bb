@@ -63,3 +63,12 @@ FILES:${PN}:forecr-dsb-nx2-xavier-nx-emmc += " \
 	/boot/tegra194-p3668-dsboard-nx2-0000-rev121.dtb \
 	/boot/tegra194-p3668-dsboard-nx2-0000-rev121-imx477.dtb \
 "
+
+do_install:jetson-orin-nano-devkit-nvme() {
+        install -d ${D}/boot/
+        install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
+}
+
+FILES:${PN}:jetson-orin-nano-devkit-nvme += " \
+        /boot/tegra234-p3767-0003-p3768-0000-a0.dtb \
+"
