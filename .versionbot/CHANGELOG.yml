@@ -1,4 +1,47 @@
 - commits:
+    - subject: Update layers/meta-balena to 5fca7f6bd85c00824689bedb2ceb4ee3fb5faad2
+      hash: 0a9037a8ad4123c5b938e8b45d139c6962a3cbec
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 5fca7f6bd85c00824689bedb2ceb4ee3fb5faad2
+        changelog-entry: Update layers/meta-balena to 5fca7f6bd85c00824689bedb2ceb4ee3fb5faad2
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update balena-supervisor to v14.11.10
+              hash: ff0ccecb9211bccf482105bc40d453f82a44d3f9
+              body: |
+                Update balena-supervisor from 14.11.9 to 14.11.10
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: Add revpi-connect-s to Raspberry Pi variants
+                      hash: 8d2b310af840d86ed9b96ac5bb4c5bc74e52e7ff
+                      body: >
+                        We need the supervisor to be able to manage config.txt
+                        changes for the
+
+                        Revolution Pi Connect S.
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Signed-off-by: Florin Sarbu <florin@balena.io>
+                        signed-off-by: Florin Sarbu <florin@balena.io>
+                      author: Florin Sarbu
+                      nested: []
+                  version: balena-supervisor-14.11.10
+                  title: ""
+                  date: 2023-07-05T19:00:39.117Z
+          version: meta-balena-3.0.5
+          title: ""
+          date: 2023-07-06T01:55:50.942Z
+  version: 3.0.5
+  title: ""
+  date: 2023-07-06T03:52:33.819Z
+- commits:
     - subject: Update layers/meta-balena to 6a3ed9d310f41d687c9751f8e3e8c37604195cd4
       hash: 84aa8fe9cb822d9b61111c0de5caf70bc3ce648f
       body: Update layers/meta-balena
