@@ -1,6 +1,10 @@
 #!/bin/sh
 set -o errexit
 
+# NOTE: This script is disabled. Once an L4T newer than 35.3.1
+# we will be able to test an update triggered from UEFI fw. Until then,
+# there's no reason to update the boot firmware.
+
 # Script which writes the appropriate
 # device tree with embedded cmdline
 # and updates the kernel, as well as
