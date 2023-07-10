@@ -14,7 +14,6 @@ HOSTAPP_HOOKS:append:jetson-orin-nx-xavier-nx-devkit = " \
 
 HOSTAPP_HOOKS:append:jetson-orin-nano-devkit-nvme = " \
      99-resin-uboot \
-     99-resin-bootfiles-orin-nano-devkit-nvme \
 "
 
 HOSTAPP_HOOKS:append:jetson-xavier = " \

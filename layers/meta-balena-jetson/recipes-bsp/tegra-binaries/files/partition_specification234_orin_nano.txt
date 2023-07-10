@@ -6,7 +6,7 @@ kernel-dtb_b:none.bin:896
 reserved_for_chain_B_user:none.bin:65536
 recovery:none.bin:163840
 recovery-dtb:none.bin:1024
-RECROOTFS:none.bin:614400
+RECROOTFS:none.bin:204800
 esp:none.bin:131072
 recovery_alt:none.bin:163840
 recovery-dtb_alt:none.bin:1024
