@@ -6,7 +6,7 @@ do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy"
 # All values are in KiB
 DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit = "331776"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nx-xavier-nx-devkit = "331776"
-DEVICE_SPECIFIC_SPACE:jetson-orin-nano-devkit-nvme = "802816"
+DEVICE_SPECIFIC_SPACE:jetson-orin-nano-devkit-nvme = "598016"
 
 BALENA_BOOT_SIZE:jetson-xavier = "121440"
 BALENA_BOOT_SIZE:jetson-xavier-nx-devkit-emmc = "121440"
@@ -20,7 +20,7 @@ IMAGE_ROOTFS_SIZE:jetson-xavier = "487424"
 IMAGE_ROOTFS_SIZE:jetson-xavier-nx-devkit-emmc = "733184"
 IMAGE_ROOTFS_SIZE:jetson-xavier-nx-devkit = "733184"
 IMAGE_ROOTFS_SIZE:jetson-orin-nx-xavier-nx-devkit = "983040"
-IMAGE_ROOTFS_SIZE:jetson-orin-nano-devkit-nvme = "983040"
+IMAGE_ROOTFS_SIZE:jetson-orin-nano-devkit-nvme = "733184"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
