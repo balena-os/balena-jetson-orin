@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.0.8+rev1
+## (2023-07-10)
+
+* tegra-binaries: Shrink Orin Nano partition sizes [Alexandru Costache]
+
 # v3.0.8
 ## (2023-07-10)
 

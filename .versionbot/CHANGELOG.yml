@@ -1,4 +1,21 @@
 - commits:
+    - subject: "tegra-binaries: Shrink Orin Nano partition sizes"
+      hash: b20ac102d35b5627aaedc4ffa817f7aae21a600e
+      body: |
+        Previous sizes caused the image to have more than 4GB,
+        which is the maximum allowed size for a file contained
+        in a zip archive. This causes problem for the image maker.
+      footer:
+        Changelog-entry: "tegra-binaries: Shrink Orin Nano partition sizes"
+        changelog-entry: "tegra-binaries: Shrink Orin Nano partition sizes"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.0.8+rev1
+  title: ""
+  date: 2023-07-10T13:09:57.606Z
+- commits:
     - subject: Update layers/meta-balena to d36ec27a6f467d936e93a0f4c64f59cd917a00a2
       hash: d11d979da31d1140fef3efae41254472bf71f706
       body: Update layers/meta-balena
