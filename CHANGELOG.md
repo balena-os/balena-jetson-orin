@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.0.8+rev2
+## (2023-07-11)
+
+* tegra-binaries: Update Orin NVME boot blob after partition size change [Alexandru Costache]
+
 # v3.0.8+rev1
 ## (2023-07-10)
 

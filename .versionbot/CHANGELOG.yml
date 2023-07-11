@@ -1,4 +1,27 @@
 - commits:
+    - subject: "tegra-binaries: Update Orin NVME boot blob after partition size change"
+      hash: 46605d76820ec1b848c41efcce3037a158046bd7
+      body: |
+        At this point the Orin Nano is not deployed to production,
+        so the partition update done previously to fix the zip
+        file size problem doesn't cause any problem.
+
+        We updated the boot blob however because it's not currently
+        possible to test a UEFI triggered bootloader update - the BSP
+        doesn't provide one yet.
+      footer:
+        Changelog-entry: "tegra-binaries: Update Orin NVME boot blob after partition
+          size change"
+        changelog-entry: "tegra-binaries: Update Orin NVME boot blob after partition
+          size change"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.0.8+rev2
+  title: ""
+  date: 2023-07-11T11:29:16.325Z
+- commits:
     - subject: "tegra-binaries: Shrink Orin Nano partition sizes"
       hash: b20ac102d35b5627aaedc4ffa817f7aae21a600e
       body: |
