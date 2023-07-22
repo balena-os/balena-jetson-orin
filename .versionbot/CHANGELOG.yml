@@ -1,4 +1,47 @@
 - commits:
+    - subject: Update layers/meta-balena to e1f474a9b8d28d5b0a0b993dd52108c214a376ea
+      hash: 818181db240d6115458b9d902d2ead2a597c857e
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to e1f474a9b8d28d5b0a0b993dd52108c214a376ea
+        changelog-entry: Update layers/meta-balena to e1f474a9b8d28d5b0a0b993dd52108c214a376ea
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "modemmanager: increase qmi port open timeout"
+              hash: d3358a33b29cf1c8404f2a0c266bbb2023235f84
+              body: |
+                The SIM7600G modem will fail to connect using
+                QMI and the default 45s timeout, nor will it work
+                with a 65s one. The value we found to work consistently
+                with this modem connected over pcie is 95s.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru Costache
+              nested: []
+            - subject: Update ModemManager to v1.20.6
+              hash: 0d629552a0caf3745e9e3738b3e74bbf802b020c
+              body: |
+                Also updated are the dependencies libqmi and libmbim.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Changelog-entry: Update ModemManager to v1.20.6
+                changelog-entry: Update ModemManager to v1.20.6
+                Signed-off-by: Zahari Petkov <zahari@balena.io>
+                signed-off-by: Zahari Petkov <zahari@balena.io>
+              author: Zahari Petkov
+              nested: []
+          version: meta-balena-3.0.16
+          title: ""
+          date: 2023-07-22T05:19:59.203Z
+  version: 3.0.16
+  title: ""
+  date: 2023-07-22T08:55:30.171Z
+- commits:
     - subject: Update layers/meta-balena to a20f839eb56d1636e9905c4809e27c4c318977e8
       hash: dc53e8b328f53c3d8540d9ba4497b6ed9071ee47
       body: Update layers/meta-balena
