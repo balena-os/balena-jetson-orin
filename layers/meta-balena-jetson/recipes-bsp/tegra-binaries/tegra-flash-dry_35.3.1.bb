@@ -31,6 +31,7 @@ SRC_URI = " \
 
 SRC_URI:append:jetson-agx-orin-devkit = " \
     file://TEGRA_BL_3701_000.Cap.gz;unpack=0 \
+    file://TEGRA_BL_3701_300.Cap.gz;unpack=0 \
 "
 
 do_install() {
@@ -48,6 +49,7 @@ do_install() {
 
 do_install:append:jetson-agx-orin-devkit() {
     install ${WORKDIR}/TEGRA_BL_3701_000.Cap.gz ${D}/${BINARY_INSTALL_PATH}/
+    install ${WORKDIR}/TEGRA_BL_3701_300.Cap.gz ${D}/${BINARY_INSTALL_PATH}/
 }
 
 do_deploy() {
