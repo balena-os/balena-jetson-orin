@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.0.16+rev1
+## (2023-07-25)
+
+* hostapp-update-hook: Trigger uefi update on next reboot for AGX Orin [Alexandru Costache]
+
 # v3.0.16
 ## (2023-07-22)
 

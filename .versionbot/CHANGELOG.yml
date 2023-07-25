@@ -1,4 +1,19 @@
 - commits:
+    - subject: "hostapp-update-hook: Trigger uefi update on next reboot for AGX Orin"
+      hash: 5a5ecafcf181213db7afdd83ee8e4cc1193675b8
+      body: |
+        This depends on the HUP container having the /sys bindmounts
+      footer:
+        Changelog-entry: "hostapp-update-hook: Trigger uefi update on next reboot for AGX Orin"
+        changelog-entry: "hostapp-update-hook: Trigger uefi update on next reboot for AGX Orin"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.0.16+rev1
+  title: ""
+  date: 2023-07-25T12:25:45.754Z
+- commits:
     - subject: Update layers/meta-balena to e1f474a9b8d28d5b0a0b993dd52108c214a376ea
       hash: 818181db240d6115458b9d902d2ead2a597c857e
       body: Update layers/meta-balena
