@@ -6,7 +6,13 @@ DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}
 IMAGE_INSTALL:append = " \
     tegra-flash-dry \
     kernel-image-initramfs \
+    tegra-redundant-boot \
+    tegra-nv-boot-control-config \
 "
+
+# We don't mount or use the esp partition, so let's
+# remove the systemd mounts that delay booting
+IMAGE_INSTALL:remove = "setup-nv-boot-control-service"
 
 MACHINE_EXTRA_RRECOMMENDS += " kernel-image-initramfs"
 MACHINE_EXTRA_RDEPENDS += " kernel-image-initramfs"

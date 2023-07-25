@@ -29,6 +29,11 @@ SRC_URI = " \
     file://${PARTSPEC} \
 "
 
+SRC_URI:append:jetson-agx-orin-devkit = " \
+    file://TEGRA_BL_3701_000.Cap.gz;unpack=0 \
+    file://TEGRA_BL_3701_300.Cap.gz;unpack=0 \
+"
+
 do_install() {
     # Ensure install is not executed until
     # do_unpack copies the archive
@@ -40,6 +45,11 @@ do_install() {
     install -d ${D}/${BINARY_INSTALL_PATH}
     install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
     install ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
+}
+
+do_install:append:jetson-agx-orin-devkit() {
+    install ${WORKDIR}/TEGRA_BL_3701_000.Cap.gz ${D}/${BINARY_INSTALL_PATH}/
+    install ${WORKDIR}/TEGRA_BL_3701_300.Cap.gz ${D}/${BINARY_INSTALL_PATH}/
 }
 
 do_deploy() {
