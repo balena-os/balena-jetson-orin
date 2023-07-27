@@ -10,14 +10,8 @@ set -o errexit
 . /usr/sbin/balena-config-vars
 
 DURING_UPDATE=${DURING_UPDATE:-0}
-declare -a UPDATED_PARTITIONS=()
-efivars_dir="/sys/firmware/efi/efivars/"
-# See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
-platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
-platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
-os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
-tmp_file="/tmp/platformspecfile.bin"
 bootloader_device="/dev/mtdblock0"
+internal_storage="/dev/mmcblk0"
 use_capsule=1
 
 if cat /proc/device-tree/nvidia,dtsfilename | grep -q "p3701-0000" ; then 
@@ -71,13 +65,12 @@ check_and_update_esp_flags() {
     esp_index="5"
     resin_boot_index="6"
 
-    # TODO: remove the hardcoded mmc block
-    esp_part_type=$(sfdisk --part-type /dev/mmcblk0 $esp_index)
-    resin_boot_part_type=$(sfdisk --part-type /dev/mmcblk0 $resin_boot_index)
+    esp_part_type=$(sfdisk --part-type $internal_storage $esp_index)
+    resin_boot_part_type=$(sfdisk --part-type $internal_storage $resin_boot_index)
 
     if [ "$esp_type" = "$esp_part_type" ]; then
         info_log "esp partition has esp flag, will be cleared"
-        sfdisk --part-type /dev/mmcblk0 $esp_index $data_type
+        sfdisk --part-type $internal_storage $esp_index $data_type
         sync
     else
         info_log "no type change needed on esp partition"
@@ -85,7 +78,7 @@ check_and_update_esp_flags() {
 
     if [ "$resin_boot_part_type" != "$esp_type" ]; then
         info_log "resin-boot partition does not have esp type, must be added"
-        sfdisk --part-type /dev/mmcblk0 $resin_boot_index $esp_type
+        sfdisk --part-type $internal_storage $resin_boot_index $esp_type
         sync
     else
         info_log "no type change needed on resin-boot partition"
@@ -103,22 +96,13 @@ do_capsule_update() {
     zcat ${bootloader_blob} > /mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
     sync
 
-    # If the file already exists, writing to it will fail
-    # causing the entire hook to fail
-    if [ ! -e ${platform_spec_efivar} ]; then
-        printf "\x07\x00\x00\x00" > ${tmp_file}
-        printf "%s" "3701-500-0000-J.0-1-1-jetson-agx-orin-devkit-" >> ${tmp_file}
-        dd if=${tmp_file} of=${platform_spec_efivar}
+    if [ $(ls -l ${efivars_dir}OsIndications* | wc -l) -gt 0 ]; then
+        info "Once a release that bindmounts sysfs is available in production, the efi vars can be updated from here instead of the after hook"
+    else
+        # Once the above condition is met, we could drop the after hook and use the legacy update mode if the base release is older
+        # than the one with sysfs bindmount in hostapp-update
+        info "Sysfs directory exists, but is not bindmounted. After hook will write the efi variables from the old OS"
     fi
-
-    if [ ! -e ${platform_compat_spec_efivar} ]; then
-        printf "\x07\x00\x00\x00" > ${tmp_file}
-        printf "%s" "3701--0000--1--jetson-agx-orin-devkit-" >> ${tmp_file}
-        dd if=${tmp_file} of=${platform_compat_spec_efivar}
-    fi
-
-    printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
-    dd if=${tmp_file} of=${os_indications_efivar}
 }
 
 do_legacy_update() {
@@ -137,7 +121,7 @@ do_legacy_update() {
     fi
 
     # Sync internal memory
-    sync /dev/mtdblock0
+    sync ${bootloader_device}
 }
 
 if [ $use_capsule -eq 1 ]; then
