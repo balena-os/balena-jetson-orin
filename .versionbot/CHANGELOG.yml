@@ -1,4 +1,63 @@
 - commits:
+    - subject: "hostapp-update-hooks: Move efivars trigger to 'after' hook"
+      hash: 930c6b8c4abab1c7db7133b5cf29a590aa1d5fe5
+      body: >
+        In PR https://github.com/balena-os/balena-jetson-orin/pull/238
+
+        we added the prebuilt capsule binaries as well as the legacy
+
+        bundle for L4T 35.3.1, and we also added the switch of the esp
+
+        and resin-boot partition types - which is performed if resin-boot
+
+        does not have the esp,boot flags set by the flashing tools. These
+
+        flags are needed by the UEFI firmware to load the capsule from
+
+        the resin-boot partition, and we'll modify jetson-flash to set
+
+        them during provisioning from now on.
+
+
+        The uefi variable setting approach in the above PR won't work
+
+        as-is because balenaHUP does not run hostapp-update in a container,
+
+        and because the existing hostapp-update script in the current releases
+
+        does not bindmount the sysfs directory. Thus it doesn't allow for the
+
+        efivars needed to trigger the capsule update to be written.
+
+
+        The approach we want to take further and implement here is:
+
+          - use legacy update if updating from a very old release which
+            does not support capsule update
+          - trigger the capsule update from the after hook - which runs in
+            the current OS - until a release with an update hostapp-update
+            script becomes available in production for the AGX orin. See
+            meta-balena PR #3194
+          - once a release that bindmounts sysfs is available, we'll switch
+            to using the legacy mode for any releases that don't have the new
+            hostapp-update script, and remove the capsule update from the after hook
+
+        The advantage of the above approach is that we create an update path
+
+        that is a bit faster and safer than the legacy update mode, until a
+
+        newer hostapp-update script is available in production images.
+      footer:
+        Changelog-entry: "hostapp-update-hooks: Move efivars trigger to 'after' hook"
+        changelog-entry: "hostapp-update-hooks: Move efivars trigger to 'after' hook"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.1.1+rev1
+  title: ""
+  date: 2023-07-27T13:15:27.994Z
+- commits:
     - subject: Update layers/meta-balena to ced059b1f06281129434311dddc8ddab3d65fb5b
       hash: 713b5fbd7e4d687b513027a1b391c96dbc51867c
       body: Update layers/meta-balena

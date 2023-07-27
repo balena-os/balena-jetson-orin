@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.1+rev1
+## (2023-07-27)
+
+* hostapp-update-hooks: Move efivars trigger to 'after' hook [Alexandru Costache]
+
 # v3.1.1
 ## (2023-07-26)
 
