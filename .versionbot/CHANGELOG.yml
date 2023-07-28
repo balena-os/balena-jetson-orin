@@ -1,4 +1,19 @@
 - commits:
+    - subject: "tegra-flash-dry: Update boot blob for Orin NX on L4T 35.3.1"
+      hash: c8fcc6bb819a7fa40e4749c31ac62266ac0d9cde
+      body: |
+        No capsule update as of 35.3.1 for the Orin NX.
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Changelog-entry: "tegra-flash-dry: Update boot blob for Orin NX on L4T 35.3.1"
+        changelog-entry: "tegra-flash-dry: Update boot blob for Orin NX on L4T 35.3.1"
+      author: Alexandru Costache
+      nested: []
+  version: 3.1.3+rev1
+  title: ""
+  date: 2023-07-28T19:23:47.075Z
+- commits:
     - subject: Update layers/meta-balena to 3df341dcfa5681fc27d0713814635ddfe20d6a17
       hash: 666ddf42321a6a152050e166f935cdbdbc6b232d
       body: Update layers/meta-balena

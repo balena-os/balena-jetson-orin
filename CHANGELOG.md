@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.3+rev1
+## (2023-07-28)
+
+* tegra-flash-dry: Update boot blob for Orin NX on L4T 35.3.1 [Alexandru Costache]
+
 # v3.1.3
 ## (2023-07-28)
 
