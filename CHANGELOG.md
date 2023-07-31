@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.4+rev1
+## (2023-07-31)
+
+* tegra-flash-dry: Fix boot blob Orin NX on 35.3.1 [Alexandru Costache]
+
 # v3.1.4
 ## (2023-07-30)
 

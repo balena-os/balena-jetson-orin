@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tegra-flash-dry: Fix boot blob Orin NX on 35.3.1"
+      hash: 8eba9aa2455b4d6065dd1d1378e2522b1cd3e1ec
+      body: |
+        In the previous commit the archived boot blob
+        was incorrect, let's fix this.
+      footer:
+        Changelog-entry: "tegra-flash-dry: Fix boot blob Orin NX on 35.3.1"
+        changelog-entry: "tegra-flash-dry: Fix boot blob Orin NX on 35.3.1"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.1.4+rev1
+  title: ""
+  date: 2023-07-31T13:37:48.285Z
+- commits:
     - subject: Update layers/meta-balena to 3ee7dc32110f9da60a088b5bd4bb39642d901bb5
       hash: 090c89bc3e59ac2f6e8ea4089bde176855e259b0
       body: Update layers/meta-balena
