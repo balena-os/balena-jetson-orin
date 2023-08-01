@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update balena-os/github-workflows to v0.0.21
+      hash: 803e0def3d46df34c9c4ae73b8e0b2b2b822d90d
+      body: Update balena-os/github-workflows
+      footer:
+        Changelog-entry: Update balena-os/github-workflows to v0.0.21
+        changelog-entry: Update balena-os/github-workflows to v0.0.21
+      author: Self-hosted Renovate Bot
+      nested: []
+  version: 3.1.4+rev2
+  title: ""
+  date: 2023-08-01T20:47:57.491Z
+- commits:
     - subject: "tegra-flash-dry: Fix boot blob Orin NX on 35.3.1"
       hash: 8eba9aa2455b4d6065dd1d1378e2522b1cd3e1ec
       body: |
