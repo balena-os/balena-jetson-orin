@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update contracts to bd81b500fe74976567485afa39f6bbab3e60dd77
+      hash: 240c397deb4b12b6d4beba3c030c49a41d004571
+      body: Update contracts
+      footer:
+        Changelog-entry: Update contracts to bd81b500fe74976567485afa39f6bbab3e60dd77
+        changelog-entry: Update contracts to bd81b500fe74976567485afa39f6bbab3e60dd77
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Fix conditional when installing libssl1.1
+              hash: 29e5a99050fb93fcea404fd48d2db029acf4acb3
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+          version: contracts-2.0.67
+          title: ""
+          date: 2023-08-03T20:27:02.315Z
+        - commits:
+            - subject: Fix a condition where /etc/nsswitch.conf exists and the build fails
+              hash: c8c521ae9fdb908fb37642154d5fbe73a2849985
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+          version: contracts-2.0.66
+          title: ""
+          date: 2023-08-03T20:04:14.870Z
+  version: 3.1.6+rev3
+  title: ""
+  date: 2023-08-03T22:44:26.539Z
+- commits:
     - subject: "tegra-flash-dry: Fix wifi card not detected on Orin NX"
       hash: 6bb8c7e4c7fbc2ff7648b674d1e8cabc2c64cb2a
       body: |
