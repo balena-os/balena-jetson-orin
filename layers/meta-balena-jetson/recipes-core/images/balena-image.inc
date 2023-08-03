@@ -64,6 +64,10 @@ IMAGE_INSTALL:append:jetson-orin-nx-xavier-nx-devkit = " \
     jetson-dtbs \
     nvidia-display-driver \
     tegra-nvfancontrol \
+    linux-firmware-rtl8168 \
+    kernel-module-r8169 \
+    kernel-module-realtek \
+    pciutils \
 "
 
 IMAGE_INSTALL:append:jetson-xavier = " \
