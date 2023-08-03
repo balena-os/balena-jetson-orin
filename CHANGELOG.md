@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.1.6+rev2
+## (2023-08-03)
+
+* tegra-flash-dry: Fix wifi card not detected on Orin NX [Alexandru Costache]
+
 # v3.1.6+rev1
 ## (2023-08-02)
 

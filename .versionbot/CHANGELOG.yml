@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tegra-flash-dry: Fix wifi card not detected on Orin NX"
+      hash: 6bb8c7e4c7fbc2ff7648b674d1e8cabc2c64cb2a
+      body: |
+        This newly genereted boot blob fixes the problem where the wifi
+        card is not discovered on pcie.
+      footer:
+        Changelog-entry: "tegra-flash-dry: Fix wifi card not detected on Orin NX"
+        changelog-entry: "tegra-flash-dry: Fix wifi card not detected on Orin NX"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.1.6+rev2
+  title: ""
+  date: 2023-08-03T09:58:49.612Z
+- commits:
     - subject: Update contracts to bf0ec3d5a42dae4babeed8485030a0ca50f6fde3
       hash: 8208dadbbed3a85ca44c1476dc68dfc283872092
       body: Update contracts
