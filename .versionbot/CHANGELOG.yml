@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update contracts to 10b9852d5826601854c35be13555647ca65bdb54
+      hash: 6c7426f15dc9f95f15889dacd870c34d86c7b73e
+      body: Update contracts
+      footer:
+        Changelog-entry: Update contracts to 10b9852d5826601854c35be13555647ca65bdb54
+        changelog-entry: Update contracts to 10b9852d5826601854c35be13555647ca65bdb54
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Remove Ubuntu Impish and Kinetic and add Lunar
+              hash: 44b45eae5a0e77c8cae05971aed7d1c4906221f9
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+          version: contracts-2.0.69
+          title: ""
+          date: 2023-08-22T16:59:36.789Z
+  version: 3.2.5+rev1
+  title: ""
+  date: 2023-08-22T19:55:54.363Z
+- commits:
     - subject: Update layers/meta-balena to b65f4a096bfae592e7f02acf7dd0be2110c84ae9
       hash: e49091d9714749a2fc6d44feaa6e0f9e600525c9
       body: Update layers/meta-balena
