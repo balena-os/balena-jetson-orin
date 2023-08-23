@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v3.2.5+rev2
+## (2023-08-23)
+
+* tegra-binaries: Update boot blob for Orin NX [Alexandru Costache]
+
 # v3.2.5+rev1
 ## (2023-08-22)
 

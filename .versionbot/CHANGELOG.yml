@@ -1,4 +1,20 @@
 - commits:
+    - subject: "tegra-binaries: Update boot blob for Orin NX"
+      hash: 81f43ced4973eb1adfc0fb1db23e7d56e1c1f5e8
+      body: |
+        This blob also sets the eeprom size to 0
+        on L4T 35.3.1.
+      footer:
+        Changelog-entry: "tegra-binaries: Update boot blob for Orin NX"
+        changelog-entry: "tegra-binaries: Update boot blob for Orin NX"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 3.2.5+rev2
+  title: ""
+  date: 2023-08-23T09:58:25.674Z
+- commits:
     - subject: Update contracts to 10b9852d5826601854c35be13555647ca65bdb54
       hash: 6c7426f15dc9f95f15889dacd870c34d86c7b73e
       body: Update contracts
