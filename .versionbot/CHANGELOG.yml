@@ -1,4 +1,36 @@
 - commits:
+    - subject: Update layers/meta-balena to e390695280de65b7e451afe624daaeea31dde595
+      hash: 5f96a26398c464e7c3c281511fa9e14bb05099b6
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to e390695280de65b7e451afe624daaeea31dde595
+        changelog-entry: Update layers/meta-balena to e390695280de65b7e451afe624daaeea31dde595
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "resin-u-boot.class: Fix for older u-boot versions"
+              hash: 8da86ebc124eacda1a1bf22d183f13a112c22158
+              body: |
+                The env_get() function was renamed from getenv() in commit
+                00caae6d47645e68d6e5277aceb69592b49381a6
+                env: Rename getenv/_f() to env_get()
+
+                Fix the balena_check_crc32 function to build for those older
+                u-boots too.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-3.2.6
+          title: ""
+          date: 2023-08-23T19:20:53.089Z
+  version: 3.2.6
+  title: ""
+  date: 2023-08-23T23:00:21.265Z
+- commits:
     - subject: "tegra-binaries: Update boot blob for Orin NX"
       hash: 81f43ced4973eb1adfc0fb1db23e7d56e1c1f5e8
       body: |
