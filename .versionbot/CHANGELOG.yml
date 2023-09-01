@@ -1,4 +1,34 @@
 - commits:
+    - subject: Update layers/meta-balena to cacbac0f5dc91de46ab61fcb1f517390dc4724ed
+      hash: 74979bc8ded64110bddf3190c9de220b52cea4f9
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to cacbac0f5dc91de46ab61fcb1f517390dc4724ed
+        changelog-entry: Update layers/meta-balena to cacbac0f5dc91de46ab61fcb1f517390dc4724ed
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "meta-resin-pyro: do not apply further modemmanager updates"
+              hash: 03d4aea5e8e846fe83ad8aa8369992beba8d0180
+              body: >
+                The meta-balena version of modemmanager is no longer compatible
+                with
+
+                Yocto Pyro, so stop trying to apply bbappend to it from meta-balena.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-3.2.10
+          title: ""
+          date: 2023-09-01T09:41:04.904Z
+  version: 3.2.10
+  title: ""
+  date: 2023-09-01T14:32:54.875Z
+- commits:
     - subject: Update layers/meta-balena to 3e9aa973067758b0424798dba9e9b9bdaf33a9d3
       hash: 36379c819b8cb5fb0af858c919dbbb8acb25027c
       body: Update layers/meta-balena
