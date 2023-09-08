@@ -92,6 +92,11 @@ BALENA_CONFIGS[xudc] = " \
     CONFIG_USB_TEGRA_XUDC=m \
 "
 
+BALENA_CONFIGS:append:jetson-agx-orin-devkit = " rtc"
+BALENA_CONFIGS[rtc] = " \
+    CONFIG_RTC_HCTOSYS_DEVICE="rtc0" \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 "
