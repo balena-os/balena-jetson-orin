@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.3+rev1
+## (2023-09-11)
+
+* Use battery backed-up RTC in Orin AGX devkit [Alex Gonzalez]
+
 # v4.0.3
 ## (2023-09-09)
 

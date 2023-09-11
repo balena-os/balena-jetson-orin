@@ -1,4 +1,25 @@
 - commits:
+    - subject: Use battery backed-up RTC in Orin AGX devkit
+      hash: 336d198b079a03941344410806bb449b90b4dbe2
+      body: >
+        The Orin AGX devkit has two RTC clocks, one in the SOM and one in the
+
+        carrier board. The BSP defaults to using the one in the SOM but only
+
+        the one in the carrier board is connected to a backup battery and is able
+
+        to keep time between reboots.
+      footer:
+        Changelog-entry: Use battery backed-up RTC in Orin AGX devkit
+        changelog-entry: Use battery backed-up RTC in Orin AGX devkit
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 4.0.3+rev1
+  title: ""
+  date: 2023-09-11T16:58:09.400Z
+- commits:
     - subject: Update layers/meta-balena to 3cdf98b11926bdbf27fb7870326a3f5d05e67e11
       hash: 6e1a065161dbb0dd984dddc9ca7dfdaa05614ecb
       body: Update layers/meta-balena
