@@ -1,4 +1,18 @@
 - commits:
+    - subject: Discontinue Forecr DSB NX2 board
+      hash: 7b7806f66afa1fe38d968539a8763189dd740982
+      body: ""
+      footer:
+        Changelog-entry: Discontinue Forecr DSB NX2 board
+        changelog-entry: Discontinue Forecr DSB NX2 board
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 4.0.10+rev1
+  title: ""
+  date: 2023-09-21T14:50:02.080Z
+- commits:
     - subject: Update layers/meta-balena to 966f4447225b4d7def470789ca6239067c22591d
       hash: 6a9239f3ec79386a141f45af81106245cc8d87d3
       body: Update layers/meta-balena

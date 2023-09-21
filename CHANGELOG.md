@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.0.10+rev1
+## (2023-09-21)
+
+* Discontinue Forecr DSB NX2 board [Alexandru Costache]
+
 # v4.0.10
 ## (2023-09-20)
 
