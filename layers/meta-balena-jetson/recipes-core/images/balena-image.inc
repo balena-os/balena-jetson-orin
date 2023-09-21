@@ -70,46 +70,5 @@ IMAGE_INSTALL:append:jetson-orin-nx-xavier-nx-devkit = " \
     pciutils \
 "
 
-IMAGE_INSTALL:append:jetson-xavier = " \
-    parted \
-    gptfdisk \
-    tegra-bluetooth \
-    tegra-wifi \
-    tegra-nvpmodel \
-    tegra-configs-nvstartup \
-    tegra-configs-udev \
-    tegra-nvfancontrol \
-    l4t-launcher-extlinux \
-"
-
-IMAGE_INSTALL:append:jetson-xavier-nx-devkit-emmc = " \
-    parted \
-    gptfdisk \
-    tegra-nvpmodel \
-    tegra-configs-nvstartup \
-    tegra-configs-udev \
-    tegra-wifi \
-    tegra-bluetooth \
-    tegra-firmware-rtl8822 \
-    mtd-utils \
-    tegra-nvfancontrol \
-    l4t-launcher-extlinux \
-    jetson-dtbs \
-"
-
-IMAGE_INSTALL:append:jetson-xavier-nx-devkit = " \
-    parted \
-    gptfdisk \
-    tegra-nvpmodel \
-    tegra-configs-nvstartup \
-    tegra-configs-udev \
-    mtd-utils \
-    tegra-bluetooth \
-    tegra-wifi \
-    tegra-firmware-rtl8822 \
-    tegra-nvfancontrol \
-    l4t-launcher-extlinux \
-"
-
 IMAGE_INSTALL:remove = "kernel-image-image"
 

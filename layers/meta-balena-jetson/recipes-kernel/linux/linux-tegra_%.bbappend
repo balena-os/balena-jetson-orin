@@ -8,8 +8,6 @@ SCMVERSION="n"
 SRC_URI:append = " file://0001-fix-kernel-headers-test.patch \
 		file://0001-defconfig-Fix-build-failure.patch \
 "
-SRC_URI:append:forecr-dsb-nx2-xavier-nx-emmc = " file://0001-Port-Forecr-DSBOARD-NX2-patches.patch "
-
 BALENA_CONFIGS:remove = " mdraid"
 
 BALENA_CONFIGS:append = " debug_kmemleak "
@@ -69,23 +67,6 @@ BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_V4=m \
     CONFIG_NFSD_V3=y \
     CONFIG_NFSD_V4=y \
-"
-
-BALENA_CONFIGS:append:forecr-dsb-nx2-xavier-nx-emmc = " pcf8574 lan743x xr17v35x usbserial"
-BALENA_CONFIGS[pcf8574] = " \
-    CONFIG_GPIO_PCF857X=m \
-"
-
-BALENA_CONFIGS[lan743x] = " \
-    CONFIG_LAN743X=m \
-"
-
-BALENA_CONFIGS[xr17v35x] = " \
-    CONFIG_SERIAL_8250_XR17V35X=m \
-"
-
-BALENA_CONFIGS[usbserial] = " \
-    CONFIG_USB_SERIAL_WWAN=m \
 "
 
 BALENA_CONFIGS[xudc] = " \
