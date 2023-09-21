@@ -1,8 +1,0 @@
-kernel:none.bin:67108864
-kernel_b:none.bin:67108864
-kernel-dtb:[DTB_NAME].dtb:524288
-kernel-dtb_b:[DTB_NAME].dtb:524288
-recovery-dtb:[DTB_NAME].dtb:524288
-kernel-bootctrl:none.bin:262144
-kernel-bootctrl_b:none.bin:262144
-PADDING:none.bin:333426688

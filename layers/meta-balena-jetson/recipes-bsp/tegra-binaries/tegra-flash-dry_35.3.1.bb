@@ -10,14 +10,9 @@ PN = "tegra-flash-dry"
 BOOTBLOB:jetson-agx-orin-devkit = "boot0_agx_orin_devkit.img.gz"
 
 # TODO: Update boot blobs for Jetson Xavier AGX, Forecr DSB and Orin NX in Xavier NX Devkit on L4T 35.2.1
-BOOTBLOB:jetson-xavier = "boot0_agx_devkit.img.gz"
-BOOTBLOB:forecr-dsb-nx2-xavier-nx-emmc = "boot0_forecr_dsb_nx2_xavier_nx.img.gz"
 BOOTBLOB:jetson-orin-nx-xavier-nx-devkit = "boot0_orin_nx_xavier_nx_devkit.img.gz"
 BOOTBLOB:jetson-orin-nano-devkit-nvme = "boot0_orin_nano_devkit_nvme.img.gz"
 
-PARTSPEC:jetson-xavier = "partition_specification194.txt"
-PARTSPEC:jetson-xavier-nx-devkit-emmc = "partition_specification194_nxde.txt"
-PARTSPEC:jetson-xavier-nx-devkit = "partition_specification194_nxde_sdcard.txt"
 PARTSPEC:jetson-agx-orin-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nx-xavier-nx-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nano-devkit-nvme = "partition_specification234_orin_nano.txt"
