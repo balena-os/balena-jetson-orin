@@ -1,4 +1,53 @@
 - commits:
+    - subject: Update layers/meta-balena to 44da832b8ba67e5889f8c0d09cea7372ca0b7c09
+      hash: 3f7eb538e33e95c94ecf5dad6a422152936ba6c8
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 44da832b8ba67e5889f8c0d09cea7372ca0b7c09
+        changelog-entry: Update layers/meta-balena to 44da832b8ba67e5889f8c0d09cea7372ca0b7c09
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update tests/leviathan digest to b4e68c8
+              hash: f772b9dde29bd43c1baf88edc0abc954a32040af
+              body: Update tests/leviathan
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: Update actions/checkout action to v4
+                      hash: eb892035fb8c34e2a87ebf37f2b7f8bd8b00a61c
+                      body: |
+                        Update actions/checkout from 3 to 4
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.28.30
+                  title: ""
+                  date: 2023-09-25T14:25:17.184Z
+          version: meta-balena-4.0.15
+          title: ""
+          date: 2023-09-27T20:13:31.640Z
+        - commits:
+            - subject: "patch: Add custom build docs"
+              hash: 1d5f8ba92d5bd5b7a1fd26fa25473febc8e097d2
+              body: ""
+              footer:
+                Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+              author: Vipul Gupta (@vipulgupta2048)
+              nested: []
+          version: meta-balena-4.0.14
+          title: ""
+          date: 2023-09-27T13:13:37.324Z
+  version: 4.0.15
+  title: ""
+  date: 2023-09-28T00:14:28.130Z
+- commits:
     - subject: Update layers/meta-balena to 57352e943a786ab900f9dd9d07fcd39963babdf6
       hash: 1bf97775a5d5a5e408a2e02a4153ab27b5b0e57e
       body: Update layers/meta-balena
