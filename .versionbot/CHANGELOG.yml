@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update layers/meta-balena to 9fe2ab5faca6323fa188bdc3145511083085ffc9
+      hash: 512a3f868e0560a2547e1facccddc94ada5ae484
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 9fe2ab5faca6323fa188bdc3145511083085ffc9
+        changelog-entry: Update layers/meta-balena to 9fe2ab5faca6323fa188bdc3145511083085ffc9
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update backports with current 2.112.x
+              hash: 5e933611adce56c0028507838b8582635b4421e4
+              body: |
+                Set current to 2.112.x, next to 2.114.x and sunset to 2.107.x
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: BalenaCI github workflow
+              nested: []
+          version: meta-balena-4.0.21
+          title: ""
+          date: 2023-10-09T17:57:35.519Z
+  version: 4.0.21
+  title: ""
+  date: 2023-10-09T20:58:20.940Z
+- commits:
     - subject: Update balena-os/github-workflows to
       hash: a8884ac7932a79058aa0ba88a4e137a2ef919cdc
       body: Update balena-os/github-workflows
