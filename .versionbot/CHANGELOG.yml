@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update layers/meta-balena to 4b47f04ece3742de572dd04180e1e30744ed3980
+      hash: c79a96f28208e3314e59803da67c82e75bc78306
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 4b47f04ece3742de572dd04180e1e30744ed3980
+        changelog-entry: Update layers/meta-balena to 4b47f04ece3742de572dd04180e1e30744ed3980
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update Pin dependencies
+              hash: 52aec8faecdffd8c957d75bef99bb632ab79aceb
+              body: |
+                Update actions/checkout
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: meta-balena-4.0.25
+          title: ""
+          date: 2023-10-11T21:28:49.290Z
+  version: 4.0.25
+  title: ""
+  date: 2023-10-12T01:06:12.697Z
+- commits:
     - subject: Update layers/meta-balena to f98f94b3181bfd112b2b88287ae29b134bb4c1ab
       hash: 97558469116296aa4a32840f1b4877d09c97d83a
       body: Update layers/meta-balena
