@@ -34,7 +34,7 @@ write_jetson_update_efivars() {
 
         if [ ! -e ${platform_compat_spec_efivar} ]; then
             printf "\x07\x00\x00\x00" > ${tmp_file}
-            printf "%s" "3701--0000--1--jetson-agx-orin-devkit-" >> ${tmp_file}
+            printf "%s" "3701-000-0000--1-0-jetson-agx-orin-devkit-" >> ${tmp_file}
             dd if=${tmp_file} of=${platform_compat_spec_efivar}
             echo "PlatformCompatSpec variable created"
         else
