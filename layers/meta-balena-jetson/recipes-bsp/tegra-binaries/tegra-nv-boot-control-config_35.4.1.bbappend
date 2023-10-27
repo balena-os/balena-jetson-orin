@@ -1,11 +1,3 @@
-do_compile() {
-    echo "AGX Orin is the only board in the Orin line-up which supports capsule updates as of L4T 35.3.1"
-}
-
-do_install() {
-    echo "AGX Orin is the only board in the Orin line-up which supports capsule updates as of L4T 35.3.1"
-}
-
 # We can't modify the root filesystem at runtime
 # and also know how the file should look for
 # the AGX Orin Devkit, so let's populate it at
@@ -23,7 +15,18 @@ EOF
 
 }
 
-do_install:jetson-agx-orin-devkit() {
+do_compile:jetson-orin-nx-xavier-nx-devkit() {
+        cat > ${B}/nv_boot_control.conf <<EOF
+TNSPEC 3767-ES1-0000-A.3-1-0-jetson-orin-nx-xavier-nx-devkit-nvme0n1p1
+COMPATIBLE_SPEC 3767-000-0000--1-0-jetson-orin-nano-devkit-
+TEGRA_CHIPID 0x23
+TEGRA_OTA_BOOT_DEVICE /dev/mtdblock0
+TEGRA_OTA_GPT_DEVICE /dev/mtdblock0
+EOF
+
+}
+
+do_install() {
 	install -d ${D}${sysconfdir}
 	install -m 0644 ${B}/nv_boot_control.conf ${D}${sysconfdir}/
 }
