@@ -8,6 +8,8 @@ inherit deploy
 PN = "tegra-flash-dry"
 
 BOOTBLOB:jetson-agx-orin-devkit = "boot0_agx_orin_devkit.img.gz"
+UEFI_CAPSULE = "TEGRA_BL_Orin_Nano_NX.Cap.gz"
+UEFI_CAPSULE:jetson-agx-orin-devkit = "TEGRA_BL_3701.Cap.gz"
 
 # TODO: Update boot blobs for Jetson Xavier AGX, Forecr DSB and Orin NX in Xavier NX Devkit on L4T 35.2.1
 BOOTBLOB:jetson-orin-nx-xavier-nx-devkit = "boot0_orin_nx_xavier_nx_devkit.img.gz"
@@ -22,10 +24,7 @@ BINARY_INSTALL_PATH = "/opt/tegra-binaries/"
 SRC_URI = " \
     file://${BOOTBLOB};unpack=0 \
     file://${PARTSPEC} \
-"
-
-SRC_URI:append:jetson-agx-orin-devkit = " \
-    file://TEGRA_BL_3701.Cap.gz;unpack=0 \
+    file://${UEFI_CAPSULE};unpack=0 \
 "
 
 do_install() {
@@ -36,13 +35,15 @@ do_install() {
         sleep 1
     done
 
+    while [ ! -f ${WORKDIR}/${UEFI_CAPSULE} ]
+    do
+        sleep 1
+    done
+
     install -d ${D}/${BINARY_INSTALL_PATH}
     install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
     install ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
-}
-
-do_install:append:jetson-agx-orin-devkit() {
-    install ${WORKDIR}/TEGRA_BL_3701.Cap.gz ${D}/${BINARY_INSTALL_PATH}/
+    install ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
 }
 
 do_deploy() {
