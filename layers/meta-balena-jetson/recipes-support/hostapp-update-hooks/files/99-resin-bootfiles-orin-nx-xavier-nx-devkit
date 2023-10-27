@@ -7,29 +7,76 @@ set -o errexit
 # the rest of the bootloader binaries
 
 . /usr/libexec/os-helpers-fs
+. /usr/sbin/balena-config-vars
 
 DURING_UPDATE=${DURING_UPDATE:-0}
-declare -a UPDATED_PARTITIONS=()
 bootloader_device="/dev/mtdblock0"
-bootloader_blob="/opt/tegra-binaries/boot0.img.gz"
+internal_storage="/dev/nvme0n1"
+use_capsule=1
+
+bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Orin_NX.Cap.gz"
 
 info_log()
 {
     echo "[INFO] $@"
 }
 
-existing_bootloader_md5sum=$(dd if=$bootloader_device bs=1M status=none | md5sum | awk '{print $1}')
-update_bootloader_md5sum=$(md5sum $bootloader_blob | awk '{print $1}')
+# While the UEFI firmware accepts loading the uefi bootloader
+# from any partition, it doesn't do the same for
+# the update capsule, which needs to reside on a partition
+# that has the boot,esp flags set. Since we originally
+# integrated this device type using the default xml
+# which sets these flags for the 'esp' partition only and
+# we preferred to include the efi bootloader in our
+# own 'resin-boot' partition instead, we do not have the flags
+# set by the nvidia flashing tools and have to
+# set them now. This way, on the next update the
+# UEFI firmware will not load the UEFI bootloader
+# from the boot partition, and instead will read the
+# capsule and perform the update.
+check_and_update_esp_flags() {
+    data_type="EBD0A0A2-B9E5-4433-87C0-68B6B72699C7"
+    esp_type="C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
+    esp_index="5"
+    resin_boot_index="6"
 
-if [ ! "$existing_bootloader_md5sum" = "$update_bootloader_md5sum" ]; then
-    info_log "Will clear bootloader device before the update"
-    flash_erase /dev/mtd0 0 0 || true
-    info_log "Updating update bootloader device"
-    zcat $bootloader_blob > $bootloader_device
-    info_log "Updated bootloader device"
-else
-    info_log "No need to update bootloader device"
-fi
+    esp_part_type=$(sfdisk --part-type $internal_storage $esp_index)
+    resin_boot_part_type=$(sfdisk --part-type $internal_storage $resin_boot_index)
 
-# Sync internal memory
-sync /dev/mtdblock0
+    if [ "$esp_type" = "$esp_part_type" ]; then
+        info_log "esp partition has esp flag, will be cleared"
+        sfdisk --part-type $internal_storage $esp_index $data_type
+        sync
+    else
+        info_log "no type change needed on esp partition"
+    fi
+
+    if [ "$resin_boot_part_type" != "$esp_type" ]; then
+        info_log "resin-boot partition does not have esp type, must be added"
+        sfdisk --part-type $internal_storage $resin_boot_index $esp_type
+        sync
+    else
+        info_log "no type change needed on resin-boot partition"
+    fi
+}
+
+check_and_update_esp_flags
+
+info "Bootloader blob is $bootloader_blob"
+
+do_capsule_update() {
+    # Unzip capsule to the boot partition
+    mkdir -p /mnt/boot/EFI/UpdateCapsule/
+    zcat ${bootloader_blob} > /mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    sync
+
+    if [ $(ls -l ${efivars_dir}OsIndications* | wc -l) -gt 0 ]; then
+        info "Once a release that bindmounts sysfs is available in production, the efi vars can be updated from here instead of the after hook"
+    else
+        # Once the above condition is met, we could drop the after hook and use the legacy update mode if the base release is older
+        # than the one with sysfs bindmount in hostapp-update
+        info "Sysfs directory exists, but is not bindmounted. After hook will write the efi variables from the old OS"
+    fi
+}
+
+do_capsule_update

@@ -1,5 +1,6 @@
 FILESEXTRAPATHS:append := ":${THISDIR}/files"
-FILESEXTRAPATHS:append := ":${THISDIR}/98-efivars"
+FILESEXTRAPATHS:append := ":${THISDIR}/98-efivars-agx-orin-devkit"
+FILESEXTRAPATHS:append := ":${THISDIR}/98-efivars-orin-nx-xavier-nx-devkit"
 
 DEPENDS:append = " tegra-flash-dry"
 
@@ -17,5 +18,8 @@ HOSTAPP_HOOKS:append:jetson-orin-nano-devkit-nvme = " \
      99-resin-uboot \
 "
 
-HOSTAPP_HOOKS_DIRS:append:jetson-agx-orin-devkit = " 98-efivars"
-HOSTAPP_HOOKS:append:jetson-agx-orin-devkit = " 98-efivars/after "
+HOSTAPP_HOOKS_DIRS:append:jetson-agx-orin-devkit = " 98-efivars-agx-orin-devkit"
+HOSTAPP_HOOKS:append:jetson-agx-orin-devkit = " 98-efivars-agx-orin-devkit/after "
+
+HOSTAPP_HOOKS_DIRS:append:jetson-orin-nx-xavier-nx-devkit = " 98-efivars-orin-nx-xavier-nx-devkit"
+HOSTAPP_HOOKS:append:jetson-orin-nx-xavier-nx-devkit = " 98-efivars-orin-nx-xavier-nx-devkit/after "
