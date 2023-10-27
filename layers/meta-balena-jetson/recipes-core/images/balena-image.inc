@@ -8,6 +8,8 @@ IMAGE_INSTALL:append = " \
     kernel-image-initramfs \
     tegra-redundant-boot \
     tegra-nv-boot-control-config \
+    tegra-eeprom-tool \
+    setup-nv-boot-control \
 "
 
 # We don't mount or use the esp partition, so let's
