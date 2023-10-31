@@ -14,7 +14,7 @@ bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/nvme0n1"
 use_capsule=1
 
-bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Orin_NANO.Cap.gz"
+bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Orin_Nano.Cap.gz"
 
 info_log()
 {
