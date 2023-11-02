@@ -1,4 +1,18 @@
 - commits:
+    - subject: "layers/meta-tegra: Switch to L4T 35.4.1"
+      hash: 834e4efc65e4d703ee650f67eb0dbeade53951ef
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-tegra: Switch to L4T 35.4.1"
+        changelog-entry: "layers/meta-tegra: Switch to L4T 35.4.1"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 4.1.2+rev1
+  title: ""
+  date: 2023-11-02T16:16:21.138Z
+- commits:
     - subject: Update layers/meta-balena to 1f878fc282e911950df09d5af3eb6b61a12d6c48
       hash: a2e29daf8f0a66b32adfc65683742dc8f1465127
       body: Update layers/meta-balena

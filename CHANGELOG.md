@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.1.2+rev1
+## (2023-11-02)
+
+* layers/meta-tegra: Switch to L4T 35.4.1 [Alexandru Costache]
+
 # v4.1.2
 ## (2023-11-01)
 
