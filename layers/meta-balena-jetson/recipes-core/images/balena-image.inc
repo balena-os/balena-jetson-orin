@@ -8,6 +8,8 @@ IMAGE_INSTALL:append = " \
     kernel-image-initramfs \
     tegra-redundant-boot \
     tegra-nv-boot-control-config \
+    tegra-eeprom-tool \
+    setup-nv-boot-control \
 "
 
 # We don't mount or use the esp partition, so let's
@@ -65,7 +67,6 @@ IMAGE_INSTALL:append:jetson-orin-nx-xavier-nx-devkit = " \
     nvidia-display-driver \
     tegra-nvfancontrol \
     linux-firmware-rtl8168 \
-    kernel-module-r8169 \
     kernel-module-realtek \
     pciutils \
 "

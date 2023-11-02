@@ -14,11 +14,7 @@ bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/mmcblk0"
 use_capsule=1
 
-if cat /proc/device-tree/nvidia,dtsfilename | grep -q "p3701-0000" ; then 
-    bootloader_blob="/opt/tegra-binaries/TEGRA_BL_3701_000.Cap.gz"
-else
-    bootloader_blob="/opt/tegra-binaries/TEGRA_BL_3701_300.Cap.gz"
-fi
+bootloader_blob="/opt/tegra-binaries/TEGRA_BL_3701.Cap.gz"
 
 info_log()
 {

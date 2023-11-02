@@ -37,16 +37,18 @@ device_specific_configuration:jetson-agx-orin-devkit() {
     NVIDIA_PART_OFFSET=40
     START=${NVIDIA_PART_OFFSET}
     for n in ${partitions}; do
-      part_name=$(echo $n | cut -d ':' -f 1)
-      file_name=$(echo $n | cut -d ':' -f 2)
-      part_size=$(echo $n | cut -d ':' -f 3)
-      file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
-      END=$(expr ${START} \+ ${part_size} \- 1)
-      echo ">>> file: ${file_path}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
-      parted -s ${BALENA_RAW_IMG} unit s mkpart $part_name ${START} ${END}
-      if [ ! "$file_name" = "none.bin" ]; then
-        check_size ${file_path} $(expr ${part_size} \* 512)
-        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512
+        part_name=$(echo $n | cut -d ':' -f 1)
+        file_name=$(echo $n | cut -d ':' -f 2)
+        part_size=$(echo $n | cut -d ':' -f 3)
+        file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
+        END=$(expr ${START} \+ ${part_size} \- 1)
+        echo ">>> file: ${file_path}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
+        parted -s ${BALENA_RAW_IMG} unit s mkpart $part_name ${START} ${END}
+        if [ ! "$file_name" = "none.bin" ]; then
+            check_size ${file_path} $(expr ${part_size} \* 512)
+            dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512
+        else
+            dd if=/dev/zero of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512 count=${part_size}
       fi
       START=$(expr ${END} \+ 1)
     done
@@ -57,18 +59,20 @@ device_specific_configuration:jetson-orin-nano-devkit-nvme() {
     NVIDIA_PART_OFFSET=40
     START=${NVIDIA_PART_OFFSET}
     for n in ${partitions}; do
-      part_name=$(echo $n | cut -d ':' -f 1)
-      file_name=$(echo $n | cut -d ':' -f 2)
-      part_size=$(echo $n | cut -d ':' -f 3)
-      file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
-      END=$(expr ${START} \+ ${part_size} \- 1)
-      echo ">>> file: ${file_path}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
-      parted -s ${BALENA_RAW_IMG} unit s mkpart $part_name ${START} ${END}
-      if [ ! "$file_name" = "none.bin" ]; then
-        check_size ${file_path} $(expr ${part_size} \* 512)
-        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512
-      fi
-      START=$(expr ${END} \+ 1)
+        part_name=$(echo $n | cut -d ':' -f 1)
+        file_name=$(echo $n | cut -d ':' -f 2)
+        part_size=$(echo $n | cut -d ':' -f 3)
+        file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
+        END=$(expr ${START} \+ ${part_size} \- 1)
+        echo ">>> file: ${file_path}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
+        parted -s ${BALENA_RAW_IMG} unit s mkpart $part_name ${START} ${END}
+        if [ ! "$file_name" = "none.bin" ]; then
+            check_size ${file_path} $(expr ${part_size} \* 512)
+            dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512
+        else
+            dd if=/dev/zero of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512 count=${part_size}
+        fi
+        START=$(expr ${END} \+ 1)
     done
 }
 
@@ -78,17 +82,19 @@ device_specific_configuration:jetson-orin-nx-xavier-nx-devkit() {
     NVIDIA_PART_OFFSET=40
     START=${NVIDIA_PART_OFFSET}
     for n in ${partitions}; do
-      part_name=$(echo $n | cut -d ':' -f 1)
-      file_name=$(echo $n | cut -d ':' -f 2)
-      part_size=$(echo $n | cut -d ':' -f 3)
-      file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
-      END=$(expr ${START} \+ ${part_size} \- 1)
-      echo ">>> file: ${file_path}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
-      parted -s ${BALENA_RAW_IMG} unit s mkpart $part_name ${START} ${END}
-      if [ ! "$file_name" = "none.bin" ]; then
-        check_size ${file_path} $(expr ${part_size} \* 512)
-        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512
-      fi
-      START=$(expr ${END} \+ 1)
+        part_name=$(echo $n | cut -d ':' -f 1)
+        file_name=$(echo $n | cut -d ':' -f 2)
+        part_size=$(echo $n | cut -d ':' -f 3)
+        file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
+        END=$(expr ${START} \+ ${part_size} \- 1)
+        echo ">>> file: ${file_path}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
+        parted -s ${BALENA_RAW_IMG} unit s mkpart $part_name ${START} ${END}
+        if [ ! "$file_name" = "none.bin" ]; then
+            check_size ${file_path} $(expr ${part_size} \* 512)
+            dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512
+        else
+            dd if=/dev/zero of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512 count=${part_size}
+        fi
+        START=$(expr ${END} \+ 1)
     done
 }
