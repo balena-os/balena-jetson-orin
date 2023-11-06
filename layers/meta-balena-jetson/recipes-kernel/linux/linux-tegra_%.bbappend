@@ -76,6 +76,7 @@ BALENA_CONFIGS[xudc] = " \
 BALENA_CONFIGS:append:jetson-agx-orin-devkit = " rtc"
 BALENA_CONFIGS[rtc] = " \
     CONFIG_RTC_HCTOSYS_DEVICE="rtc0" \
+    CONFIG_RTC_SYSTOHC_DEVICE="rtc0" \
 "
 
 L4TVER=" l4tver=${L4T_VERSION}"
