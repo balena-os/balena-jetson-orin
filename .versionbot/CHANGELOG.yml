@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update battery backed RTC from system clock on the Orin AGX
+      hash: 2d3f73c04c3073d220d906a9c4591e5b7c535a8c
+      body: |
+        Commit 336d198b079a03941344410806bb449b90b4dbe2 switched the source RTC
+        device for system clock from rtc1 (on the SoM) to rtc0 (on the carrier
+        board, battery-backed).
+
+        This only solves half of the problem as it will correctly use rtc0
+        as the clock source on boot (controlled by CONFIG_RTC_HCTOSYS_DEVICE),
+        but chrony will still periodically write system time to rtc1
+        (controlled by CONFIG_RTC_SYSTOHC_DEVICE), meaning rtc0 is in fact
+        never set correctly.
+
+        This patch configures CONFIG_RTC_SYSTOHC_DEVICE to also use rtc0.
+      footer:
+        Changelog-entry: Update battery backed RTC from system clock on the Orin AGX
+        changelog-entry: Update battery backed RTC from system clock on the Orin AGX
+        Signed-off-by: Michal Toman <michalt@balena.io>
+        signed-off-by: Michal Toman <michalt@balena.io>
+      author: Michal Toman
+      nested: []
+  version: 4.1.2+rev2
+  title: ""
+  date: 2023-11-06T12:51:18.256Z
+- commits:
     - subject: "layers/meta-tegra: Switch to L4T 35.4.1"
       hash: 834e4efc65e4d703ee650f67eb0dbeade53951ef
       body: ""

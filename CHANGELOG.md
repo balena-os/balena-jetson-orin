@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v4.1.2+rev2
+## (2023-11-06)
+
+* Update battery backed RTC from system clock on the Orin AGX [Michal Toman]
+
 # v4.1.2+rev1
 ## (2023-11-02)
 
