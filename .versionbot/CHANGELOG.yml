@@ -1,4 +1,170 @@
 - commits:
+    - subject: Update layers/meta-balena to 53a1e875f6a48f891d26b5edb9295fc6486ab4e8
+      hash: 1eccd03ecabbf40b3949e90957f89e9f79da74c5
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 53a1e875f6a48f891d26b5edb9295fc6486ab4e8
+        changelog-entry: Update layers/meta-balena to 53a1e875f6a48f891d26b5edb9295fc6486ab4e8
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "update-balena-supervisor: ensure target supervisor is running"
+              hash: bb56c90dd91913773bb838ee5361731ab65fc754
+              body: >
+                If the target supervisor image is already cached but there is no
+
+                container running with it, the update script would just exit without
+
+                actually running the target supervisor.
+
+
+                This commit checks whether there is a running container using the
+
+                target image and restarts the supervisor if there is none.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "update-balena-supervisor: use os-helpers logging"
+              hash: 65419a73aab31f92f640dee998dd85f9620e3ca8
+              body: |
+                This allows the script to log messages to the journal.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "hostapp-update: surface logs to journal"
+              hash: f34090d23ceef8c352d188a6aa34351885971239
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "hostapp-update-hooks: surface logs to journal"
+              hash: 5e1fdf9e3d94af2f814e9cef44b4f114b7ac2b76
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "os-helpers-logging: skip logging to journal from a container"
+              hash: 07f32d8098ef6a826b49f09cda04f9a11181409d
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-4.1.5
+          title: ""
+          date: 2023-11-10T16:58:38.759Z
+        - commits:
+            - subject: Update tests/leviathan digest to af50e8d
+              hash: c2f33c50ca7e24e74afed1bd8490b1c49d67ddfa
+              body: Update tests/leviathan
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: "core: remove request timeout on flashing"
+                      hash: 8c8ff58cfd7d2c93cda7735cb48f92556445e053
+                      body: ""
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Signed-off-by: Ryan Cooke <ryan@balena.io>
+                        signed-off-by: Ryan Cooke <ryan@balena.io>
+                      author: rcooke-warwick
+                      nested: []
+                  version: leviathan-2.29.10
+                  title: ""
+                  date: 2023-11-08T10:24:24.736Z
+          version: meta-balena-4.1.4
+          title: ""
+          date: 2023-11-10T09:57:20.312Z
+        - commits:
+            - subject: Update tests/leviathan digest to 2a64939
+              hash: 44b9074caa94ce8704c2caeac46269338ec30466
+              body: Update tests/leviathan
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: Update Lock file maintenance
+                      hash: ae22f3efcbe5858619bb87acb78e1f9e8001ef90
+                      body: |
+                        Update
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.9
+                  title: ""
+                  date: 2023-11-06T00:53:48.210Z
+                - commits:
+                    - subject: "patch: Update Learn More docs content"
+                      hash: 2e4d53c54239eb550c252dc1a6d7eabdb059ed3e
+                      body: ""
+                      footer:
+                        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                      author: Vipul Gupta (@vipulgupta2048)
+                      nested: []
+                  version: leviathan-2.29.8
+                  title: ""
+                  date: 2023-10-30T14:22:19.959Z
+                - commits:
+                    - subject: Update Lock file maintenance
+                      hash: 7fb3d995abf9949466994affea68419e5ee91ae5
+                      body: |
+                        Update
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.7
+                  title: ""
+                  date: 2023-10-30T00:51:53.810Z
+                - commits:
+                    - subject: Update core/contracts digest to 1091793
+                      hash: 4a2ffb821d539af2e4a2e42cf467120bc950c99c
+                      body: |
+                        Update core/contracts
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.6
+                  title: ""
+                  date: 2023-10-26T07:39:59.321Z
+          version: meta-balena-4.1.3
+          title: ""
+          date: 2023-11-06T05:41:30.588Z
+  version: 4.1.5
+  title: ""
+  date: 2023-11-14T08:08:37.247Z
+- commits:
     - subject: Update balena-yocto-scripts to 84d8d394f158be4490628d7ca65a50e90667fa4b
       hash: 3028810f61b325582113dc8a58c9232e073cc718
       body: Update balena-yocto-scripts
