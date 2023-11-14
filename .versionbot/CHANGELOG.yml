@@ -1,4 +1,35 @@
 - commits:
+    - subject: "tegra-binaries: Update pre-flashed boot0 image for AGX Orin Devkt 32GB
+        to L4T 35.4.1"
+      hash: 3afde543842b8c19a5e714cbd199ef53e66007c3
+      body: |
+        This is used when during HUP if the capsule update cannot be used
+      footer:
+        Changelog-entry: "tegra-binaries: Update pre-flashed boot0 image for AGX Orin
+          Devkt 32GB to L4T 35.4.1"
+        changelog-entry: "tegra-binaries: Update pre-flashed boot0 image for AGX Orin
+          Devkt 32GB to L4T 35.4.1"
+      author: Alexandru Costache
+      nested: []
+    - subject: "hostapp-update-hooks: Print current active slot prior triggering the
+        capsule"
+      hash: 16dcea438b26d9a6323720c5b1241cc7435ab16a
+      body: |
+        and also toggle the esp flags AFTER the capsule has been placed
+        in the boot partition.
+      footer:
+        Changelog-entry: "hostapp-update-hooks: Print current active slot prior
+          triggering the capsule"
+        changelog-entry: "hostapp-update-hooks: Print current active slot prior
+          triggering the capsule"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 4.1.5+rev1
+  title: ""
+  date: 2023-11-14T16:14:03.676Z
+- commits:
     - subject: Update layers/meta-balena to 53a1e875f6a48f891d26b5edb9295fc6486ab4e8
       hash: 1eccd03ecabbf40b3949e90957f89e9f79da74c5
       body: Update layers/meta-balena

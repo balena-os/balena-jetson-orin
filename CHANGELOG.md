@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v4.1.5+rev1
+## (2023-11-14)
+
+* tegra-binaries: Update pre-flashed boot0 image for AGX Orin Devkt 32GB to L4T 35.4.1 [Alexandru Costache]
+* hostapp-update-hooks: Print current active slot prior triggering the capsule [Alexandru Costache]
+
 # v4.1.5
 ## (2023-11-14)
 
