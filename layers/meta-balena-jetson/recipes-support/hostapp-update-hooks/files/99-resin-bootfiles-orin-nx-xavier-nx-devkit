@@ -60,7 +60,10 @@ check_and_update_esp_flags() {
     fi
 }
 
-check_and_update_esp_flags
+info "Pre-update A/B slots info:"
+info "=========================="
+/usr/sbin/nvbootctrl dump-slots-info || true
+info "=========================="
 
 info "Bootloader blob is $bootloader_blob"
 
@@ -80,3 +83,4 @@ do_capsule_update() {
 }
 
 do_capsule_update
+check_and_update_esp_flags

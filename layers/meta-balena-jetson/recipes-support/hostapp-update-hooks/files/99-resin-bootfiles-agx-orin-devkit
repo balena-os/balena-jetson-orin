@@ -82,7 +82,6 @@ check_and_update_esp_flags() {
 }
 
 check_disable_xudc
-check_and_update_esp_flags
 
 info "Bootloader blob is $bootloader_blob"
 
@@ -120,8 +119,16 @@ do_legacy_update() {
     sync ${bootloader_device}
 }
 
+
+info "Pre-update A/B slots info:"
+info "=========================="
+/usr/sbin/nvbootctrl dump-slots-info || true
+info "=========================="
+
 if [ $use_capsule -eq 1 ]; then
     do_capsule_update
 else
     do_legacy_update
 fi
+
+check_and_update_esp_flags
