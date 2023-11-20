@@ -88,7 +88,7 @@ info "Bootloader blob is $bootloader_blob"
 do_capsule_update() {
     # Unzip capsule to the boot partition
     mkdir -p /mnt/boot/EFI/UpdateCapsule/
-    zcat ${bootloader_blob} > /mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
     sync
 
     if [ $(ls -l ${efivars_dir}OsIndications* | wc -l) -gt 0 ]; then
@@ -109,7 +109,7 @@ do_legacy_update() {
         info_log "Will clear bootloader device before the update"
         flash_erase /dev/mtd0 0 0 || true
         info_log "Updating bootloader device"
-        zcat $bootloader_blob > $bootloader_device
+        gunzip -k -c $bootloader_blob | dd of=$bootloader_device
         info_log "Updated bootloader device"
     else
         info_log "No need to update bootloader device"
