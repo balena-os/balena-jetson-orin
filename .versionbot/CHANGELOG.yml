@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update layers/meta-balena to cb75bf3ef0719cac2b8b080dd99f90d4f6c95705
+      hash: 1c6c7a3f9402adee711d9815cefd437f1e6000fa
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to cb75bf3ef0719cac2b8b080dd99f90d4f6c95705
+        changelog-entry: Update layers/meta-balena to cb75bf3ef0719cac2b8b080dd99f90d4f6c95705
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "tests: os: safe-reboot: wait for SV to start"
+              hash: 7f301ec876ad361ea0f355e1976c92d83a661d3b
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: meta-balena-4.1.11
+          title: ""
+          date: 2023-11-27T14:31:02.562Z
+  version: 4.1.11
+  title: ""
+  date: 2023-11-27T18:04:51.347Z
+- commits:
     - subject: Update layers/meta-balena to 06288522295690b4722b094098433e5d3cbbd50a
       hash: 6221c06d5a989aefcdabe553e0ed5f8eb90b85cc
       body: Update layers/meta-balena
