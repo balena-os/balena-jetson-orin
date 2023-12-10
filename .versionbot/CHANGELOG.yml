@@ -1,4 +1,29 @@
 - commits:
+    - subject: Update layers/meta-balena to 91ad9aa182cc5feadf430fea151dc117898919ed
+      hash: fedff51e6b94f16bf919830cbd98efeae421418e
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 91ad9aa182cc5feadf430fea151dc117898919ed
+        changelog-entry: Update layers/meta-balena to 91ad9aa182cc5feadf430fea151dc117898919ed
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update actions/setup-python action to v5
+              hash: 964061a70249cd4dabc99ae98083be5f1e650bc3
+              body: |
+                Update actions/setup-python from v4 to v5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested: []
+          version: meta-balena-5.0.7
+          title: ""
+          date: 2023-12-06T16:38:31.017Z
+  version: 5.0.7
+  title: ""
+  date: 2023-12-10T14:10:45.924Z
+- commits:
     - subject: "resin-init-flasher-board: switch to using gunzip"
       hash: c19c9c8f0349efb100e8bb711f0479d366658b42
       body: ""
