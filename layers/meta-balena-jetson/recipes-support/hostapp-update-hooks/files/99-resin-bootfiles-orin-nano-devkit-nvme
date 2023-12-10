@@ -65,7 +65,7 @@ info "Bootloader blob is $bootloader_blob"
 do_capsule_update() {
     # Unzip capsule to the boot partition
     mkdir -p /mnt/boot/EFI/UpdateCapsule/
-    zcat ${bootloader_blob} > /mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
     sync
 
     if [ $(ls -l ${efivars_dir}OsIndications* | wc -l) -gt 0 ]; then
