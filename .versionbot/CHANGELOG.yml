@@ -1,4 +1,18 @@
 - commits:
+    - subject: "resin-init-flasher-board: switch to using gunzip"
+      hash: c19c9c8f0349efb100e8bb711f0479d366658b42
+      body: ""
+      footer:
+        Changelog-entry: "resin-init-flasher-board: switch to using gunzip"
+        changelog-entry: "resin-init-flasher-board: switch to using gunzip"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.0.6+rev1
+  title: ""
+  date: 2023-12-10T13:15:56.070Z
+- commits:
     - subject: Update layers/meta-balena to 3617c776ed31ef47429bb266d4276d63f19a2d58
       hash: 62454c4bd9c0e29389f439426afd346fccbd5a51
       body: Update layers/meta-balena

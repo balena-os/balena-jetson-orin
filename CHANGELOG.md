@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.0.6+rev1
+## (2023-12-10)
+
+* resin-init-flasher-board: switch to using gunzip [Alexandru Costache]
+
 # v5.0.6
 ## (2023-12-05)
 
