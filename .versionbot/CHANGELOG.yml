@@ -1,4 +1,37 @@
 - commits:
+    - subject: Update layers/meta-balena to 77ede04d006fc181647691958da41161e4f8402e
+      hash: 3fe1db11e54dd9a4b675d028102e70be8001871c
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 77ede04d006fc181647691958da41161e4f8402e
+        changelog-entry: Update layers/meta-balena to 77ede04d006fc181647691958da41161e4f8402e
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "timesync-https: increase default connection max time to 10s"
+              hash: 7f350447206a1a531a18c3628e7ee72d0d1d35f2
+              body: >
+                We have seen cases of networks that were not able to receive a
+                response
+
+                in the current 5s.
+
+
+                Increasing the default to 10s should have no negative effect.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-5.0.9
+          title: ""
+          date: 2023-12-12T18:01:57.596Z
+  version: 5.0.9
+  title: ""
+  date: 2023-12-12T22:03:17.749Z
+- commits:
     - subject: Update layers/meta-balena to e7a8680cc8db8bd7529ed389dd59999a1492c1aa
       hash: 034db4be3a0c44be40070ad58aba24913bb896c5
       body: Update layers/meta-balena
