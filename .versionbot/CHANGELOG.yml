@@ -1,4 +1,82 @@
 - commits:
+    - subject: Update layers/meta-balena to d80ee36afa682981b8acce253e28c8237ed8166a
+      hash: 04dd6e4484637603fb8b11276e8a1ed730459ae8
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to d80ee36afa682981b8acce253e28c8237ed8166a
+        changelog-entry: Update layers/meta-balena to d80ee36afa682981b8acce253e28c8237ed8166a
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "migrate: check for mount point before umounting"
+              hash: 5e1165213e086efdecabd3dbd8d8a5c9c5d4d2ea
+              body: |
+                This avoids a warning on each boot.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "initrdscripts: move mounting of log mounts to finish module"
+              hash: 0f3bd475dadc52aa48f7b98bf18e4cd3a1b9e9e7
+              body: |
+                The log files are kept in the /run partition that also houses
+                the udev database.
+
+                By moving the /run partition to $ROOTFS_DIR/run in the migrate
+                module, the udev database persists across reboots.
+
+                The udevcleanup module was introduced to cleanup the database
+                so it's regenerated on the final rootfs as the rules are
+                different between initramfs and final rootfs. By moving /run
+                before udevcleanup ran, the cleanup was not effective.
+
+                This commit moves the relocation of the /run mount to the
+                finish module, after udevcleanup is run, and groups it with
+                the other relocations needed for the pivot switch.
+
+                Looking at git history, the relocation of the /run partition
+                was initially done in the rootfs module, so when the migrate
+                module was introduced and needed to mount the rootfs, this
+                relocation was just moved into the migration module itself,
+                without considering later modules like finish.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-5.1.0
+          title: ""
+          date: 2023-12-19T14:17:32.497Z
+        - commits:
+            - subject: "update-balena-supervisor: fix supervisor.conf when image already
+                downloaded"
+              hash: cdd6cbb7007a1b614bfaa337e3027562c05429e7
+              body: >
+                If update-balena-supervisor runs and finds the image is already
+                downloaded
+
+                it will run the specified supervisor but will not check that supervisor.conf
+
+                is updated so the version will revert on the next update.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-5.0.11
+          title: ""
+          date: 2023-12-14T14:32:01.902Z
+  version: 5.1.0
+  title: ""
+  date: 2023-12-19T19:29:30.415Z
+- commits:
     - subject: Update layers/meta-balena to 3f7d62c3108cf8852fc22f67fd2ed910ef12ed19
       hash: 7c9eaf38091e83c71bb9f3f859ba112cfb9b8b2a
       body: Update layers/meta-balena
