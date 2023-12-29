@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.4+rev3
+## (2023-12-29)
+
+* recipes-bsp/uefi: Add UEFI firmware version healthcheck script [Alexandru Costache]
+
 # v5.1.4+rev2
 ## (2023-12-28)
 
