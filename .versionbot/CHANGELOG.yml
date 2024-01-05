@@ -1,4 +1,18 @@
 - commits:
+    - subject: "hostapp-update-hooks: add hook for J4012"
+      hash: e6e6cf11faa4bfaf224bd2ed6bf0053582135e23
+      body: ""
+      footer:
+        Changelog-entry: "hostapp-update-hooks: add hook for J4012"
+        changelog-entry: "hostapp-update-hooks: add hook for J4012"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.1.5+rev2
+  title: ""
+  date: 2024-01-05T14:03:22.405Z
+- commits:
     - subject: Update contracts to 802e95f85092e2bacc14014823b8167add968edd
       hash: f51f356924a53abbbfc2ed7378995151a3d2a2c4
       body: Update contracts

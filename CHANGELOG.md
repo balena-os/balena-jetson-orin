@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.5+rev2
+## (2024-01-05)
+
+* hostapp-update-hooks: add hook for J4012 [Alexandru Costache]
+
 # v5.1.5+rev1
 ## (2024-01-03)
 
