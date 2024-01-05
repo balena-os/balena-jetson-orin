@@ -11,10 +11,12 @@ SRC_URI:append:jetson-agx-orin-devkit = " \
 
 SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \ 
     file://0005-L4TLauncher-hup-rollback-support-orin-nx.patch;patchdir=.. \
+    file://set_boot_order.patch;patchdir=.. \
 "
 
 SRC_URI:append:jetson-orin-nano-devkit-nvme = " \
     file://0005-Add-hup-and-rollback-support-orin-nano-35-3-1.patch;patchdir=.. \
+    file://set_boot_order.patch;patchdir=.. \
 "
 
 do_deploy:append() {
