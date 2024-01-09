@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.6+rev1
+## (2024-01-09)
+
+* tegra-binaries: Update boot blob and capsule for J4012 [Alexandru Costache]
+
 # v5.1.6
 ## (2024-01-08)
 

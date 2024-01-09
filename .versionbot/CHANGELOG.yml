@@ -1,4 +1,18 @@
 - commits:
+    - subject: "tegra-binaries: Update boot blob and capsule for J4012"
+      hash: 5b1b9fab5f92a275b26e23429b269c5079d72076
+      body: ""
+      footer:
+        Changelog-entry: "tegra-binaries: Update boot blob and capsule for J4012"
+        changelog-entry: "tegra-binaries: Update boot blob and capsule for J4012"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.1.6+rev1
+  title: ""
+  date: 2024-01-09T16:50:39.039Z
+- commits:
     - subject: Update layers/meta-balena to 18da0e4751bacb78b3da4e95d58a466e32b36faf
       hash: 56d3fd0cad1be294b3f651879b45c4005856737f
       body: Update layers/meta-balena
