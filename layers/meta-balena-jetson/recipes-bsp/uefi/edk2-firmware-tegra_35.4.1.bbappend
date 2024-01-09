@@ -19,6 +19,14 @@ SRC_URI:append:jetson-orin-nano-devkit-nvme = " \
     file://set_boot_order.patch;patchdir=.. \
 "
 
+SRC_URI:remove:jetson-orin-nx-seeed-j4012 = " \
+    file://0005-L4TLauncher-hup-rollback-support-orin-nx.patch;patchdir=.. \
+"
+
+SRC_URI:append:jetson-orin-nx-seeed-j4012 = " \
+    file://0005-L4TLauncher-hup-rollback-support-orin-nx-seed-j4012.patch;patchdir=.. \
+"
+
 do_deploy:append() {
      mkdir -p ${DEPLOYDIR}/bootfiles/EFI/BOOT/
      cp ${WORKDIR}/build/images/BOOTAA64.efi ${DEPLOYDIR}/bootfiles/EFI/BOOT/BOOTAA64.efi
