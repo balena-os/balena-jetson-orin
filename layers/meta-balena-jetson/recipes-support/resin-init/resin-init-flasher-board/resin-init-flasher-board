@@ -2,8 +2,9 @@
 
 set -e
 
-flash_erase /dev/mtd0 0 0
-gunzip -k -c /opt/tegra-binaries/boot0.img.gz | dd of=/dev/mtdblock0
+mtd_debug erase /dev/mtd0 0x0 0x4000000
+gunzip -k -c /opt/tegra-binaries/boot0.img.gz | dd of=/tmp/boot0.img bs=1M
+mtd_debug write /dev/mtd0 0x0 0x4000000 /tmp/boot0.img
 sync
 
 # Relocate secondary gpt after writing image to the nvme with dd
