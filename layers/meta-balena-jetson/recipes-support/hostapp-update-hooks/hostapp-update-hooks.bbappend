@@ -28,3 +28,12 @@ HOSTAPP_HOOKS:append:jetson-orin-nx-xavier-nx-devkit = " 98-efivars-orin-nx-xavi
 
 HOSTAPP_HOOKS_DIRS:append:jetson-orin-nano-devkit-nvme = " 98-efivars-orin-nano-devkit-nvme"
 HOSTAPP_HOOKS:append:jetson-orin-nano-devkit-nvme = " 98-efivars-orin-nano-devkit-nvme/after "
+
+HOSTAPP_HOOKS:remove:jetson-orin-nx-seeed-j4012 = "99-resin-bootfiles-orin-nx-xavier-nx-devkit"
+
+HOSTAPP_HOOKS:append:jetson-orin-nx-seeed-j4012 = " \
+     99-resin-bootfiles-orin-nx-seeed-j4012 \
+"
+
+HOSTAPP_HOOKS_DIRS:remove:jetson-orin-nx-seeed-j4012 = " 98-efivars-orin-nx-xavier-nx-devkit"
+HOSTAPP_HOOKS:remove:jetson-orin-nx-seeed-j4012 = " 98-efivars-orin-nx-xavier-nx-devkit/after"
