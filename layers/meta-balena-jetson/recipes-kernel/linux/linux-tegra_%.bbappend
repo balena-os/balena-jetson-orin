@@ -79,6 +79,14 @@ BALENA_CONFIGS[rtc] = " \
     CONFIG_RTC_SYSTOHC_DEVICE="rtc0" \
 "
 
+BALENA_CONFIGS:append:jetson-orin-nano-devkit-nvme = " binder"
+BALENA_CONFIGS[binder] = " \
+    CONFIG_ANDROID=y \
+    CONFIG_ANDROID_BINDER_IPC=y \
+    CONFIG_ANDROID_BINDER_DEVICES=\"binder,hwbinder,vndbinder\" \
+    CONFIG_ANDROID_BINDER_IPC_SELFTEST=y \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 "
