@@ -1,0 +1,26 @@
+From 28794a36b2ac17a7e8f3fd5a8b7609e119010ee2 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Fri, 12 Jan 2024 14:46:24 +0000
+Subject: [PATCH] second patch
+
+from https://forums.developer.nvidia.com/t/cpu-0-error-cbb-noc-0x2300000-irq-15/230970/3
+---
+ nvidia/drivers/video/tegra/dc/dc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/nvidia/drivers/video/tegra/dc/dc.c b/nvidia/drivers/video/tegra/dc/dc.c
+index 1cedba915442..09e1a0d6fb55 100644
+--- a/nvidia/drivers/video/tegra/dc/dc.c
++++ b/nvidia/drivers/video/tegra/dc/dc.c
+@@ -6374,7 +6374,7 @@ bool tegra_is_bl_display_initialized(int instance)
+ 		pr_debug("dc->fb_mem not initialized\n");
+ 		return false;
+ 	}
+-	return (dc->fb_mem->start != 0);
++	return false;
+ }
+ EXPORT_SYMBOL(tegra_is_bl_display_initialized);
+ 
+-- 
+2.17.1
+

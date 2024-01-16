@@ -8,14 +8,20 @@ DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit = "331776"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nx-xavier-nx-devkit = "331776"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nano-devkit-nvme = "598016"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nx-seeed-j4012 = "598016"
+DEVICE_SPECIFIC_SPACE:jetson-xavier-nx-devkit-emmc = "593920"
 
 BALENA_BOOT_SIZE:jetson-orin-nx-xavier-nx-devkit = "121440"
 BALENA_BOOT_SIZE:jetson-orin-nano-devkit-nvme = "121440"
+BALENA_BOOT_SIZE:jetson-xavier-nx-devkit-emmc = "121440"
 
 IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit = "1003520"
 IMAGE_ROOTFS_SIZE:jetson-orin-nx-xavier-nx-devkit = "983040"
 IMAGE_ROOTFS_SIZE:jetson-orin-nx-seeed-j4012 = "733184"
 IMAGE_ROOTFS_SIZE:jetson-orin-nano-devkit-nvme = "733184"
+IMAGE_ROOTFS_SIZE:jetson-xavier-nx-devkit-emmc = "733184"
+
+START_OFFSET = "40"
+START_OFFSET:jetson-xavier-nx-devkit-emmc = "40"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
@@ -25,7 +31,10 @@ BALENA_BOOT_PARTITION_FILES:append = " \
 PART_SPEC_FILE = "partition_specification234.txt"
 PART_SPEC_FILE:jetson-orin-nano-devkit-nvme = "partition_specification234_orin_nano.txt"
 PART_SPEC_FILE:jetson-orin-nx-seeed-j4012 = "partition_specification234_orin_nano.txt"
+PART_SPEC_FILE:jetson-xavier-nx-devkit-emmc = "partition_specification194_nxde.txt"
 
+BOOTFILES_DIR = "bootfiles"
+BOOTFILES_DIR:jetson-xavier-nx-devkit-emmc = "tegra-bootfiles"
 check_size() {
     file_path=${1}
     [ -f "${file_path}" ] || bbfatal "Specified path does not exist: ${file_path}"
@@ -40,12 +49,12 @@ check_size() {
 device_specific_configuration() {
     partitions=$(cat "${DEPLOY_DIR_IMAGE}/tegra-binaries/${PART_SPEC_FILE}")
     echo ">>> Partitions list: ${partitions}"
-    START=40
+    START=${START_OFFSET}
     for n in ${partitions}; do
         part_name=$(echo $n | cut -d ':' -f 1)
         file_name=$(echo $n | cut -d ':' -f 2)
         part_size=$(echo $n | cut -d ':' -f 3)
-        file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
+        file_path=$(find ${DEPLOY_DIR_IMAGE}/${BOOTFILES_DIR} -name $file_name)
         END=$(expr ${START} \+ ${part_size} \- 1)
         echo ">>> file: ${file_path}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
         parted -s ${BALENA_RAW_IMG} unit s mkpart $part_name ${START} ${END}
@@ -54,7 +63,8 @@ device_specific_configuration() {
             dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512
         else
             dd if=/dev/zero of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512 count=${part_size}
-      fi
-      START=$(expr ${END} \+ 1)
+        fi
+        START=$(expr ${END} \+ 1)
     done
 }
+

@@ -7,6 +7,8 @@ SCMVERSION="n"
 # Switch nvmap to built-in to fix the kernel headers
 SRC_URI:append = " file://0001-fix-kernel-headers-test.patch \
 		file://0001-defconfig-Fix-build-failure.patch \
+		file://0001-Fix-Xavier-NX-crash.patch \
+		file://0001-second-patch.patch \
 "
 BALENA_CONFIGS:remove = " mdraid"
 
@@ -67,6 +69,7 @@ BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_V4=m \
     CONFIG_NFSD_V3=y \
     CONFIG_NFSD_V4=y \
+    CONFIG_FB_SIMPLE=n \
 "
 
 BALENA_CONFIGS[xudc] = " \
@@ -81,8 +84,8 @@ BALENA_CONFIGS[rtc] = " \
 
 L4TVER=" l4tver=${L4T_VERSION}"
 
-KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 "
-KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=tty0 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} "
+KERNEL_ARGS = " firmware_class.path=/etc/firmware "
+KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} "
 
 generate_extlinux_conf() {
     mkdir -p ${DEPLOY_DIR_IMAGE}/extlinux || true

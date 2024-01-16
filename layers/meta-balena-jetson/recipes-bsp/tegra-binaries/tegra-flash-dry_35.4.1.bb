@@ -7,21 +7,23 @@ inherit deploy
 
 PN = "tegra-flash-dry"
 
-BOOTBLOB:jetson-agx-orin-devkit = "boot0_agx_orin_devkit.img.gz"
 UEFI_CAPSULE:jetson-orin-nx-xavier-nx-devkit = "TEGRA_BL_Orin_NX.Cap.gz"
 UEFI_CAPSULE:jetson-agx-orin-devkit = "TEGRA_BL_3701.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nano-devkit-nvme = "TEGRA_BL_Orin_Nano.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nx-seeed-j4012 = "TEGRA_BL_Seeed_j4012.Cap.gz"
+UEFI_CAPSULE:jetson-xavier-nx-devkit-emmc = "TEGRA_BL_Xavier_NX_eMMC.Cap.gz"
 
+BOOTBLOB:jetson-agx-orin-devkit = "boot0_agx_orin_devkit.img.gz"
 BOOTBLOB:jetson-orin-nx-xavier-nx-devkit = "boot0_orin_nx_xavier_nx_devkit.img.gz"
 BOOTBLOB:jetson-orin-nano-devkit-nvme = "boot0_orin_nano_devkit_nvme.img.gz"
 BOOTBLOB:jetson-orin-nx-seeed-j4012 = "boot0_orin_nx_seed_j4012.img.gz"
+BOOTBLOB:jetson-xavier-nx-devkit-emmc = "boot0_xavier_nx_emmc.img.gz"
 
 PARTSPEC:jetson-agx-orin-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nx-xavier-nx-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nano-devkit-nvme = "partition_specification234_orin_nano.txt"
 PARTSPEC:jetson-orin-nx-seeed-j4012 = "partition_specification234_orin_nano.txt"
-
+PARTSPEC:jetson-xavier-nx-devkit-emmc = "partition_specification194_nxde.txt"
 
 BINARY_INSTALL_PATH = "/opt/tegra-binaries/"
 

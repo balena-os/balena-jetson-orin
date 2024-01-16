@@ -1,5 +1,7 @@
 IMAGE_FSTYPES += "balenaos-img"
 
+SPLASH:remove="plymouth"
+
 do_rootfs:balenaos-img[depends] += " linux-tegra:do_deploy edk2-firmware-tegra:do_deploy l4t-launcher-extlinux:do_deploy tegra-flash-dry:do_install"
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
@@ -69,6 +71,22 @@ IMAGE_INSTALL:append:jetson-orin-nx-xavier-nx-devkit = " \
     linux-firmware-rtl8168 \
     kernel-module-realtek \
     pciutils \
+"
+
+IMAGE_INSTALL:append:jetson-xavier-nx-devkit-emmc = " \
+    tegra194-nxde-flash-dry \
+    parted \
+    gptfdisk \
+    tegra-nvpmodel \
+    tegra-configs-nvstartup \
+    tegra-configs-udev \
+    tegra-wifi \
+    tegra-bluetooth \
+    tegra-firmware-rtl8822 \
+    mtd-utils \
+    tegra-nvfancontrol \
+    l4t-launcher-extlinux \
+    jetson-dtbs \
 "
 
 IMAGE_INSTALL:remove = "kernel-image-image"

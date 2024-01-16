@@ -1,0 +1,48 @@
+From 0394c8bf19a6947801a46cd1f33fb6b691bdee8b Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Fri, 12 Jan 2024 14:08:23 +0000
+Subject: [PATCH] Fix Xavier NX crash
+
+As per https://forums.developer.nvidia.com/t/kernel-panic-as-result-of-cpu-0-error-cbb-noc-error-on-l4t-35-4-1/272032/34
+
+Upstream-status: Inappropriate
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ drivers/soc/tegra/powergate-bpmp.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/soc/tegra/powergate-bpmp.c b/drivers/soc/tegra/powergate-bpmp.c
+index 06c792bafca5..857b568702d5 100644
+--- a/drivers/soc/tegra/powergate-bpmp.c
++++ b/drivers/soc/tegra/powergate-bpmp.c
+@@ -9,6 +9,7 @@
+ #include <linux/slab.h>
+ #include <linux/version.h>
+ 
++#include <soc/tegra/fuse.h>
+ #include <soc/tegra/bpmp.h>
+ #include <soc/tegra/bpmp-abi.h>
+ 
+@@ -185,7 +186,18 @@ tegra_powergate_add(struct tegra_bpmp *bpmp,
+ 	powergate->genpd.name = kstrdup(info->name, GFP_KERNEL);
+ 	powergate->genpd.power_on = tegra_powergate_power_on;
+ 	powergate->genpd.power_off = tegra_powergate_power_off;
+-
++	/* 
++	 *  Set display power domains to always-on if powergate is already powered
++	 */
++	if (tegra_get_chip_id() == TEGRA194) {
++		if ((!strcmp(powergate->genpd.name, "disp") ||
++			!strcmp(powergate->genpd.name, "dispb") ||
++			!strcmp(powergate->genpd.name, "dispc")) && !off) {
++			    powergate->genpd.flags |= GENPD_FLAG_ALWAYS_ON;
++			    dev_dbg(bpmp->dev, "%s set GENPD_FLAG_ALWAYS_ON flag\n",
++				powergate->genpd.name);
++		}
++	}
+ 	err = pm_genpd_init(&powergate->genpd, NULL, off);
+ 	if (err < 0) {
+ 		kfree(powergate->genpd.name);
+-- 
+2.17.1
+

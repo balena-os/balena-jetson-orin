@@ -37,3 +37,12 @@ do_install:jetson-orin-nano-devkit-nvme() {
 FILES:${PN}:jetson-orin-nano-devkit-nvme += " \
         /boot/tegra234-p3767-0003-p3768-0000-a0.dtb \
 "
+
+do_install:jetson-xavier-nx-devkit-emmc() {
+        install -d ${D}/boot/
+        install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
+}
+
+FILES:${PN}:jetson-xavier-nx-devkit-emmc += " \
+	/boot/tegra194-p3668-all-p3509-0000.dtb \
+"
