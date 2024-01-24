@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.8+rev3
+## (2024-01-24)
+
+* linux-tegra: Enable binder config for Jetson Orin Nano [Alexandru Costache]
+
 # v5.1.8+rev2
 ## (2024-01-13)
 

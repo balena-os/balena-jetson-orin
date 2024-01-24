@@ -1,4 +1,21 @@
 - commits:
+    - subject: "linux-tegra: Enable binder config for Jetson Orin Nano"
+      hash: d9b9c250e484d354fd80da11764831dab55a1f1d
+      body: |
+        As per zendesk ticket 2718. The config was previously
+        enabled for the TX2 on L4T 32.X base-line, but the
+        upstream 35.X did not enable it by default.
+      footer:
+        Changelog-entry: "linux-tegra: Enable binder config for Jetson Orin Nano"
+        changelog-entry: "linux-tegra: Enable binder config for Jetson Orin Nano"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.1.8+rev3
+  title: ""
+  date: 2024-01-24T08:54:42.522Z
+- commits:
     - subject: Update layers/meta-openembedded to
         730e44900a0a86265bad93a16b5a5ff344a07266
       hash: 4c4c7aa896dd5f7610dbdcbcb1b6f5db4a5fd17f
