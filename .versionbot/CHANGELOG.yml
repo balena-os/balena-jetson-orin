@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update layers/meta-balena to 926c556a680f3d42118f2f8cb5c5cd67b1f79c3c
+      hash: 9284a7f7396c75041d1f3c1534aeef3891e31c4d
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 926c556a680f3d42118f2f8cb5c5cd67b1f79c3c
+        changelog-entry: Update layers/meta-balena to 926c556a680f3d42118f2f8cb5c5cd67b1f79c3c
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "classes: kernel-balena: expose watchdog in sysfs"
+              hash: 1c56e8e1cb2bb9c871ce3fe805b97e9e2a7c867b
+              body: |
+                This helps debugging watchdog related issues.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-5.1.18
+          title: ""
+          date: 2024-01-29T18:06:47.257Z
+  version: 5.1.18
+  title: ""
+  date: 2024-01-29T21:25:56.328Z
+- commits:
     - subject: Update layers/meta-balena to 10c68e5f01bbb3f6d2866f11a934635129ed3b0e
       hash: 3f10cc322adb2cf70c58999c75181e41d9f5abd8
       body: Update layers/meta-balena
