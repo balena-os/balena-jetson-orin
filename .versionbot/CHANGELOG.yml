@@ -1,4 +1,20 @@
 - commits:
+    - subject: "linux-tegra: Enable CONFIG_ASHMEM"
+      hash: f8012029fcf6c6d7f82decdbdf946db33aaad172
+      body: |
+        This config may also be needed apart from
+        the BINDER configs.
+      footer:
+        Changelog-entry: "linux-tegra: Enable CONFIG_ASHMEM"
+        changelog-entry: "linux-tegra: Enable CONFIG_ASHMEM"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.1.18+rev1
+  title: ""
+  date: 2024-01-31T08:41:03.957Z
+- commits:
     - subject: Update layers/meta-balena to 926c556a680f3d42118f2f8cb5c5cd67b1f79c3c
       hash: 9284a7f7396c75041d1f3c1534aeef3891e31c4d
       body: Update layers/meta-balena

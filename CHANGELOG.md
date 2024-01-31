@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.1.18+rev1
+## (2024-01-31)
+
+* linux-tegra: Enable CONFIG_ASHMEM [Alexandru Costache]
+
 # v5.1.18
 ## (2024-01-29)
 
