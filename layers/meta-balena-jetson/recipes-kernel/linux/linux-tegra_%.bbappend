@@ -82,6 +82,7 @@ BALENA_CONFIGS[rtc] = " \
 BALENA_CONFIGS:append:jetson-orin-nano-devkit-nvme = " binder"
 BALENA_CONFIGS[binder] = " \
     CONFIG_ANDROID=y \
+    CONFIG_ASHMEM=y \
     CONFIG_ANDROID_BINDER_IPC=y \
     CONFIG_ANDROID_BINDER_DEVICES=\"binder,hwbinder,vndbinder\" \
     CONFIG_ANDROID_BINDER_IPC_SELFTEST=y \
