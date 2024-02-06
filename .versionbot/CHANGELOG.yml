@@ -1,4 +1,54 @@
 - commits:
+    - subject: Update layers/meta-balena to e3519f1960bc68e72abf3ec052564cbf5878629f
+      hash: eb73844a40f4bac48ab5c834b33b006e4c16d007
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to e3519f1960bc68e72abf3ec052564cbf5878629f
+        changelog-entry: Update layers/meta-balena to e3519f1960bc68e72abf3ec052564cbf5878629f
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: Update tests/leviathan digest to 57ba19b
+              hash: 95914f064319b07f4fffaea99acba403371f8552
+              body: Update tests/leviathan
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: Update balena-os/leviathan-worker to v2.9.32
+                      hash: 9b77f33362ad96fbcb16144d1ced8f55b1ae229b
+                      body: |
+                        Update balena-os/leviathan-worker from 2.9.30 to 2.9.32
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.48
+                  title: ""
+                  date: 2024-02-05T14:50:14.058Z
+                - commits:
+                    - subject: Update Lock file maintenance
+                      hash: aaaa5b9d3cbdc934492b3198be0f589878bb2556
+                      body: |
+                        Update
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.47
+                  title: ""
+                  date: 2024-02-05T00:45:07.492Z
+          version: meta-balena-5.1.24
+          title: ""
+          date: 2024-02-05T21:33:40.827Z
+  version: 5.1.24
+  title: ""
+  date: 2024-02-06T02:34:36.845Z
+- commits:
     - subject: Update layers/meta-openembedded to
         ce9c0d76171ce9d07e4bcb702b750416b265562a
       hash: e02ad00305b9125814ad1c3128c80e58bbb9149d
