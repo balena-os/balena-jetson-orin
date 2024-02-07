@@ -1,4 +1,31 @@
 - commits:
+    - subject: Update balena-yocto-scripts to 57b2f7c97e4d95e74b76a0827e910d46e3b3ce2f
+      hash: a53269170dcf00d8ef35b9704684ef735a06c87c
+      body: Update balena-yocto-scripts
+      footer:
+        Changelog-entry: Update balena-yocto-scripts to 57b2f7c97e4d95e74b76a0827e910d46e3b3ce2f
+        changelog-entry: Update balena-yocto-scripts to 57b2f7c97e4d95e74b76a0827e910d46e3b3ce2f
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "balena-deploy: Remove docker.io when pulling image"
+              hash: bd23b9ad59a1645bce79b0df5ef3879d10774a3a
+              body: |
+                This seems to cause docker images --format to fail
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru
+              nested: []
+          version: balena-yocto-scripts-1.21.1
+          title: ""
+          date: 2024-02-07T12:39:41.622Z
+  version: 5.1.26+rev1
+  title: ""
+  date: 2024-02-07T14:57:47.248Z
+- commits:
     - subject: Update layers/meta-balena to cde215eca198fddfd900cf481ed5cc3f26d901ab
       hash: b9407ddbca63b9ab52467f109e9e8d61e130c9b2
       body: Update layers/meta-balena
