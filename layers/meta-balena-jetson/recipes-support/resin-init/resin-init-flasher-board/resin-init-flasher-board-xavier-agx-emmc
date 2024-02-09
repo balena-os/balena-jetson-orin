@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+echo 0 > /sys/block/mmcblk0boot0/force_ro
+dd if=/opt/tegra-binaries/boot0_mmcblk0boot0.img of=/dev/mmcblk0boot0 bs=1M
+echo 1 > /sys/block/mmcblk0boot0/force_ro
+sync
+
+# Relocate secondary gpt after writing image to the emmc with dd
+sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/mmcblk0
+    v
+    w
+EOF
