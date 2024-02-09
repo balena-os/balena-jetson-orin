@@ -1,4 +1,34 @@
 - commits:
+    - subject: Update layers/meta-balena to cb86da70496b25de7b826abbacd7c7feedf2fa54
+      hash: 0bde9d4bbdfb2dd9cad79f3db0574bf151cb9e8f
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to cb86da70496b25de7b826abbacd7c7feedf2fa54
+        changelog-entry: Update layers/meta-balena to cb86da70496b25de7b826abbacd7c7feedf2fa54
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "patch: upgrade recipes/devtools/go to 1.17.13"
+              hash: 0845ea2914e0b784a022d3c9414168d8a2212c4b
+              body: ""
+              footer:
+                cherry-pick: c93239706f70b0cea59797814a409cfc376b3e0f
+              author: JOASSART Edwin
+              nested: []
+            - subject: "patch: removes recipes/devtools/go to 1.16"
+              hash: 6017fdaaae799b8e5cd6b8f3b52e9c51f46e9450
+              body: ""
+              footer:
+                cherry-pick: git://git.yoctoproject.org/poky@c93239706f70b0cea59797814a409cfc376b3e0f
+              author: JOASSART Edwin
+              nested: []
+          version: meta-balena-5.1.27
+          title: ""
+          date: 2024-02-09T17:47:17.512Z
+  version: 5.1.27
+  title: ""
+  date: 2024-02-09T22:48:23.053Z
+- commits:
     - subject: Update layers/meta-openembedded to
         8609de00952d65bb813a48c535c937324efeb18a
       hash: ff03eeb31fdd82f3e2b66029c73e4accdb2fcba5

@@ -1,6 +1,22 @@
 Change log
 -----------
 
+# v5.1.27
+## (2024-02-09)
+
+
+<details>
+<summary> Update layers/meta-balena to cb86da70496b25de7b826abbacd7c7feedf2fa54 [Self-hosted Renovate Bot] </summary>
+
+> ## meta-balena-5.1.27
+> ### (2024-02-09)
+> 
+> * patch: upgrade recipes/devtools/go to 1.17.13 [JOASSART Edwin]
+> * patch: removes recipes/devtools/go to 1.16 [JOASSART Edwin]
+> 
+
+</details>
+
 # v5.1.26+rev4
 ## (2024-02-08)
 
