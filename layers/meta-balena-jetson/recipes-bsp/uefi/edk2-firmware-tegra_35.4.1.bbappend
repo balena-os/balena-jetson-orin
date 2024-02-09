@@ -31,7 +31,9 @@ do_deploy:append() {
      mkdir -p ${DEPLOYDIR}/bootfiles/EFI/BOOT/
      cp ${WORKDIR}/build/images/BOOTAA64.efi ${DEPLOYDIR}/bootfiles/EFI/BOOT/BOOTAA64.efi
 }
-
+SRC_URI:append:jetson-xavier = " \
+    file://0005-Add-hup-and-rollback-support-agx-xavier-35-4-1.patch;patchdir=.. \
+"
 # We generate the final nvdisp-init.bin file in tegra194-flash* using
 # the original one provided in the tegra BSP archive
 NVDISPLAY_INIT_DEFAULT:tegra194=""

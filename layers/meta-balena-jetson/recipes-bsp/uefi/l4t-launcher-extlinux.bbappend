@@ -1,4 +1,4 @@
-do_install:tegra234() {
+do_install() {
     install -d ${D}/boot/extlinux
     cp ${DEPLOY_DIR_IMAGE}/extlinux/extlinux.conf ${B}/
     install -m 0644 ${B}/extlinux.conf ${D}/boot/extlinux/
