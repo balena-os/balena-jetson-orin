@@ -8,14 +8,17 @@ DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit = "331776"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nx-xavier-nx-devkit = "331776"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nano-devkit-nvme = "598016"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nx-seeed-j4012 = "598016"
+DEVICE_SPECIFIC_SPACE:jetson-xavier = "921600"
 
 BALENA_BOOT_SIZE:jetson-orin-nx-xavier-nx-devkit = "121440"
 BALENA_BOOT_SIZE:jetson-orin-nano-devkit-nvme = "121440"
+BALENA_BOOT_SIZE:jetson-xavier = "121440"
 
 IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit = "1003520"
 IMAGE_ROOTFS_SIZE:jetson-orin-nx-xavier-nx-devkit = "983040"
 IMAGE_ROOTFS_SIZE:jetson-orin-nx-seeed-j4012 = "733184"
 IMAGE_ROOTFS_SIZE:jetson-orin-nano-devkit-nvme = "733184"
+IMAGE_ROOTFS_SIZE:jetson-xavier = "733184"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
@@ -58,3 +61,31 @@ device_specific_configuration() {
       START=$(expr ${END} \+ 1)
     done
 }
+
+device_specific_configuration:jetson-xavier() {
+    ESP_BLOCKS=65536
+    dd if=/dev/zero of=${DEPLOY_DIR_IMAGE}/tegra-binaries/esp.img seek=${ESP_BLOCKS} count=0 bs=1024
+    mkfs.vfat -F 32 -I ${DEPLOY_DIR_IMAGE}/tegra-binaries/esp.img ${ESP_BLOCkS}
+    partitions=$(cat ${DEPLOY_DIR_IMAGE}/tegra-binaries/partition_specification194.txt)
+    NVIDIA_PART_OFFSET=20480
+    START=${NVIDIA_PART_OFFSET}
+    for n in ${partitions}; do
+      part_name=$(echo $n | cut -d ':' -f 1)
+      file_name=$(echo $n | cut -d ':' -f 2)
+      part_size=$(echo $n | cut -d ':' -f 3)
+      file_path=$(find ${DEPLOY_DIR_IMAGE}/tegra-binaries -name $part_name)
+      END=$(expr ${START} \+ ${part_size} \- 1)
+      echo "Will write $part_name from ${START} to ${END} part size: $part_size"
+      parted -s ${BALENA_RAW_IMG} unit B mkpart $part_name ${START} ${END}
+      # The padding partition exists to allow for the device specific space to
+      # be a multiple of 4096. We don't write anything to it for the moment.
+      if [ ! "$file_name" = "none.bin" ]; then
+	# TODO: convert to sectors
+        # check_size ${file_path} ${part_size}
+        # TODO: Secondary blobs with signed kernel, dtb and other bootloaders that need to be written to specific partitions are needed for the AGX Xavier
+        dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=$(expr ${START} \/ 512) bs=512
+      fi
+      START=$(expr ${END} \+ 1)
+    done
+}
+

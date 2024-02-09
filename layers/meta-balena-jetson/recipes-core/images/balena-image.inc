@@ -71,5 +71,30 @@ IMAGE_INSTALL:append:jetson-orin-nx-xavier-nx-devkit = " \
     pciutils \
 "
 
+IMAGE_INSTALL:append:jetson-xavier = " \
+    tegra-redundant-boot \
+    tegra-nv-boot-control-config \
+    parted \
+    gptfdisk \
+    tegra-bluetooth \
+    tegra-wifi \
+    tegra-nvpmodel \
+    jetson-dtbs \
+    tegra-configs-nvstartup \
+    tegra-nvstartup \
+    tegra-configs-udev \
+    tegra-nvfancontrol \
+    l4t-launcher-extlinux \
+    pciutils \
+    tegra-firmware \
+    tegra-eeprom-tool \
+    tegra-redundant-boot \
+    tegra-nv-boot-control-config \
+    tegra-eeprom-tool \
+    setup-nv-boot-control \
+    ldd \
+"
+
+
 IMAGE_INSTALL:remove = "kernel-image-image"
 
