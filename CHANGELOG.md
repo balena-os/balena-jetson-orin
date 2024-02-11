@@ -1,6 +1,32 @@
 Change log
 -----------
 
+# v5.1.28
+## (2024-02-11)
+
+
+<details>
+<summary> Update layers/meta-balena to 4b70a3a329ce5e6749b32e49f87ef0093ee2d2c6 [Self-hosted Renovate Bot] </summary>
+
+> ## meta-balena-5.1.28
+> ### (2024-02-11)
+> 
+> 
+> <details>
+> <summary> Update balena-engine to v20.10.43 [Self-hosted Renovate Bot] </summary>
+> 
+>> ### balena-engine-20.10.43
+>> #### (2024-02-06)
+>> 
+>> * Update runc component to v1.1.12 from balena-runc repo [Ken Bannister]
+>> 
+> 
+> </details>
+> 
+> 
+
+</details>
+
 # v5.1.27
 ## (2024-02-09)
 
