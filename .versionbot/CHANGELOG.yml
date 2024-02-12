@@ -1,4 +1,139 @@
 - commits:
+    - subject: Update layers/meta-balena to c9e64a42b8de857356e587b551fc25e83df441a1
+      hash: cdbb6ee22d215f8f98306307ff15bc9136fd476b
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to c9e64a42b8de857356e587b551fc25e83df441a1
+        changelog-entry: Update layers/meta-balena to c9e64a42b8de857356e587b551fc25e83df441a1
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "balena-image-bootloader-initramfs.bb: Add fsck module"
+              hash: 4b1bc7244ab21a9952ea7569c0c0e1bc9a11e2e0
+              body: >
+                The balena bootloader initramfs contains the rootfs module and
+                that
+
+                will get the rootfs mounted but not checked first for errors. This is
+
+                problematic because at first boot with network connectivity available,
+
+                time will sync but the rootfs will still have the last mount time in
+
+                1970. If at that point the rootfs gets corrupted then at next boot
+
+                the rootfs' initramfs module from balena-bootloader will try to mount
+
+                the rootfs without checking it first and then after that the filesystem
+
+                check triggered by the fsck module from the actual kernel initramfs will
+
+                fail like this:
+
+
+                [init][INFO] Running filesystem checks on partition resin-rootA (/dev/disk/by-state/resin-rootA)
+
+                resin-rootA contains a file system with errors, check forced.
+
+                resin-rootA: Inodes that were part of a corrupted orphan linked list found.
+
+
+                resin-rootA: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.
+                        (i.e., without -a or -p options)
+
+                This commit will add the fsck module to balena bootloader's initramfs
+
+                which will trigger filesystem checks before the rootfs module runs.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+          version: meta-balena-5.1.30
+          title: ""
+          date: 2024-02-12T19:58:46.698Z
+        - commits:
+            - subject: Update tests/leviathan digest to f6a3391
+              hash: 0df90f0d2a1105bb3d0e8db6a28ce9bc76d8e1b0
+              body: Update tests/leviathan
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: Update core/contracts digest to 4f7dba1
+                      hash: 55fdb70de51b296b56752e79375ef5932c294de2
+                      body: |
+                        Update core/contracts
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.54
+                  title: ""
+                  date: 2024-02-12T01:49:14.116Z
+                - commits:
+                    - subject: Update Lock file maintenance
+                      hash: 174797e7ff00c3cec8912d63cc5debfbfadbb3ce
+                      body: |
+                        Update
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.53
+                  title: ""
+                  date: 2024-02-12T00:49:17.031Z
+                - commits:
+                    - subject: Update balena-os/leviathan-worker to v2.9.34
+                      hash: 676c345f8f2bd4eb14270817774fa9f6d32552eb
+                      body: |
+                        Update balena-os/leviathan-worker from 2.9.33 to 2.9.34
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.52
+                  title: ""
+                  date: 2024-02-08T09:34:59.187Z
+                - commits:
+                    - subject: Update balena-os/leviathan-worker to v2.9.33
+                      hash: 9eeb44be296aaeb17654afa51d6757242dd9da38
+                      body: |
+                        Update balena-os/leviathan-worker from 2.9.32 to 2.9.33
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.51
+                  title: ""
+                  date: 2024-02-06T12:48:22.014Z
+                - commits:
+                    - subject: "patch: Add config.js validator"
+                      hash: 740c4bfbe01703ed694b227e5c6ccebf096cb297
+                      body: ""
+                      footer:
+                        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+                      author: Vipul Gupta (@vipulgupta2048)
+                      nested: []
+                  version: leviathan-2.29.50
+                  title: ""
+                  date: 2024-02-06T10:02:47.800Z
+          version: meta-balena-5.1.29
+          title: ""
+          date: 2024-02-12T06:15:56.841Z
+  version: 5.1.30
+  title: ""
+  date: 2024-02-12T23:59:52.190Z
+- commits:
     - subject: Update balena-yocto-scripts to 0cb57aede8dea798c14ddfc6546525b920504970
       hash: ecf1d010017c10fa05c8ec1a66968a5231f17ba7
       body: Update balena-yocto-scripts
