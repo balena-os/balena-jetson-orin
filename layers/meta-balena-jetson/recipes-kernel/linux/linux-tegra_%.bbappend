@@ -69,7 +69,6 @@ BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_V4=m \
     CONFIG_NFSD_V3=y \
     CONFIG_NFSD_V4=y \
-    CONFIG_FB_SIMPLE=n \
 "
 
 BALENA_CONFIGS[xudc] = " \
@@ -85,6 +84,7 @@ BALENA_CONFIGS[rtc] = " \
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS = " firmware_class.path=/etc/firmware "
+KERNEL_ARGS:jetson-xavier-nx-devkit-emmc = " fbcon=map:0 video=efifb:off nospectre_bhb"
 KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} "
 
 generate_extlinux_conf() {
