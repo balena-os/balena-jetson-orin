@@ -42,11 +42,11 @@ EOF
 
 do_compile:jetson-xavier-nx-devkit-emmc() {
         cat > ${B}/nv_boot_control.conf <<EOF
-TNSPEC 3701-500-0000-J.0-1-1-jetson-xavier-nx-devkit-emmc-
-COMPATIBLE_SPEC 3701--0000--1--jetson-xavier-nx-devkit-emmc-
+TNSPEC 3668-200-0001-G.0-1-2-jetson-xavier-nx-devkit-emmc-
+COMPATIBLE_SPEC 3668-100---1--jetson-xavier-nx-devkit-emmc-
 TEGRA_LEGACY_UPDATE true
 TEGRA_EMMC_ONLY false
-TEGRA_CHIPID 0x23
+TEGRA_CHIPID 0x19
 TEGRA_OTA_BOOT_DEVICE /dev/mtdblock0
 TEGRA_OTA_GPT_DEVICE /dev/mtdblock0
 EOF
