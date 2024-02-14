@@ -1,4 +1,30 @@
 - commits:
+    - subject: Update layers/meta-balena to 905446e98206f871145d1c70107c01d567e1303d
+      hash: 8ff4fd7db8c3fbaba28e9936a0e7bfd8b44bad73
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 905446e98206f871145d1c70107c01d567e1303d
+        changelog-entry: Update layers/meta-balena to 905446e98206f871145d1c70107c01d567e1303d
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "tests: cloud: if no existing release, create generic fleet"
+              hash: 5b63019d327a1b8ebe1871fd6bc85b0790f40f81
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Ryan Cooke <ryan@balena.io>
+                signed-off-by: Ryan Cooke <ryan@balena.io>
+              author: rcooke-warwick
+              nested: []
+          version: meta-balena-5.1.33
+          title: ""
+          date: 2024-02-14T07:31:35.324Z
+  version: 5.1.33
+  title: ""
+  date: 2024-02-14T11:05:14.916Z
+- commits:
     - subject: Update layers/meta-balena to 9cacd8fbca660d61433e0b01a2beb0e515ea5a51
       hash: 37cad38fab7bdac9eea8431d18a03e52e02bcc32
       body: Update layers/meta-balena
