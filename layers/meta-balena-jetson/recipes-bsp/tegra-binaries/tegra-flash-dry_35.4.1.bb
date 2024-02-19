@@ -31,6 +31,11 @@ PARTSPEC:jetson-xavier = "partition_specification194.txt"
 PARTSPEC:jetson-xavier-nx-devkit-emmc = "partition_specification194_nxde.txt"
 PARTSPEC:jetson-xavier-nx-devkit = "partition_specification194_nxde.txt"
 
+BOOT0_PREFLASHED = "boot0.img"
+BOOT0_PREFLASHED:jetson-xavier = "boot0_mmcblk0boot0.img"
+BOOT0_PREFLASHED:jetson-xavier-nx-devkit-emmc = "boot0_mtdblock0.img"
+BOOT0_PREFLASHED:jetson-xavier-nx-devkit = "boot0_mtdblock0.img"
+
 BINARY_INSTALL_PATH = "/opt/tegra-binaries/"
 
 SRC_URI = " \
@@ -38,6 +43,9 @@ SRC_URI = " \
     file://${PARTSPEC} \
     file://${UEFI_CAPSULE};unpack=0 \
 "
+install_artifacts_orin() {
+    install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/${BOOT0_PREFLASHED}
+}
 
 do_install() {
     # Ensure install is not executed until
@@ -53,76 +61,39 @@ do_install() {
     done
 
     install -d ${D}/${BINARY_INSTALL_PATH}
-    install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img
     install ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
     install ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
 }
 
-# TODO: Compress install scriptlets for all Xavier boards
-do_install:jetson-xavier() {
-    # Ensure install is not executed until
-    # do_unpack copies the archive
-    while [ ! -f ${WORKDIR}/${BOOTBLOB} ]
-    do
-        sleep 1
-    done
-
-    while [ ! -f ${WORKDIR}/${UEFI_CAPSULE} ]
-    do
-        sleep 1
-    done
-
-    install -d ${D}/${BINARY_INSTALL_PATH}
-    install -m 0644 ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/
-    install -m 0644 ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
-    install -m 0644 ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
-
-    tar xf ${D}/${BINARY_INSTALL_PATH}/${BOOTBLOB} -C ${WORKDIR}/ boot0_mmcblk0boot0.img
-    install ${WORKDIR}/boot0_mmcblk0boot0.img ${D}/${BINARY_INSTALL_PATH}/
+do_install:append:jetson-orin-nx-xavier-nx-devkit() {
+   install_artifacts_orin
 }
 
-do_install:jetson-xavier-nx-devkit-emmc() {
-    # Ensure install is not executed until
-    # do_unpack copies the archive
-    while [ ! -f ${WORKDIR}/${BOOTBLOB} ]
-    do
-        sleep 1
-    done
-
-    while [ ! -f ${WORKDIR}/${UEFI_CAPSULE} ]
-    do
-        sleep 1
-    done
-
-    install -d ${D}/${BINARY_INSTALL_PATH}
-    install -m 0644 ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/
-    install -m 0644 ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
-    install -m 0644 ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
-
-    tar xf ${D}/${BINARY_INSTALL_PATH}/${BOOTBLOB} -C ${WORKDIR}/ boot0_mtdblock0.img
-    install ${WORKDIR}/boot0_mtdblock0.img ${D}/${BINARY_INSTALL_PATH}/
+do_install:append:jetson-orin-nano-devkit-nvme() {
+   install_artifacts_orin
 }
 
-do_install:jetson-xavier-nx-devkit() {
-    # Ensure install is not executed until
-    # do_unpack copies the archive
-    while [ ! -f ${WORKDIR}/${BOOTBLOB} ]
-    do
-        sleep 1
-    done
+do_install:append:jetson-agx-orin-devkit() {
+   install_artifacts_orin
+}
 
-    while [ ! -f ${WORKDIR}/${UEFI_CAPSULE} ]
-    do
-        sleep 1
-    done
 
-    install -d ${D}/${BINARY_INSTALL_PATH}
+install_artifacts_xavier() {
     install -m 0644 ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/
-    install -m 0644 ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
-    install -m 0644 ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
+    tar xf ${D}/${BINARY_INSTALL_PATH}/${BOOTBLOB} -C ${WORKDIR}/ ${BOOT0_PREFLASHED}
+    install ${WORKDIR}/${BOOT0_PREFLASHED} ${D}/${BINARY_INSTALL_PATH}/
+}
 
-    tar xf ${D}/${BINARY_INSTALL_PATH}/${BOOTBLOB} -C ${WORKDIR}/ boot0_mtdblock0.img
-    install ${WORKDIR}/boot0_mtdblock0.img ${D}/${BINARY_INSTALL_PATH}/
+do_install:append:jetson-xavier() {
+    install_artifacts_xavier
+}
+
+do_install:append:jetson-xavier-nx-devkit-emmc() {
+    install_artifacts_xavier
+}
+
+do_install:append:jetson-xavier-nx-devkit() {
+   install_artifacts_xavier
 }
 
 do_deploy() {
