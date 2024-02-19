@@ -26,10 +26,10 @@ module.exports =
 
 	yocto:
 		machine: 'jetson-xavier'
-		image: 'balena-image-flasher'
+		image: 'balena-image'
 		fstype: 'balenaos-img'
 		version: 'yocto-kirkstone'
-		deployArtifact: 'balena-image-flasher-jetson-xavier.balenaos-img'
+		deployArtifact: 'balena-image-jetson-xavier.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]
@@ -37,7 +37,7 @@ module.exports =
 	configuration:
 		config:
 			partition:
-				primary: 1
+				primary: 43
 			path: '/config.json'
 
 	initialization: commonImg.initialization
