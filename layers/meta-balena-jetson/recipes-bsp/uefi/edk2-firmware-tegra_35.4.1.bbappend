@@ -33,7 +33,7 @@ do_deploy:append() {
 }
 
 SRC_URI:append:jetson-xavier = " \
-    file://set_boot_order_xavier_nx.patch \
+    file://set_boot_order_xavier_nx.patch;patchdir=.. \
     file://0005-Add-hup-and-rollback-support-agx-xavier-35-4-1.patch;patchdir=.. \
 "
 
