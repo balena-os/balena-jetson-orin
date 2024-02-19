@@ -14,12 +14,14 @@ UEFI_CAPSULE:jetson-orin-nano-devkit-nvme = "TEGRA_BL_Orin_Nano.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nx-seeed-j4012 = "TEGRA_BL_Seeed_j4012.Cap.gz"
 UEFI_CAPSULE:jetson-xavier = "TEGRA_BL_Xavier_AGX.Cap.gz"
 UEFI_CAPSULE:jetson-xavier-nx-devkit-emmc = "TEGRA_BL_Xavier_NX_eMMC.Cap.gz"
+UEFI_CAPSULE:jetson-xavier-nx-devkit = "TEGRA_BL_Xavier_NX_SD.Cap.gz"
 
 BOOTBLOB:jetson-orin-nx-xavier-nx-devkit = "boot0_orin_nx_xavier_nx_devkit.img.gz"
 BOOTBLOB:jetson-orin-nano-devkit-nvme = "boot0_orin_nano_devkit_nvme.img.gz"
 BOOTBLOB:jetson-orin-nx-seeed-j4012 = "boot0_orin_nx_seed_j4012.img.gz"
 BOOTBLOB:jetson-xavier = "bins_agx_xavier.tar.gz"
 BOOTBLOB:jetson-xavier-nx-devkit-emmc = "boot0_xavier_nx_emmc.tar.gz"
+BOOTBLOB:jetson-xavier-nx-devkit = "boot0_xavier_nx_sd.tar.gz"
 
 PARTSPEC:jetson-agx-orin-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nx-xavier-nx-devkit = "partition_specification234.txt"
@@ -27,7 +29,7 @@ PARTSPEC:jetson-orin-nano-devkit-nvme = "partition_specification234_orin_nano.tx
 PARTSPEC:jetson-orin-nx-seeed-j4012 = "partition_specification234_orin_nano.txt"
 PARTSPEC:jetson-xavier = "partition_specification194.txt"
 PARTSPEC:jetson-xavier-nx-devkit-emmc = "partition_specification194_nxde.txt"
-
+PARTSPEC:jetson-xavier-nx-devkit = "partition_specification194_nxde.txt"
 
 BINARY_INSTALL_PATH = "/opt/tegra-binaries/"
 
@@ -56,6 +58,7 @@ do_install() {
     install ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
 }
 
+# TODO: Compress install scriptlets for all Xavier boards
 do_install:jetson-xavier() {
     # Ensure install is not executed until
     # do_unpack copies the archive
@@ -75,7 +78,6 @@ do_install:jetson-xavier() {
     install -m 0644 ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
 
     tar xf ${D}/${BINARY_INSTALL_PATH}/${BOOTBLOB} -C ${WORKDIR}/ boot0_mmcblk0boot0.img
-    echo "AM AJUNS AICI"
     install ${WORKDIR}/boot0_mmcblk0boot0.img ${D}/${BINARY_INSTALL_PATH}/
 }
 
@@ -98,10 +100,30 @@ do_install:jetson-xavier-nx-devkit-emmc() {
     install -m 0644 ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
 
     tar xf ${D}/${BINARY_INSTALL_PATH}/${BOOTBLOB} -C ${WORKDIR}/ boot0_mtdblock0.img
-    echo "AM AJUNS AICI"
     install ${WORKDIR}/boot0_mtdblock0.img ${D}/${BINARY_INSTALL_PATH}/
 }
 
+do_install:jetson-xavier-nx-devkit() {
+    # Ensure install is not executed until
+    # do_unpack copies the archive
+    while [ ! -f ${WORKDIR}/${BOOTBLOB} ]
+    do
+        sleep 1
+    done
+
+    while [ ! -f ${WORKDIR}/${UEFI_CAPSULE} ]
+    do
+        sleep 1
+    done
+
+    install -d ${D}/${BINARY_INSTALL_PATH}
+    install -m 0644 ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/
+    install -m 0644 ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
+    install -m 0644 ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
+
+    tar xf ${D}/${BINARY_INSTALL_PATH}/${BOOTBLOB} -C ${WORKDIR}/ boot0_mtdblock0.img
+    install ${WORKDIR}/boot0_mtdblock0.img ${D}/${BINARY_INSTALL_PATH}/
+}
 
 do_deploy() {
     rm -rf ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH}) || true
@@ -110,13 +132,16 @@ do_deploy() {
 }
 
 do_deploy:append:jetson-xavier() {
-    tar xf ${WORKDIR}/bins_agx_xavier.tar.gz -C ${DEPLOY_DIR_IMAGE}/tegra-binaries/
+    tar xf ${WORKDIR}/${BOOTBLOB} -C ${DEPLOY_DIR_IMAGE}/tegra-binaries/
 }
 
 do_deploy:append:jetson-xavier-nx-devkit-emmc() {
-    tar xf ${WORKDIR}/boot0_xavier_nx_emmc.tar.gz -C ${DEPLOY_DIR_IMAGE}/tegra-binaries/
+    tar xf ${WORKDIR}/${BOOTBLOB} -C ${DEPLOY_DIR_IMAGE}/tegra-binaries/
 }
 
+do_deploy:append:jetson-xavier-nx-devkit() {
+    tar xf ${WORKDIR}/${BOOTBLOB} -C ${DEPLOY_DIR_IMAGE}/tegra-binaries/
+}
 
 FILES:${PN} += " \
     /opt/tegra-binaries/* \
