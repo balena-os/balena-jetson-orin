@@ -86,7 +86,6 @@ device_specific_configuration:jetson-xavier-nx-devkit() {
     write_jetson_partitions_xavier
 }
 
-# TODO: Convert bytes to sectors for AGX Xavier
 write_jetson_partitions_xavier() {
     ESP_BLOCKS=65536
     dd if=/dev/zero of=${DEPLOY_DIR_IMAGE}/tegra-binaries/esp.img seek=${ESP_BLOCKS} count=0 bs=1024

@@ -71,7 +71,7 @@ IMAGE_INSTALL:append:jetson-orin-nx-xavier-nx-devkit = " \
     pciutils \
 "
 
-IMAGE_INSTALL:append:jetson-xavier = " \
+XAVIER_PACKAGES = " \
     tegra-redundant-boot \
     tegra-nv-boot-control-config \
     parted \
@@ -88,50 +88,14 @@ IMAGE_INSTALL:append:jetson-xavier = " \
     pciutils \
     tegra-firmware \
     tegra-eeprom-tool \
-    tegra-redundant-boot \
-    tegra-nv-boot-control-config \
-    tegra-eeprom-tool \
     setup-nv-boot-control \
     ldd \
-"
-
-IMAGE_INSTALL:append:jetson-xavier-nx-devkit-emmc = " \
-    parted \
-    gptfdisk \
-    tegra-nvpmodel \
-    tegra-configs-nvstartup \
-    tegra-configs-udev \
-    tegra-wifi \
-    tegra-bluetooth \
     tegra-firmware-rtl8822 \
     mtd-utils \
-    tegra-nvfancontrol \
-    l4t-launcher-extlinux \
-    tegra-nv-boot-control-config \
-    tegra-eeprom-tool \
-    setup-nv-boot-control \
-    jetson-dtbs \
-    l4t-launcher-extlinux \
 "
 
-IMAGE_INSTALL:append:jetson-xavier-nx-devkit = " \
-    parted \
-    gptfdisk \
-    tegra-nvpmodel \
-    tegra-configs-nvstartup \
-    tegra-configs-udev \
-    tegra-wifi \
-    tegra-bluetooth \
-    tegra-firmware-rtl8822 \
-    mtd-utils \
-    tegra-nvfancontrol \
-    l4t-launcher-extlinux \
-    tegra-nv-boot-control-config \
-    tegra-eeprom-tool \
-    setup-nv-boot-control \
-    jetson-dtbs \
-    l4t-launcher-extlinux \
-"
+IMAGE_INSTALL:append:jetson-xavier = "${XAVIER_PACKAGES}"
+IMAGE_INSTALL:append:jetson-xavier-nx-devkit-emmc = "${XAVIER_PACKAGES}"
+IMAGE_INSTALL:append:jetson-xavier-nx-devkit = "${XAVIER_PACKAGES}"
 
 IMAGE_INSTALL:remove = "kernel-image-image"
-
