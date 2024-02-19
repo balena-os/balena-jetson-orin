@@ -43,6 +43,11 @@ SRC_URI:append:jetson-xavier-nx-devkit-emmc = " \
     file://set_boot_order_xavier_nx.patch;patchdir=.. \
 "
 
+SRC_URI:append:jetson-xavier-nx-devkit = " \
+    file://0005-L4TLauncher-hup-rollback-support-jetson-xavier-nx-devkit-emmc.patch;patchdir=.. \
+    file://set_boot_order_xavier_nx.patch;patchdir=.. \
+"
+
 # We generate the final nvdisp-init.bin file in tegra194-flash* using
 # the original one provided in the tegra BSP archive
 NVDISPLAY_INIT_DEFAULT:tegra194=""
