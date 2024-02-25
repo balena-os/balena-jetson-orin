@@ -9,15 +9,19 @@ do_install[depends] += " linux-tegra:do_deploy "
 S = "${WORKDIR}"
 DTBNAME = "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
+SRC_URI:append:jetson-agx-orin-devkit = " file://tegra234-p3701-0000-p3737-0000-spi.dtb "
+
 do_install:jetson-agx-orin-devkit() {
 	install -d ${D}/boot/
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
         install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3701-0004-p3737-0000.dtb" "${D}/boot/tegra234-p3701-0004-p3737-0000.dtb"
+        install -m 0644 "${WORKDIR}/tegra234-p3701-0000-p3737-0000-spi.dtb" "${D}/boot/tegra234-p3701-0000-p3737-0000-spi.dtb"
 }
 
 FILES:${PN}:jetson-agx-orin-devkit += " \
 	/boot/tegra234-p3701-0000-p3737-0000.dtb \
 	/boot/tegra234-p3701-0004-p3737-0000.dtb \
+	/boot/tegra234-p3701-0000-p3737-0000-spi.dtb \
 "
 
 do_install:jetson-orin-nx-xavier-nx-devkit() {
