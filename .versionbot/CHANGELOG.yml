@@ -1,4 +1,34 @@
 - commits:
+    - subject: "jetson-dtbs: Fix build and install for pre-compiled spi dtb"
+      hash: 606408f0222d9debda0a7b637195a2876e727079
+      body: ""
+      footer:
+        Changelog-entry: "jetson-dtbs: Fix build and install for pre-compiled spi dtb"
+        changelog-entry: "jetson-dtbs: Fix build and install for pre-compiled spi dtb"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: Add SPI support for 40-pin header
+      hash: ccaef5fabbf836ac126e3b2c6778e035105b5a3f
+      body: |
+        Adds a custom DTB that enables the SPI pins in the 40-pin header of the
+        Jetson AGX Orin Dev Kit. The 40-pin header defaults to GPIO. This DTB
+        was generated using the jetson-io utility that is supplied with L4T and
+        JetPack to configure the 40-pin header. The DTB has been verified by
+        uploading to balenaOS devices and using the device configuration in
+        balenaCloud.
+      footer:
+        Changelog-entry: Add SPI support for 40-pin header
+        changelog-entry: Add SPI support for 40-pin header
+        Signed-off-by: Christopher Field <chris.field@theiascientific.com>
+        signed-off-by: Christopher Field <chris.field@theiascientific.com>
+      author: Christopher Field
+      nested: []
+  version: 5.1.37+rev1
+  title: ""
+  date: 2024-02-25T10:16:48.858Z
+- commits:
     - subject: Update layers/meta-balena to bf4ec98227e4cce4c22ff3d7037bdcd78ffdd9ec
       hash: b557a4237c6c3133965a075c731c8f22522c79d4
       body: Update layers/meta-balena

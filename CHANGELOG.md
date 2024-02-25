@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v5.1.37+rev1
+## (2024-02-25)
+
+* jetson-dtbs: Fix build and install for pre-compiled spi dtb [Alexandru Costache]
+* Add SPI support for 40-pin header [Christopher Field]
+
 # v5.1.37
 ## (2024-02-22)
 
