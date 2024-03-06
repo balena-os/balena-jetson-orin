@@ -51,4 +51,5 @@ HOSTAPP_HOOKS:append:jetson-xavier-nx-devkit-emmc = " \
 
 HOSTAPP_HOOKS:append:jetson-xavier-nx-devkit = " \
     99-resin-uboot \
+    98-resin-bootfiles-jetson-xavier-nx-devkit \
 "

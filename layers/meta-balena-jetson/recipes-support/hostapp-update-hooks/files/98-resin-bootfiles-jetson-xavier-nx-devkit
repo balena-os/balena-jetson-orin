@@ -1,0 +1,88 @@
+#!/bin/sh
+set -o errexit
+
+# Script which writes the appropriate
+# device tree with embedded cmdline
+# and updates the kernel, as well as
+# the rest of the bootloader binaries
+
+. /usr/libexec/os-helpers-fs
+. /usr/sbin/balena-config-vars
+
+# See tegra-flash-dry package for instructions on how to generate
+# UEFI Capsule
+DURING_UPDATE=${DURING_UPDATE:-0}
+efivars_dir="/sys/firmware/efi/efivars/"
+# See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
+platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
+platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
+os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
+capsule_file="/opt/tegra-binaries/TEGRA_BL_T194.Cap.gz"
+tmp_file="/tmp/platformspecfile.bin"
+
+# As per the UpdateAndRedundancy bup gen docs,
+# the Orin NX uses the Orin Nano type
+device_type="jetson-xavier-nx-devkit"
+
+source /usr/bin/uefi_common.func
+
+boardspec=$(tegra-boardspec 2>/dev/null)
+TegraPlatformSpec="${boardspec}-${device_type}-"
+compatspec=$(echo "$boardspec" | gen_compat_spec)
+TegraPlatformCompatSpec="${compatspec}-${device_type}-"
+
+info_log()
+{
+    echo "[INFO] $@"
+}
+
+write_jetson_update_efivars() {
+    echo "Writing of jetson efivars triggered from old OS hook"
+    if [ -d $efivars_dir ]; then
+        # If the file already exists, writing to it will fail
+        # causing the entire hook to fail
+        if [ ! -e ${platform_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
+            dd if=${tmp_file} of=${platform_spec_efivar}
+            echo "PlatformSpec variable created"
+        else
+            echo "PlatformSpec variable already exists"
+        fi
+
+        if [ ! -e ${platform_compat_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+            dd if=${tmp_file} of=${platform_compat_spec_efivar}
+            echo "PlatformCompatSpec variable created"
+        else
+            echo "PlatformCompatSpec variable already exists"
+        fi
+
+        printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
+        dd if=${tmp_file} of=${os_indications_efivar}
+        echo "OsIndications variable written"
+    else
+        echo "sysfs not accessible!"
+        return 1
+    fi
+
+    return 0
+}
+
+
+do_capsule_update() {
+    # Unzip capsule to the boot partition
+    mkdir -p /mnt/boot/EFI/UpdateCapsule/
+    gunzip -k -c ${capsule_file} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    sync
+}
+
+info "Pre-update A/B slots info:"
+info "=========================="
+/usr/sbin/nvbootctrl dump-slots-info || true
+info "=========================="
+
+write_jetson_update_efivars
+do_capsule_update
+
