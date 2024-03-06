@@ -12,6 +12,15 @@ UEFI_CAPSULE:jetson-orin-nx-xavier-nx-devkit = "TEGRA_BL_Orin_NX.Cap.gz"
 UEFI_CAPSULE:jetson-agx-orin-devkit = "TEGRA_BL_3701.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nano-devkit-nvme = "TEGRA_BL_Orin_Nano.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nx-seeed-j4012 = "TEGRA_BL_Seeed_j4012.Cap.gz"
+
+# For the AGX Xavier Devkit, the capsule has been generated in the reference
+# Linux_for_Tegra environent, in which we replaced uefi_jetson.bin
+# with the one from a balenaOS yocto build, as well as the partition file
+# /bootloader/t186ref/cfg/flash_t194_sdmmc.xml with the one in the jetson-flash
+# Jetson Xavier assets. Note that all <filename> FILENAME.. attributes for the
+# esp and balenaOS have been removed prior to creating the UEFI capsule.
+# The steps for generating any UEFI Capsule can be consulted in the L4T 35.4.1
+# DeveloperGuide, in the UpdateAndRedundancy section > Generating a Multi-Spec Capsule Payload
 UEFI_CAPSULE:jetson-xavier = "TEGRA_BL_Xavier_AGX.Cap.gz"
 UEFI_CAPSULE:jetson-xavier-nx-devkit-emmc = "TEGRA_BL_Xavier_NX_eMMC.Cap.gz"
 UEFI_CAPSULE:jetson-xavier-nx-devkit = "TEGRA_BL_Xavier_NX_SD.Cap.gz"
