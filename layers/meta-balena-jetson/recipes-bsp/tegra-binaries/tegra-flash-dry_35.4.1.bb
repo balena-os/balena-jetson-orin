@@ -14,16 +14,22 @@ UEFI_CAPSULE:jetson-orin-nano-devkit-nvme = "TEGRA_BL_Orin_Nano.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nx-seeed-j4012 = "TEGRA_BL_Seeed_j4012.Cap.gz"
 
 # For the AGX Xavier Devkit, the capsule has been generated in the reference
-# Linux_for_Tegra environent, in which we replaced uefi_jetson.bin
+# Linux_for_Tegra environment, in which we replaced uefi_jetson.bin
 # with the one from a balenaOS yocto build, as well as the partition file
 # /bootloader/t186ref/cfg/flash_t194_sdmmc.xml with the one in the jetson-flash
 # Jetson Xavier assets. Note that all <filename> FILENAME.. attributes for the
 # esp and balenaOS have been removed prior to creating the UEFI capsule.
 # The steps for generating any UEFI Capsule can be consulted in the L4T 35.4.1
 # DeveloperGuide, in the UpdateAndRedundancy section > Generating a Multi-Spec Capsule Payload
-UEFI_CAPSULE:jetson-xavier = "TEGRA_BL_Xavier_AGX.Cap.gz"
-UEFI_CAPSULE:jetson-xavier-nx-devkit-emmc = "TEGRA_BL_Xavier_NX_eMMC.Cap.gz"
-UEFI_CAPSULE:jetson-xavier-nx-devkit = "TEGRA_BL_Xavier_NX_SD.Cap.gz"
+UEFI_CAPSULE:jetson-xavier = "TEGRA_BL_T194.Cap.gz"
+
+# The same applies to the Xavier NX SD and eMMC, and the same capsule
+# can be used for all T194-based devkits. The only difference is that
+# the files flash_l4t_t194_spi_sd_p3668.xml and flash_l4t_t194_spi_emmc_p3668.xml
+# have had their contents replaced with the ones from the jetson-flash device
+# assets directory.
+UEFI_CAPSULE:jetson-xavier-nx-devkit-emmc = "TEGRA_BL_T194.Cap.gz"
+UEFI_CAPSULE:jetson-xavier-nx-devkit = "TEGRA_BL_T194.Cap.gz"
 
 BOOTBLOB:jetson-orin-nx-xavier-nx-devkit = "boot0_orin_nx_xavier_nx_devkit.img.gz"
 BOOTBLOB:jetson-orin-nano-devkit-nvme = "boot0_orin_nano_devkit_nvme.img.gz"
@@ -40,6 +46,10 @@ PARTSPEC:jetson-xavier = "partition_specification194.txt"
 PARTSPEC:jetson-xavier-nx-devkit-emmc = "partition_specification194_nxde.txt"
 PARTSPEC:jetson-xavier-nx-devkit = "partition_specification194_nxde.txt"
 
+# The boot blobs have been extracted from the initramfs of devices flashed with
+# jetson-flash, right after provisioning. This ensures that the UEFI store
+# is not populated with boot options that contain the GUIDs of the eMMC
+# of the device used for development.
 BOOT0_PREFLASHED = "boot0.img"
 BOOT0_PREFLASHED:jetson-xavier = "boot0_mmcblk0boot0.img"
 BOOT0_PREFLASHED:jetson-xavier-nx-devkit-emmc = "boot0_mtdblock0.img"
