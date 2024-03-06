@@ -43,7 +43,7 @@ EOF
 do_compile:jetson-xavier() {
         cat > ${B}/nv_boot_control.conf <<EOF
 TNSPEC 2888-400-0001-E.0-1-2-jetson-agx-xavier-devkit-
-COMPATIBLE_SPEC 2888-400-0001-J.0-1-2-jetson-xavier-agx-xavier-devkit-
+COMPATIBLE_SPEC 2888-400-0001-J.0-1-2-jetson-agx-xavier-devkit-
 TEGRA_CHIPID 0x19
 TEGRA_OTA_BOOT_DEVICE /dev/mmcblk0boot0
 TEGRA_OTA_GPT_DEVICE /dev/mmcblk0boot1
