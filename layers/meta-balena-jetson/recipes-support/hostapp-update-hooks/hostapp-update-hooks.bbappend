@@ -40,6 +40,7 @@ HOSTAPP_HOOKS:remove:jetson-orin-nx-seeed-j4012 = " 98-efivars-orin-nx-xavier-nx
 # 98-resin-bootfiles-jetson-xavier
 HOSTAPP_HOOKS:append:jetson-xavier = " \
     99-resin-uboot \
+    98-resin-bootfiles-jetson-xavier \
 "
 
 HOSTAPP_HOOKS:append:jetson-xavier-nx-devkit-emmc = " \
