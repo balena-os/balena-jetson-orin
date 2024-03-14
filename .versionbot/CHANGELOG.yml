@@ -1,4 +1,35 @@
 - commits:
+    - subject: Update balena-yocto-scripts to 97ebe58289e398c96dbc6f789e0119010b85da7f
+      hash: b9634502506fd172e8fc139ae2dc97a3f7099766
+      body: Update balena-yocto-scripts
+      footer:
+        Changelog-entry: Update balena-yocto-scripts to 97ebe58289e398c96dbc6f789e0119010b85da7f
+        changelog-entry: Update balena-yocto-scripts to 97ebe58289e398c96dbc6f789e0119010b85da7f
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: "balena-build: avoid using device-type as a prefix in yocto sstate"
+              hash: f4a9566941083770151ebe3edd78e9866b4856fb
+              body: >
+                Yocto already splits the build sstate by target arch, native
+                arch, toolchains, and machine where applicable.
+
+
+                Keeping the caches separated by device type prevents sharing of
+                common cache steps between identical toolchains and
+                architectures.
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Kyle Harding
+              nested: []
+          version: balena-yocto-scripts-1.21.4
+          title: ""
+          date: 2024-03-13T18:16:12.920Z
+  version: 5.1.45+rev3
+  title: ""
+  date: 2024-03-14T02:53:49.618Z
+- commits:
     - subject: pass input parameters to common esr workflow
       hash: 6d3beb38f1c2f7559382d1f7d4848188bd995aac
       body: ""
@@ -70,7 +101,10 @@
                 https://balena.zulipchat.com/#narrow/stream/360838-balena-io.2Fos.2Fdevices/topic/balena-raspberrypi.20jenkins.20build.20failures/near/423970246
 
 
-                Currently devices with on-board storage fail to build in jenkins, if they don't provide a flasher image. One example is the CM4. Since there are multiple devices using this configuration, let's re-enable builds for all of them.
+                Currently devices with on-board storage fail to build in
+                jenkins, if they don't provide a flasher image. One example is
+                the CM4. Since there are multiple devices using this
+                configuration, let's re-enable builds for all of them.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -112,9 +146,11 @@
                         RPI firmware configuration allows repeating overlays to
                         define
 
-                        configurations on multiple devices. For instance, for configuring
+                        configurations on multiple devices. For instance, for
+                        configuring
 
-                        multiple `ads` devices, `config.txt` needs to be setup this way
+                        multiple `ads` devices, `config.txt` needs to be setup
+                        this way
 
 
                         ```
@@ -126,11 +162,14 @@
                         ```
 
 
-                        Before this change, the supervisor would interpret both lines as
+                        Before this change, the supervisor would interpret both
+                        lines as
 
-                        belonging to the same overlay, preventing users from configuring multiple
+                        belonging to the same overlay, preventing users from
+                        configuring multiple
 
-                        devices, and leading to a loop when trying to apply configurations with
+                        devices, and leading to a loop when trying to apply
+                        configurations with
 
                         repeated overlays coming from the cloud side.
                       footer:
@@ -149,9 +188,11 @@
                         v14](https://github.com/balena-os/balena-supervisor/commit/460c3ba0aab31d18a02e3f5dda1838691768c494).
                         While considered legacy,
 
-                        they are still used by a few customers with devices running OS < 2.47.1.
+                        they are still used by a few customers with devices
+                        running OS < 2.47.1.
 
-                        This should fix v2 delta support for those devices until we can
+                        This should fix v2 delta support for those devices until
+                        we can
 
                         completely remove rsync deltas from the supervisor
                       footer:
@@ -187,13 +228,17 @@
                         Previously, getBootConfig() of the config.txt backend
                         was omitting
 
-                        array configurations such as gpio settings, thus resulting in the SV
+                        array configurations such as gpio settings, thus
+                        resulting in the SV
 
-                        mistakenly assuming that boot config had not been applied, since gpio
+                        mistakenly assuming that boot config had not been
+                        applied, since gpio
 
-                        would not be in current config.txt config but would be in target config.
+                        would not be in current config.txt config but would be
+                        in target config.
 
-                        This resulted in SV entering an infinite loop of attempting to apply the
+                        This resulted in SV entering an infinite loop of
+                        attempting to apply the
 
                         gpio config when it wasn't necessary.
                       footer:
@@ -227,26 +272,34 @@
                         While ordering is important in the RPI firmware
                         configuration file (config.txt),
 
-                        some dt params are by default considered part of the base dt overlay
+                        some dt params are by default considered part of the
+                        base dt overlay
 
                         if they are not used by other overlays.
 
-                        Unfortunately the [list of dtparams](https://github.com/raspberrypi/firmware/blob/master/boot/overlays/README#L133)
+                        Unfortunately the [list of
+                        dtparams](https://github.com/raspberrypi/firmware/blob/master/boot/overlays/README#L133)
 
-                        is too long to add all of them as exceptions, but we can add the params
+                        is too long to add all of them as exceptions, but we can
+                        add the params
 
-                        used in the default config.txt provided in OS images, to avoid reboots
+                        used in the default config.txt provided in OS images, to
+                        avoid reboots
 
-                        when updating to this new supervisor and correctly parsing the
+                        when updating to this new supervisor and correctly
+                        parsing the
 
                         provisioning config.txt as variables.
 
 
-                        While this addition handles most common scenarios, there is still a
+                        While this addition handles most common scenarios, there
+                        is still a
 
-                        chance a user may have use other base overlay dt params in the initial
+                        chance a user may have use other base overlay dt params
+                        in the initial
 
-                        config, in which case those will be interpreted according to the
+                        config, in which case those will be interpreted
+                        according to the
 
                         relative ordering
                       footer:
@@ -260,23 +313,29 @@
                         DT overlays and DT params need to be consumed in the
                         order that they
 
-                        appear on the file. DT params apply to the last dtoverlay defined on the
+                        appear on the file. DT params apply to the last
+                        dtoverlay defined on the
 
                         file, or to the base overlay.
 
 
-                        This commit updates config.txt parsing to consider this ordering, and it
+                        This commit updates config.txt parsing to consider this
+                        ordering, and it
 
-                        also ensures global dtparams are written first so they cannot be
+                        also ensures global dtparams are written first so they
+                        cannot be
 
                         overriden by later overlays.
 
 
-                        Because of the more strict parsing method, it is possible that existing
+                        Because of the more strict parsing method, it is
+                        possible that existing
 
-                        HOST_CONFIG vars do not match the interpretation of the parser. If
+                        HOST_CONFIG vars do not match the interpretation of the
+                        parser. If
 
-                        that's the case, the supervisor will re-apply the target state which
+                        that's the case, the supervisor will re-apply the target
+                        state which
 
                         will cause the device to reboot.
                       footer:
@@ -522,7 +581,8 @@
                 Calling `cryptsetup resize` on LUKS2 actually prompts for a
                 password
 
-                and it is not needed as the partition will auto-expand on unlock.
+                and it is not needed as the partition will auto-expand on
+                unlock.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -619,7 +679,8 @@
                 This helper file is to be overwritten by device integration
                 layers
 
-                to provide hostOS update customizations for secure boot devices that
+                to provide hostOS update customizations for secure boot devices
+                that
 
                 split the boot partition into encrypted and non-encrypted.
               footer:
@@ -636,7 +697,8 @@
                 The flasher image is now able to self-install when launched from
                 an
 
-                external storage. This is useful for use cases where an installation
+                external storage. This is useful for use cases where an
+                installation
 
                 steps that re-partitions/encrypts disk is required for example.
               footer:
@@ -805,18 +867,23 @@
                 During HUP, rollback-health-breadcrumb and
                 rollback-altboot-breadcrumb
 
-                are created in the state partition to trigger rollback-health and
+                are created in the state partition to trigger rollback-health
+                and
 
-                rollback-altboot respectively on the next boot. After these services
+                rollback-altboot respectively on the next boot. After these
+                services
 
                 complete, they will remove these breadcrumbs.
 
 
-                Make the broken init fallback tests wait for these services to become
+                Make the broken init fallback tests wait for these services to
+                become
 
-                inactive before testing the state of the breadcrumbs. Otherwise, a race
+                inactive before testing the state of the breadcrumbs. Otherwise,
+                a race
 
-                condition can make these tests fail. Most notably on slower systems,
+                condition can make these tests fail. Most notably on slower
+                systems,
 
                 such as emulated generic-aarch64.
               footer:
@@ -1058,36 +1125,47 @@
                 The balena bootloader initramfs contains the rootfs module and
                 that
 
-                will get the rootfs mounted but not checked first for errors. This is
+                will get the rootfs mounted but not checked first for errors.
+                This is
 
-                problematic because at first boot with network connectivity available,
+                problematic because at first boot with network connectivity
+                available,
 
-                time will sync but the rootfs will still have the last mount time in
+                time will sync but the rootfs will still have the last mount
+                time in
 
-                1970. If at that point the rootfs gets corrupted then at next boot
+                1970. If at that point the rootfs gets corrupted then at next
+                boot
 
-                the rootfs' initramfs module from balena-bootloader will try to mount
+                the rootfs' initramfs module from balena-bootloader will try to
+                mount
 
-                the rootfs without checking it first and then after that the filesystem
+                the rootfs without checking it first and then after that the
+                filesystem
 
-                check triggered by the fsck module from the actual kernel initramfs will
+                check triggered by the fsck module from the actual kernel
+                initramfs will
 
                 fail like this:
 
 
-                [init][INFO] Running filesystem checks on partition resin-rootA (/dev/disk/by-state/resin-rootA)
+                [init][INFO] Running filesystem checks on partition resin-rootA
+                (/dev/disk/by-state/resin-rootA)
 
                 resin-rootA contains a file system with errors, check forced.
 
-                resin-rootA: Inodes that were part of a corrupted orphan linked list found.
+                resin-rootA: Inodes that were part of a corrupted orphan linked
+                list found.
 
 
                 resin-rootA: UNEXPECTED INCONSISTENCY; RUN fsck MANUALLY.
                         (i.e., without -a or -p options)
 
-                This commit will add the fsck module to balena bootloader's initramfs
+                This commit will add the fsck module to balena bootloader's
+                initramfs
 
-                which will trigger filesystem checks before the rootfs module runs.
+                which will trigger filesystem checks before the rootfs module
+                runs.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -1229,7 +1307,8 @@
                         Also update containerd component from balena-containerd
                         to also use
 
-                        runc v1.1.12. Also update dependencies as indicated from balena-runc go.mod.
+                        runc v1.1.12. Also update dependencies as indicated from
+                        balena-runc go.mod.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -1618,14 +1697,16 @@
                 This fixes rollback-health failures for boards like the Jetson
                 Seeeed
 
-                J4012, which updates efivars for capsule updates from container hooks
+                J4012, which updates efivars for capsule updates from container
+                hooks
 
                 and not from the current OS hooks.
 
 
                 While the actual HUP works because of /sys being bindmounted by
 
-                hostapp-update, rollbacks will fail to run the old OS hooks unless
+                hostapp-update, rollbacks will fail to run the old OS hooks
+                unless
 
                 efivarfs is mounted.
               footer:
@@ -1768,14 +1849,18 @@
                         Moby v25 adds the dynamically generated MAC address to
                         the Config field,
 
-                        which breaks the state engine, preventing the state from settling as the
+                        which breaks the state engine, preventing the state from
+                        settling as the
 
-                        current state never matches the target state (empty mac address). This
+                        current state never matches the target state (empty mac
+                        address). This
 
-                        seems to be a bug in Moby that we reported in moby/moby#47228
+                        seems to be a bug in Moby that we reported in
+                        moby/moby#47228
 
 
-                        The issue won't affect Balena devices until balenaEngine is updated, and this
+                        The issue won't affect Balena devices until balenaEngine
+                        is updated, and this
 
                         change fixes testing for now.
                       footer:
@@ -1789,7 +1874,8 @@
                         From docker 25, the engine will validate IPAM config.
                         This would cause
 
-                        the docker utils test to fail since the network/subnet configuration was
+                        the docker utils test to fail since the network/subnet
+                        configuration was
 
                         incorrect.
                       footer:
@@ -1827,7 +1913,8 @@
                         The tsserver lsp doesn't seem to work well with
                         .editorconfig. Using
 
-                        prettierrc will allow formatting to work correctly with editor plugins
+                        prettierrc will allow formatting to work correctly with
+                        editor plugins
 
 
                         This also updates editorconfig to work well with json
@@ -1862,7 +1949,8 @@
 
                 to be used as the balena bootloader. Device types are expected
 
-                to inherit it and perform additional device-specific configuration.
+                to inherit it and perform additional device-specific
+                configuration.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -1876,9 +1964,11 @@
                 The kexec initrd script currently removes the maxcpus=0 kernel
                 arg
 
-                which we use to put the system into non-SMP mode. This however does
+                which we use to put the system into non-SMP mode. This however
+                does
 
-                not work on all platforms and nr_cpus=1 seems to be a more robust
+                not work on all platforms and nr_cpus=1 seems to be a more
+                robust
 
                 solution, so with this patch nr_cpus will be removed as well.
               footer:
@@ -2041,20 +2131,26 @@
               body: >
                 At this moment there is a race condition between NetworkManager
 
-                and the engine when a shared interface is configured. If the interface
+                and the engine when a shared interface is configured. If the
+                interface
 
-                is configured first and the engine second, the containers are allowed
+                is configured first and the engine second, the containers are
+                allowed
 
-                to access DHCP hosts behind the shared interface. If the engine comes
+                to access DHCP hosts behind the shared interface. If the engine
+                comes
 
                 up first and the shared interface second, access will be denied.
 
 
-                This patch adds a dispatcher script that always configures the firewall
+                This patch adds a dispatcher script that always configures the
+                firewall
 
-                rules as if the engine came up last. This does not really address
+                rules as if the engine came up last. This does not really
+                address
 
-                the underlying issue but it overcomes the race condition and makes
+                the underlying issue but it overcomes the race condition and
+                makes
 
                 the behavior deterministic, which is good enough at this point.
               footer:
@@ -2178,7 +2274,8 @@
                 UEFI firmware in secure boot needs to authenticate the kernel
                 plus
 
-                initramfs in the chain of trust. Other firmware implements secure boot
+                initramfs in the chain of trust. Other firmware implements
+                secure boot
 
                 differently and does not need this.
               footer:
@@ -2452,12 +2549,14 @@
                         This is meant to allow users to configure their device
                         to
 
-                        resolve `.local` queries via dnsmasq by modifying config.json, e.g. `dnsServers":
+                        resolve `.local` queries via dnsmasq by modifying
+                        config.json, e.g. `dnsServers":
 
                         "/bob.local/172.17.0.33`.
 
 
-                        This would fail before as MDNS lookups would always come first
+                        This would fail before as MDNS lookups would always come
+                        first
                       footer:
                         Change-type: minor
                         change-type: minor
@@ -2499,15 +2598,20 @@
                         The `updateMetadata` step renames the container to match
                         the target
 
-                        release when the service doesn't change between releases. We have seen
+                        release when the service doesn't change between
+                        releases. We have seen
 
-                        this step fail because of an engine bug that seems to relate to the
+                        this step fail because of an engine bug that seems to
+                        relate to the
 
-                        engine keeping stale references after container restarts. The only way
+                        engine keeping stale references after container
+                        restarts. The only way
 
-                        around this issue is to remove the old container and create it again.
+                        around this issue is to remove the old container and
+                        create it again.
 
-                        This implements that workaround during the updateMetadata step to deal
+                        This implements that workaround during the
+                        updateMetadata step to deal
 
                         with that issue.
                       footer:
@@ -2968,7 +3072,8 @@
                 There have been reports of an empty config vars cache file -
                 probably
 
-                because of a race condition when the reading of config.json happens just
+                because of a race condition when the reading of config.json
+                happens just
 
                 as the file is being replaced.
 
@@ -3088,7 +3193,8 @@
                 If update-balena-supervisor runs and finds the image is already
                 downloaded
 
-                it will run the specified supervisor but will not check that supervisor.conf
+                it will run the specified supervisor but will not check that
+                supervisor.conf
 
                 is updated so the version will revert on the next update.
               footer:
@@ -3120,12 +3226,14 @@
                 This provides an easy switch to enable tracing on HUP hooks that
                 works
 
-                both on old and new OS hooks as enabling it depends on a config.json
+                both on old and new OS hooks as enabling it depends on a
+                config.json
 
                 setting.
 
 
-                It is meant to debug field issues with HUP failure where all we see is:
+                It is meant to debug field issues with HUP failure where all we
+                see is:
 
                 ```
 
@@ -3349,27 +3457,35 @@
                 (see https://github.com/systemd/systemd/pull/17917).
 
 
-                Properly detecting this is too cumbersome for a bash logging script,
+                Properly detecting this is too cumbersome for a bash logging
+                script,
 
-                see https://github.com/systemd/systemd/pull/17902, however, falling
+                see https://github.com/systemd/systemd/pull/17902, however,
+                falling
 
-                back to the last check, that is, seeing if `/.dockerenv` exists is easy
+                back to the last check, that is, seeing if `/.dockerenv` exists
+                is easy
 
                 enough and works for our use case.
 
 
-                This script will only be called from the hostOS, and the only case it is
+                This script will only be called from the hostOS, and the only
+                case it is
 
-                called from a container is during HUP and the container is always a hostOS
+                called from a container is during HUP and the container is
+                always a hostOS
 
-                image. So even though the interface chosen by moby, a file under /,
+                image. So even though the interface chosen by moby, a file under
+                /,
 
-                is a bad interface in general, it works fine for the specific limitations
+                is a bad interface in general, it works fine for the specific
+                limitations
 
                 of balenaOS.
 
 
-                Also, check for `/run/.containerenv` which is the equivalent interface
+                Also, check for `/run/.containerenv` which is the equivalent
+                interface
 
                 for podman for future proofing.
               footer:
@@ -3510,13 +3626,17 @@
                         Whenever the Supervisor reports current state, it diffs
                         the current state
 
-                        with its last reported current state. However, when the Supervisor starts
+                        with its last reported current state. However, when the
+                        Supervisor starts
 
-                        up, there is no last reported state, since that last report is stored in
+                        up, there is no last reported state, since that last
+                        report is stored in
 
-                        process memory. Caching the last report in a location that survives
+                        process memory. Caching the last report in a location
+                        that survives
 
-                        Supervisor restarts will reduce the current report bandwidth used on startup.
+                        Supervisor restarts will reduce the current report
+                        bandwidth used on startup.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -3594,11 +3714,14 @@
                 We previously tried to use a single time limit for the execution
                 of the
 
-                healthcheck test on all device types. This was causing occasional false
+                healthcheck test on all device types. This was causing
+                occasional false
 
-                positives in our Continuous Integration pipeline, though -- especially
+                positives in our Continuous Integration pipeline, though --
+                especially
 
-                on slow devices like Pi Zeros and the generic-aarch64, which runs on
+                on slow devices like Pi Zeros and the generic-aarch64, which
+                runs on
 
                 emulated hardware.
 
@@ -3606,7 +3729,8 @@
                 This commit addresses this issue, this commit:
 
 
-                1. Limits execution for device types for which we have collected enough
+                1. Limits execution for device types for which we have collected
+                enough
                    data to have a good idea of how long the test should take.
                 2. Uses time limits specific for each device type.
               footer:
@@ -3648,11 +3772,14 @@
                         PR #2217 removed the expose configuration but also
                         caused a regresion
 
-                        where ports set via the `ports` configuration would no longer get
+                        where ports set via the `ports` configuration would no
+                        longer get
 
-                        exposed to the host, despite portmappings being set. This fixes that
+                        exposed to the host, despite portmappings being set.
+                        This fixes that
 
-                        issue by exposing only those ports comming from port mappings.
+                        issue by exposing only those ports comming from port
+                        mappings.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -3668,33 +3795,44 @@
                         The docker EXPOSE directive and corresponding
                         docker-compose `expose`
 
-                        service configuration serves as documentation/metadata that a container
+                        service configuration serves as documentation/metadata
+                        that a container
 
-                        listens on a certain port that may be used for service discovery but it doesn't
+                        listens on a certain port that may be used for service
+                        discovery but it doesn't
 
                         have any real impact on the ability for
 
-                        other containers on the same network to access the exposed service via
+                        other containers on the same network to access the
+                        exposed service via
 
-                        the port. In newer engine implementations, this property may conflict
+                        the port. In newer engine implementations, this property
+                        may conflict
 
-                        with other network configurations, and prevent the container from being
+                        with other network configurations, and prevent the
+                        container from being
 
                         started by the docker engine (see #2211).
 
 
-                        This PR removes code that would manage the expose property and takes the
+                        This PR removes code that would manage the expose
+                        property and takes the
 
-                        property out of the whitelist. A composition with the `expose` property
+                        property out of the whitelist. A composition with the
+                        `expose` property
 
-                        will result in the log message `Ignoring unsupported or unknown compose fields: expose`.
+                        will result in the log message `Ignoring unsupported or
+                        unknown compose fields: expose`.
 
 
-                        While this change should not have operational impact, it still removes
+                        While this change should not have operational impact, it
+                        still removes
 
-                        a previously supported configuration and as such there is a chance of it
+                        a previously supported configuration and as such there
+                        is a chance of it
 
-                        being a breaking change for some applications. For this reason it is
+                        being a breaking change for some applications. For this
+                        reason it is
 
                         being published as a new major version.
                       footer:
@@ -3945,17 +4083,21 @@
                 The code moved from meta-balena-kirkstone was not really
                 specific to
 
-                kirkstone so let's move it here so that future branches for newer yocto
+                kirkstone so let's move it here so that future branches for
+                newer yocto
 
-                releases which we'll base off kirkstone don't continue to add this
+                releases which we'll base off kirkstone don't continue to add
+                this
 
                 unneeded  duplication.
 
                 There are other meta-balena-* directories that still contain the
 
-                duplication we moved from meta-balena-kirkstone but we're not really
+                duplication we moved from meta-balena-kirkstone but we're not
+                really
 
-                concerned with that because going forward those old directories will
+                concerned with that because going forward those old directories
+                will
 
                 naturally get deprecated.
               footer:
@@ -4080,12 +4222,14 @@
               body: >
                 If the target supervisor image is already cached but there is no
 
-                container running with it, the update script would just exit without
+                container running with it, the update script would just exit
+                without
 
                 actually running the target supervisor.
 
 
-                This commit checks whether there is a running container using the
+                This commit checks whether there is a running container using
+                the
 
                 target image and restarts the supervisor if there is none.
               footer:
@@ -4348,7 +4492,8 @@
                 This check is now done in the cryptsetup initramfs hook rather
                 than
 
-                during installation, which obviates the need to perform it during setup.
+                during installation, which obviates the need to perform it
+                during setup.
 
                 Remove it.
               footer:
@@ -4364,14 +4509,17 @@
                 During installation, some firmwares may allow keys to be
                 enrolled but
 
-                fail to tip the system into user mode until the system is rebooted. We
+                fail to tip the system into user mode until the system is
+                rebooted. We
 
-                don't want to mislead users with only full-disk encryption into thinking
+                don't want to mislead users with only full-disk encryption into
+                thinking
 
                 their system also has secure boot enabled when it doesn't.
 
 
-                Disable the hook to unlock encrypted partitions if the firmware fails to
+                Disable the hook to unlock encrypted partitions if the firmware
+                fails to
 
                 boot into user mode.
               footer:
@@ -4387,7 +4535,8 @@
                 We now have several places where secure boot specific
                 configuration is
 
-                checked. Create an os-helpers-secureboot package to consolidate and
+                checked. Create an os-helpers-secureboot package to consolidate
+                and
 
                 reuse this code.
               footer:
@@ -4616,7 +4765,8 @@
                 This script is used by balenaHup to report provisioning failures
                 to
 
-                the cloud. Adding retries, return status code check and error output
+                the cloud. Adding retries, return status code check and error
+                output
 
                 should make it more resilient and easier to debug.
               footer:
@@ -4913,13 +5063,17 @@
                         This reverts commit
                         0c7bad779291e15e419166a2c66c2a21dd06aa83, as that
 
-                        change causes a service restart loop. The supervisor cannot distinguish
+                        change causes a service restart loop. The supervisor
+                        cannot distinguish
 
-                        between ports exposed via the `EXPOSE` directive and the docker-compose
+                        between ports exposed via the `EXPOSE` directive and the
+                        docker-compose
 
-                        `expose` property. Because of this, in the case of `network-mode:
+                        `expose` property. Because of this, in the case of
+                        `network-mode:
 
-                        service:<...>` the current state and target state never match, leading
+                        service:<...>` the current state and target state never
+                        match, leading
 
                         to a service restart loop.
                       footer:
@@ -4961,13 +5115,17 @@
                         The supervisor exposes ports configured using the
                         `EXPOSE` directive in
 
-                        the dockerfile when configuring the container for runtime. This can
+                        the dockerfile when configuring the container for
+                        runtime. This can
 
-                        cause issues if using `network_mode: service:<service name>` as the
+                        cause issues if using `network_mode: service:<service
+                        name>` as the
 
-                        expose configuration is not compatible with that network mode. This
+                        expose configuration is not compatible with that network
+                        mode. This
 
-                        fix now skips image exposed ports for that particular network mode.
+                        fix now skips image exposed ports for that particular
+                        network mode.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -5018,7 +5176,8 @@
                         devDependencies are tree-shaked, while dependencies are
                         stored in the
 
-                        image. We reserve dependencies just for those that contain binary
+                        image. We reserve dependencies just for those that
+                        contain binary
 
                         bindings
                       footer:
@@ -5284,12 +5443,15 @@
               body: >
                 When searching for devices matching the glob list in
 
-                get_internal_device(), a glob match breaks from a nested loop rather
+                get_internal_device(), a glob match breaks from a nested loop
+                rather
 
-                than the parent loop, allowing the function to output multiple matches.
+                than the parent loop, allowing the function to output multiple
+                matches.
 
 
-                When running the flasher, this results in the script failing with an
+                When running the flasher, this results in the script failing
+                with an
 
                 incorrect path to the internal disk.
 
@@ -5523,7 +5685,8 @@
                         Alpine allows the `~=` syntax to match a part of the
                         package version
 
-                        when installing. In this case we want to use it to specify node and
+                        when installing. In this case we want to use it to
+                        specify node and
 
                         npm major versions
                       footer:
@@ -5605,7 +5768,8 @@
                 security reasons.
 
 
-                This new balenaOS ESR bot has contents:write and workflows:write permissions
+                This new balenaOS ESR bot has contents:write and workflows:write
+                permissions
 
                 but is only available on balenaOS repositories.
               footer:
@@ -5886,16 +6050,19 @@
                 This is done by the bootloader (uboot/grub) at this moment but
                 as we
 
-                are moving towards the balena 2nd stage bootloader, it needs to be
+                are moving towards the balena 2nd stage bootloader, it needs to
+                be
 
                 moved into the initramfs.
 
 
-                This adds a standalone recipe - by default yocto tries to build all
+                This adds a standalone recipe - by default yocto tries to build
+                all
 
                 modules defined in the initramfs-framework recipe, which breaks
 
-                on armv7 when abroot is defined there. This is because it depends
+                on armv7 when abroot is defined there. This is because it
+                depends
 
                 on grub-editenv which is not supported on armv7.
               footer:
@@ -5924,9 +6091,11 @@
               body: >
                 The rootfs script uses both os-helpers-fs and os-helpers-logging
 
-                though the package depends on neither. This seems to work now because
+                though the package depends on neither. This seems to work now
+                because
 
-                in most cases something else pulls in the dependencies or the code
+                in most cases something else pulls in the dependencies or the
+                code
 
                 on a particular device does not fall under the branches that use
 
@@ -6343,7 +6512,8 @@
 
         carrier board. The BSP defaults to using the one in the SOM but only
 
-        the one in the carrier board is connected to a backup battery and is able
+        the one in the carrier board is connected to a backup battery and is
+        able
 
         to keep time between reboots.
       footer:
@@ -6432,10 +6602,12 @@
                         This commit updates balena-containerd to a new version
                         in which we
 
-                        cherry-picked the change from here: https://github.com/containerd/containerd/pull/8086
+                        cherry-picked the change from here:
+                        https://github.com/containerd/containerd/pull/8086
 
 
-                        This change avoids enabling AppArmor if the `/sbin/apparmor_parser`
+                        This change avoids enabling AppArmor if the
+                        `/sbin/apparmor_parser`
 
                         binary is not found in the system.
                       footer:
@@ -6615,7 +6787,8 @@
                 The meta-balena version of modemmanager is no longer compatible
                 with
 
-                Yocto Pyro, so stop trying to apply bbappend to it from meta-balena.
+                Yocto Pyro, so stop trying to apply bbappend to it from
+                meta-balena.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -7272,7 +7445,8 @@
                         The node-dbus module is unmaintained and a blocker for
                         the update to
 
-                        Node 18. Switching to our own node bindings for systemd solves this
+                        Node 18. Switching to our own node bindings for systemd
+                        solves this
 
                         issue
                       footer:
@@ -7325,7 +7499,8 @@
                 mobile-broadband-provider-info 'master' branch was renamed to
                 'main',
 
-                causing do_fetch() to fail before it was changes in Yocto Kirkstone
+                causing do_fetch() to fail before it was changes in Yocto
+                Kirkstone
 
                 commit e4795393c4882cf38273521539cc255a4ffcb34a.
               footer:
@@ -7491,7 +7666,8 @@
                 Verify kernel lockdown prohibits loading of unsigned modules,
                 and still
 
-                loads modules with a signature that validates against a trusted key.
+                loads modules with a signature that validates against a trusted
+                key.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -7681,24 +7857,31 @@
                 314047e and b5c5214 made flasher block until the
                 resin-device-register
 
-                service exits and made resin-device-register give up after 6 seconds
+                service exits and made resin-device-register give up after 6
+                seconds
 
-                not to block infinitely when no network is available. This effectively
+                not to block infinitely when no network is available. This
+                effectively
 
-                means that if the device fails to register within first 6 seconds,
+                means that if the device fails to register within first 6
+                seconds,
 
-                it will never retry, flasher will not report status to the dashboard
+                it will never retry, flasher will not report status to the
+                dashboard
 
                 and the device will only register on first boot.
 
 
-                This patch changes the logic back to resin-device-register trying
+                This patch changes the logic back to resin-device-register
+                trying
 
-                in the background in an infinite loop and moves the "give the device
+                in the background in an infinite loop and moves the "give the
+                device
 
                 a chance to register" delay to flasher itself. It also extends
 
-                the wait to openvpn as flasher already does that and wants VPN to run
+                the wait to openvpn as flasher already does that and wants VPN
+                to run
 
                 to be debuggable - in case flashing fails, it would be possible
 
@@ -7792,32 +7975,40 @@
                 CONIFG_SECURITY=n
 
 
-                which is mispelled and not being applied. The commit where this was
+                which is mispelled and not being applied. The commit where this
+                was
 
-                introduced claims it's needed to completely disable the audit logs, and
+                introduced claims it's needed to completely disable the audit
+                logs, and
 
                 also that the security framework is unused.
 
 
-                I disagree in that it's unused - the hostOS is not using any security
+                I disagree in that it's unused - the hostOS is not using any
+                security
 
-                framework, but applications may, so luckily the security framework was
+                framework, but applications may, so luckily the security
+                framework was
 
                 never disabled.
 
 
-                Removing this mispelled entry should have no functional effect. Whether
+                Removing this mispelled entry should have no functional effect.
+                Whether
 
                 the audit subsystem is disabled will depend on the final kernel
 
-                configuration. Definitely we have not seen a need to disable it recently,
+                configuration. Definitely we have not seen a need to disable it
+                recently,
 
                 and we have not seen the kernel log flooded with messages.
 
 
-                I'd argue the disabling of the audit subsystem in meta-balena serves no
+                I'd argue the disabling of the audit subsystem in meta-balena
+                serves no
 
-                need but I also have no specific reason to remove it at the moment.
+                need but I also have no specific reason to remove it at the
+                moment.
 
 
                 Fixes #2947
@@ -7866,7 +8057,8 @@
                 The flasher/installer image can be configured by the user and
                 that
 
-                configuration finishes up in the installed image. Add the dispatcher
+                configuration finishes up in the installed image. Add the
+                dispatcher
 
                 scripts to this existing mechanim.
               footer:
@@ -7882,7 +8074,8 @@
                 On boot, the dispatcher script are copied from the boot
                 partition where
 
-                the user has configured them, to the bind mount used by the running
+                the user has configured them, to the bind mount used by the
+                running
 
                 applications.
               footer:
@@ -7928,18 +8121,23 @@
                 At this moment grub.cfg sources /grub/grub_extraenv which works
                 fine
 
-                on MBR systems, however on EFI systems this does not work because GRUB
+                on MBR systems, however on EFI systems this does not work
+                because GRUB
 
                 is installed in /EFI/BOOT/ rather than /grub/.
 
 
-                This patch replaces the hardcoded /grub with ${prefix} which should
+                This patch replaces the hardcoded /grub with ${prefix} which
+                should
 
-                expand to the appropriate directory regardless of the platform. It also
+                expand to the appropriate directory regardless of the platform.
+                It also
 
-                removes the loading of grub_extraenv from the secure boot variant
+                removes the loading of grub_extraenv from the secure boot
+                variant
 
-                of the GRUB config since this would not load without a signature anyway.
+                of the GRUB config since this would not load without a signature
+                anyway.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -8027,7 +8225,8 @@
               body: >
                 This fix has been ported from the following upstream
 
-                change: https://patchwork.yoctoproject.org/project/oe-core/patch/002c31d6add77e1002fb1ccd4050ce826a654170.1659653543.git.bruce.ashfield@gmail.com/
+                change:
+                https://patchwork.yoctoproject.org/project/oe-core/patch/002c31d6add77e1002fb1ccd4050ce826a654170.1659653543.git.bruce.ashfield@gmail.com/
 
                 and fixes the following compilation error on generic-aarch64:
 
@@ -8082,7 +8281,8 @@
               body: >
                 Repackage iwlwifi-cc-a0 to include all firmware versions shipped
 
-                upstream, rather than only an older version (48) that's no longer
+                upstream, rather than only an older version (48) that's no
+                longer
 
                 shipped as of 20230404.
               footer:
@@ -8111,7 +8311,8 @@
               body: >
                 Replace older versioned iwlwifi packages with
 
-                linux-firmware-iwlwifi-3160 package that includes all versions shipped
+                linux-firmware-iwlwifi-3160 package that includes all versions
+                shipped
 
                 in linux-firmware.
               footer:
@@ -8142,7 +8343,8 @@
               body: >
                 Some board BSPs may define UBOOT_MACHINE, others UBOOT_CONFIG,
 
-                let's make sure we include the extra_uEnv.txt file in the non-flasher
+                let's make sure we include the extra_uEnv.txt file in the
+                non-flasher
 
                 image for both cases.
               footer:
@@ -8457,7 +8659,8 @@
 
                 `libgcc_s.so.1 must be installed for pthread_exit to work`
 
-                which panics the kernel and triggers a reboot loop indistinguishable
+                which panics the kernel and triggers a reboot loop
+                indistinguishable
 
                 from a "device has been tampered with" state on regular builds
 
@@ -8597,7 +8800,8 @@
 
                 deprecation. This allows to just remove the coffee file from the
 
-                device repository when a device is deprecated so there will be no
+                device repository when a device is deprecated so there will be
+                no
 
                 more releases and no need for checks on a discontinued state.
               footer:
@@ -8614,7 +8818,8 @@
 
                 deprecation. This allows to just remove the coffee file from the
 
-                device repository when a device is deprecated so there will be no
+                device repository when a device is deprecated so there will be
+                no
 
                 more releases and no need for checks on a discontinued state.
               footer:
@@ -8631,7 +8836,8 @@
 
                 deprecation. This allows to just remove the coffee file from the
 
-                device repository when a device is deprecated so there will be no
+                device repository when a device is deprecated so there will be
+                no
 
                 more releases and no need for checks on a discontinued state.
               footer:
@@ -8731,7 +8937,8 @@
                 systems with secure boot and full-disk encryption.
 
 
-                If kexec fails, we don't want to continue with the rest of the boot
+                If kexec fails, we don't want to continue with the rest of the
+                boot
 
                 process in the first stage kernel, so bail out on failure.
               footer:
@@ -8900,11 +9107,14 @@
                         It's not an official status from container inspects, and
                         the Supervisor
 
-                        doesn't set it internally anywhere. It's better to remove it entirely as the
+                        doesn't set it internally anywhere. It's better to
+                        remove it entirely as the
 
-                        method by which Supervisor sets internal service statuses is by using a global
+                        method by which Supervisor sets internal service
+                        statuses is by using a global
 
-                        event emitter (reportNewStatus) which makes things difficult to test.
+                        event emitter (reportNewStatus) which makes things
+                        difficult to test.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -9011,7 +9221,8 @@
                 Explain that balenaOS does not take control of the TPM and that
                 it
 
-                is possible to fill all the key slots with enough provisioning cycles.
+                is possible to fill all the key slots with enough provisioning
+                cycles.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -9025,13 +9236,16 @@
                 We have seen devices that won't change PCR1 hash when a
                 temporary boot
 
-                order override was applied or secure boot was disabled via BIOS setup.
+                order override was applied or secure boot was disabled via BIOS
+                setup.
 
                 The implementation of what PCR1 actually measures is very
 
-                device-specific, but many of the risks can be mitigated by setting up
+                device-specific, but many of the risks can be mitigated by
+                setting up
 
-                a BIOS password and disabling F-key shortcuts for interacting with
+                a BIOS password and disabling F-key shortcuts for interacting
+                with
 
                 the firmware.
 
@@ -9123,32 +9337,41 @@
                 Both `kernel-modules-headers` and `kernel-devsrc` provide kernel
                 headers
 
-                since Yocto Thud switched `kernel-devsrc` from full source to just
+                since Yocto Thud switched `kernel-devsrc` from full source to
+                just
 
                 kernel headers.
 
 
-                The only difference between them is that `kernel-modules-headers` builds
+                The only difference between them is that
+                `kernel-modules-headers` builds
 
-                some target binaries which need to be built with `make modules_prepare`
+                some target binaries which need to be built with `make
+                modules_prepare`
 
-                when using `kernel-devsrc` headers. These binaries depend on libc version
+                when using `kernel-devsrc` headers. These binaries depend on
+                libc version
 
                 matching though so they have shown to be problematic.
 
 
-                This commit removes the `kernel-modules-headers` recipe and modifies
+                This commit removes the `kernel-modules-headers` recipe and
+                modifies
 
-                `kernel-devsrc` to replace it. The deployed artifact remains named as
+                `kernel-devsrc` to replace it. The deployed artifact remains
+                named as
 
                 `kernel-modules-headers` as it's a more descriptive name.
 
 
-                This introduces a breaking change in the balenaOS API as customers that
+                This introduces a breaking change in the balenaOS API as
+                customers that
 
-                are using `kernel-modules-headers` to build external kernel modules will
+                are using `kernel-modules-headers` to build external kernel
+                modules will
 
-                now need to issue a `make modules_prepare` as part of their build scripts.
+                now need to issue a `make modules_prepare` as part of their
+                build scripts.
 
 
                 Fixes #1822
@@ -9204,9 +9427,11 @@
                 This variable accepts the base64 encoded public key of a kernel
                 module
 
-                signing keypair and appends it to the list of trusted keys the kernel
+                signing keypair and appends it to the list of trusted keys the
+                kernel
 
-                will use to validate signed modules. Multiple keys may be appended,
+                will use to validate signed modules. Multiple keys may be
+                appended,
 
                 delimited with a semicolon.
 
@@ -9214,7 +9439,8 @@
                 A PEM file can be used like so:
 
 
-                SIGN_KMOD_KEY_APPEND="$( sed -e '/-----BEGIN CERTIFICATE-----/d' \
+                SIGN_KMOD_KEY_APPEND="$( sed -e '/-----BEGIN CERTIFICATE-----/d'
+                \
                                              -e 's/-----END CERTIFICATE-----/;/g' \
                                              -e '$d' signing_key.pem \
                                          | tr -d '\n' )"
@@ -9249,22 +9475,30 @@
                         The previous implementation in #2170 of parsing the
                         container status was too general,
 
-                        because it relied on the mistaken assumption that a container would have a status of
+                        because it relied on the mistaken assumption that a
+                        container would have a status of
 
-                        `Stopped` if it was manually stopped. This turned out to be untrue, as manually stopped
+                        `Stopped` if it was manually stopped. This turned out to
+                        be untrue, as manually stopped
 
-                        containers were also getting restarted by the Supervisor due to their inspect status of
+                        containers were also getting restarted by the Supervisor
+                        due to their inspect status of
 
-                        `exited`. With this, parsing the exit message became unavoidable as there are no other
+                        `exited`. With this, parsing the exit message became
+                        unavoidable as there are no other
 
-                        clear ways to discern a container that has been manually stopped and shouldn't be started
+                        clear ways to discern a container that has been manually
+                        stopped and shouldn't be started
 
-                        from a container experiencing the Engine-host race condition issue (again, see #2170).
+                        from a container experiencing the Engine-host race
+                        condition issue (again, see #2170).
 
 
-                        Since we're just parsing the exit error message, we don't need to worry about different behaviors
+                        Since we're just parsing the exit error message, we
+                        don't need to worry about different behaviors
 
-                        amongst restart policies, as any container with the error message on exit should be started.
+                        amongst restart policies, as any container with the
+                        error message on exit should be started.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -9297,7 +9531,8 @@
                         Previously, `concatReadSeekCloser.Read()` would
                         incorrectly return
 
-                        an `io.ErrUnexpectedEOF` if the last read from the second concatenated
+                        an `io.ErrUnexpectedEOF` if the last read from the
+                        second concatenated
 
                         `Reader` didn't completely fill the passed buffer.
 
@@ -9313,60 +9548,79 @@
                         ```
 
 
-                        In this example, we have a `concatReadSeekCloser` that concatenates two
+                        In this example, we have a `concatReadSeekCloser` that
+                        concatenates two
 
-                        `Reader`s (`aaa...` and `bbb...`). The last `Read()` used a buffer
+                        `Reader`s (`aaa...` and `bbb...`). The last `Read()`
+                        used a buffer
 
-                        larger than the yet-to-be-read portion of the `bbb...`. So, it would
+                        larger than the yet-to-be-read portion of the `bbb...`.
+                        So, it would
 
                         incorrectly return an `io.ErrUnexpectedEOF`.
 
 
-                        This commit makes sure that last `Read()` returns all the remaining data
+                        This commit makes sure that last `Read()` returns all
+                        the remaining data
 
                         without an error. It also adds various test cases for
 
-                        `concatReadSeekCloser.Read()`, many of which would fail before this
+                        `concatReadSeekCloser.Read()`, many of which would fail
+                        before this
 
                         correction.
 
 
-                        Interestingly, this bug was silently affecting us. Not in a fatal way,
+                        Interestingly, this bug was silently affecting us. Not
+                        in a fatal way,
 
-                        but causing deltas to be larger than necessary. Indeed, running
+                        but causing deltas to be larger than necessary. Indeed,
+                        running
 
-                        `TestDeltaSize` after this commit shows that some test cases are
+                        `TestDeltaSize` after this commit shows that some test
+                        cases are
 
-                        producing deltas smaller than what we expected before. For posterity,
+                        producing deltas smaller than what we expected before.
+                        For posterity,
 
                         see all the details below.
 
 
-                        We use `concatReadSeekCloser`s to concatenate all layers of the basis
+                        We use `concatReadSeekCloser`s to concatenate all layers
+                        of the basis
 
-                        image when creating the "signature" of the basis image. In this process,
+                        image when creating the "signature" of the basis image.
+                        In this process,
 
-                        the `concatReadSeekCloser`s are wrapped around by a buffered reader with
+                        the `concatReadSeekCloser`s are wrapped around by a
+                        buffered reader with
 
                         a buffer of 65kB.
 
 
-                        If, in any read, part of this 65kB buffer was beyond the second
+                        If, in any read, part of this 65kB buffer was beyond the
+                        second
 
-                        concatenated reader, it would result in an `io.ErrUnexpectedEOF`. This
+                        concatenated reader, it would result in an
+                        `io.ErrUnexpectedEOF`. This
 
-                        would not cause the whole process to fail, but would prematurely end the
+                        would not cause the whole process to fail, but would
+                        prematurely end the
 
-                        signature generation: some of the final blocks in the basis image would
+                        signature generation: some of the final blocks in the
+                        basis image would
 
-                        not be added to the signature. Therefore, if those blocks appeared in
+                        not be added to the signature. Therefore, if those
+                        blocks appeared in
 
-                        the target image, they'd result in (larger) LITERAL, instead of
+                        the target image, they'd result in (larger) LITERAL,
+                        instead of
 
                         (smaller) COPY operations.
 
 
-                        For illustration, here's the delta generated for the `delta-006-008`
+                        For illustration, here's the delta generated for the
+                        `delta-006-008`
 
                         test case. First before this commit:
 
@@ -9419,7 +9673,8 @@
                         ```
 
 
-                        That 21kB LITERAL is the difference in size we saw in the test results.
+                        That 21kB LITERAL is the difference in size we saw in
+                        the test results.
                       footer:
                         Signed-off-by: Leandro Motta Barros <leandro@balena.io>
                         signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -9433,7 +9688,8 @@
                         Using `defer` for the sake of being more idiomatic (and
                         maybe slightly
 
-                        more reliable); plus, using the proper doc comment standards.
+                        more reliable); plus, using the proper doc comment
+                        standards.
                       footer:
                         Signed-off-by: Leandro Motta Barros <leandro@balena.io>
                         signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -9638,16 +9894,21 @@
                         This is necessary since the builder no longer passes the
                         platform flag
 
-                        to the build. This would lead to dockerfiles that are mixing multi and single
+                        to the build. This would lead to dockerfiles that are
+                        mixing multi and single
 
-                        arch stages to pull the wrong architecture images, particularly when
+                        arch stages to pull the wrong architecture images,
+                        particularly when
 
-                        trying to build images in emulated builds (e.g. armv7hf built on aarch64).
+                        trying to build images in emulated builds (e.g. armv7hf
+                        built on aarch64).
 
 
-                        Moving the full build to multi-arch solves this as the docker engine is
+                        Moving the full build to multi-arch solves this as the
+                        docker engine is
 
-                        capable of chosing the right architecture from the manifest.
+                        capable of chosing the right architecture from the
+                        manifest.
                       footer:
                         Relatest-to: balena-io/balena-builder#1010
                         relatest-to: balena-io/balena-builder#1010
@@ -9821,7 +10082,8 @@
                 This should be the default but with no explicit argument we
                 still
 
-                end up with LUKS1 partitions. This patch adds the parameter to enforce
+                end up with LUKS1 partitions. This patch adds the parameter to
+                enforce
 
                 LUKS2 formatting and adds conversion to LUKS2 to the cryptsetup
 
@@ -10084,38 +10346,52 @@
                         There exists a race condition between Engine and a host
                         resource that may not
 
-                        be immediately created. In this race condition, if a container's compose config
+                        be immediately created. In this race condition, if a
+                        container's compose config
 
-                        depends on the existence of that host resource, such as a network interface, and the
+                        depends on the existence of that host resource, such as
+                        a network interface, and the
 
-                        Engine tries to create & start the container before the host resource is created, the
+                        Engine tries to create & start the container before the
+                        host resource is created, the
 
-                        Engine will not reattempt to start the container, regardless of the restart policy.
+                        Engine will not reattempt to start the container,
+                        regardless of the restart policy.
 
-                        This is undesireable behavior but seems to be the behavior as implemented by Docker.
+                        This is undesireable behavior but seems to be the
+                        behavior as implemented by Docker.
 
 
-                        To rectify this, the Supervisor state funnel noops for a grace period of 1 minute
+                        To rectify this, the Supervisor state funnel noops for a
+                        grace period of 1 minute
 
-                        after starting a container to see that the container's status has become 'running`.
+                        after starting a container to see that the container's
+                        status has become 'running`.
 
-                        If the container exits because of the race condition, the status becomes 'exited' and the
+                        If the container exits because of the race condition,
+                        the status becomes 'exited' and the
 
-                        Supervisor will attempt to generate another start step. This noop-wait-start step loop
+                        Supervisor will attempt to generate another start step.
+                        This noop-wait-start step loop
 
                         will repeat until the container is able to start.
 
 
-                        If the container is never able to start, there was a problem in the host in the creation of the
+                        If the container is never able to start, there was a
+                        problem in the host in the creation of the
 
-                        host resource, and that should be fixed at the host level.
+                        host resource, and that should be fixed at the host
+                        level.
 
 
-                        This commit does not handle the case of services with restart policies "no" or "on-failure"
+                        This commit does not handle the case of services with
+                        restart policies "no" or "on-failure"
 
-                        which encounter this host race, as metadata from container inspects needs to be introduced
+                        which encounter this host race, as metadata from
+                        container inspects needs to be introduced
 
-                        during step calculation in order to figure out whether services with those restart policies
+                        during step calculation in order to figure out whether
+                        services with those restart policies
 
                         need to be started. This will be fixed in a future PR.
                       footer:
@@ -10177,7 +10453,8 @@
                 This patch extends secure boot documentation with more details
                 about
 
-                how the feature works and tries to explain why some decisions were made.
+                how the feature works and tries to explain why some decisions
+                were made.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -10219,12 +10496,14 @@
                 When running in the initramfs, the resin-device-progress package
                 is not
 
-                installed as we cannot guarantee that the initramfs would be able to
+                installed as we cannot guarantee that the initramfs would be
+                able to
 
                 bring up all types of network interfaces.
 
 
-                This commit adds a check for the script to exists instead of getting a
+                This commit adds a check for the script to exists instead of
+                getting a
 
                 `command not found` when an API endpoint is defined.
               footer:
@@ -10244,10 +10523,12 @@
                 The purpose of testing the API calls is to detect breaking
                 changes, not
 
-                to fail builds because of temporary network or API access problems.
+                to fail builds because of temporary network or API access
+                problems.
 
 
-                Printing a warning instead should be enough for developers to detect
+                Printing a warning instead should be enough for developers to
+                detect
 
                 breaking changes.
               footer:
@@ -10345,12 +10626,14 @@
                 Comply with AWS public AMI quota, taking into account we have
                 two
 
-                architectures that publish AMI images and we need free slots for custom
+                architectures that publish AMI images and we need free slots for
+                custom
 
                 version request.
 
 
-                Make the oldest public image back to private before publishing a new image.
+                Make the oldest public image back to private before publishing a
+                new image.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -10368,7 +10651,8 @@
                 When building signed images, add the secureBoot feature flag
                 into the
 
-                OS contract. This is needed for other components to identify secureBoot
+                OS contract. This is needed for other components to identify
+                secureBoot
 
                 compatible software releases.
               footer:
@@ -10456,11 +10740,14 @@
                         Support for colon characters was added v14.6.0 which
                         enabled
 
-                        configurations for HDMI port 2 (e.g on the RPi 4). These configurations
+                        configurations for HDMI port 2 (e.g on the RPi 4). These
+                        configurations
 
-                        are not documented anywhere else so this allows users to be able to
+                        are not documented anywhere else so this allows users to
+                        be able to
 
-                        better find the relevant information for working with HDMI.
+                        better find the relevant information for working with
+                        HDMI.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -10561,9 +10848,11 @@
 
                 the setup mode flag after a new PK is installed. In this case
 
-                flasher will reboot in order to ensure the keys are actually saved
+                flasher will reboot in order to ensure the keys are actually
+                saved
 
-                and the device comes back with secure boot enabled. Since we changed
+                and the device comes back with secure boot enabled. Since we
+                changed
 
                 flasher to be unsigned by default, this reboot causes a security
 
@@ -10572,7 +10861,8 @@
 
                 With this patch flasher will add a new boot entry before issuing
 
-                the reboot so that signed flasher comes up and the installation process
+                the reboot so that signed flasher comes up and the installation
+                process
 
                 can continue.
               footer:
@@ -10589,14 +10879,17 @@
                 Currently the db.auth file is signed as "append" in order to
                 make HUP work.
 
-                Most UEFI firmwares will accept such file even for "replace", which we do
+                Most UEFI firmwares will accept such file even for "replace",
+                which we do
 
-                during the initial provisioning, however we have seen devices that will
+                during the initial provisioning, however we have seen devices
+                that will
 
                 only allow appending, which makes flasher fail.
 
 
-                With this patch flasher will use the esl file for initial programming
+                With this patch flasher will use the esl file for initial
+                programming
 
                 of the db variable.
 
@@ -10789,11 +11082,14 @@
 
                         for about 17 minutes (for details see commit
 
-                        582487f832c59c2f734a780ab0492833f29002c9). This worked fine in most
+                        582487f832c59c2f734a780ab0492833f29002c9). This worked
+                        fine in most
 
-                        situations, but we have seen at least one case of a particularly
+                        situations, but we have seen at least one case of a
+                        particularly
 
-                        unreliable network connection that would not be able to finish a large
+                        unreliable network connection that would not be able to
+                        finish a large
 
                         pull when operating under this policy.
 
@@ -10801,17 +11097,20 @@
                         This commit:
 
 
-                        * Completely removes timeouts from image pulls. We'll keep retrying
+                        * Completely removes timeouts from image pulls. We'll
+                        keep retrying
                           forever, or until users cancel the pull. (From the perspective of the
                           REST API, "canceling" mean closing the HTTP connection. This is what
                           happens when a user Ctrl+C during a pull in the CLI, or, say, we kill
                           a curl process that was using the REST API to pull image.)
-                        * Still uses exponential back-off, but we now limit the interval between
+                        * Still uses exponential back-off, but we now limit the
+                        interval between
                           retries to 5 minutes. The rationale is that some very unreliable
                           networks may be up only for relatively small time windows. Therefore,
                           using intervals that are too long would increase the risk of missing
                           these windows.
-                        * Tries to avoid flooding the log stream with messages about retries.
+                        * Tries to avoid flooding the log stream with messages
+                        about retries.
                           We'll log every retry attempt up to the 10th. After that, we'll log
                           retries only once about every 2h. This retry count is reset every time
                           we successfully download any amount of data.
@@ -11005,11 +11304,14 @@
                         the flasher image to force an installer migration.
 
 
-                        With the current QEMU setting, `installerForceMigration` alone is not
+                        With the current QEMU setting, `installerForceMigration`
+                        alone is not
 
-                        enough and the QEMU_INTERNAL_STORAGE also needs to be set to false in
+                        enough and the QEMU_INTERNAL_STORAGE also needs to be
+                        set to false in
 
-                        the worker's environment so only a single external disk is attached to
+                        the worker's environment so only a single external disk
+                        is attached to
 
                         the emulator.
                       footer:
@@ -11094,7 +11396,8 @@
                         Whether the internal disk is attached or not will be
                         defined by the
 
-                        environment. This allows to test the migrator that requires booting only
+                        environment. This allows to test the migrator that
+                        requires booting only
 
                         the external disk.
                       footer:
@@ -11139,25 +11442,33 @@
                         After a recent change enforcing all the partitions to be
                         on the same
 
-                        block device, encrypted partitions are no longer being detected
+                        block device, encrypted partitions are no longer being
+                        detected
 
-                        correctly. This is because the assumption that the parent block device
+                        correctly. This is because the assumption that the
+                        parent block device
 
-                        is a substring of the actually mounted block device does not work
+                        is a substring of the actually mounted block device does
+                        not work
 
-                        for LUKS devices - the mount will either be /dev/mapper/luks-XXX
+                        for LUKS devices - the mount will either be
+                        /dev/mapper/luks-XXX
 
-                        or /dev/dm-X while the parent device is still e.g. /dev/sda.
+                        or /dev/dm-X while the parent device is still e.g.
+                        /dev/sda.
 
 
-                        The usual balenaOS boot partition is also split in two - boot and efi.
+                        The usual balenaOS boot partition is also split in two -
+                        boot and efi.
 
-                        The boot partition (mounted under /mnt/boot) is encrypted and the efi
+                        The boot partition (mounted under /mnt/boot) is
+                        encrypted and the efi
 
                         partition (mounted under /mnt/efi) is not.
 
 
-                        This patch generalizes the detection of the parent device so that
+                        This patch generalizes the detection of the parent
+                        device so that
 
                         it works with both encrypted and unencrypted partitions.
                       footer:
@@ -11177,14 +11488,17 @@
                         The docker compose V2 spec no longer accepts
                         `network_mode: bridge`,
 
-                        which means we can no longer override the network configuration of
+                        which means we can no longer override the network
+                        configuration of
 
                         the `balena-supervisor` service for tests.
 
 
-                        For this reason we now create a separate service to run the built
+                        For this reason we now create a separate service to run
+                        the built
 
-                        supervisor `balena-supervisor-sut` and run API tests against this
+                        supervisor `balena-supervisor-sut` and run API tests
+                        against this
 
                         service instead of the default `balena-supervisor`.
                       footer:
@@ -11282,7 +11596,8 @@
                 Both the migrator and secureboot tests assumed they were
                 creating an
 
-                installer config.json section. Modify the code so both settings are
+                installer config.json section. Modify the code so both settings
+                are
 
                 included.
               footer:
@@ -11336,13 +11651,17 @@
 
                 This patch adds a wait4file loop to the script that waits
 
-                for the /dev/disk/by-state directory. This is not tied to any particular
+                for the /dev/disk/by-state directory. This is not tied to any
+                particular
 
-                partition or device but since the directory does not exist by default
+                partition or device but since the directory does not exist by
+                default
 
-                and is only created by a custom balenaOS udev rule, its existence
+                and is only created by a custom balenaOS udev rule, its
+                existence
 
-                implies that the rule fired and a device with balenaOS partitions
+                implies that the rule fired and a device with balenaOS
+                partitions
 
                 is present in the system.
               footer:
@@ -11444,14 +11763,17 @@
                         A bug in service comparison would make it that a device
                         already running
 
-                        a service from a new release with network changes would never stop the
+                        a service from a new release with network changes would
+                        never stop the
 
-                        running service so remaining services would forever get stuck in
+                        running service so remaining services would forever get
+                        stuck in
 
                         `Downloaded` state.
 
 
-                        This fixes the comparison so the service will get killed in this case,
+                        This fixes the comparison so the service will get killed
+                        in this case,
 
                         particularly allowing devices to recover from #1576
                       footer:
@@ -11465,11 +11787,14 @@
                         Devices affected by the bug described in 1576, are also
                         stuck with some
 
-                        services in the `Downloaded` state, because the state engine does not
+                        services in the `Downloaded` state, because the state
+                        engine does not
 
-                        detect that the running services should be killed on a network change
+                        detect that the running services should be killed on a
+                        network change
 
-                        even if they belong to a new release. This is a bug, which can be
+                        even if they belong to a new release. This is a bug,
+                        which can be
 
                         replicated by the tests in this commit
                       footer:
@@ -11483,9 +11808,11 @@
                         Previous behavior would make it that an `updateMetadata`
                         step would take
 
-                        precedence over a `kill` step when network changes are present. This
+                        precedence over a `kill` step when network changes are
+                        present. This
 
-                        would lead to an inconsistent state if an update included a
+                        would lead to an inconsistent state if an update
+                        included a
 
                         network and a container change.
                       footer:
@@ -11509,10 +11836,12 @@
                         These tests use the supervisor API to check that
                         applying a target state
 
-                        allows the device to eventually get to the desired target configuration.
+                        allows the device to eventually get to the desired
+                        target configuration.
 
 
-                        This are high-level tests that work with real images and containers
+                        This are high-level tests that work with real images and
+                        containers
 
                         using dind.
                       footer:
@@ -11526,11 +11855,14 @@
                         The supervisor allows the target image to be an image
                         without a
 
-                        registry (e.g. `alpine:latest`), while this really only happens while in
+                        registry (e.g. `alpine:latest`), while this really only
+                        happens while in
 
-                        local mode, we don't want to pass credentials to the default registry as
+                        local mode, we don't want to pass credentials to the
+                        default registry as
 
-                        those credentials are meant for balena registry and will otherwise fail.
+                        those credentials are meant for balena registry and will
+                        otherwise fail.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -11549,7 +11881,8 @@
                 A safe copy would only work for files that are read by fatrw
                 also and that is
 
-                not the case for boot files. Still, some file like `config.json` would
+                not the case for boot files. Still, some file like `config.json`
+                would
 
                 benefit from a safe copy so we still try that first.
 
@@ -11568,14 +11901,17 @@
                 If a safe copy is preferred but non-critical, the unsafe fatrw
                 command
 
-                can be used and if fatrw does not have enough resources to make a safe
+                can be used and if fatrw does not have enough resources to make
+                a safe
 
                 copy it will fallback to a standard cp.
 
 
-                This is useful when performing hostOS updates for example where a safe
+                This is useful when performing hostOS updates for example where
+                a safe
 
-                copy would only work for files that are read by fatrw also and that is
+                copy would only work for files that are read by fatrw also and
+                that is
 
                 not the case for boot files for example.
               footer:
@@ -11824,7 +12160,8 @@
                         Target volatile doesn't make sense now that we can use
                         the
 
-                        current state as a target. It wasn't actually being used for anything
+                        current state as a target. It wasn't actually being used
+                        for anything
 
                         anymore apparently
                       footer:
@@ -11841,7 +12178,8 @@
                         from the rest of the code.
 
 
-                        The function `applyIntermediateTarget` will now call `pausingApply`
+                        The function `applyIntermediateTarget` will now call
+                        `pausingApply`
 
                         before applying the target
 
@@ -11861,12 +12199,14 @@
                         engine.
 
 
-                        - doPurge first removes the user app from the target state and passes
+                        - doPurge first removes the user app from the target
+                        state and passes
                           that to the state engine for purging. Since intermediate state doesn't
                           remove images, this will have the effect of basically re-installing
                           the app.
 
-                        - doRestart modifies the target state by first removing only the
+                        - doRestart modifies the target state by first removing
+                        only the
                           services from the current state but keeping volumes and networks. This
                           has the same effect as before where services were stopped one by one
                       footer:
@@ -11880,7 +12220,8 @@
                         Local mode uses a numeric `appUuid` which was messing up
                         parsing the
 
-                        network name. This fixes this issue so the current state can be used
+                        network name. This fixes this issue so the current state
+                        can be used
 
                         as a target state
                       footer:
@@ -11894,12 +12235,15 @@
                         The Service class in `compose/service.ts` cannot get the
                         image name
 
-                        from the image id when building the object from the container metadata.
+                        from the image id when building the object from the
+                        container metadata.
 
 
-                        We query the metadata in the application manager getCurrentApps method
+                        We query the metadata in the application manager
+                        getCurrentApps method
 
-                        so the current state can be used as target by API methods
+                        so the current state can be used as target by API
+                        methods
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -11911,7 +12255,8 @@
                         Network aliases are now compared checking that the
                         target state is a
 
-                        subset of the current state. This will prevent service restarts due to
+                        subset of the current state. This will prevent service
+                        restarts due to
 
                         additional aliases created by docker in the container.
                       footer:
@@ -11927,12 +12272,15 @@
                         When getting the service from the docker container,
                         remove the
 
-                        containerId from the list of aliases (which gets added by docker). This
+                        containerId from the list of aliases (which gets added
+                        by docker). This
 
-                        will make it easier to use the current service state as a target.
+                        will make it easier to use the current service state as
+                        a target.
 
 
-                        This will help us remove the `safeStateClone` function in the API in a
+                        This will help us remove the `safeStateClone` function
+                        in the API in a
 
                         future commit
                       footer:
@@ -11946,7 +12294,8 @@
                         This replaces the previous flag `isApplyingIntermediate`
                         on application
 
-                        manager and simplifies the interface of the state engine to make temporary changes to the
+                        manager and simplifies the interface of the state engine
+                        to make temporary changes to the
 
                         general app state.
                       footer:
@@ -11960,21 +12309,26 @@
                         There were multiple places in the state engine that
                         skipped some
 
-                        operations while in local mode. In reality, all it's needed while in
+                        operations while in local mode. In reality, all it's
+                        needed while in
 
                         local mode is to skip image and volume deletion.
 
 
-                        This commit simplifies application-manager and compose app to be more
+                        This commit simplifies application-manager and compose
+                        app to be more
 
-                        local mode agnostic and instead making the image deletion and volume
+                        local mode agnostic and instead making the image
+                        deletion and volume
 
                         deletion configurable via function arguments.
 
 
-                        This also has the benefit to make the treatment of local mode
+                        This also has the benefit to make the treatment of local
+                        mode
 
-                        applications more similar to cloud mode applications, allowing for
+                        applications more similar to cloud mode applications,
+                        allowing for
 
                         API endpoints to function the same way both modes.
                       footer:
@@ -12019,13 +12373,16 @@
                 When parsing additional variables to be passed to the bitbake
                 build,
 
-                keys and values are split using equals as a delimiter. However, the
+                keys and values are split using equals as a delimiter. However,
+                the
 
-                splitting process does not split only on the first occurrence, which
+                splitting process does not split only on the first occurrence,
+                which
 
                 results in removing equals signs from the value as well. This is
 
-                problematic with base64 encoded strings, which are padded with equals
+                problematic with base64 encoded strings, which are padded with
+                equals
 
                 signs.
 
@@ -12070,11 +12427,14 @@
                         The OS since v2.82.6 will monitor changes to config.json
                         and restart
 
-                        the relevant services to apply the changes. There is no need to trigger
+                        the relevant services to apply the changes. There is no
+                        need to trigger
 
-                        restart of the services via the supervisor. Users on older OS versions
+                        restart of the services via the supervisor. Users on
+                        older OS versions
 
-                        will need to update their OS or restart the services manually as OS
+                        will need to update their OS or restart the services
+                        manually as OS
 
                         loses support after 2y.
                       footer:
@@ -12094,7 +12454,8 @@
                         We don't need this anonymous volume as /data is bind
                         mounted into
 
-                        the container from host (legacy), and will soon be mounted by the
+                        the container from host (legacy), and will soon be
+                        mounted by the
 
                         Supervisor itself on startup.
                       footer:
@@ -12149,7 +12510,8 @@
                 In order to use hashes we can not use UEFI time-based
                 authentication
 
-                for updates as this would prevent rollbacks. Instead we ship appendable
+                for updates as this would prevent rollbacks. Instead we ship
+                appendable
 
                 updates for both db and dbx that HUP can use.
               footer:
@@ -12165,18 +12527,23 @@
                 This patch changes the validation of bootable images from
                 certificate
 
-                signatures to a list of allowed hashes of binaries. This only applies
+                signatures to a list of allowed hashes of binaries. This only
+                applies
 
                 on db level, PK and KEK are still certificates.
 
 
-                The motivation is that certificates expire and we need to be sure
+                The motivation is that certificates expire and we need to be
+                sure
 
-                that even devices that have been lying on a shelf for several years
+                that even devices that have been lying on a shelf for several
+                years
 
-                or whose CMOS battery has died and reset date to 1970-01-01 are still
+                or whose CMOS battery has died and reset date to 1970-01-01 are
+                still
 
-                bootable. Using hashes is more aligned with this use-case and also
+                bootable. Using hashes is more aligned with this use-case and
+                also
 
                 more similar to the approach that embedded SoCs use.
               footer:
@@ -12208,18 +12575,22 @@
                 Shipping a single image with signature checks enabled will
                 enforce
 
-                the signatures on non-secure-boot systems as well. GRUB does not have
+                the signatures on non-secure-boot systems as well. GRUB does not
+                have
 
-                a simple method to check whether secure boot is enabled that could
+                a simple method to check whether secure boot is enabled that
+                could
 
                 be embedded with the default built-in config.
 
 
                 With this patch we build two separate images - one enforcing
 
-                the signatures and the other one not, keeping the original behavior.
+                the signatures and the other one not, keeping the original
+                behavior.
 
-                HUP and flasher both can detect if secure boot is enabled so they
+                HUP and flasher both can detect if secure boot is enabled so
+                they
 
                 put the correct image in place when installing/updating GRUB.
               footer:
@@ -12265,9 +12636,11 @@
                 The installer is to copy configuration files into the boot
                 partition on
 
-                the installer disk - searching by label needs to be restriced to the
+                the installer disk - searching by label needs to be restriced to
+                the
 
-                booting disk to avoid clashes if there are other disks with matching
+                booting disk to avoid clashes if there are other disks with
+                matching
 
                 labels present.
               footer:
@@ -12293,7 +12666,8 @@
                 Search for the installation disk on the same device the system
                 is being
 
-                installed on. This avoids problems when there are more than one disk
+                installed on. This avoids problems when there are more than one
+                disk
 
                 with balena/resin labelling.
               footer:
@@ -12309,7 +12683,8 @@
                 The internal target device to program is not always the device
                 the system
 
-                is booting from. Make sure the `flash-boot` partition search is done
+                is booting from. Make sure the `flash-boot` partition search is
+                done
 
                 on the booting device.
               footer:
@@ -12399,14 +12774,18 @@
                         rejections](https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V15.md#throw-on-unhandled-rejections---33021)
                         from a warning to a throw.
 
-                        For this reason errors like a corrupt migration directory, that happens when trying to
+                        For this reason errors like a corrupt migration
+                        directory, that happens when trying to
 
-                        roll back to a previous supervisor version were no longer showing a
+                        roll back to a previous supervisor version were no
+                        longer showing a
 
-                        message but dumping the full minimized code into the journal logs.
+                        message but dumping the full minimized code into the
+                        journal logs.
 
 
-                        This PR adds a catchall on app.ts to log the exception and throw an exit
+                        This PR adds a catchall on app.ts to log the exception
+                        and throw an exit
 
                         code of 1.
                       footer:
@@ -12424,9 +12803,11 @@
                         From:
                         https://github.com/balena-os/balena-supervisor/pull/2153/commits/c0b4fafe842115933b1da9b4d68e601a19c3e4eb
 
-                        Restart-service checks that both services have restarted in its test assertion, which is
+                        Restart-service checks that both services have restarted
+                        in its test assertion, which is
 
-                        incorrect as restart-service should only restart one service.
+                        incorrect as restart-service should only restart one
+                        service.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -12653,24 +13034,32 @@
                         As the Supervisor is a privileged container, it has
                         access to host /dev, and therefore has access
 
-                        to boot, data, and state balenaOS partitions. This commit sets up the framework for the following:
+                        to boot, data, and state balenaOS partitions. This
+                        commit sets up the framework for the following:
 
 
-                        - Finds the /dev partition that corresponds to each partition based on partition label
+                        - Finds the /dev partition that corresponds to each
+                        partition based on partition label
 
-                        - Mounts the partitions into set mountpoints in the device
+                        - Mounts the partitions into set mountpoints in the
+                        device
 
-                        - Removes reliance on env vars and mountpoints provided by host's start-balena-supervisor script
+                        - Removes reliance on env vars and mountpoints provided
+                        by host's start-balena-supervisor script
 
-                        - Simplifies host path querying by centralizing these queries through methods in lib/host-utils.ts
+                        - Simplifies host path querying by centralizing these
+                        queries through methods in lib/host-utils.ts
 
 
-                        This particular changes env vars for and mounts the boot partition.
+                        This particular changes env vars for and mounts the boot
+                        partition.
 
 
-                        Since the Supervisor would no longer rely on container `run` arguments provided by a host script,
+                        Since the Supervisor would no longer rely on container
+                        `run` arguments provided by a host script,
 
-                        this change moves Supervisor closer to being able to start itself (Supervisor-as-an-app).
+                        this change moves Supervisor closer to being able to
+                        start itself (Supervisor-as-an-app).
                       footer:
                         Change-type: minor
                         change-type: minor
@@ -12701,11 +13090,14 @@
                         Notable improvements these new versions bring:
 
 
-                        * Optimized code path for generating deltas with blocks that are
+                        * Optimized code path for generating deltas with blocks
+                        that are
                           power-of-two-sized.
-                        * Avoid allocating unbounded amounts of memory when the target differs
+                        * Avoid allocating unbounded amounts of memory when the
+                        target differs
                           completely from the source.
-                        * Several bugfixes in edge cases that shall not affect balenaEngine.
+                        * Several bugfixes in edge cases that shall not affect
+                        balenaEngine.
                       footer:
                         Signed-off-by: Leandro Motta Barros <leandro@balena.io>
                         signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -12790,14 +13182,17 @@
                         --tpmstate argument
 
 
-                        If the same state directory/files are used for multiple installations,
+                        If the same state directory/files are used for multiple
+                        installations,
 
-                        the available space can be filled, and the installer will fail with the
+                        the available space can be filled, and the installer
+                        will fail with the
 
                         error "insufficient space for NV allocation".
 
 
-                        Move swtpm state to tmpfs to create new state files every run.
+                        Move swtpm state to tmpfs to create new state files
+                        every run.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -12936,12 +13331,14 @@
                 Setting `LimitCORE=0` will avoid the creation of core dump files
                 on
 
-                containers. This will avoid cases in which a crashlooping user app ends
+                containers. This will avoid cases in which a crashlooping user
+                app ends
 
                 up filling up the entire storage with dump files.
 
 
-                Users can re-enable core dumps in their services by manually setting the
+                Users can re-enable core dumps in their services by manually
+                setting the
 
                 `ulimits.core`. For example:
 
@@ -12977,7 +13374,8 @@
                 https://github.com/moby/moby/commit/d16737f971092767c1b9d28302a3f5aedbe2f576
 
 
-                And also is recommended by systemd: https://systemd.io/CGROUP_DELEGATION/
+                And also is recommended by systemd:
+                https://systemd.io/CGROUP_DELEGATION/
               footer:
                 Signed-off-by: Leandro Motta Barros <leandro@balena.io>
                 signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -13027,16 +13425,20 @@
                         The original delta code on the `xfer` package used to
                         set `d.err` when
 
-                        an unexpected EOF was found in the delta tar stream. Turns out `d.err`
+                        an unexpected EOF was found in the delta tar stream.
+                        Turns out `d.err`
 
-                        would end up being overwritten before it was read, so that initial
+                        would end up being overwritten before it was read, so
+                        that initial
 
                         assignment was effectively a no-op.
 
 
-                        This commit simplifies the code a little bit by removing this bogus
+                        This commit simplifies the code a little bit by removing
+                        this bogus
 
-                        assignment and also improves the error reporting a notch by adding more
+                        assignment and also improves the error reporting a notch
+                        by adding more
 
                         context to the error messages.
                       footer:
@@ -13052,7 +13454,8 @@
                         This factors out portions of the `xfer` package, so that
                         we can
 
-                        reuse this functionality between `balena pull` and `balena load`. There
+                        reuse this functionality between `balena pull` and
+                        `balena load`. There
 
                         was a good deal of duplication.
                       footer:
@@ -13068,31 +13471,39 @@
                         This factors out portions of the `distribution` package,
                         so that we can
 
-                        reuse this functionality between `balena pull` and `balena load`. There
+                        reuse this functionality between `balena pull` and
+                        `balena load`. There
 
                         was a good deal of duplication.
 
 
-                        This piece of code is tricky to factor out into a separate function.
+                        This piece of code is tricky to factor out into a
+                        separate function.
 
                         Basically we had two options:
 
 
-                        1. Create a completely reusable, DRY function that encapsulates all the
+                        1. Create a completely reusable, DRY function that
+                        encapsulates all the
                            duplicate code. Sounds nice until you noticed that would be a
                            horrendous function with 5 return values and overly obscure
                            semantics.
-                        2. We create a small set of functions with clearer interfaces and
+                        2. We create a small set of functions with clearer
+                        interfaces and
                            semantics, but which will still lead to some code duplication between
                            the `pull` and `load` implementations.
 
-                        I opted for the second alternative because the resulting code is much
+                        I opted for the second alternative because the resulting
+                        code is much
 
-                        easier to understand and maintain. Also, the remaining duplication is
+                        easier to understand and maintain. Also, the remaining
+                        duplication is
 
-                        mostly dumb, integration and error handling code that almost writes
+                        mostly dumb, integration and error handling code that
+                        almost writes
 
-                        itself as we call the new reusable functions -- so, this is sort of a
+                        itself as we call the new reusable functions -- so, this
+                        is sort of a
 
                         benign duplication.
                       footer:
@@ -13138,7 +13549,8 @@
                         00e389e5f559dd10e49cfa411784b89498c3c0eb.
 
 
-                        Images generated using this dockerfile still don't have the right
+                        Images generated using this dockerfile still don't have
+                        the right
 
                         architecture. More testing is needed
                       footer:
@@ -13229,16 +13641,21 @@
                         This is necessary since the builder no longer passes the
                         platform flag
 
-                        to the build. This would lead to dockerfiles that are mixing multi and single
+                        to the build. This would lead to dockerfiles that are
+                        mixing multi and single
 
-                        arch stages to pull the wrong architecture images, particularly when
+                        arch stages to pull the wrong architecture images,
+                        particularly when
 
-                        trying to build images in emulated builds (e.g. armv7hf built on aarch64).
+                        trying to build images in emulated builds (e.g. armv7hf
+                        built on aarch64).
 
 
-                        Moving the full build to multi-arch solves this as the docker engine is
+                        Moving the full build to multi-arch solves this as the
+                        docker engine is
 
-                        capable of chosing the right architecture from the manifest.
+                        capable of chosing the right architecture from the
+                        manifest.
                       footer:
                         Relatest-to: balena-io/balena-builder#1010
                         relatest-to: balena-io/balena-builder#1010
@@ -13297,7 +13714,8 @@
                         There were various usages of Bash-specific features. As
                         a result, the
 
-                        script would work correctly only on OSes that have `sh` as an alias to
+                        script would work correctly only on OSes that have `sh`
+                        as an alias to
 
                         `bash`. It would fail on Ubuntu, for example.
                       footer:
@@ -13313,9 +13731,11 @@
                         A couple of changes here:
 
 
-                        * Check for sudo necessity and availability before doing any real work.
+                        * Check for sudo necessity and availability before doing
+                        any real work.
                           Better to warn and exit quick and early!
-                        * Remove the support for using `su`. It was broken for two reasons.
+                        * Remove the support for using `su`. It was broken for
+                        two reasons.
                           First, unlike `sudo`, `su -c` expects the command as a single
                           argument. Second, `su`, unlike `sudo`, reads the password from stdin
                           which in this case "contains" the tarball being downloaded. The second
@@ -13336,9 +13756,11 @@
                         A couple of changes here:
 
 
-                        * Check for missing dependencies before doing any real work. Better to
+                        * Check for missing dependencies before doing any real
+                        work. Better to
                           warn and exit quick and early!
-                        * Fix the actual check. We previously used `[ $abort ] && exit 1` which
+                        * Fix the actual check. We previously used `[ $abort ]
+                        && exit 1` which
                           caused the script to always exit (`abort` is never empty).
                       footer:
                         Signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -13429,7 +13851,8 @@
                         Added an `Asserting` suffix to all functions that
                         internally call
 
-                        `assert.*()`. This makes clearer what is really going on at the point of
+                        `assert.*()`. This makes clearer what is really going on
+                        at the point of
 
                         call, without needing to look under the hood.
                       footer:
@@ -13455,7 +13878,8 @@
                         Most notably, on the "delta root" feature, which is
                         important for HUPs,
 
-                        not very well-known and not documented anywhere else I know.
+                        not very well-known and not documented anywhere else I
+                        know.
                       footer:
                         Signed-off-by: Leandro Motta Barros <leandro@balena.io>
                         signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -13483,7 +13907,8 @@
                         We apparently have broken this during the 20.10 merge.
                         Not setting the
 
-                        delta image store breaks delta-based balenaOS updates (HUPs).
+                        delta image store breaks delta-based balenaOS updates
+                        (HUPs).
                       footer:
                         Signed-off-by: Leandro Motta Barros <leandro@balena.io>
                         signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -13568,9 +13993,11 @@
                 https://github.com/containerd/console/pull/10/commits/c358734ec94e72903243bd1c9034874a1de09424
 
 
-                This fix is present in balena engine since v17.13.5, which has been in
+                This fix is present in balena engine since v17.13.5, which has
+                been in
 
-                use since commit 53ce147. Drop this patch from meta-balena-dunfell and
+                use since commit 53ce147. Drop this patch from
+                meta-balena-dunfell and
 
                 later.
               footer:
@@ -13586,9 +14013,11 @@
                 Plymouth services are modified in the installation directory
                 with balena
 
-                specific customizations using patches. This increases the manual intervention necessary
+                specific customizations using patches. This increases the manual
+                intervention necessary
 
-                when adding support for a new version of this package or Yocto. Replace
+                when adding support for a new version of this package or Yocto.
+                Replace
 
                 the patches with equivalent drop-in configs.
               footer:
@@ -13604,9 +14033,11 @@
                 We disable systemd-getty-generator to allow explicit control
                 over when
 
-                we setup getty to create consoles. Previously, this was done using a
+                we setup getty to create consoles. Previously, this was done
+                using a
 
-                patch to systemd, removing this generator. Mask this instead so we can
+                patch to systemd, removing this generator. Mask this instead so
+                we can
 
                 consolidate this configuration in meta-balena-common.
               footer:
@@ -13622,11 +14053,14 @@
                 Certain services, such as getty@.service, and
                 systemd-logind.service are
 
-                disabled when running in a container using a patch to the source files.
+                disabled when running in a container using a patch to the source
+                files.
 
-                This increases the manual intervention necessary when adding support for
+                This increases the manual intervention necessary when adding
+                support for
 
-                a new version of systemd. Replace the patch with drop-in configs.
+                a new version of systemd. Replace the patch with drop-in
+                configs.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -13699,21 +14133,27 @@
                         Some incoming tests require QEMU to exit, simulating a
                         device powering
 
-                        off, before starting QEMU again. This is used to "reflash" a virtualized
+                        off, before starting QEMU again. This is used to
+                        "reflash" a virtualized
 
-                        device before continuing with testing, for instance after tampering with
+                        device before continuing with testing, for instance
+                        after tampering with
 
-                        boot files on a secure boot enabled device to verify secure boot checks.
+                        boot files on a secure boot enabled device to verify
+                        secure boot checks.
 
 
-                        However, swtpm will exit when QEMU disconnects. The `--exit-code-from`
+                        However, swtpm will exit when QEMU disconnects. The
+                        `--exit-code-from`
 
-                        compose argument implies `--abort-on-container-exit`, so this results
+                        compose argument implies `--abort-on-container-exit`, so
+                        this results
 
                         in the test run aborting prematurely.
 
 
-                        Adapt the entrypoint and command of the swtpm container to always
+                        Adapt the entrypoint and command of the swtpm container
+                        to always
 
                         restart the program without exiting the container.
                       footer:
@@ -13781,9 +14221,11 @@
                 Disable ad-hoc unwrapping in the HUP test suite in favor of
                 utilizing
 
-                the QEMU worker's new ability to bind a disk image to an emulated
+                the QEMU worker's new ability to bind a disk image to an
+                emulated
 
-                external USB mass storage device. This runs the flasher in QEMU, and
+                external USB mass storage device. This runs the flasher in QEMU,
+                and
 
                 installs to emulated internal storage.
               footer:
@@ -13817,11 +14259,14 @@
                 It should be safe to assume that boards now use newer u-boot
                 versions
 
-                that all have Kconfig support so we default to that. This allows for
+                that all have Kconfig support so we default to that. This allows
+                for
 
-                device repos not to specify it and use Kconfig support or if for some
+                device repos not to specify it and use Kconfig support or if for
+                some
 
-                reason there are boards with old u-boot versions they can overwrite the
+                reason there are boards with old u-boot versions they can
+                overwrite the
 
                 UBOOT_KCONFIG_SUPPORT variable to 0.
               footer:
@@ -13884,7 +14329,8 @@
                 be overwritten in append files.
 
 
-                This change is an extension of https://github.com/balena-os/meta-balena/commit/a3c276a1058d05e66991871bf167079fc2824843
+                This change is an extension of
+                https://github.com/balena-os/meta-balena/commit/a3c276a1058d05e66991871bf167079fc2824843
               footer:
                 Change-type: patch
                 change-type: patch
@@ -13903,11 +14349,14 @@
                 Because we use this patch with various u-boot versions it often
                 happens that this patch
 
-                does not apply so we then need to rework it in the device integration layer. Instead it
+                does not apply so we then need to rework it in the device
+                integration layer. Instead it
 
-                would be better to have some code at configure time parsing the same file and inserting
+                would be better to have some code at configure time parsing the
+                same file and inserting
 
-                the balena env dynamically, so regardless of u-boot versions we use.
+                the balena env dynamically, so regardless of u-boot versions we
+                use.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -13935,18 +14384,23 @@
                         Preloaded devices can require that the device is pinned
                         to the preloaded
 
-                        release on provisioning. However if the provisioned release gets
+                        release on provisioning. However if the provisioned
+                        release gets
 
-                        released in the future, that would lead to the device remaining in "VPN
+                        released in the future, that would lead to the device
+                        remaining in "VPN
 
-                        only" state forever as the provisioning process could not finish due to
+                        only" state forever as the provisioning process could
+                        not finish due to
 
                         pinning failure.
 
 
-                        This commit changes the behavior so if the release does not exist, the
+                        This commit changes the behavior so if the release does
+                        not exist, the
 
-                        pinning step is skipped and the device follows the fleet pinning state.
+                        pinning step is skipped and the device follows the fleet
+                        pinning state.
                       footer:
                         Closes: "#2133"
                         closes: "#2133"
@@ -13964,16 +14418,21 @@
                         This is necessary since the builder no longer passes the
                         platform flag
 
-                        to the build. This would lead to dockerfiles that are mixing multi and single
+                        to the build. This would lead to dockerfiles that are
+                        mixing multi and single
 
-                        arch stages to pull the wrong architecture images, particularly when
+                        arch stages to pull the wrong architecture images,
+                        particularly when
 
-                        trying to build images in emulated builds (e.g. armv7hf built on aarch64).
+                        trying to build images in emulated builds (e.g. armv7hf
+                        built on aarch64).
 
 
-                        Moving the full build to single-arch solves this as the docker engine is
+                        Moving the full build to single-arch solves this as the
+                        docker engine is
 
-                        capable of chosing the right architecture from the manifest. Once some
+                        capable of chosing the right architecture from the
+                        manifest. Once some
 
                         of the builder issues are fixed, we should move to #2141
                       footer:
@@ -13993,13 +14452,17 @@
                         The issue with the original Supervisor implementation of
                         the firewall is that
 
-                        on Supervisor start, the Supervisor flushes the INPUT chain of the filter table.
+                        on Supervisor start, the Supervisor flushes the INPUT
+                        chain of the filter table.
 
-                        This doesn't play well with services that add to the INPUT chain on startup that
+                        This doesn't play well with services that add to the
+                        INPUT chain on startup that
 
-                        may start up before the Supervisor, such as certain NetworkManager connection
+                        may start up before the Supervisor, such as certain
+                        NetworkManager connection
 
-                        profiles. This change only replaces the BALENA-FIREWALL rule in the INPUT chain,
+                        profiles. This change only replaces the BALENA-FIREWALL
+                        rule in the INPUT chain,
 
                         preserving the other rules as well as their order.
                       footer:
@@ -14065,9 +14528,11 @@
                 In the Internet connection sharing test one of the checks may
                 run
 
-                into a racing problem. The following command is holding the iptables
+                into a racing problem. The following command is holding the
+                iptables
 
-                lock for 3 seconds while NetworkManager activates a connection with
+                lock for 3 seconds while NetworkManager activates a connection
+                with
 
                 sharing enabled:
 
@@ -14075,20 +14540,25 @@
                 `flock /run/xtables.lock sleep 3 & nmcli c up dummy & wait`
 
 
-                NetworkManager waits for 2 seconds for the lock to be released and
+                NetworkManager waits for 2 seconds for the lock to be released
+                and
 
-                those three seconds should be enough for one of the iptables rules
+                those three seconds should be enough for one of the iptables
+                rules
 
-                to fail. However there is no guarantee that NetworkManager will start
+                to fail. However there is no guarantee that NetworkManager will
+                start
 
-                adding the iptables rules that quickly - it may start adding those
+                adding the iptables rules that quickly - it may start adding
+                those
 
                 after one out of those three seconds already passed, which will
 
                 lead to all iptables rules to be set at the end.
 
 
-                This check is non-essential for the test itself, so it is removed with
+                This check is non-essential for the test itself, so it is
+                removed with
 
                 this commit.
               footer:
@@ -14108,9 +14578,11 @@
                 At this moment, when module signing is enabled, the peak module
                 is signed
 
-                but do_install ignores the signed variant and installs the original
+                but do_install ignores the signed variant and installs the
+                original
 
-                unsigned file. With this patch do_install installs the signed file
+                unsigned file. With this patch do_install installs the signed
+                file
 
                 if available.
               footer:
@@ -14142,21 +14614,26 @@
                 Previously, we bailed out of the installer when the system was
                 in user
 
-                mode (keys enrolled) but the user had not opted in to secure boot, as it
+                mode (keys enrolled) but the user had not opted in to secure
+                boot, as it
 
                 was ambiguous whether the user actually wanted SB/FDE.
 
 
-                However, some systems come with vendor keys pre-enrolled, and a user may
+                However, some systems come with vendor keys pre-enrolled, and a
+                user may
 
-                simply turn off secure boot in the firmware setup menu without erasing
+                simply turn off secure boot in the firmware setup menu without
+                erasing
 
-                the keys. This would result in the installer bailing out even though
+                the keys. This would result in the installer bailing out even
+                though
 
                 secure boot is disabled in the firmware menu.
 
 
-                Check that secure boot is enabled in addition to having keys enrolled
+                Check that secure boot is enabled in addition to having keys
+                enrolled
 
                 before bailing out.
               footer:
@@ -14188,16 +14665,20 @@
                 https://github.com/balena-os/meta-balena/pull/2963
 
 
-                A racing condition between balenaEngine and NetworkManager led to some Internet
+                A racing condition between balenaEngine and NetworkManager led
+                to some Internet
 
-                connection sharing iptables rules not being applied when NM connection profile
+                connection sharing iptables rules not being applied when NM
+                connection profile
 
                 with Internet sharing was activated at boot.
 
 
-                This test checks whether all necessary iptables rules are added by artificially
+                This test checks whether all necessary iptables rules are added
+                by artificially
 
-                blocking iptables for 1 second and then for 3 seconds while a connection
+                blocking iptables for 1 second and then for 3 seconds while a
+                connection
 
                 profile with Internet sharing is activated.
               footer:
@@ -14250,13 +14731,16 @@
                 do_resin_boot_dirgen_and_deploy needs all the partial files
                 deployed
 
-                when it runs as it will be copying them to the actual boot partition.
+                when it runs as it will be copying them to the actual boot
+                partition.
 
                 There is a race condition between it and grub_conf:do_deploy,
 
-                we have seen builds fail when grub_conf:do_deploy does not execute
+                we have seen builds fail when grub_conf:do_deploy does not
+                execute
 
-                in time. This patch adds an explicit dependency to avoid such situation.
+                in time. This patch adds an explicit dependency to avoid such
+                situation.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -14273,17 +14757,22 @@
               body: >
                 We have added DER certificates because it is the only format
 
-                that QEMU/TianoCore accepts in UEFI setup. Since we made setup mode
+                that QEMU/TianoCore accepts in UEFI setup. Since we made setup
+                mode
 
-                work properly, there is no need to program the QEMU keys manually
+                work properly, there is no need to program the QEMU keys
+                manually
 
-                and therefore there is no reason to pollute the boot partition with
+                and therefore there is no reason to pollute the boot partition
+                with
 
                 the DER files. If indeed necessary, they can always be extracted
 
-                from the ESL, which is still shipped. Shipping the DER files is also
+                from the ESL, which is still shipped. Shipping the DER files is
+                also
 
-                not possible when db uses hashes instead of certificates, which we
+                not possible when db uses hashes instead of certificates, which
+                we
 
                 want to move towards.
               footer:
@@ -14303,7 +14792,8 @@
                 This allows to transition from unmanaged to managed by just
                 writing
 
-                a config.json file, like it's the case with AWS cloud configuration.
+                a config.json file, like it's the case with AWS cloud
+                configuration.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -14323,7 +14813,8 @@
 
                 that this is about balenaEngine makes it simpler to grep for
 
-                Engine-related portions of balenaOS. Might also help a tad bit when
+                Engine-related portions of balenaOS. Might also help a tad bit
+                when
 
                 looking at logs.
               footer:
@@ -14368,7 +14859,8 @@
                 The `du` utility has the same output format for single or
                 several files,
 
-                while the `wc` utility doesn't and does not display a total for single
+                while the `wc` utility doesn't and does not display a total for
+                single
 
                 files.
               footer:
@@ -14402,9 +14894,11 @@
                 finish the flashing with a reboot instead of a shutdown.
 
 
-                This is possible as the initramfs does not currently have a shutdown
+                This is possible as the initramfs does not currently have a
+                shutdown
 
-                command and avoids the complexity of having to detect whether we are
+                command and avoids the complexity of having to detect whether we
+                are
 
                 running from initramfs or not.
               footer:
@@ -14431,7 +14925,8 @@
                 This module allows to program the internal storage from
                 initramfs hence
 
-                making it possible to migrate an existing OS by booting from the same
+                making it possible to migrate an existing OS by booting from the
+                same
 
                 disk.
               footer:
@@ -14471,7 +14966,8 @@
                 The migrate module needs to umount the rootfs, so by moving the
                 mountpoint
 
-                moving into the migrate module it's only done when not migrating.
+                moving into the migrate module it's only done when not
+                migrating.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -14488,12 +14984,14 @@
                 not boot into the OS but launch adbd.
 
 
-                A connection can then be established via the network (if a DHCP address
+                A connection can then be established via the network (if a DHCP
+                address
 
                 is provided) or using a USB gadget connection.
 
 
-                For a network connection, the client needs to install `adb` and run:
+                For a network connection, the client needs to install `adb` and
+                run:
 
                 ```
 
@@ -14645,9 +15143,11 @@
                 The unsafe-perm config option has been dropped in npm 9, trying
                 to set it
 
-                ends with an error and therefore fails the build. With this patch
+                ends with an error and therefore fails the build. With this
+                patch
 
-                the build script parses the major version from `npm --version` and only
+                the build script parses the major version from `npm --version`
+                and only
 
                 sets unsafe-perm on npm 8 and older.
               footer:
@@ -14715,7 +15215,8 @@
         characters with a `*`.
 
 
-        [1] https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
+        [1]
+        https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
 
 
         [skip ci]
@@ -14745,9 +15246,11 @@
                 There is nothing in `balena-config-vars` itself that needs
                 `fatrw`, so
 
-                change it so scripts don't exit if it is not available. For example,
+                change it so scripts don't exit if it is not available. For
+                example,
 
-                `balena-config-vars` gets used in the initramfs but `fatrw` is not
+                `balena-config-vars` gets used in the initramfs but `fatrw` is
+                not
 
                 required (and it is quite heavy).
               footer:
@@ -14765,7 +15268,8 @@
                 balena-config scripts and not unit configuration dependencies.
 
 
-                This allows to include only the balena-config scripts in the initramfs.
+                This allows to include only the balena-config scripts in the
+                initramfs.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -14782,7 +15286,8 @@
                 the images size significantly.
 
 
-                This commit introduces a `raid` machine feature that device types need
+                This commit introduces a `raid` machine feature that device
+                types need
 
                 to define if RAID support is required.
               footer:
@@ -14800,7 +15305,8 @@
 
                 will also be used from the initramfs, move the dependency to
 
-                packagegroup-resin so that resin-device-progress is still included in
+                packagegroup-resin so that resin-device-progress is still
+                included in
 
                 the flasher image.
               footer:
@@ -14820,9 +15326,11 @@
                 flasher is not running from initramfs.
 
 
-                These dependencies are already part of the corresponding packagegroups,
+                These dependencies are already part of the corresponding
+                packagegroups,
 
-                so listing them here is redundant and wrong as it increases the size of
+                so listing them here is redundant and wrong as it increases the
+                size of
 
                 the initramfs with no reason.
               footer:
@@ -14873,7 +15381,8 @@
                 it is only used in the installer script.
 
 
-                Also, make the resin-init-flasher script check for it's existance before using
+                Also, make the resin-init-flasher script check for it's
+                existance before using
 
                 it.
               footer:
@@ -14892,7 +15401,8 @@
                 in disk encryption).
 
 
-                Adding a loop that waits for the links to be available adds robustness
+                Adding a loop that waits for the links to be available adds
+                robustness
 
                 in case there are device specific delays.
               footer:
@@ -14967,7 +15477,8 @@
 
                 - The Radxa CM3 on RPI CM4 IOBoard as well as the Radxa zero use
                   rockchip software tools in order to put the eMMC in mass-storage mode
-                - The CM4 module comes in two flavors: one with eMMC and the Lite version
+                - The CM4 module comes in two flavors: one with eMMC and the
+                Lite version
                   which uses the carrier board sd-card slot to load the image. Both use the
                   same balenaOS image.
                   I switched the storage to internal for this DT because it *may* have
@@ -15005,16 +15516,19 @@
 
                 saving the entire uboot environment in any device specific
 
-                partitions. This because it relies on the default environment being
+                partitions. This because it relies on the default environment
+                being
 
                 stored in the u-boot binary.
 
 
                 Let's disable the saveenv command and avoid potential incorrect
 
-                usage which may overwrite the partition table, resin-boot filesystem
+                usage which may overwrite the partition table, resin-boot
+                filesystem
 
-                or other areas of the eMMC that may be pre-configured by the BSP.
+                or other areas of the eMMC that may be pre-configured by the
+                BSP.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -15075,9 +15589,11 @@
                 Block device nodes are sometimes created without attached media.
                 These
 
-                devices can neither be read from, nor written to. In this case, the
+                devices can neither be read from, nor written to. In this case,
+                the
 
-                flasher will attempt to install to the invalid disk and fail.  Detect
+                flasher will attempt to install to the invalid disk and
+                fail.  Detect
 
                 this case and skip the disk to allow flashing to continue.
               footer:
@@ -15175,7 +15691,8 @@
                 Secure boot is now opt-in, even in the case where the image is
                 signed,
 
-                and it's supported in firmware. Skip the secure boot tests when it's not
+                and it's supported in firmware. Skip the secure boot tests when
+                it's not
 
                 enabled at runtime.
               footer:
@@ -15222,7 +15739,8 @@
                         exceptions, and makes debugging and log messages worse.
 
 
-                        When we don't have a valid way to handle an exception, just throw it.
+                        When we don't have a valid way to handle an exception,
+                        just throw it.
 
                         The traceback is more useful than the handler.
                       footer:
@@ -15371,7 +15889,8 @@
               body: >
                 This is used to support falling back into the original OS when
 
-                performing a brownfield migration into balenaOS from a flasher image.
+                performing a brownfield migration into balenaOS from a flasher
+                image.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -15439,7 +15958,8 @@
                 It's not clear how the feature to skip tests work, so modify the
                 commit
 
-                message to be of type patch to avoid balenaCI errors on type none.
+                message to be of type patch to avoid balenaCI errors on type
+                none.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -15527,25 +16047,32 @@
                         We have seen a few times devices with duplicated network
                         names for some
 
-                        reason. While we don't know the cause the networks get duplicates, this
+                        reason. While we don't know the cause the networks get
+                        duplicates, this
 
-                        can be disruptive for updates as trying to create a container referencing a duplicate
+                        can be disruptive for updates as trying to create a
+                        container referencing a duplicate
 
                         network results in a 400 error from the engine.
 
 
-                        This commit finds and removes duplicate networks via the state engine,
+                        This commit finds and removes duplicate networks via the
+                        state engine,
 
-                        this means that even if somehow a container could be referencing a
+                        this means that even if somehow a container could be
+                        referencing a
 
-                        network that has been duplicated later somehow, this will remove the
+                        network that has been duplicated later somehow, this
+                        will remove the
 
                         container first.
 
 
-                        While thies doesn't solve the problem of duplicate networks being
+                        While thies doesn't solve the problem of duplicate
+                        networks being
 
-                        created in the first place, it will fix the state of the system to
+                        created in the first place, it will fix the state of the
+                        system to
 
                         correct the inconsistency.
                       footer:
@@ -15561,29 +16088,38 @@
                         We have seen a few times devices with duplicated network
                         names for some
 
-                        reason. While we don't know the cause the networks get duplicates,
+                        reason. While we don't know the cause the networks get
+                        duplicates,
 
-                        this is disruptive of updates, as the supervisor usually queries
+                        this is disruptive of updates, as the supervisor usually
+                        queries
 
-                        resource by name, resulting in a 400 error from the engine because of
+                        resource by name, resulting in a 400 error from the
+                        engine because of
 
                         the ambiguity.
 
 
-                        This replaces those queries by name to queries by id. This includes
+                        This replaces those queries by name to queries by id.
+                        This includes
 
-                        network removal. If a `removeNetwork` step is generated, the supervisor
+                        network removal. If a `removeNetwork` step is generated,
+                        the supervisor
 
-                        opts to remove all instances of the network with the same name as it
+                        opts to remove all instances of the network with the
+                        same name as it
 
                         cannot easily resolve the ambiguity.
 
 
-                        This doesn't solve the problem of ambiguous networks, because even if
+                        This doesn't solve the problem of ambiguous networks,
+                        because even if
 
-                        networks are referenced by id when creating a container, the engine will
+                        networks are referenced by id when creating a container,
+                        the engine will
 
-                        throw an error (see https://github.com/balena-os/balena-supervisor/issues/590#issuecomment-1423557871)
+                        throw an error (see
+                        https://github.com/balena-os/balena-supervisor/issues/590#issuecomment-1423557871)
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -15778,12 +16314,14 @@
 
                         - references in docs
 
-                        - references device-state, api-binder, compose modules, API
+                        - references device-state, api-binder, compose modules,
+                        API
 
                         - references in tests
 
 
-                        The commit also adds a migration to remove the 4 dependent device tables from the DB.
+                        The commit also adds a migration to remove the 4
+                        dependent device tables from the DB.
                       footer:
                         Change-type: minor
                         change-type: minor
@@ -15854,7 +16392,8 @@
               body: >
                 Drop support for Fedora 34 35.
 
-                Fedora 36 will be the last version for armv7 as it is no longer supported.
+                Fedora 36 will be the last version for armv7 as it is no longer
+                supported.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -16164,9 +16703,11 @@
                 executed. When sourced, the shebang should be ignored.
 
 
-                However, we have seen instances where a bash script sourcing a sh
+                However, we have seen instances where a bash script sourcing a
+                sh
 
-                os-helper scripts triggers POSIX behaviour, specifically glob parsing
+                os-helper scripts triggers POSIX behaviour, specifically glob
+                parsing
 
                 failures.
               footer:
@@ -16487,7 +17028,8 @@
                 specific flags being misapplied, breaking the build
 
 
-                Set ARCH based on the target architecture, and override OBJCOPY to the
+                Set ARCH based on the target architecture, and override OBJCOPY
+                to the
 
                 binary provided by the target architecture's toolchain.
               footer:
@@ -16554,27 +17096,35 @@
                 When a user runs the flasher with secure boot enabled in
                 `config.json`,
 
-                the public keys used to validate the bootloader are enrolled. If any
+                the public keys used to validate the bootloader are enrolled. If
+                any
 
-                other bootloader signature fails to validate against this public key, it
+                other bootloader signature fails to validate against this public
+                key, it
 
                 won't be executed.
 
 
-                If the user attempts to run the balenaOS flasher on that system again
+                If the user attempts to run the balenaOS flasher on that system
+                again
 
-                without first enabling the secure boot option, the flasher won't enroll
+                without first enabling the secure boot option, the flasher won't
+                enroll
 
-                keys, but the installed system will be signed. This will result in a
+                keys, but the installed system will be signed. This will result
+                in a
 
                 secure boot enabled system without full-disk encryption.
 
 
-                Bail out in this case so the user must choose to explicitly opt-in to
+                Bail out in this case so the user must choose to explicitly
+                opt-in to
 
-                secure boot for the new installation, and full-disk encryption along
+                secure boot for the new installation, and full-disk encryption
+                along
 
-                with it. Otherwise, the user must reset the enrolled keys to install
+                with it. Otherwise, the user must reset the enrolled keys to
+                install
 
                 without secure boot.
               footer:
@@ -16590,11 +17140,14 @@
                 Extended globbing is not enabled by default, which makes the
                 substring
 
-                match for trimming leading zeroes not work. This causes SETUPMODEVAR to
+                match for trimming leading zeroes not work. This causes
+                SETUPMODEVAR to
 
-                evaluate to "01", which fails comparison with the string "1", skipping
+                evaluate to "01", which fails comparison with the string "1",
+                skipping
 
-                key enrollment when secure boot is enabled. Compare using an integer
+                key enrollment when secure boot is enabled. Compare using an
+                integer
 
                 expression instead.
               footer:
@@ -16610,21 +17163,26 @@
                 When refactoring secure boot setup, a logic mistake in the
                 purpose and
 
-                use of SECUREBOOT_VAR meant that devices booting the flasher with keys already
+                use of SECUREBOOT_VAR meant that devices booting the flasher
+                with keys already
 
-                enrolled would bail out with an incorrect message about secure boot not
+                enrolled would bail out with an incorrect message about secure
+                boot not
 
                 being supported in firmware.
 
 
-                This variable is `00` on systems with secure boot support in firmware,
+                This variable is `00` on systems with secure boot support in
+                firmware,
 
-                but not enabled and enforced, `01` on systems where secure boot is
+                but not enabled and enforced, `01` on systems where secure boot
+                is
 
                 enforced, and empty when secure boot is unsupported.
 
 
-                Change this conditional to bail out only when the variable is empty,
+                Change this conditional to bail out only when the variable is
+                empty,
 
                 indicating that secure boot is unsupported.
               footer:
@@ -16722,9 +17280,11 @@
                         Not all platforms support secure boot, notably aarch64
                         using tianocore
 
-                        firmware. Additionally, swtpm may not be available for all platforms.
+                        firmware. Additionally, swtpm may not be available for
+                        all platforms.
 
-                        Accordingly, move the swtpm service to a separate compose file that is
+                        Accordingly, move the swtpm service to a separate
+                        compose file that is
 
                         only used when secure boot is enabled.
                       footer:
@@ -16786,7 +17346,8 @@
                         QEMU is capable of using an emulated software TPM
                         exposed via socket. A
 
-                        TPM is necessary for full disk encryption (FDE), so add a service to
+                        TPM is necessary for full disk encryption (FDE), so add
+                        a service to
 
                         provide this to the QEMU worker.
                       footer:
@@ -16831,7 +17392,8 @@
                 Some firmwares will not boot balenaOS by default without
                 explicitly
 
-                creating a boot entry, so create one on EFI platforms after flashing.
+                creating a boot entry, so create one on EFI platforms after
+                flashing.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -16845,19 +17407,23 @@
                 get_dev_path_from_label() calls lsblk to get the name and label
                 of a
 
-                disk, then filters the list using the label and returns a /dev path.
+                disk, then filters the list using the label and returns a /dev
+                path.
 
 
                 The name returned when using a luks encrypted partition is the
 
-                /dev/mapper name, rather than the kernel's device mapper name under
+                /dev/mapper name, rather than the kernel's device mapper name
+                under
 
-                /dev/dm-*. When assembling a path under /dev using the luks name, the
+                /dev/dm-*. When assembling a path under /dev using the luks
+                name, the
 
                 path is invalid, and the by-state links aren't created.
 
 
-                This leads to the rootfs hook failing to find and mount the resin-rootA
+                This leads to the rootfs hook failing to find and mount the
+                resin-rootA
 
                 partition.
 
@@ -16892,15 +17458,18 @@
                 The flasher image enrolls the secure boot keys before rebooting
                 into
 
-                secured user mode and creating the encrypted luks volumes on disk.
+                secured user mode and creating the encrypted luks volumes on
+                disk.
 
 
-                If the image is not signed, the key enrollment will fail, and the
+                If the image is not signed, the key enrollment will fail, and
+                the
 
                 flasher will enter a loop trying to enroll them and rebooting.
 
 
-                Instead, skip the key enrollment if the image is not signed, resulting
+                Instead, skip the key enrollment if the image is not signed,
+                resulting
 
                 in a non secure-boot installation.
               footer:
@@ -17049,7 +17618,8 @@
 
                 old hooks from, the EFI partition must be bind-mounted as well
 
-                otherwise the /mnt/boot/EFI symlink is invalid and rollback fails
+                otherwise the /mnt/boot/EFI symlink is invalid and rollback
+                fails
 
                 to deploy files into that directory.
               footer:
@@ -17255,7 +17825,8 @@
               body: >
                 iptables takes a file lock at /run/xtables.lock. By default, if
 
-                the file is locked, iptables will fail with error. When that happens,
+                the file is locked, iptables will fail with error. When that
+                happens,
 
                 the iptables rules won't be configured, and the shared mode
 
@@ -17323,10 +17894,12 @@
                 This EFI image contains the secure boot certificates and when
                 executed it
 
-                is supposed to load the keys into the respective secure boot slots.
+                is supposed to load the keys into the respective secure boot
+                slots.
 
 
-                We don't use this binary in our secure boot implementation, but currently
+                We don't use this binary in our secure boot implementation, but
+                currently
 
                 the build breaks as the binary is installed but not packaged.
               footer:
@@ -17407,7 +17980,8 @@
                 to a new maximum of 2048.
 
 
-                See https://github.com/darkk/redsocks/blob/19b822e345f6a291f6cff6b168f1cfdfeeb2cd7d/base.c#L419
+                See
+                https://github.com/darkk/redsocks/blob/19b822e345f6a291f6cff6b168f1cfdfeeb2cd7d/base.c#L419
               footer:
                 Change-type: patch
                 change-type: patch
@@ -17691,14 +18265,17 @@
               body: >
                 The previous method of disabling NTP by stopping the nameserver
 
-                (dnsmasq) relied on the dnsmasq unit not being reactivated before the
+                (dnsmasq) relied on the dnsmasq unit not being reactivated
+                before the
 
                 test completed.
 
 
-                Instead, disable NTP by blocking ntp.org in the local dnsmasq instance
+                Instead, disable NTP by blocking ntp.org in the local dnsmasq
+                instance
 
-                using a dbus method call. NTP is re-enabled as before, by restarting
+                using a dbus method call. NTP is re-enabled as before, by
+                restarting
 
                 dnsmasq.
               footer:
@@ -17902,7 +18479,8 @@
                         Custom actions can only use certain secrets and
                         single-dimension
 
-                        run matrices. By running an entirely separate job after Flowzone
+                        run matrices. By running an entirely separate job after
+                        Flowzone
 
                         is successful we have a lot more options.
                       footer:
@@ -18091,11 +18669,13 @@
                 In rare cases (believed to be caused by a non-atomic file
                 creation and
 
-                writing operation in containerd), we end up with an empty file at
+                writing operation in containerd), we end up with an empty file
+                at
 
                 `/mnt/data/docker/containerd/daemon/io.containerd.grpc.v1.introspection/uuid`.
 
-                This causes `ctr version` (and hence the health check) to fail. See
+                This causes `ctr version` (and hence the health check) to fail.
+                See
 
                 https://github.com/balena-os/balena-engine/issues/322
 
@@ -18103,13 +18683,16 @@
                 This commit addresses this issue in two ways:
 
 
-                1. Before running `ctr version`, we check if the uuid file exists and is
+                1. Before running `ctr version`, we check if the uuid file
+                exists and is
                    empty. If so, we remove it. (The subsequent execution of `ctr
                    version` by the healthcheck will create the file again.)
-                2. After running `ctr version`, we check if the uuid file was really
+                2. After running `ctr version`, we check if the uuid file was
+                really
                    created and is not empty.
 
-                In both cases, when an empty uuid file is detected, we log the event to
+                In both cases, when an empty uuid file is detected, we log the
+                event to
 
                 help us confirm our hypothesis about the root cause.
               footer:
@@ -18213,16 +18796,19 @@
                 If the signing server's response is anything other than
                 successful, such
 
-                as with an authentication failure or bad request, the HTTP status code
+                as with an authentication failure or bad request, the HTTP
+                status code
 
                 and response are hidden due to the --silent flag passed to cURL.
 
 
-                Drop the stdio redirect to the output file along with the --silent flag,
+                Drop the stdio redirect to the output file along with the
+                --silent flag,
 
                 and instead use the -o parameter to output the response to the
 
-                appropriate file on success. This allows the status code and response to
+                appropriate file on success. This allows the status code and
+                response to
 
                 be shown in the logs upon failure.
               footer:
@@ -18244,12 +18830,14 @@
                 meta-openembedded, so that all improvements are merged now.
 
 
-                Excluded from it are `iwd` and `dhcpcd` daemon configurations that are
+                Excluded from it are `iwd` and `dhcpcd` daemon configurations
+                that are
 
                 not used by us.
 
 
-                Default NM firewall in meta-openembedded is `nftables` where we are still
+                Default NM firewall in meta-openembedded is `nftables` where we
+                are still
 
                 using `iptables`.
 
@@ -18257,11 +18845,14 @@
                 The new recipe relies on `meson` as a build system now.
 
 
-                The .bbapend file that contains modifications specific to balena is preserved.
+                The .bbapend file that contains modifications specific to balena
+                is preserved.
 
-                Only `balena-client-id.patch` is removed as it references code that no longer
+                Only `balena-client-id.patch` is removed as it references code
+                that no longer
 
-                exists. This is because the internal systemd DHCPv4 client code that NM used
+                exists. This is because the internal systemd DHCPv4 client code
+                that NM used
 
                 is now replaced by nettools' n-dhcp4 implementation.
 
@@ -18289,7 +18880,8 @@
                 so we reuse the fixed version from upstream.
 
 
-                The symptom is that DNS servers provided by DHCP are not being used.
+                The symptom is that DNS servers provided by DHCP are not being
+                used.
 
 
                 Closes #2907
@@ -18473,7 +19065,8 @@
                         a unique subnet that is not in use.
 
 
-                        The DinD daemon in the core service will also start with a non-default
+                        The DinD daemon in the core service will also start with
+                        a non-default
 
                         subnet.
                       footer:
@@ -18509,11 +19102,14 @@
                 When unlocking LUKS devices, udev events initializing the DM
                 devices are still
 
-                generated in the background even after cryptsetup luksOpen returns. We need to
+                generated in the background even after cryptsetup luksOpen
+                returns. We need to
 
-                wait for the udev processing to finish before killing udev and cleaning up
+                wait for the udev processing to finish before killing udev and
+                cleaning up
 
-                the udev database to avoid having to deal with partially initialized devices
+                the udev database to avoid having to deal with partially
+                initialized devices
 
                 or corrupted udev database in the target OS.
               footer:
@@ -18618,9 +19214,11 @@
                 Our initramfs is built into the kernel, which is always
                 compressed.
 
-                Disable redundant initramfs compression, which should save some CPU
+                Disable redundant initramfs compression, which should save some
+                CPU
 
-                cycles during build and boot, as well as improving compression ratio.
+                cycles during build and boot, as well as improving compression
+                ratio.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -18638,16 +19236,21 @@
                 In the current state the cryptsetup initrd script tries to
                 unlock all
 
-                LUKS volumes in the system using the TPM. This includes user-defined LUKS
+                LUKS volumes in the system using the TPM. This includes
+                user-defined LUKS
 
-                volumes that, if present, fail to unlock and make the system unbootable.
+                volumes that, if present, fail to unlock and make the system
+                unbootable.
 
-                We should also not touch user-defined volumes in the first place.
+                We should also not touch user-defined volumes in the first
+                place.
 
 
-                This patch modifies the cryptsetup script to only unlock LUKS volumes
+                This patch modifies the cryptsetup script to only unlock LUKS
+                volumes
 
-                that are on the OS drive (same block device as the EFI partition).
+                that are on the OS drive (same block device as the EFI
+                partition).
               footer:
                 Change-type: patch
                 change-type: patch
@@ -18904,12 +19507,16 @@
 
                 ```
 
-                /dev/sdd2: LABEL="flash-rootA" UUID="5585296a-c183-4b10-89ae-20607e5604be" TYPE="ext4" PARTLABEL="resin-rootA" PARTUUID="582478f2-be4b-4279-9124-536385c9551d"
+                /dev/sdd2: LABEL="flash-rootA"
+                UUID="5585296a-c183-4b10-89ae-20607e5604be" TYPE="ext4"
+                PARTLABEL="resin-rootA"
+                PARTUUID="582478f2-be4b-4279-9124-536385c9551d"
 
                 ```
 
 
-                This commit fixes the inconsistency as the PARTLABEL is used as a fallback
+                This commit fixes the inconsistency as the PARTLABEL is used as
+                a fallback
 
                 method to identify devices.
               footer:
@@ -19094,11 +19701,14 @@
                 Not all the boards we support have the redsocks uid as 995 in
                 their rootfs so let's
 
-                fetch the actual redsocks uid from the DUT before running the proxy tests and
+                fetch the actual redsocks uid from the DUT before running the
+                proxy tests and
 
-                update that in the docker-compose.yml. We do so because the REDSOCKS_UID value
+                update that in the docker-compose.yml. We do so because the
+                REDSOCKS_UID value
 
-                isn't substituted in the compose if the variable, even if it is passed trough
+                isn't substituted in the compose if the variable, even if it is
+                passed trough
 
                 the cli.
               footer:
@@ -19130,19 +19740,23 @@
                 Enabling CONFIG_KERNEL_ZSTD=y improves the compression ratio
                 compared
 
-                to gzip while being faster to decompress. With kernel 5.15 in balenaOS
+                to gzip while being faster to decompress. With kernel 5.15 in
+                balenaOS
 
                 v2.105, we see the 24 MB kernel compress to approximately 19 MB.
 
 
-                Zstd support was added in commit 48f7ddf, first introduced in kernel
+                Zstd support was added in commit 48f7ddf, first introduced in
+                kernel
 
                 v5.9. Enable this config unconditionally in supported kernels.
 
 
-                Note that not every architecture and device support this option, but in
+                Note that not every architecture and device support this option,
+                but in
 
-                those cases, Kconfig will automatically disable it as HAVE_ZSTD is also
+                those cases, Kconfig will automatically disable it as HAVE_ZSTD
+                is also
 
                 missing.
               footer:
@@ -19162,7 +19776,8 @@
                 Generate a bmap file from the sparse image to allow for punching
                 holes
 
-                in the disk image ranges that were unmapped after building. This data is
+                in the disk image ranges that were unmapped after building. This
+                data is
 
                 lost during compression, and the bmapfile allows for recreating,
 
@@ -19232,12 +19847,14 @@
                         eb69ff445fe0cac4f2060e67fa6994e61c3ca4b9.
 
 
-                        Hardcoding the bridge address like this results in conflicts
+                        Hardcoding the bridge address like this results in
+                        conflicts
 
                         when multiple instances are running on one jenkins node.
 
 
-                        A new solution for local workstation testing will have to be
+                        A new solution for local workstation testing will have
+                        to be
 
                         considered.
                       footer:
@@ -19278,7 +19895,8 @@
                         Instead of retrying to get the DUT IP address 120 times
                         on a 1 seconds interval,
 
-                        let's reduce it to 30 times because the resolveLocalTarget which we call will
+                        let's reduce it to 30 times because the
+                        resolveLocalTarget which we call will
 
                         timeout too in 15 seconds:
 
@@ -19286,7 +19904,8 @@
                         https://github.com/balena-os/leviathan-worker/blob/master/lib/helpers/index.ts#L162
 
 
-                        So reducing the retries number to 30 will effectly bring the total combined timeout to a maximum of 8 minutes.
+                        So reducing the retries number to 30 will effectly bring
+                        the total combined timeout to a maximum of 8 minutes.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -19323,7 +19942,8 @@
                         The testbot AP is visible and is discovered during a
                         scan.
 
-                        Let's remove the hidden attribute as it may cause problems
+                        Let's remove the hidden attribute as it may cause
+                        problems
 
                         for the 243390-rpi wireless tests.
                       footer:
@@ -19477,9 +20097,11 @@
                 There are two GRUB config variants - one for regular devices and
                 one
 
-                for devices with FDE enabled. This commit makes flasher include the latter
+                for devices with FDE enabled. This commit makes flasher include
+                the latter
 
-                in the boot partition when secure boot and FDE is included in the image.
+                in the boot partition when secure boot and FDE is included in
+                the image.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -19607,7 +20229,8 @@
                 get_part_number_by_label expects the block device name without
                 the /dev/
 
-                prefix, flasher uses this correctly in all but one place, this patch fixes it.
+                prefix, flasher uses this correctly in all but one place, this
+                patch fixes it.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -19620,7 +20243,8 @@
               body: >
                 On most device types rootA and rootB are partitions 2 and 3
 
-                but with LUKS encryption and boot/EFI split they are shifted to 3 and 4
+                but with LUKS encryption and boot/EFI split they are shifted to
+                3 and 4
               footer:
                 Change-type: patch
                 change-type: patch
@@ -19646,7 +20270,8 @@
                 We are using two variants of GRUB configs - one for
                 LUKS-encrypted OS
 
-                and the other one for the rest. HUP needs to acknowledge this and use
+                and the other one for the rest. HUP needs to acknowledge this
+                and use
 
                 the correct one based on the system being updated.
               footer:
@@ -19673,7 +20298,8 @@
                 On full disk encrypted devices the EFI partition is a soft link
                 in the
 
-                boot partition. This commit fixes detecting files in the EFI partition
+                boot partition. This commit fixes detecting files in the EFI
+                partition
 
                 from the boot partition.
               footer:
@@ -19689,7 +20315,8 @@
                 On full disk encrypted devices the EFI partition is a soft link
                 in the
 
-                boot partition. This commit fixes detecting files in the EFI partition
+                boot partition. This commit fixes detecting files in the EFI
+                partition
 
                 from the boot partition.
               footer:
@@ -19709,9 +20336,11 @@
                   |-sda2                                          8:2    0   42M  0 part
                   | `-luks-a91cd125-9e4c-45e6-b3f4-1e9b4ec9e5b9 250:0    0   40M  0 crypt /mnt/boot
 
-                This commit allows extracting the physical device (sdaN) whic is needed
+                This commit allows extracting the physical device (sdaN) whic is
+                needed
 
-                to extract the partition index using sysfs both for luks or standard
+                to extract the partition index using sysfs both for luks or
+                standard
 
                 devices.
               footer:
@@ -19801,7 +20430,8 @@
                 container and the DUT does not allow to ssh as a non-root user.
 
 
-                Run ssh from the worker to test local SSH authentication with a cloud
+                Run ssh from the worker to test local SSH authentication with a
+                cloud
 
                 user.
               footer:
@@ -19817,14 +20447,17 @@
                 Given that testbot devices use a tunnel to specific ports to
                 communicate
 
-                with the DUT that is established with the suite-generated keys, using
+                with the DUT that is established with the suite-generated keys,
+                using
 
-                a different keypair for the ssh-auth test would require to tear down and
+                a different keypair for the ssh-auth test would require to tear
+                down and
 
                 re-establish the tunnel.
 
 
-                It's easier to just use the existing key pair in the ssh-auth test.
+                It's easier to just use the existing key pair in the ssh-auth
+                test.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -19838,7 +20471,8 @@
                 Using two set of keys, the one created by the suite to
                 authenticate by
 
-                the proxy and a new custom key, is tricky as when running on testbot the
+                the proxy and a new custom key, is tricky as when running on
+                testbot the
 
                 key is used to establish the tunnel between core and DUT.
 
@@ -19950,12 +20584,14 @@
                 When adding a kernel configuration conditional in a provided
                 kernel
 
-                version, make the check include the provided kernel version as that is
+                version, make the check include the provided kernel version as
+                that is
 
                 the intuitive way to understand it.
 
 
-                The two places that use this function already used it in this way.
+                The two places that use this function already used it in this
+                way.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -19984,7 +20620,8 @@
               body: >
                 chrony 4.2 introduces security hardening in the
 
-                service definition that removes the CAP_SYS_ADMIN permission, affecting
+                service definition that removes the CAP_SYS_ADMIN permission,
+                affecting
 
                 the way healthdog uses execve to become chronyd.
 
@@ -19992,7 +20629,8 @@
                 commit 83f96efdfd2d (examples: harden systemd services)
 
 
-                This commits works around it by allowing all members of the service's
+                This commits works around it by allowing all members of the
+                service's
 
                 control group to send notification messages.
               footer:
@@ -20072,7 +20710,8 @@
                 Add the wireguard module by default so it is included in all
                 device
 
-                types. This is a frequently requested by customers and will avoid having
+                types. This is a frequently requested by customers and will
+                avoid having
 
                 to patch individual device repositories.
               footer:
@@ -20104,12 +20743,15 @@
                 There are two sets of keys used in this test, one stored in
                 `/root/id`
 
-                which is created by the cloud suite to SSH via the proxy server, and
+                which is created by the cloud suite to SSH via the proxy server,
+                and
 
-                a custom key stored in `/root/test_id` used in some of the subtests.
+                a custom key stored in `/root/test_id` used in some of the
+                subtests.
 
 
-                Fix the test cases using the custom key to use the correct private key.
+                Fix the test cases using the custom key to use the correct
+                private key.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -20167,7 +20809,8 @@
                 configuration and starting the `openvpn` service unit.
 
 
-                As the `openvpn` service units stops `os-config`, it might not get to
+                As the `openvpn` service units stops `os-config`, it might not
+                get to
 
                 restart the supervisor.
 
@@ -20265,12 +20908,15 @@
                 The sshd daemon is configured to fetch keys from the API for
                 local
 
-                user connections. The script that fetches the keys, cloud-public-sshkeys,
+                user connections. The script that fetches the keys,
+                cloud-public-sshkeys,
 
-                sources balena-config-vars and is run as an exclusive non-root user.
+                sources balena-config-vars and is run as an exclusive non-root
+                user.
 
 
-                Let's set the correct permissions for this file to allow not to break
+                Let's set the correct permissions for this file to allow not to
+                break
 
                 the above.
 
@@ -20301,12 +20947,14 @@
                 database and files modified outside of the pseudo context [0].
 
 
-                This will occasionally cause builds to fail in the do_deploy step of the
+                This will occasionally cause builds to fail in the do_deploy
+                step of the
 
                 kernel-devsrc recipe. [1]
 
 
-                Fix this by not removing the kernel_source tarball in the do_deploy
+                Fix this by not removing the kernel_source tarball in the
+                do_deploy
 
                 step.
 
@@ -20356,7 +21004,8 @@
                 The old test no longer matches on full disk paths including
                 /dev, which
 
-                can potentially result in the installation disk not being excluded from
+                can potentially result in the installation disk not being
+                excluded from
 
                 the pool of installation targets.
 
@@ -20377,9 +21026,11 @@
                 Previously, globs such as 'md/balena{,_*}' and 'mmcblk?' weren't
                 being
 
-                properly expanded, resulting in the old behavior of explicit lists of
+                properly expanded, resulting in the old behavior of explicit
+                lists of
 
-                disks continuing to work, but consolidated globs matching multiple disks
+                disks continuing to work, but consolidated globs matching
+                multiple disks
 
                 would not.
 
@@ -20497,7 +21148,8 @@
                 Since kirkstone tasks have network access disabled by default so
                 we need
 
-                to enable it explicitly for tasks that talk to the signing service.
+                to enable it explicitly for tasks that talk to the signing
+                service.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -20801,7 +21453,8 @@
                 Handle ENOENT ErrnoException when attempting to unwrap a
                 non-flasher
 
-                image in HUP tests. This mirrors a similar change made in ce2d33ad8.
+                image in HUP tests. This mirrors a similar change made in
+                ce2d33ad8.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -20953,7 +21606,8 @@
 
                 ```
 
-                ERROR: libical-2.0.0-r0 do_package: QA Issue: libical: Files/directories were installed but not shipped in any package:
+                ERROR: libical-2.0.0-r0 do_package: QA Issue: libical:
+                Files/directories were installed but not shipped in any package:
 
                 /usr/lib/cmake
 
@@ -21031,7 +21685,8 @@
               body: >
                 Newer versions fail on the configuration step with:
 
-                Requested 'libcrypto >= 1.1.0' but version of OpenSSL-libcrypto is 1.0.2o
+                Requested 'libcrypto >= 1.1.0' but version of OpenSSL-libcrypto
+                is 1.0.2o
               footer:
                 Change-type: patch
                 change-type: patch
@@ -21151,14 +21806,17 @@
                 This config file hasn't been used since commit 2db88c2, which
                 unified
 
-                how managed and unmanaged images operate. Since that commit, openvpn
+                how managed and unmanaged images operate. Since that commit,
+                openvpn
 
-                starts up if the config file at /etc/openvpn/openvpn.conf is found, and
+                starts up if the config file at /etc/openvpn/openvpn.conf is
+                found, and
 
                 otherwise remains inactive. This file is populated by os-config.
 
 
-                Remove the old config to prevent misdirection and cleanup the layer.
+                Remove the old config to prevent misdirection and cleanup the
+                layer.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -21210,26 +21868,32 @@
                 Chronyd checks that the directory specified as `sourcedir` in
                 `chrony.conf`
 
-                (in this case `/var/chrony`) is not world accessible if it exists (chrony
+                (in this case `/var/chrony`) is not world accessible if it
+                exists (chrony
 
-                will create it correctly if it does not exist), and does not start
+                will create it correctly if it does not exist), and does not
+                start
 
                 if that's the case.
 
 
-                The way that the `/var/chrony` is created when it does not exist opens
+                The way that the `/var/chrony` is created when it does not exist
+                opens
 
-                the possibility of the directory existing with the wrong permissions and
+                the possibility of the directory existing with the wrong
+                permissions and
 
                 hitting this problem.
 
 
-                This commit creates the directory with the correct permissions from the
+                This commit creates the directory with the correct permissions
+                from the
 
                 start to avoid the race condition.
 
 
-                It also changes the permissiong from 750 to 770 to match what chrony
+                It also changes the permissiong from 750 to 770 to match what
+                chrony
 
                 does (see
 
