@@ -1,0 +1,119 @@
+#!/bin/sh
+set -o errexit
+
+# Script which writes the appropriate
+# device tree with embedded cmdline
+# and updates the kernel, as well as
+# the rest of the bootloader binaries
+
+. /usr/libexec/os-helpers-fs
+. /usr/sbin/balena-config-vars
+
+# See tegra-flash-dry package for instructions on how to generate
+# UEFI Capsule
+
+DURING_UPDATE=${DURING_UPDATE:-0}
+esp_mount="/tmp/esp/"
+efivars_dir="${esp_mount}EFI/NVDA/Variables/"
+capsule_dir="${esp_mount}EFI/UpdateCapsule/"
+
+# See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
+platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
+platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
+os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
+capsule_name="TEGRA_BL_T194.Cap.gz"
+tmp_file="/tmp/platformspecfile.bin"
+
+device_type="jetson-agx-xavier-devkit"
+
+source /usr/bin/uefi_common.func
+
+boardspec=$(tegra-boardspec 2>/dev/null)
+TegraPlatformSpec="${boardspec}-${device_type}-"
+compatspec=$(echo "$boardspec" | gen_compat_spec)
+TegraPlatformCompatSpec="${compatspec}-${device_type}-"
+
+echo "TegraPlatformSpec is: $TegraPlatformSpec"
+echo "TegraPlatformCompatSpec is: $TegraPlatformCompatSpec"
+
+do_capsule_update() {
+    echo "Writing of jetson efivars triggered from old OS hook"
+    if [ ! -d ${esp_mount} ]; then
+        mkdir -p ${esp_mount}
+        echo "created temporary mount for esp partition"
+    else
+        echo "${esp_mount} already exists"
+    fi
+
+    # Print current slot status
+    /usr/sbin/nvbootctrl dump-slots-info || true
+
+    esp_part=$(get_state_path_from_label "esp")
+    echo "esp partition is ${esp_part}"
+    mount -t vfat ${esp_part} ${esp_mount}
+
+    if [ ! -d ${efivars_dir} ]; then
+        mkdir -p ${efivars_dir}
+        echo "created ${efivars_dir}"
+    else
+        echo "${efivars_dir} already exists"
+    fi
+
+    if [ ! -d ${capsule_dir} ]; then
+        mkdir -p ${capsule_dir}
+        echo "created ${capsule_dir}"
+    else
+        echo "${capsule_dir} already exists"
+    fi
+
+    if [ -d $efivars_dir ]; then
+        # If the file already exists, writing to it will fail
+        # causing the entire hook to fail
+        if [ ! -e ${platform_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
+            dd if=${tmp_file} of=${platform_spec_efivar}
+            echo "PlatformSpec variable created - ${TegraPlatformSpec}"
+        else
+            echo "PlatformSpec variable already exists"
+        fi
+
+        if [ ! -e ${platform_compat_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+            dd if=${tmp_file} of=${platform_compat_spec_efivar}
+            echo "PlatformCompatSpec variable created - ${TegraPlatformCompatSpec}"
+        else
+            echo "PlatformCompatSpec variable already exists"
+        fi
+
+        printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
+        dd if=${tmp_file} of=${os_indications_efivar}
+        echo "OsIndications variable written"
+    else
+        echo "esp not accessible!"
+        return 1
+    fi
+
+
+    capsule_file="/opt/tegra-binaries/${capsule_name}"
+    gunzip -k -c ${capsule_file} | dd of=${capsule_dir}/TEGRA_BL.Cap
+
+    umount /tmp/esp
+
+    if [ -d ${esp_mount} ]; then
+        echo "Removing ${esp_mount}"
+        rmdir ${esp_mount}
+    else
+        echo "${esp_dir} not found"
+    fi
+
+    return 0
+}
+
+if do_capsule_update ; then
+    echo "Capsule update triggered"
+else
+    echo "Could not trigger capsule update"
+fi
+

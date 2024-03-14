@@ -455,7 +455,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +    CleanLine = CleanExtLinuxLine (FileLine);
 +    if (*CleanLine != CHAR_NULL) {
 +      if (StrStr(CleanLine, L"resin_root_part=")) {
-+       *RootPart = StrDecimalToUintn(CleanLine + 16);
++       *RootPart = StrHexToUintn(CleanLine + 16);
 +       Print(L"RootPart is %d\r\n", *RootPart);
 +      } else if (StrStr(CleanLine, L"upgrade_available=")) {
 +        *UpgradeAvailable = StrDecimalToUintn(CleanLine + 18);
@@ -560,8 +560,8 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +#define BALENA_BOOT_CONF_PATH          L"resinOS_uEnv.txt"
 +#define BALENA_BOOTCOUNT_FILE_PATH     L"bootcount.env"
 +#define MAX_RESINOS_UENV_SIZE          256
-+#define BALENA_ROOTFS_INDEX_A          35
-+#define BALENA_ROOTFS_INDEX_B          36
++#define BALENA_ROOTFS_INDEX_A          44
++#define BALENA_ROOTFS_INDEX_B          45
 +#define BALENA_OS_BC_LIM               3
 +#define BALENA_EXTRA_UENV_FILE         L"extra_uEnv.txt"
  #define BOOTIMG_BASE_NAME       L"kernel"
