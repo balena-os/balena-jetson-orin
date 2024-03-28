@@ -1,4 +1,828 @@
 - commits:
+    - subject: Update layers/meta-balena to 90d838ae943ffa72108522bfcc4370105a3be40c
+      hash: d7549411c2992d8627257690c37de27a908856b8
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 90d838ae943ffa72108522bfcc4370105a3be40c
+        changelog-entry: Update layers/meta-balena to 90d838ae943ffa72108522bfcc4370105a3be40c
+      author: Self-hosted Renovate Bot
+      nested:
+        - commits:
+            - subject: mv docs/{,uefi-}secure-boot.md
+              hash: 18e35c55cb486d93aadc43df1f5e0db0ef840c03
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "docs: secure-boot: update for PCR7 sealing"
+              hash: e3c6131e6979390292c72e5e18c96d83165096fe
+              body: >
+                Update secure boot docs to reflect changes made for PCR7
+                sealing,
+
+                including:
+
+
+                * No first boot needed anymore to reach secure state
+
+                * PCR roles
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "os-helpers: compute_pcr7: merge event log digests"
+              hash: e10d67084621e5ce10f14557f2466e91ff684b41
+              body: >
+                The main variables measured into PCR7 to ensure secure boot
+
+                configuration integrity are the state and EFI vars, including
+                PK, KEK,
+
+                db, dbx, etc.
+
+
+                However, some systems have firmware that will measure other,
+                unexpected
+
+                events, such as "DMA Protection Disabled" (related to a Windows
+                feature
+
+                [0]), or "Unknown event type" with strange data.
+
+
+                These events can't be predicted, and other devices may have
+                different
+
+                measured events that aren't compliant with the TCG spec, so
+                attempt to
+
+                check the TPM event log and extend our digest with any unknown
+                events
+
+                that fit the bill.
+
+
+                [0]
+                https://learn.microsoft.com/en-us/windows/security/hardware-security/kernel-dma-protection-for-thunderbolt
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: Update policy's PCR7 value in hostapp-update hook
+              hash: f05deea2cd1003e186fa7756eecf8f113db26a7f
+              body: >
+                When performing a hostapp-update, we may touch file and efivars
+                that are
+
+                measured into PCR7. Re-generate the predicted value and reseal
+                the LUKS
+
+                passphrase using this new digest.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "os-helpers-tpm2: compute_pcr7: allow overriding efivars"
+              hash: 3e0911a5c4317ea4b9ca03a7816ce600e5b202c5
+              body: >
+                When computing the digest of PCR7, it may be necessary to
+                override the
+
+                input variables used, in order to predict the value on the next
+                boot.
+
+                Allow these inputs to be overridden using function parameters.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: Move policy update to HUP commit hook
+              hash: 80f9bd84de394aa728ed802a2d4c02f3a87f370b
+              body: >
+                When migrating the TPM2 policy used to secure the LUKS
+                passphrase to use
+
+                different PCRs, we temporarily want to maintain fallback
+                capability in
+
+                case the newly installed hostapp doesn't pass healthchecks. This
+                allows
+
+                the system to boot back into the original OS and try again.
+
+
+                In order to do so, we leave the passphrase in place with the old
+                PCR
+
+                authentication policy. The cryptsetup hook in the initramfs will
+                try
+
+                PCRs 0,2,3,7 and if those don't work we fallback to the original
+                PCRs.
+
+
+                Once the new system successfully boots, we'll re-encrypt the
+                passphrase
+
+                and use the new PCRs to create a policy to secure the key.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "rollback-health: move apply-dbx to HUP commit hook"
+              hash: 3d78d26366b284313ea718adb8d5498ac4f27e1f
+              body: >
+                This operation is done after rollback-health completes and the
+                new OS is
+
+                running to ensure the OS is healthy before appending to the
+                forbidden
+
+                signatures list.
+
+
+                Move this out of rollback-health and into a HUP commit hook,
+                which
+
+                allows it to be excluded from OS images that don't use EFI or
+                support
+
+                secure boot.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "hostapp-hooks: include 0-signed-update only for efi"
+              hash: 328222014146f0116e0208443f3e255d0e85ef15
+              body: >
+                This hook is only applicable for EFI machines. Include it in the
+                build
+
+                only when MACHINE_FEATURES includes EFI.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "secure boot: seal luks passphrase w/ PCR7"
+              hash: 86460d1fa00e40caa1e3edd3ebed5d2098dafe31
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "os-helpers-tpm2: separate authentication from crypto"
+              hash: 6a4e3cd2f48dc7e48acc35f04200317397d6d0b1
+              body: >
+                When encrypting the LUKS passphrase, we need the ability to
+                construct a
+
+                policy that can logically OR together multiple policies, such as
+                when
+
+                the machine may or may not measure binaries loaded through EFI
+                boot
+
+                services into PCR7.
+
+
+                We also need the ability to update the sealing policy to revoke
+
+                previously valid configurations, such as after
+                hostapp-healthcheck
+
+                completes successfully. Ideally, this should be completed before
+
+                modifying any efi variables, to prevent the system from becoming
+
+                unbootable in the event of an interrupted update.
+
+
+                These requirements necessitate the ability to create sealing
+                policies
+
+                and authenticate against them outside of the
+                hw_{en,de}crypt_passphrase
+
+                functions.
+
+
+                This commit allows the caller to setup the sealing policy when
+
+                encrypting, and choose what kind of authentication to use when
+
+                decrypting.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "tcgtool: new recipe"
+              hash: 5217a6c8e8599f18ef84d319fb41049c476be265
+              body: >
+                Create recipe for tcgtool, a program that replicates the
+                structures used
+
+                to represent data measured and hashed to extend TPM PCRs.
+
+
+                This is useful to compute a PCR hash at runtime, which is
+                normally
+
+                computed by the firmware before the OS boots. This allows for
+                adjusting
+
+                a TPM2 policy to unlock the disk encryption passphrase with the
+                updated
+
+                state on the next boot.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "recipes-bsp: add recipe for GRUB 2.12"
+              hash: 27808e2da6740bcd17d435aa15d644fef7b2b69c
+              body: >
+                This version changes how kernel images are booted, passing them
+                to the EFI
+
+                boot services LoadImage method, which uses EFISTUB and retains
+                the TPM
+
+                event log in memory.
+
+
+                Copy this recipe from Poky rev 43f9098. This may be removed once
+                Poky is
+
+                bumped to Scarthgap (5.0).
+
+
+                More info: https://edk2.groups.io/g/devel/topic/93730585
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "tests: skip bootloader config integrity check"
+              hash: ad70f51fcc899dd3ec521c280c0a074302f7498f
+              body: >
+                GRUB 2.12 no longer outputs the escape codes the previous
+                version did.
+
+                Skip this test until we can patch the bootloader to output a
+                string we
+
+                can match against.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+            - subject: "secureboot: enroll kernel hash in db for EFISTUB"
+              hash: 45fe30fcc01bb2f3c423c11e2ea244546da30d57
+              body: >
+                Generate hash for second stage bootloader and enroll in db
+                efivar to
+
+                allow the firmware to verify the image for booting when using
+                EFISTUB.
+
+
+                This is necessary to update to GRUB 2.12, which passes the EFI
+                image to
+
+                the EFI boot services LoadImage method, which then validates the
+                image
+
+                when secure boot is enabled.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Joseph Kogut <joseph@balena.io>
+                signed-off-by: Joseph Kogut <joseph@balena.io>
+              author: Joseph Kogut
+              nested: []
+          version: meta-balena-5.2.3
+          title: ""
+          date: 2024-03-22T08:48:01.071Z
+        - commits:
+            - subject: Update contributing-device-support with balena-info documentation
+              hash: a42c71a14701a2d06d3025abfbbbc869c52b062d
+              body: |
+                Info on the ascii art for consoles was missing, so we add that
+                in this commit.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alexandru Costache <alexandru@balena.io>
+                signed-off-by: Alexandru Costache <alexandru@balena.io>
+              author: Alexandru
+              nested: []
+          version: meta-balena-5.2.2
+          title: ""
+          date: 2024-03-20T03:17:05.884Z
+        - commits:
+            - subject: "networkmanager: Wait for iptables lock in shared dispatcher script"
+              hash: 374c4c32df59cc00e0b04d0c619f6fb98a69f1a5
+              body: >
+                The dispatcher script that moves around FORWARD rules of shared
+
+                interfaces currently calls iptables assuming it will always work
+
+                but in practice two iptables commands can not run in parallel
+
+                and we have occasionally seen the script fail with:
+
+
+                Another app is currently holding the xtables lock.
+
+                Perhaps you want to use the -w option?
+
+
+                This patch adds the -w option to make the script wait for the
+                lock
+
+                when necessary.
+
+
+                It also makes the script exit with an error code if anything
+                fails,
+
+                which will log the output as WARN instead of INFO as the errors
+
+                are easy to overlook at this moment.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Michal Toman <michalt@balena.io>
+                signed-off-by: Michal Toman <michalt@balena.io>
+              author: Michal Toman
+              nested: []
+          version: meta-balena-5.2.1
+          title: ""
+          date: 2024-03-18T17:11:28.023Z
+        - commits:
+            - subject: Update NetworkManager to version 1.46.0
+              hash: 9d88a4566b7a9afc7226df97b40d266f0ece64b6
+              body: >
+                This recipe is taken from meta-openembedded commit
+
+                f240c5cecf3d7ee75d5ec1ece4c412c94434a879 with the only changes
+                being that
+
+                we removed from it the init.d, iwd, and dhcpcd daemon
+                configurations which
+
+                are not used by us.
+
+
+                This is the latest stable version available.
+              footer:
+                Change-type: minor
+                change-type: minor
+                Changelog-entry: Update NetworkManager to version 1.46.0
+                changelog-entry: Update NetworkManager to version 1.46.0
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+          version: meta-balena-5.2.0
+          title: ""
+          date: 2024-03-16T12:02:30.009Z
+        - commits:
+            - subject: "mkfs-hostapp-native: Disable iptables features in yocto balena daemon"
+              hash: 1e563863caf75fc88a8e7c7f2ab15f65ad21ebe8
+              body: >
+                We don't need any iptables features in order to perform
+
+                hostapp-update in this build recipe, and it has no impact
+
+                on build output.
+
+
+                It does, however, improve compatbility with build environments
+                and
+
+                reduces the dependencies of the build host kernel.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: meta-balena-5.1.54
+          title: ""
+          date: 2024-03-13T06:45:02.830Z
+        - commits:
+            - subject: Update balena-supervisor to v16.1.5
+              hash: b15d808d021e647afc8c4da22f64dc9e7c929310
+              body: |
+                Update balena-supervisor from 16.1.4 to 16.1.5
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: Update fatrw to v0.2.21
+                      hash: 772702793c3ebf9bf3ac8119934436f2caa44bef
+                      body: |
+                        Update fatrw from 0.2.9 to 0.2.21
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Felipe Lalanne
+                      nested: []
+                  version: balena-supervisor-16.1.5
+                  title: ""
+                  date: 2024-03-12T13:33:05.116Z
+          version: meta-balena-5.1.53
+          title: ""
+          date: 2024-03-12T18:48:47.631Z
+        - commits:
+            - subject: "images: balena-image-initramfs: remove uneeded kernel image"
+              hash: f1ac14d114955678b62a0cbe661f71297e32a621
+              body: |
+                Remove the kernel image from the initramfs to save space.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "classes: kernel-balena-noimage: add extra space"
+              hash: 3696a0d8ad5f6d67903e3918bbe186300a2245ff
+              body: >
+                When appending a variable a space needs to be prefixed to create
+                a
+
+                space separated list.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-5.1.52
+          title: ""
+          date: 2024-03-11T15:55:46.939Z
+        - commits:
+            - subject: Update balena-supervisor to v16.1.4
+              hash: 932d20360314f8297c9b34f5940a95847cc48f58
+              body: |
+                Update balena-supervisor from 16.1.0 to 16.1.4
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: Update balena-register-device and its deps
+                      hash: 790f6b71e4c127a6c6078e3f3797992e78995d3b
+                      body: |
+                        This bumps the related dependencies
+
+                        - balena-register-device
+                        - balena-request
+                        - balena-auth
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Felipe Lalanne
+                      nested: []
+                  version: balena-supervisor-16.1.4
+                  title: ""
+                  date: 2024-03-08T14:10:19.423Z
+                - commits:
+                    - subject: Remove dependency on @balena/happy-eyeballs
+                      hash: 08727ed2b5f67c55b2469d3ee5c5e2857119521b
+                      body: >
+                        Node 20 now implements the happy eyeballs algorithm as
+                        part of its core
+
+                        `net` module, with the
+                        [autoSelectFamily](https://nodejs.org/docs/latest-v20.x/api/net.html#netgetdefaultautoselectfamily)
+                        option of `socket.connect`. This option defaults to
+                        `true`, meaning that a separate
+
+                        implementation of happy eyeballs is no longer needed.
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Felipe Lalanne
+                      nested: []
+                    - subject: Update Node to v20
+                      hash: b77dba20462df90ca720dae3fcacb84628fd5069
+                      body: >
+                        This updates the supervisor runtime to latest Node LTS
+                        version. There
+
+                        are no breaking changes related to this bump.
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Felipe Lalanne
+                      nested: []
+                  version: balena-supervisor-16.1.3
+                  title: ""
+                  date: 2024-03-07T16:10:24.150Z
+                - commits:
+                    - subject: Update typescript to v5
+                      hash: 6217546894e25c8216d305f231876fc888a6e407
+                      body: >
+                        This also updates code to use the default import syntax
+                        instead of
+
+                        `import * as` when the imported module exposes a
+                        default. This is needed
+
+                        with the latest typescript version.
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Felipe Lalanne
+                      nested: []
+                  version: balena-supervisor-16.1.2
+                  title: ""
+                  date: 2024-03-06T14:06:45.274Z
+                - commits:
+                    - subject: Update @balena/lint to v7
+                      hash: 988a1c9e9a2317a66f2be0a1dbddb89f8084014f
+                      body: >
+                        This updates balena lint to the latest version to enable
+                        eslint support
+
+                        and unblock Typescript updates. This is a huge number of
+                        changes as the
+
+                        linting rules are much more strict now, requiring
+                        modifiying most files
+
+                        in the codebase. This commit also bumps the test
+                        dependency `rewire` as
+
+                        that was interfering with the update of balena-lint
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Felipe Lalanne
+                      nested: []
+                  version: balena-supervisor-16.1.1
+                  title: ""
+                  date: 2024-03-04T18:16:11.250Z
+          version: meta-balena-5.1.51
+          title: ""
+          date: 2024-03-08T18:44:40.323Z
+        - commits:
+            - subject: "tests/device-tree: Rework to account for new form of setting dtoverlay
+                in config.txt by the supervisor"
+              hash: 12a0940ce31031e203364dd6c76a4fc07697133b
+              body: |
+                The supervisor will now write the following dtoverlay setting
+
+                "gpio-key,gpio=4,active_low=0,gpio_pull=down"
+
+                into config.txt in the following form:
+
+                dtoverlay=gpio-key
+                dtparam=gpio=4
+                dtparam=active_low=0
+                dtparam=gpio_pull=down
+
+                So we need to rework the test to account for these changes.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+          version: meta-balena-5.1.50
+          title: ""
+          date: 2024-03-07T11:28:39.221Z
+        - commits:
+            - subject: Update tests/leviathan digest to a677d89
+              hash: cb9142269bc348e6c0dbe99dfc8b95d4215c0cf4
+              body: Update tests/leviathan
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: Self-hosted Renovate Bot
+              nested:
+                - commits:
+                    - subject: Update Lock file maintenance
+                      hash: fad1b73fe8752efee01764264b4aecfd88faf584
+                      body: |
+                        Update
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Self-hosted Renovate Bot
+                      nested: []
+                  version: leviathan-2.29.64
+                  title: ""
+                  date: 2024-03-04T02:11:20.831Z
+          version: meta-balena-5.1.49
+          title: ""
+          date: 2024-03-06T18:33:42.003Z
+        - commits:
+            - subject: "hostapp-update-hooks: Soft include balena-config-defaults"
+              hash: a6cd568a3b3aec127e2ef5b9b480b657a3ea246e
+              body: >
+                a203bcdfd567c0cc4b4ed9de493513142cd7463f introduced a dependency
+
+                on /usr/sbin/balena-config-defaults to hostapp-update-hooks,
+                however
+
+                during HUP the script is not only executed in the "new" OS
+                container
+
+                but directly in the context of the "old" OS as well, so
+
+                /usr/sbin/balena-config-defaults needs to exist there.
+
+                The file was introduced in balenaOS v2.99.28, so trying to HUP
+
+                from anything before that will fail.
+
+
+                This patch changes this to a soft dependency so even if the file
+
+                is missing HUP will continue.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Michal Toman <michalt@balena.io>
+                signed-off-by: Michal Toman <michalt@balena.io>
+              author: Michal Toman
+              nested: []
+          version: meta-balena-5.1.48
+          title: ""
+          date: 2024-03-06T08:25:08.800Z
+        - commits:
+            - subject: "classes: kernel-balena: fix secureboot append"
+              hash: 78a00ffdbebfccabbbb2e891a4b50fa421117cac
+              body: |
+                Add missing space.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "classes: kernel-balena: correct dmcrypt dependencies"
+              hash: 7ee3a14c01b3fdb6a21a3a4b4758e719e9378d5f
+              body: |
+                Fixes the dm_crypt setting check config warning.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "classes: kernel-balena: separate kexec configuration"
+              hash: 693cd55fe098cc4675db28e76d7a174cbcbd8d3f
+              body: >
+                Only the EFI secure boot mechanism currently needs kexec
+                support, other
+
+                implementation will use the balena bootloader instead.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "kernel-balena: remove EFI specific settings"
+              hash: a5e3f7b25914e3b5b128675c7ca3df2eb7a3ccd8
+              body: >
+                The ZSTD support is not supported for all machines - restrict it
+                to those
+
+                that define EFI.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "kernel-balena: separate EFI specific secure boot configurations"
+              hash: 4f1dc09e6fb2de97f12302cb90b19a759e231277
+              body: |
+                These settings are specific to EFI and fail to apply for other
+                secure boot enabled platforms.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "kernel-balena: remove deprecated kernel configuration"
+              hash: 3c44c1417f7cfbe1ff8414f8e5845544167a5388
+              body: |
+                The NF_TABLES_SET module has been dropped from v5.10.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+            - subject: "kernel-balena: add nfsd kernel setting"
+              hash: 625c4021beba360662127d8ed4f929bb866dc9d6
+              body: |
+                This setting is moved from a device repository so it is common.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Alex Gonzalez <alexg@balena.io>
+                signed-off-by: Alex Gonzalez <alexg@balena.io>
+              author: Alex Gonzalez
+              nested: []
+          version: meta-balena-5.1.47
+          title: ""
+          date: 2024-03-03T20:18:56.488Z
+        - commits:
+            - subject: "resin_update_state_probe: ignore RAID members when looking for root"
+              hash: e984b21b0270729784735d99f222294be65afd20
+              body: >
+                At this moment resin_update_state_probe looks for the root
+                partition
+
+                by UUID and assumes that only a single device is returned. This
+
+                assumption breaks when the root is on a MD RAID1 device as not
+                only
+
+                the virtual MD device holds a filesystem with the given UUID,
+
+                each member does as well.
+
+
+                This patch makes resin_update_state_probe ignore devices
+
+                that are RAID members which in that case will only return
+
+                the MD device as expected.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Michal Toman <michalt@balena.io>
+                signed-off-by: Michal Toman <michalt@balena.io>
+              author: Michal Toman
+              nested: []
+          version: meta-balena-5.1.46
+          title: ""
+          date: 2024-03-02T01:20:54.562Z
+  version: 5.2.3
+  title: ""
+  date: 2024-03-28T16:50:34.655Z
+- commits:
     - subject: Update balena-yocto-scripts to 97ebe58289e398c96dbc6f789e0119010b85da7f
       hash: b9634502506fd172e8fc139ae2dc97a3f7099766
       body: Update balena-yocto-scripts
