@@ -1,13 +1,13 @@
 inherit kernel-resin deploy
 
-FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
+FILESEXTRAPATHS:append := ":${THISDIR}/files"
 
 SCMVERSION="n"
 
 # Switch nvmap to built-in to fix the kernel headers
-SRC_URI:append = " file://0001-fix-kernel-headers-test.patch \
-		file://0001-defconfig-Fix-build-failure.patch \
-"
+#SRC_URI:append = " file://0001-fix-kernel-headers-test.patch 
+#		file://0001-defconfig-Fix-build-failure.patch 
+#"
 BALENA_CONFIGS:remove = " mdraid"
 
 BALENA_CONFIGS:append = " debug_kmemleak "

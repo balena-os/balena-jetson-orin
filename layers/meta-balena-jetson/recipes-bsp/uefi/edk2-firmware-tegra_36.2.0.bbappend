@@ -1,13 +1,12 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-SRC_URI:append = " \ 
-    file://0004-Add-symbolic-links-support-32-5-2.patch;patchdir=.. \
-    file://0006-boot.patch;patchdir=.. \
-"
+#SRC_URI:append = " \ 
+#    file://0006-boot.patch;patchdir=.. 
+#"
 
-SRC_URI:append:jetson-agx-orin-devkit = " \
-    file://0005-Add-hup-and-rollback-support-agx-orin-32-5-2.patch;patchdir=.. \
-"
+#SRC_URI:append:jetson-agx-orin-devkit = " 
+#    file://0005-Add-hup-and-rollback-support-agx-orin-32-5-2.patch;patchdir=.. 
+#"
 
 SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \ 
     file://0005-L4TLauncher-hup-rollback-support-orin-nx.patch;patchdir=.. \
