@@ -29,7 +29,7 @@ Index: edk2-tegra/edk2/NetworkPkg/HttpBootDxe/HttpBootImpl.c
    EFI_STATUS              Status;
    HTTP_BOOT_IMAGE_TYPE    ImageType;
  
-+  AsciiPrint("\n HttpBootDxeLoadFile: Skip HTTP boot");
++  AsciiPrint("\n HttpBootDxeLoadFile: Force skip HTTP boot");
 +  return EFI_NO_MEDIA;
 +  
    if ((This == NULL) || (BufferSize == NULL) || (FilePath == NULL)) {
@@ -43,7 +43,7 @@ Index: edk2-tegra/edk2/NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c
    EFI_STATUS                  Status;
    EFI_STATUS                  MediaStatus;
  
-+  AsciiPrint("\n HttpBootDxeLoadFile: Skip PXE boot");
++  AsciiPrint("\n HttpBootDxeLoadFile: Force skip PXE boot");
 +  return EFI_NO_MEDIA;
 +
    if ((This == NULL) || (BufferSize == NULL) || (FilePath == NULL) || !IsDevicePathEnd (FilePath)) {
