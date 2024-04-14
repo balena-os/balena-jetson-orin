@@ -1,4 +1,22 @@
 - commits:
+    - subject: "tegra-binaries: Update Orin Nano Devkit NVME boot blob and UEFI capsule"
+      hash: 1554370bf44b3a1ee37cd2a7898b50da3f94da77
+      body: |
+        to disable network boot in the firmware. This was causing a 5 minute
+        delay in booting on some boards.
+      footer:
+        Changelog-entry: "tegra-binaries: Update Orin Nano Devkit NVME boot blob and
+          UEFI capsule"
+        changelog-entry: "tegra-binaries: Update Orin Nano Devkit NVME boot blob and
+          UEFI capsule"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.2.4+rev1
+  title: ""
+  date: 2024-04-14T14:10:57.794Z
+- commits:
     - subject: Update layers/meta-balena to 756d76ca12b7cbf2086bf6bad5f36b1117423d5f
       hash: 35510e8a903750aa39b662c49fbd5e87907f93af
       body: Update layers/meta-balena

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.2.4+rev1
+## (2024-04-14)
+
+* tegra-binaries: Update Orin Nano Devkit NVME boot blob and UEFI capsule [Alexandru Costache]
+
 # v5.2.4
 ## (2024-04-05)
 
