@@ -1,24 +1,28 @@
-Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/PlatformBootOrderLib.c
+Index: edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/InternalPlatformBootOrderLib.h
 ===================================================================
---- edk2-tegra.orig/edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/PlatformBootOrderLib.c
-+++ edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/PlatformBootOrderLib.c
-@@ -33,10 +33,6 @@ STATIC NVIDIA_BOOT_ORDER_PRIORITY  mBoot
-   { "scsi",     MAX_INT32, MESSAGING_DEVICE_PATH, MSG_SCSI_DP,           MAX_UINT8                },
-   { "usb",      MAX_INT32, MESSAGING_DEVICE_PATH, MSG_USB_DP,            MAX_UINT8                },
-   { "sata",     MAX_INT32, MESSAGING_DEVICE_PATH, MSG_SATA_DP,           MAX_UINT8                },
--  { "pxev4",    MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv4_DP,           MAX_UINT8                },
--  { "httpv4",   MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv4_DP,           NVIDIA_BOOT_TYPE_HTTP    },
--  { "pxev6",    MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv6_DP,           MAX_UINT8                },
--  { "httpv6",   MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv6_DP,           NVIDIA_BOOT_TYPE_HTTP    },
-   { "nvme",     MAX_INT32, MESSAGING_DEVICE_PATH, MSG_NVME_NAMESPACE_DP, MAX_UINT8                },
-   { "ufs",      MAX_INT32, MESSAGING_DEVICE_PATH, MSG_UFS_DP,            MAX_UINT8                },
-   { "sd",       MAX_INT32, MESSAGING_DEVICE_PATH, MSG_SD_DP,             MAX_UINT8                },
-@@ -45,7 +41,7 @@ STATIC NVIDIA_BOOT_ORDER_PRIORITY  mBoot
-   { "boot.img", MAX_INT32, MAX_UINT8,             MAX_UINT8,             NVIDIA_BOOT_TYPE_BOOTIMG },
- };
+--- edk2-nvidia.orig/Silicon/NVIDIA/Library/PlatformBootOrderLib/InternalPlatformBootOrderLib.h
++++ edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/InternalPlatformBootOrderLib.h
+@@ -39,7 +39,7 @@ typedef struct {
+   UINTN    FuncNum;
+ } NVIDIA_BOOT_ORDER_PRIORITY;
  
--#define DEFAULT_BOOT_ORDER_STRING  "boot.img,usb,sd,emmc,ufs"
-+#define DEFAULT_BOOT_ORDER_STRING  "boot.img,nvme,usb,sd,emmc,ufs"
- 
- STATIC
- INT32
+-#define DEFAULT_BOOT_ORDER_STRING   "boot.img,usb,sd,emmc,ufs"
++#define DEFAULT_BOOT_ORDER_STRING   "boot.img,nvme,usb,sd,emmc,ufs"
+ #define BOOT_ORDER_CLASS_SEPARATOR  ','
+ #define BOOT_ORDER_SBDF_SEPARATOR   ':'
+ #define BOOT_ORDER_SBDF_STARTER     '|'
+Index: edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/PlatformBootOrderLib.c
+===================================================================
+--- edk2-nvidia.orig/Silicon/NVIDIA/Library/PlatformBootOrderLib/PlatformBootOrderLib.c
++++ edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/PlatformBootOrderLib.c
+@@ -27,10 +27,6 @@ NVIDIA_BOOT_ORDER_PRIORITY  mBootPriorit
+   { "scsi",     MAX_INT32, MESSAGING_DEVICE_PATH, MSG_SCSI_DP,           MAX_UINT8,                MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
+   { "usb",      MAX_INT32, MESSAGING_DEVICE_PATH, MSG_USB_DP,            MAX_UINT8,                MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
+   { "sata",     MAX_INT32, MESSAGING_DEVICE_PATH, MSG_SATA_DP,           MAX_UINT8,                MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
+-  { "pxev4",    MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv4_DP,           MAX_UINT8,                MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
+-  { "httpv4",   MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv4_DP,           NVIDIA_BOOT_TYPE_HTTP,    MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
+-  { "pxev6",    MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv6_DP,           MAX_UINT8,                MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
+-  { "httpv6",   MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv6_DP,           NVIDIA_BOOT_TYPE_HTTP,    MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
+   { "nvme",     MAX_INT32, MESSAGING_DEVICE_PATH, MSG_NVME_NAMESPACE_DP, MAX_UINT8,                MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
+   { "ufs",      MAX_INT32, MESSAGING_DEVICE_PATH, MSG_UFS_DP,            MAX_UINT8,                MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
+   { "sd",       MAX_INT32, MESSAGING_DEVICE_PATH, MSG_SD_DP,             MAX_UINT8,                MAX_UINTN, MAX_UINTN, MAX_UINTN, MAX_UINTN },
