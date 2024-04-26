@@ -1,6 +1,7 @@
 include balena-image.inc
 
 do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy"
+do_resin_boot_dirgen_and_deploy:balenaos-img[depends] += "edk2-firmware-tegra:do_deploy"
 
 # Leave some space, just in case future L4Ts add device specific partitions
 # All values are in KiB
