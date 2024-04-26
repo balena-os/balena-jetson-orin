@@ -1,12 +1,13 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
-#SRC_URI:append = " \ 
-#    file://0006-boot.patch;patchdir=.. 
-#"
+SRC_URI:append = " \ 
+    file://0006-boot.patch;patchdir=../edk2-nvidia \
+    file://0001-edk2-Disable-PXE-and-HTTP-boot.patch;patchdir=../edk2 \ 
+"
 
-#SRC_URI:append:jetson-agx-orin-devkit = " 
-#    file://0005-Add-hup-and-rollback-support-agx-orin-32-5-2.patch;patchdir=.. 
-#"
+SRC_URI:append:jetson-agx-orin-devkit = " \
+    file://0005-Add-hup-and-rollback-support-agx-orin-32-5-2.patch;patchdir=../edk2-nvidia \
+"
 
 SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \ 
     file://0005-L4TLauncher-hup-rollback-support-orin-nx.patch;patchdir=.. \

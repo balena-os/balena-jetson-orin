@@ -1,8 +1,8 @@
-Index: edk2-tegra/edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
+Index: edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
 ===================================================================
---- edk2-tegra.orig/edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
-+++ edk2-tegra/edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
-@@ -99,6 +99,7 @@
+--- edk2-nvidia.orig/Platform/NVIDIA/Jetson/Jetson.dsc.inc
++++ edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
+@@ -108,6 +108,7 @@
    gNVIDIATokenSpaceGuid.PcdBrBctLogicalSlotSize|0x4000
    gNVIDIATokenSpaceGuid.PcdBrBctDataSize|0x1000
    gNVIDIATokenSpaceGuid.PcdAffinityMpIdrSupported|FALSE
@@ -10,7 +10,7 @@ Index: edk2-tegra/edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
  
  [PcdsDynamicHii.common.T194]
    gNVIDIATokenSpaceGuid.PcdPcieResourceConfigNeeded|L"PCIeResourceConfig"|gNVIDIATokenSpaceGuid|0x0|1|BS
-@@ -115,6 +116,7 @@
+@@ -124,6 +125,7 @@
    gNVIDIATokenSpaceGuid.PcdBrBctLogicalSlotSize|0x10000
    gNVIDIATokenSpaceGuid.PcdBrBctDataSize|0x2000
    gNVIDIATokenSpaceGuid.PcdAffinityMpIdrSupported|TRUE
@@ -18,11 +18,11 @@ Index: edk2-tegra/edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
  
  [PcdsDynamicHii.common.T234SLT]
    gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|2
-Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/NVIDIA.dec
+Index: edk2-nvidia/Silicon/NVIDIA/NVIDIA.dec
 ===================================================================
---- edk2-tegra.orig/edk2-nvidia/Silicon/NVIDIA/NVIDIA.dec
-+++ edk2-tegra/edk2-nvidia/Silicon/NVIDIA/NVIDIA.dec
-@@ -475,7 +475,7 @@
+--- edk2-nvidia.orig/Silicon/NVIDIA/NVIDIA.dec
++++ edk2-nvidia/Silicon/NVIDIA/NVIDIA.dec
+@@ -649,7 +649,7 @@
    gNVIDIATokenSpaceGuid.PcdNewDeviceHierarchy|0x01|UINT8|0x00000068
  
  #Enable OS access to QSPI DTB

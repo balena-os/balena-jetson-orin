@@ -1,0 +1,51 @@
+From 540346129ab5e652227ebcfa04f63d3ac9095ea9 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Wed, 17 Apr 2024 12:48:30 +0000
+Subject: [PATCH] edk2: Disable PXE and HTTP boot
+
+On some boards, the firmware may set a different
+boot order and place network boot first,
+prior to the NVME or eMMC. This can cause a 4-5 minute
+boot delay on the Orin Nano Devkit NVME.
+
+This patch is based on Oleksandr Slovak's patch for
+disabling unwanted http and pxe boot.
+
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+Upstream-status: Inappropriate [configuration]
+---
+ NetworkPkg/HttpBootDxe/HttpBootImpl.c | 3 +++
+ NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c   | 3 +++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/NetworkPkg/HttpBootDxe/HttpBootImpl.c b/NetworkPkg/HttpBootDxe/HttpBootImpl.c
+index b4c61925b9..061f89465f 100644
+--- a/NetworkPkg/HttpBootDxe/HttpBootImpl.c
++++ b/NetworkPkg/HttpBootDxe/HttpBootImpl.c
+@@ -580,6 +580,9 @@ HttpBootDxeLoadFile (
+   EFI_STATUS              Status;
+   HTTP_BOOT_IMAGE_TYPE    ImageType;
+ 
++  AsciiPrint("\n HttpBootDxeLoadFile: Force skip HTTP boot");
++  return EFI_NO_MEDIA;
++
+   if ((This == NULL) || (BufferSize == NULL) || (FilePath == NULL)) {
+     return EFI_INVALID_PARAMETER;
+   }
+diff --git a/NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c b/NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c
+index 0a4baf6f90..64f567816a 100644
+--- a/NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c
++++ b/NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c
+@@ -2359,6 +2359,9 @@ EfiPxeLoadFile (
+   EFI_STATUS                  Status;
+   EFI_STATUS                  MediaStatus;
+ 
++  AsciiPrint("\n HttpBootDxeLoadFile: Force skip PXE boot");
++  return EFI_NO_MEDIA;
++
+   if ((This == NULL) || (BufferSize == NULL) || (FilePath == NULL) || !IsDevicePathEnd (FilePath)) {
+     return EFI_INVALID_PARAMETER;
+   }
+-- 
+2.17.1
+
