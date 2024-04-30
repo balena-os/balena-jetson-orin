@@ -6,7 +6,7 @@ SRC_URI:append = " \
 "
 
 SRC_URI:append:jetson-agx-orin-devkit = " \
-    file://0005-Add-hup-and-rollback-support-agx-orin-32-5-2.patch;patchdir=../edk2-nvidia \
+    file://0005-Add-hup-and-rollback-support-agx-orin-36-2.patch;patchdir=../edk2-nvidia \
 "
 
 SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \ 

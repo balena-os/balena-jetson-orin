@@ -386,7 +386,7 @@ index 5d72ea22..1c3f2aef 100644
 +       if (*CleanLine != CHAR_NULL) {
 +         if (StrStr(CleanLine, L"bootcount=")) {
 +           *BootCountValue = StrDecimalToUintn(CleanLine + 10);
-+           Print(L"%a: BootCount is %d : %s\r\n", __FUNCTION__, *BootCountValue);
++           Print(L"%a: BootCount is %d\r\n", __FUNCTION__, *BootCountValue);
 +
 +           if (FileHandle != NULL) {
 +             FileHandleClose (FileHandle);
