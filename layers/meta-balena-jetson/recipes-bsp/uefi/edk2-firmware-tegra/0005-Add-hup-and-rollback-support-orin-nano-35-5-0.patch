@@ -377,7 +377,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +       if (*CleanLine != CHAR_NULL) {
 +         if (StrStr(CleanLine, L"bootcount=")) {
 +           *BootCountValue = StrDecimalToUintn(CleanLine + 10);
-+           Print(L"%a: BootCount is %d : %s\r\n", __FUNCTION__, *BootCountValue);
++           Print(L"%a: BootCount is %d \r\n", __FUNCTION__, *BootCountValue);
 +
 +           if (FileHandle != NULL) {
 +             FileHandleClose (FileHandle);

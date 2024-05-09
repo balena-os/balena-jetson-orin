@@ -16,7 +16,7 @@ SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \
 "
 
 SRC_URI:append:jetson-orin-nano-devkit-nvme = " \ 
-    file://0005-Add-hup-and-rollback-support-orin-nano-35-3-1.patch;patchdir=.. \
+    file://0005-Add-hup-and-rollback-support-orin-nano-35-5-0.patch;patchdir=.. \
     file://set_boot_order.patch;patchdir=.. \
 "
 
