@@ -3,7 +3,7 @@
 set -o errexit
 
 fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
-kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+kernel_l4t=$(uname -r | grep -E -o 'l4t-r?[0-9]+[.]+[0-9]' | cut -d "-" -f 2 | tr -d "r")
 
 echo "Rollback: UEFI firmware L4T version: ${fw_version}"
 echo "Rollback: Kernel L4T version: ${kernel_l4t}"
