@@ -4,6 +4,7 @@ SRC_URI:append = " \
     file://0004-Add-symbolic-links-support-32-5-2.patch;patchdir=.. \
     file://0006-boot.patch;patchdir=.. \
     file://skip_network_boot.patch;patchdir=.. \
+    file://0001-FmpDevicePkg-Force-accept-old-UEFI-capsule.patch;patchdir=../edk2 \
 "
 
 SRC_URI:append:jetson-agx-orin-devkit = " \
