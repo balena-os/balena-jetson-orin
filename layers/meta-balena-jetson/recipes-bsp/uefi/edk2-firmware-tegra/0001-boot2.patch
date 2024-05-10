@@ -1,0 +1,25 @@
+From 04c3bc7f65c997566126b460911e74d207b36380 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Wed, 8 May 2024 09:11:14 +0000
+Subject: [PATCH] boot2
+
+---
+ Silicon/NVIDIA/NVIDIA.dec | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Silicon/NVIDIA/NVIDIA.dec b/Silicon/NVIDIA/NVIDIA.dec
+index c5c96b8b..ff5f6fe1 100644
+--- a/Silicon/NVIDIA/NVIDIA.dec
++++ b/Silicon/NVIDIA/NVIDIA.dec
+@@ -662,7 +662,7 @@
+   gNVIDIATokenSpaceGuid.PcdNewDeviceHierarchy|0x01|UINT8|0x00000068
+ 
+ #Enable OS access to QSPI DTB
+-  gNVIDIATokenSpaceGuid.PcdAllowOsAccessQspi|FALSE|BOOLEAN|0x0000006B
++  gNVIDIATokenSpaceGuid.PcdAllowOsAccessQspi|TRUE|BOOLEAN|0x0000006B
+ 
+ #Enable STMM Secure Variable Store
+   gNVIDIATokenSpaceGuid.PcdTegraStmmEnabled|TRUE|BOOLEAN|0x0000006C
+-- 
+2.17.1
+

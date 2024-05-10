@@ -1,8 +1,20 @@
-Index: edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
-===================================================================
---- edk2-nvidia.orig/Platform/NVIDIA/Jetson/Jetson.dsc.inc
-+++ edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
-@@ -108,6 +108,7 @@
+From dff3bb1f20df62f7f2134758cfdde9ec4838915a Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Wed, 8 May 2024 08:35:12 +0000
+Subject: [PATCH] Boot
+
+Upstream-status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ Platform/NVIDIA/NVIDIA.common.dsc.inc | 2 ++
+ Silicon/NVIDIA/NVIDIA.dec             | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Platform/NVIDIA/NVIDIA.common.dsc.inc b/Platform/NVIDIA/NVIDIA.common.dsc.inc
+index e56a31b3..6ef67d35 100644
+--- a/Platform/NVIDIA/NVIDIA.common.dsc.inc
++++ b/Platform/NVIDIA/NVIDIA.common.dsc.inc
+@@ -1127,10 +1127,12 @@ gEfiSecurityPkgTokenSpaceGuid.PcdSingleBootApplicationGuid|{ GUID("cbf481fb-b373
    gNVIDIATokenSpaceGuid.PcdBrBctLogicalSlotSize|0x4000
    gNVIDIATokenSpaceGuid.PcdBrBctDataSize|0x1000
    gNVIDIATokenSpaceGuid.PcdAffinityMpIdrSupported|FALSE
@@ -10,19 +22,16 @@ Index: edk2-nvidia/Platform/NVIDIA/Jetson/Jetson.dsc.inc
  
  [PcdsDynamicHii.common.T194]
    gNVIDIATokenSpaceGuid.PcdPcieResourceConfigNeeded|L"PCIeResourceConfig"|gNVIDIATokenSpaceGuid|0x0|1|BS
-@@ -124,6 +125,7 @@
-   gNVIDIATokenSpaceGuid.PcdBrBctLogicalSlotSize|0x10000
-   gNVIDIATokenSpaceGuid.PcdBrBctDataSize|0x2000
-   gNVIDIATokenSpaceGuid.PcdAffinityMpIdrSupported|TRUE
+   gNVIDIATokenSpaceGuid.PcdPcieEntryInAcpiConfigNeeded|L"PCIeInOsConfig"|gNVIDIATokenSpaceGuid|0x0|1|BS
 +  gNVIDIATokenSpaceGuid.PcdAllowOsAccessQspi|TRUE
+ !endif
  
- [PcdsDynamicHii.common.T234SLT]
-   gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|2
-Index: edk2-nvidia/Silicon/NVIDIA/NVIDIA.dec
-===================================================================
---- edk2-nvidia.orig/Silicon/NVIDIA/NVIDIA.dec
-+++ edk2-nvidia/Silicon/NVIDIA/NVIDIA.dec
-@@ -649,7 +649,7 @@
+ !ifdef CONFIG_SOC_ORIN
+diff --git a/Silicon/NVIDIA/NVIDIA.dec b/Silicon/NVIDIA/NVIDIA.dec
+index c5c96b8b..ff5f6fe1 100644
+--- a/Silicon/NVIDIA/NVIDIA.dec
++++ b/Silicon/NVIDIA/NVIDIA.dec
+@@ -662,7 +662,7 @@
    gNVIDIATokenSpaceGuid.PcdNewDeviceHierarchy|0x01|UINT8|0x00000068
  
  #Enable OS access to QSPI DTB
@@ -31,3 +40,6 @@ Index: edk2-nvidia/Silicon/NVIDIA/NVIDIA.dec
  
  #Enable STMM Secure Variable Store
    gNVIDIATokenSpaceGuid.PcdTegraStmmEnabled|TRUE|BOOLEAN|0x0000006C
+-- 
+2.17.1
+

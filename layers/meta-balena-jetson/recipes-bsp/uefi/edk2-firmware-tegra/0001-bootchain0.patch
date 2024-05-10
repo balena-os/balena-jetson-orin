@@ -1,0 +1,49 @@
+From 0055b17f428db10d297c2749874e03bc81a432e0 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Fri, 10 May 2024 11:18:12 +0000
+Subject: [PATCH] bootchain0.
+
+---
+ Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+index e8d74315..24b3b339 100644
+--- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
++++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+@@ -2819,7 +2819,7 @@ L4TLauncher (
+   EFI_HANDLE                 DeviceHandle       = 0;
+   L4T_BOOT_PARAMS            BootParams;
+   EXTLINUX_BOOT_CONFIG       ExtLinuxConfig;
+-  UINTN                      ExtLinuxBootOption;
++  UINTN                      ExtLinuxBootOption;
+   UINTN                      Index;
+   CHAR16                     *BalenaOSRootFs = NULL;
+   UINTN                      UpgradeAvailable = 0;
+@@ -2905,6 +2905,14 @@ L4TLauncher (
+               ErrorPrint(L"%a: Error while processing bootcount value\r\n", __FUNCTION__);
+           }
+           Print (L"%a: BootCountValue is %d\r\n", __FUNCTION__, BootCountValue);
++      } else if (2 == UpgradeAvailable) {
++	      ErrorPrint(L"%a: UpgradeAvailable set to 2, setting bootchain to 0\r\n", __FUNCTION__);
++	      Status = SetNextBootChain(0);
++	      if (EFI_ERROR (Status)) {
++	         ErrorPrint(L"Failed to SetNextBootChain to 0\r\n");
++	      }
++		ErrorPrint(L"Rebooting...\r\n\n");
++	      ResetCold();
+       }
+ 
+       /* If boot limit is reached while upgrade_available=1, switch partitions */
+@@ -2945,7 +2953,7 @@ L4TLauncher (
+       if (ExtLinuxConfig.BootOptions[Index].BootArgs != NULL) {
+         FreePool (ExtLinuxConfig.BootOptions[Index].BootArgs);
+         ExtLinuxConfig.BootOptions[Index].BootArgs = NULL;
+-      }
++      }
+ 
+       if (ExtLinuxConfig.BootOptions[Index].DtbPath != NULL) {
+         FreePool (ExtLinuxConfig.BootOptions[Index].DtbPath);
+-- 
+2.17.1
+

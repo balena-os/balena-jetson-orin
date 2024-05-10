@@ -1,0 +1,24 @@
+From c5eac726fa8fddc95f1f5f254c8b954c178f8337 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Fri, 10 May 2024 09:40:11 +0000
+Subject: [PATCH] platform
+
+---
+ Platform/NVIDIA/NVIDIA.common.dsc.inc | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Platform/NVIDIA/NVIDIA.common.dsc.inc b/Platform/NVIDIA/NVIDIA.common.dsc.inc
+index e56a31b3..69447581 100644
+--- a/Platform/NVIDIA/NVIDIA.common.dsc.inc
++++ b/Platform/NVIDIA/NVIDIA.common.dsc.inc
+@@ -1146,6 +1146,7 @@ gEfiSecurityPkgTokenSpaceGuid.PcdSingleBootApplicationGuid|{ GUID("cbf481fb-b373
+   gNVIDIATokenSpaceGuid.PcdBrBctDataSize|0x2000
+   gNVIDIATokenSpaceGuid.PcdAffinityMpIdrSupported|TRUE
+   gNVIDIATokenSpaceGuid.PcdGptIsPerBootChain|TRUE
++  gNVIDIATokenSpaceGuid.PcdAllowOsAccessQspi|TRUE
+ 
+ [PcdsDynamicHii.common.T234SLT]
+   gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|2
+-- 
+2.17.1
+
