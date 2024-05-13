@@ -19,6 +19,7 @@ SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \
 SRC_URI:append:jetson-orin-nano-devkit-nvme = " \ 
     file://0005-Add-hup-and-rollback-support-orin-nano-35-5-0.patch;patchdir=.. \
     file://set_boot_order.patch;patchdir=.. \
+    file://0001-Switch-boot-chains.patch;patchdir=../edk2-nvidia \
 "
 
 SRC_URI:remove:jetson-orin-nx-seeed-j4012 = " \
