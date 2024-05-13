@@ -1,0 +1,213 @@
+From 93149fb12aae634aaf1be77920f565528c2ab534 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Mon, 13 May 2024 13:48:08 +0300
+Subject: [PATCH] Switch boot chains when bootcount limit is reached
+
+In this commit we rely on the hostapp-update-hooks to save
+the target firmware boot chain (A/B - 0/1) in /mnt/boot/bootchain.env.
+
+When the max bootcount value is reached, we thus know which is the
+updated target slot and can thus:
+ - set the facllback (old) bootchain as next boot target and reboot
+ - detect that we falled back to the old chain in the previous boot,
+   and continue to boot it in altboot mode. After this point the OS
+   will run the rollback hooks.
+
+The hostapp-update hooks always overite the bootchain file, and remove it
+completely upon rolling back.
+
+This change is a basis for enabling rollbacks between JP5 -> JP6.
+
+Upstream-status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ .../Application/L4TLauncher/L4TLauncher.c     | 123 ++++++++++++++++--
+ .../Application/L4TLauncher/L4TLauncher.h     |   1 +
+ 2 files changed, 116 insertions(+), 8 deletions(-)
+
+diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+index fef26cde..20f24cb2 100644
+--- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
++++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+@@ -1281,7 +1281,8 @@ ProcessExtLinuxConfig (
+   IN UINT32                 BootChain,
+   IN CONST CHAR16           *BalenaOSRootFs,
+   OUT EXTLINUX_BOOT_CONFIG  *BootConfig,
+-  OUT EFI_HANDLE            *RootFsHandle
++  OUT EFI_HANDLE            *RootFsHandle,
++  IN BOOLEAN                RunningUpdatedBootSlot
+   )
+ {
+   EFI_STATUS       Status;
+@@ -1304,6 +1305,8 @@ ProcessExtLinuxConfig (
+     return EFI_INVALID_PARAMETER;
+   }
+ 
++ErrorPrint (L"%a:Running the updated (target) bootchain slot: %s\r\n", __FUNCTION__, RunningUpdatedBootSlot ? L"true" : L"false");
++
+   /* Load extlinux.conf from the selected BalenaOS root filesystem */
+   Status = FindPartitionInfo (DeviceHandle, BalenaOSRootFs, BootChain, NULL, RootFsHandle);
+   Status = OpenAndReadFileToBuffer (
+@@ -2597,6 +2600,86 @@ ProcessResinOSuEnv (
+   return EFI_SUCCESS;
+ }
+ 
++STATIC
++EFI_STATUS
++EFIAPI
++ProcessBootSlotFile (
++  IN EFI_HANDLE            DeviceHandle,
++  IN UINT32                BootChain,
++  OUT UINTN                *BootSlotValue,
++  OUT BOOLEAN              *IsRunningUpdatedSlot
++)
++{
++  EFI_STATUS       Status;
++  EFI_DEVICE_PATH  *FullDevicePath;
++  EFI_DEVICE_PATH  *TmpFullDevicePath;
++  EFI_HANDLE       BootPartHandle;
++  EFI_FILE_HANDLE  FileHandle = NULL;
++  CHAR16           *FileLine = NULL;
++  CHAR16           *CleanLine;
++  BOOLEAN          Ascii;
++
++  Status = FindPartitionInfo (DeviceHandle, BALENA_BOOT_PARTITION, BootChain, NULL, &BootPartHandle);
++  if (EFI_ERROR (Status)) {
++    ErrorPrint (L"%a: Could not find partition resin-boot\r\n", __FUNCTION__);
++    return Status;
++  }
++
++  FullDevicePath = FileDevicePath (BootPartHandle, BALENA_BOOTSLOT_FILE_PATH);
++  if (NULL == FullDevicePath) {
++    ErrorPrint (L"%a: Failed to create file device path for bootcount.env\r\n", __FUNCTION__);
++    return EFI_OUT_OF_RESOURCES;
++  }
++
++  TmpFullDevicePath = FullDevicePath;
++  Status = EfiOpenFileByDevicePath (&TmpFullDevicePath, &FileHandle, EFI_FILE_MODE_READ, 0);
++  if (EFI_ERROR (Status)) {
++          ErrorPrint (L"%a: Failed to open boot slot file\r\n", __FUNCTION__);
++          return Status;
++  } else {
++     while (!FileHandleEof (FileHandle)) {
++       if (FileLine != NULL) {
++         FreePool (FileLine);
++         FileLine = NULL;
++       }
++
++       FileLine = FileHandleReturnLine (FileHandle, &Ascii);
++       if (NULL == FileLine) {
++         break;
++       }
++
++       CleanLine = CleanExtLinuxLine (FileLine);
++       if (*CleanLine != CHAR_NULL) {
++         if (StrStr(CleanLine, L"bootslot=")) {
++           ErrorPrint(L"%a: BootSlotFile contents: %s\r\n", __FUNCTION__, CleanLine);
++           *BootSlotValue = StrDecimalToUintn(CleanLine + 9);
++           ErrorPrint(L"%a: BootSlot is %u \r\n", __FUNCTION__, *BootSlotValue);
++           if (*BootSlotValue == BootChain) {
++             ErrorPrint(L"%a: Running on updated slot %u\r\n", __FUNCTION__, BootChain);
++             *IsRunningUpdatedSlot = TRUE;
++           } else {
++            ErrorPrint(L"%a: Running on fallback slot %u\r\n", __FUNCTION__, BootChain);
++            *IsRunningUpdatedSlot = FALSE;
++           }
++
++           if (FileHandle != NULL) {
++             FileHandleClose (FileHandle);
++           }
++         }
++
++         if (FileLine != NULL) {
++           FreePool (FileLine);
++           FileLine = NULL;
++         }
++         return Status;
++       }
++     }
++  }
++
++  return EFI_SUCCESS;
++}
++
++
+ /**
+   This is the declaration of an EFI image entry point. This entry point is
+   the same for UEFI Applications, UEFI OS Loaders, and UEFI Drivers, including
+@@ -2630,6 +2713,9 @@ L4TLauncher (
+   UINTN                      UpgradeAvailable = 0;
+   UINTN                      BootCountValue = 0;
+   UINTN                      RootFsIndex = BALENA_ROOTFS_INDEX_A;
++  UINTN                      UpdatedBootSlot = 0;
++  BOOLEAN                    RunningUpdatedBootSlot = FALSE;
++  BOOLEAN                    BootLimitReached = FALSE;
+   Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
+   if (EFI_ERROR (Status)) {
+     ErrorPrint (L"%a: Unable to locate loaded image: %r\r\n", __FUNCTION__, Status);
+@@ -2711,14 +2797,35 @@ L4TLauncher (
+           Print (L"%a: BootCountValue is %d\r\n", __FUNCTION__, BootCountValue);
+       }
+ 
++      Status = ProcessBootSlotFile(LoadedImage->DeviceHandle, BootParams.BootChain, &UpdatedBootSlot, &RunningUpdatedBootSlot);
++      if (EFI_ERROR (Status)) {
++        ErrorPrint(L"%a: Error while processing boot slot value\r\n", __FUNCTION__);
++      } else {
++        ErrorPrint(L"%a: Updated (target) boot slot: %u - Current running boot slot: %u\r\n", __FUNCTION__, UpdatedBootSlot, BootParams.BootChain);
++      }
++
+       /* If boot limit is reached while upgrade_available=1, switch partitions */
+       if (BALENA_OS_BC_LIM <= BootCountValue) {
+-         if (BALENA_ROOTFS_INDEX_B == RootFsIndex) {
+-            RootFsIndex = BALENA_ROOTFS_INDEX_A;
+-         } else {
+-            RootFsIndex = BALENA_ROOTFS_INDEX_B;
+-         }
+-         ErrorPrint(L"%a: Reached bootcount limit, will switch partitions... New index is %d\r\n", __FUNCTION__, RootFsIndex);
++        if (BALENA_ROOTFS_INDEX_B == RootFsIndex) {
++          RootFsIndex = BALENA_ROOTFS_INDEX_A;
++        } else {
++          RootFsIndex = BALENA_ROOTFS_INDEX_B;
++        }
++        BootLimitReached = TRUE;
++        ErrorPrint(L"%a: Reached bootcount limit, will switch partitions... New index is %d\r\n", __FUNCTION__, RootFsIndex);
++
++        /* Running the same boot slot as our target, which has been updated by the UEFI capsule */
++        if (RunningUpdatedBootSlot) {
++          ErrorPrint(L"%a: Running the updated boot slot %u and boot limit was reached, rebooting into fallback (pre-update) slot %u\r\n", __FUNCTION__, BootParams.BootChain, !BootParams.BootChain);
++          Status = SetNextBootChain(!BootParams.BootChain);
++          ResetCold();
++        } else {
++          ErrorPrint(L"%a: Running the fallback (pre-update) boot slot %u because boot limit was reached. Updated boot slot booted previously was %u\r\n", __FUNCTION__, BootParams.BootChain, UpdatedBootSlot);
++          /* TODO: Check if this allows for capsule to be applied during rollback-altboot */
++          ValidateActiveBootChain();
++          ErrorPrint(L"%a: Running the fallback (pre-update) boot slot %u because boot limit was reached, and marked current one as active. Updated boot slot booted previously was %u\r\n", __FUNCTION__, BootParams.BootChain, UpdatedBootSlot);
++
++        }
+       }
+ 
+       if (BALENA_ROOTFS_INDEX_B == RootFsIndex) {
+@@ -2727,7 +2834,7 @@ L4TLauncher (
+         BalenaOSRootFs = BALENA_ROOTFS_BASE_NAME_A;
+       }
+ 
+-      Status = ProcessExtLinuxConfig (LoadedImage->DeviceHandle, BootParams.BootChain, BalenaOSRootFs, &ExtLinuxConfig, &RootFsDeviceHandle);
++      Status = ProcessExtLinuxConfig (LoadedImage->DeviceHandle, BootParams.BootChain, BalenaOSRootFs, &ExtLinuxConfig, &RootFsDeviceHandle, RunningUpdatedBootSlot);
+       if (EFI_ERROR (Status)) {
+ 	ErrorPrint (L"%a: ProcessExtLinuxConfig failed on partition %s: %r\r\n", __FUNCTION__, BalenaOSRootFs, Status);
+         BootParams.BootMode = NVIDIA_L4T_BOOTMODE_BOOTIMG;
+diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
+index a9d9b074..1c9475ce 100644
+--- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
++++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
+@@ -37,6 +37,7 @@
+ #define BALENA_BOOT_PARTITION          L"resin-boot"
+ #define BALENA_BOOT_CONF_PATH          L"resinOS_uEnv.txt"
+ #define BALENA_BOOTCOUNT_FILE_PATH     L"bootcount.env"
++#define BALENA_BOOTSLOT_FILE_PATH     L"bootslot.env"
+ #define MAX_RESINOS_UENV_SIZE          256
+ #define BALENA_ROOTFS_INDEX_A          15
+ #define BALENA_ROOTFS_INDEX_B          16
+-- 
+2.34.1
+
