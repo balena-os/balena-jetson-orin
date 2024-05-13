@@ -18,8 +18,12 @@ SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \
 "
 
 SRC_URI:append:jetson-orin-nano-devkit-nvme = " \
-     file://0001-L4TLauncher-Orin-Nano-36.3.patch;patchdir=../edk2-nvidia \
+    file://0005-Add-hup-and-rollback-support-orin-nano-36-3.patch \
+    file://0002-Switch-boot-chains-when-bootcount-limit-is-reached.patch \
 "
+
+### UNUSED: To be deleted
+#     file://0001-L4TLauncher-Orin-Nano-36.3.patch;patchdir=../edk2-nvidia 
 #    file://0001-L4TLauncher-is-loaded-by-the-UEFI-firmware-from-the.patch;patchdir=../edk2-nvidia 
 #    file://0005-Add-hup-and-rollback-support-orin-nano-36-3.patch;patchdir=../edk2-nvidia 
 #    file://0001-bootchain0.patch;patchdir=../edk2-nvidia 

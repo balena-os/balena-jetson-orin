@@ -1,7 +1,7 @@
-From 7b51172fc5ea8ce4417c1c8f14e7cd5186d5a29e Mon Sep 17 00:00:00 2001
+From 27affe16c8463ec68de62091ef3b371a4cf7bef3 Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Wed, 8 May 2024 08:56:14 +0000
-Subject: [PATCH] L4TLauncher is loaded by the UEFI firmware from the
+Date: Mon, 13 May 2024 14:54:23 +0000
+Subject: [PATCH 1/2] L4TLauncher is loaded by the UEFI firmware from the 
  resin-boot partition. The launcher's name is BOOTAARCH64.efi.
 
 With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
