@@ -8,7 +8,7 @@
 	branch = master
 [submodule "layers/meta-tegra"]
 	path = layers/meta-tegra
-	url = https://github.com/acostach/meta-tegra.git
+	url = https://github.com/balena-os/meta-tegra.git
 	branch = master
 [submodule "layers/poky"]
 	path = layers/poky
