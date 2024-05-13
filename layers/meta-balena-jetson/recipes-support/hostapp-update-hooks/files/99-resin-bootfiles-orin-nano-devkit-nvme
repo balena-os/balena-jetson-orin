@@ -16,7 +16,9 @@ platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38
 platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
 os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
 tmp_file="/tmp/platformspecfile.bin"
+
 device_type="jetson-orin-nano-devkit"
+
 DURING_UPDATE=${DURING_UPDATE:-0}
 bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/nvme0n1"
