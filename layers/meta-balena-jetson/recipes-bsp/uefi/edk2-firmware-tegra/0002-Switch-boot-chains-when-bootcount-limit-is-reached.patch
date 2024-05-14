@@ -149,7 +149,7 @@ index e8d74315..747678a9 100644
            Print (L"%a: BootCountValue is %d\r\n", __FUNCTION__, BootCountValue);
        }
  
-+      Status = ProcessBootSlotFile(LoadedImage->DeviceHandle, BootParams.BootChain, &UpdatedBootSlot, &RunningUpdatedBootSlot);
++      Status = ProcessBootSlotFile(DeviceHandle, BootParams.BootChain, &UpdatedBootSlot, &RunningUpdatedBootSlot);
 +      if (EFI_ERROR (Status)) {
 +        ErrorPrint(L"%a: Error while processing boot slot value\r\n", __FUNCTION__);
 +      } else {
