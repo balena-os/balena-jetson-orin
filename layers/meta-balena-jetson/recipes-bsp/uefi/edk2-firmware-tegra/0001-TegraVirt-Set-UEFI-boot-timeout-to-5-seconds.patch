@@ -1,0 +1,25 @@
+From 73cae87585147f8791aa5d0f05f4e28f252928d3 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Wed, 15 May 2024 07:07:10 +0000
+Subject: [PATCH] TegraVirt: Set UEFI boot timeout to 5 seconds
+
+---
+ Platform/NVIDIA/TegraVirt/TegraVirt.dsc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Platform/NVIDIA/TegraVirt/TegraVirt.dsc b/Platform/NVIDIA/TegraVirt/TegraVirt.dsc
+index f457392c..1575aa4b 100644
+--- a/Platform/NVIDIA/TegraVirt/TegraVirt.dsc
++++ b/Platform/NVIDIA/TegraVirt/TegraVirt.dsc
+@@ -237,7 +237,7 @@
+ 
+ [PcdsDynamicHii]
+ !if $(TARGET) == RELEASE
+-  gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|0
++  gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|5
+ !else
+   gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|5
+ !endif
+-- 
+2.17.1
+

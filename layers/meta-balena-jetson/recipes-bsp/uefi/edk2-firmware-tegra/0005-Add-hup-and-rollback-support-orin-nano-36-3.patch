@@ -573,7 +573,7 @@ index fc46a70d..f8cab2c8 100644
  #define RECOVERY_BASE_NAME      L"recovery"
  #define RECOVERY_DTB_BASE_NAME  L"recovery-dtb"
 -
-+#define DEFAULT_ORIN_NANO_DTB_NAME     L"tegra234-p3768-0000+p3767-0003-nv.dtb"
++#define DEFAULT_ORIN_NANO_DTB_NAME     L"tegra234-p3768-0000+p3767-0005-nv.dtb"
  #define EXTLINUX_KEY_TIMEOUT     L"TIMEOUT"
  #define EXTLINUX_KEY_DEFAULT     L"DEFAULT"
  #define EXTLINUX_KEY_MENU_TITLE  L"MENU TITLE"

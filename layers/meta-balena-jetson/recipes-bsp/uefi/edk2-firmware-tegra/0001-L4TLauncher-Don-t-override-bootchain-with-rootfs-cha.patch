@@ -1,0 +1,82 @@
+From 74e51cb91c897bbb719d0cd939e5b8a6d62d468a Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Tue, 14 May 2024 16:10:55 +0000
+Subject: [PATCH] L4TLauncher: Don't override bootchain with rootfs chain
+
+---
+ .../Application/L4TLauncher/L4TLauncher.c     | 23 +++++++++++++------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+index 20f24cb2..8c7a70d9 100644
+--- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
++++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+@@ -1810,7 +1810,7 @@ ProcessBootParams (
+   }
+ 
+   BootParams->BootChain = 0;
+-
++  ErrorPrint(L"%a: Bootchain before set %u\r\n", __FUNCTION__, BootParams->BootChain);
+   DataSize = sizeof (BootParams->BootMode);
+   Status   = gRT->GetVariable (L4T_BOOTMODE_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootParams->BootMode);
+   if (EFI_ERROR (Status) || (BootParams->BootMode > NVIDIA_L4T_BOOTMODE_RECOVERY)) {
+@@ -1821,17 +1821,22 @@ ProcessBootParams (
+   Status   = gRT->GetVariable (BOOT_FW_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootChain);
+   // If variable does not exist, is >4 bytes or has a value larger than 1, boot partition A
+   if (!EFI_ERROR (Status) && (BootChain <= 1)) {
++    ErrorPrint(L"%a: Setting bootchain after reading BOOT_FW_VARIABLE_NAME\r\n", __FUNCTION__);
+     BootParams->BootChain = BootChain;
+   }
+-
++  ErrorPrint(L"%a: Bootchain after checking BOOT_FW_VARIABLE_NAME %u\r\n", __FUNCTION__, BootParams->BootChain);
++  /* Below section is commented out because we don't know at this point if the active balenaOS rootfs is B and boot chain is A
++   * and even if it was, they should run independently.
+   // Read current OS boot type to allow for chaining
+   DataSize = sizeof (BootChain);
+   Status   = gRT->GetVariable (BOOT_OS_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootChain);
+   // If variable does not exist, is >4 bytes or has a value larger than 1, boot partition A
+   if (!EFI_ERROR (Status) && (BootChain <= 1)) {
++    ErrorPrint(L"%a: Set bootchain after reading BOOT_OS_VARIABLE_NAME, %u\r\n", __FUNCTION__);
+     BootParams->BootChain = BootChain;
+   }
+-
++  ErrorPrint(L"%a: Bootchain after checking/setting BOOT_OS_VARIABLE_NAME %u\r\n", __FUNCTION__, BootParams->BootChain);
++  */
+   if (LoadedImage->LoadOptionsSize) {
+     CurrentBootOption = StrStr (LoadedImage->LoadOptions, BOOTMODE_DIRECT_STRING);
+     if (CurrentBootOption != NULL) {
+@@ -1861,7 +1866,9 @@ ProcessBootParams (
+       if (EFI_ERROR (Status)) {
+         ErrorPrint (L"Failed to read boot chain override: %r\r\n", Status);
+       } else if (StringValue <= 1) {
++	ErrorPrint (L"Overriding bootchain with String Value!\r\n");	
+         BootParams->BootChain = (UINT32)StringValue;
++	ErrorPrint(L"%a: Bootchain after checking/setting BOOT_OS_VARIABLE_NAME %u\r\n", __FUNCTION__, BootParams->BootChain);
+       } else {
+         ErrorPrint (L"Boot chain override value out of range, ignoring\r\n");
+       }
+@@ -1869,15 +1876,17 @@ ProcessBootParams (
+   }
+ 
+   // Find valid Rootfs Chain. If not, select recovery kernel
+-  Status = ValidateRootfsStatus (BootParams);
+-  if (EFI_ERROR (Status)) {
+-    ErrorPrint (L"Failed to validate rootfs status: %r\r\n", Status);
+-  }
++  //Status = ValidateRootfsStatus (BootParams);
++  //if (EFI_ERROR (Status)) {
++    ErrorPrint (L"Skip rootfs validation, this is performed by balenaOS.\r\n");
++  //}
+ 
+   // Store the current boot chain in volatile variable to allow chain loading
+   Status = gRT->SetVariable (BOOT_OS_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, EFI_VARIABLE_BOOTSERVICE_ACCESS|EFI_VARIABLE_RUNTIME_ACCESS, sizeof (BootParams->BootChain), &BootParams->BootChain);
+   if (EFI_ERROR (Status)) {
+     ErrorPrint (L"Failed to set OS variable: %r\r\n", Status);
++  } else {
++    ErrorPrint(L"%a: BOOT_OS_VARIABLE_NAME was set to %u\r\n", __FUNCTION__, BootParams->BootChain);  
+   }
+ 
+   return EFI_SUCCESS;
+-- 
+2.17.1
+
