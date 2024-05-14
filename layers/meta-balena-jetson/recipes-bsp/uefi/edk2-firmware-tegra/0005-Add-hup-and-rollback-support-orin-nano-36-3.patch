@@ -464,7 +464,7 @@ index 3be26f82..e8d74315 100644
 +    CleanLine = CleanExtLinuxLine (FileLine);
 +    if (*CleanLine != CHAR_NULL) {
 +      if (StrStr(CleanLine, L"resin_root_part=")) {
-+       *RootPart = StrDecimalToUintn(CleanLine + 16);
++       *RootPart = StrHexToUintn(CleanLine + 16);
 +       Print(L"RootPart is %d\r\n", *RootPart);
 +      } else if (StrStr(CleanLine, L"upgrade_available=")) {
 +        *UpgradeAvailable = StrDecimalToUintn(CleanLine + 18);
