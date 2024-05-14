@@ -59,7 +59,7 @@ BALENA_CONFIGS[rtl8822ce] = " \
 		CONFIG_RTK_BTUSB=m \
 "
 
-BALENA_CONFIGS:append = " nfsfs xudc"
+BALENA_CONFIGS:append = " nfsfs xudc nvme"
 BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_FS=m \
     CONFIG_NFS_V2=m \
@@ -71,6 +71,16 @@ BALENA_CONFIGS[nfsfs] = " \
 
 BALENA_CONFIGS[xudc] = " \
     CONFIG_USB_TEGRA_XUDC=m \
+"
+
+BALENA_CONFIGS[nvme] = " \
+    CONFIG_NVME_CORE=y \
+    CONFIG_BLK_DEV_NVME=y \
+    CONFIG_NVME_FABRICS=y \
+    CONFIG_NVME_TCP=y \
+    CONFIG_NVME_TARGET=y \
+    CONFIG_NVME_TARGET_TCP=y \
+    CONFIG_NVME_HOST=y \
 "
 
 BALENA_CONFIGS:append:jetson-agx-orin-devkit = " rtc"
