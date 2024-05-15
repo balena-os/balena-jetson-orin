@@ -142,6 +142,24 @@ info "=========================="
 do_capsule_update
 check_and_update_esp_flags
 
+# In 36.3 we need to unload the tegra
+# qspi drivers, otherwise the board will hang
+# when trying to write the Compat UEFI variables
+unload_spi_drivers() {
+spi_modules=("spi_tegra210_quad" "spi_tegra114")
+
+for spi_module in "${spi_modules[@]}"
+do
+    if lsmod | grep -q $spi_module ; then
+        echo "Unloading $spi_module"
+        rmmod $spi_module
+
+        if [ $? -eq 0 ]; then
+            echo "Unloaded $spi_module"
+        fi
+    fi
+done
+}
 
 # Save next active boot slot
 # so it can be processed by the UEFI bootloader
@@ -170,6 +188,9 @@ process_bootslot_file() {
 
 process_bootslot_file
 copy_jp5_dtb
+
+
+unload_spi_drivers
 
 if [ $(ls -l ${efivars_dir}OsIndications* | wc -l) -gt 0 ]; then
     write_jetson_update_efivars
