@@ -59,7 +59,7 @@ BALENA_CONFIGS[rtl8822ce] = " \
 		CONFIG_RTK_BTUSB=m \
 "
 
-BALENA_CONFIGS:append = " nfsfs xudc nvme"
+BALENA_CONFIGS:append = " nfsfs xudc nvme pcie"
 BALENA_CONFIGS[nfsfs] = " \
     CONFIG_NFS_FS=m \
     CONFIG_NFS_V2=m \
@@ -80,7 +80,16 @@ BALENA_CONFIGS[nvme] = " \
     CONFIG_NVME_TCP=y \
     CONFIG_NVME_TARGET=y \
     CONFIG_NVME_TARGET_TCP=y \
-    CONFIG_NVME_HOST=y \
+"
+
+# These drivers needs to be built-in, otherwise
+# the nvme cannot be detected in the initramfs,
+# when trying to boot from it.
+BALENA_CONFIGS[pcie] = " \
+    CONFIG_PCIE_TEGRA194=y \
+    CONFIG_PCIE_TEGRA194_HOST=y \
+    CONFIG_PCIE_TEGRA194_EP=y \
+    CONFIG_PHY_TEGRA194_P2U=y \
 "
 
 BALENA_CONFIGS:append:jetson-agx-orin-devkit = " rtc"
@@ -121,7 +130,4 @@ EOF
 do_deploy[nostamp] = "1"
 do_deploy[postfuncs] += "generate_extlinux_conf"
 do_install[depends] += "${@['', '${INITRAMFS_IMAGE}:do_image_complete'][(d.getVar('INITRAMFS_IMAGE', True) or '') != '' and (d.getVar('TEGRA_INITRAMFS_INITRD', True) or '') == "1"]}"
-
-# These are needed by tegraflash during signing
-OVERLAY_DTB_FILE:append:jetson-agx-orin-devkit = " tegra234-p3737-overlay-pcie.dtbo,tegra234-p3737-audio-codec-rt5658-40pin.dtbo,tegra234-p3737-a03-overlay.dtbo,tegra234-p3737-a04-overlay.dtbo,tegra234-p3737-camera-dual-imx274-overlay.dtbo,AcpiBoot.dtbo,L4TConfiguration.dtbo,L4TRootfsInfo.dtbo,L4TRootfsABInfo.dtbo,L4TRootfsBrokenInfo.dtbo"
 
