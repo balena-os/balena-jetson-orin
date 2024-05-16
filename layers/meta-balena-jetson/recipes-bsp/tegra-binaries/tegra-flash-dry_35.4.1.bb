@@ -13,15 +13,47 @@ UEFI_CAPSULE:jetson-agx-orin-devkit = "TEGRA_BL_3701.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nano-devkit-nvme = "TEGRA_BL_Orin_Nano.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nx-seeed-j4012 = "TEGRA_BL_Seeed_j4012.Cap.gz"
 
+# For the AGX Xavier Devkit, the capsule has been generated in the reference
+# Linux_for_Tegra environment, in which we replaced uefi_jetson.bin
+# with the one from a balenaOS yocto build, as well as the partition file
+# /bootloader/t186ref/cfg/flash_t194_sdmmc.xml with the one in the jetson-flash
+# Jetson Xavier assets. Note that all <filename> FILENAME.. attributes for the
+# esp and balenaOS have been removed prior to creating the UEFI capsule.
+# The steps for generating any UEFI Capsule can be consulted in the L4T 35.4.1
+# DeveloperGuide, in the UpdateAndRedundancy section > Generating a Multi-Spec Capsule Payload
+UEFI_CAPSULE:jetson-xavier = "TEGRA_BL_T194.Cap.gz"
+
+# The same applies to the Xavier NX SD and eMMC, and the same capsule
+# can be used for all T194-based devkits. The only difference is that
+# the files flash_l4t_t194_spi_sd_p3668.xml and flash_l4t_t194_spi_emmc_p3668.xml
+# have had their contents replaced with the ones from the jetson-flash device
+# assets directory.
+UEFI_CAPSULE:jetson-xavier-nx-devkit-emmc = "TEGRA_BL_T194.Cap.gz"
+UEFI_CAPSULE:jetson-xavier-nx-devkit = "TEGRA_BL_T194.Cap.gz"
+
 BOOTBLOB:jetson-orin-nx-xavier-nx-devkit = "boot0_orin_nx_xavier_nx_devkit.img.gz"
 BOOTBLOB:jetson-orin-nano-devkit-nvme = "boot0_orin_nano_devkit_nvme.img.gz"
 BOOTBLOB:jetson-orin-nx-seeed-j4012 = "boot0_orin_nx_seed_j4012.img.gz"
+BOOTBLOB:jetson-xavier = "bins_agx_xavier.tar.gz"
+BOOTBLOB:jetson-xavier-nx-devkit-emmc = "boot0_xavier_nx_emmc.tar.gz"
+BOOTBLOB:jetson-xavier-nx-devkit = "boot0_xavier_nx_sd.tar.gz"
 
 PARTSPEC:jetson-agx-orin-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nx-xavier-nx-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nano-devkit-nvme = "partition_specification234_orin_nano.txt"
 PARTSPEC:jetson-orin-nx-seeed-j4012 = "partition_specification234_orin_nano.txt"
+PARTSPEC:jetson-xavier = "partition_specification194.txt"
+PARTSPEC:jetson-xavier-nx-devkit-emmc = "partition_specification194_nxde.txt"
+PARTSPEC:jetson-xavier-nx-devkit = "partition_specification194_nxde.txt"
 
+# The boot blobs have been extracted from the initramfs of devices flashed with
+# jetson-flash, right after provisioning. This ensures that the UEFI store
+# is not populated with boot options that contain the GUIDs of the eMMC
+# of the device used for development.
+BOOT0_PREFLASHED = "boot0.img"
+BOOT0_PREFLASHED:jetson-xavier = "boot0_mmcblk0boot0.img"
+BOOT0_PREFLASHED:jetson-xavier-nx-devkit-emmc = "boot0_mtdblock0.img"
+BOOT0_PREFLASHED:jetson-xavier-nx-devkit = "boot0_mtdblock0.img"
 
 BINARY_INSTALL_PATH = "/opt/tegra-binaries/"
 
@@ -30,6 +62,9 @@ SRC_URI = " \
     file://${PARTSPEC} \
     file://${UEFI_CAPSULE};unpack=0 \
 "
+install_artifacts_orin() {
+    install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/${BOOT0_PREFLASHED}
+}
 
 do_install() {
     # Ensure install is not executed until
@@ -45,15 +80,57 @@ do_install() {
     done
 
     install -d ${D}/${BINARY_INSTALL_PATH}
-    install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
     install ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
     install ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
+}
+
+do_install:append:jetson-orin-nx-xavier-nx-devkit() {
+   install_artifacts_orin
+}
+
+do_install:append:jetson-orin-nano-devkit-nvme() {
+   install_artifacts_orin
+}
+
+do_install:append:jetson-agx-orin-devkit() {
+   install_artifacts_orin
+}
+
+
+install_artifacts_xavier() {
+    install -m 0644 ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/
+    tar xf ${D}/${BINARY_INSTALL_PATH}/${BOOTBLOB} -C ${WORKDIR}/ ${BOOT0_PREFLASHED}
+    install ${WORKDIR}/${BOOT0_PREFLASHED} ${D}/${BINARY_INSTALL_PATH}/
+}
+
+do_install:append:jetson-xavier() {
+    install_artifacts_xavier
+}
+
+do_install:append:jetson-xavier-nx-devkit-emmc() {
+    install_artifacts_xavier
+}
+
+do_install:append:jetson-xavier-nx-devkit() {
+   install_artifacts_xavier
 }
 
 do_deploy() {
     rm -rf ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH}) || true
     mkdir -p ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
     cp -r ${D}/${BINARY_INSTALL_PATH}/* ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
+}
+
+do_deploy:append:jetson-xavier() {
+    tar xf ${WORKDIR}/${BOOTBLOB} -C ${DEPLOY_DIR_IMAGE}/tegra-binaries/
+}
+
+do_deploy:append:jetson-xavier-nx-devkit-emmc() {
+    tar xf ${WORKDIR}/${BOOTBLOB} -C ${DEPLOY_DIR_IMAGE}/tegra-binaries/
+}
+
+do_deploy:append:jetson-xavier-nx-devkit() {
+    tar xf ${WORKDIR}/${BOOTBLOB} -C ${DEPLOY_DIR_IMAGE}/tegra-binaries/
 }
 
 FILES:${PN} += " \

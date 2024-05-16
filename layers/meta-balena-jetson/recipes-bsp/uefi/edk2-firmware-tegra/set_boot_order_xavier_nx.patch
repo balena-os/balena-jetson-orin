@@ -1,0 +1,24 @@
+Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/PlatformBootOrderLib.c
+===================================================================
+--- edk2-tegra.orig/edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/PlatformBootOrderLib.c
++++ edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Library/PlatformBootOrderLib/PlatformBootOrderLib.c
+@@ -33,10 +33,6 @@ STATIC NVIDIA_BOOT_ORDER_PRIORITY  mBoot
+   { "scsi",     MAX_INT32, MESSAGING_DEVICE_PATH, MSG_SCSI_DP,           MAX_UINT8                },
+   { "usb",      MAX_INT32, MESSAGING_DEVICE_PATH, MSG_USB_DP,            MAX_UINT8                },
+   { "sata",     MAX_INT32, MESSAGING_DEVICE_PATH, MSG_SATA_DP,           MAX_UINT8                },
+-  { "pxev4",    MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv4_DP,           MAX_UINT8                },
+-  { "httpv4",   MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv4_DP,           NVIDIA_BOOT_TYPE_HTTP    },
+-  { "pxev6",    MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv6_DP,           MAX_UINT8                },
+-  { "httpv6",   MAX_INT32, MESSAGING_DEVICE_PATH, MSG_IPv6_DP,           NVIDIA_BOOT_TYPE_HTTP    },
+   { "nvme",     MAX_INT32, MESSAGING_DEVICE_PATH, MSG_NVME_NAMESPACE_DP, MAX_UINT8                },
+   { "ufs",      MAX_INT32, MESSAGING_DEVICE_PATH, MSG_UFS_DP,            MAX_UINT8                },
+   { "sd",       MAX_INT32, MESSAGING_DEVICE_PATH, MSG_SD_DP,             MAX_UINT8                },
+@@ -45,7 +41,7 @@ STATIC NVIDIA_BOOT_ORDER_PRIORITY  mBoot
+   { "boot.img", MAX_INT32, MAX_UINT8,             MAX_UINT8,             NVIDIA_BOOT_TYPE_BOOTIMG },
+ };
+ 
+-#define DEFAULT_BOOT_ORDER_STRING  "boot.img,usb,sd,emmc,ufs"
++#define DEFAULT_BOOT_ORDER_STRING  "boot.img,sd,emmc,usb,ufs"
+ 
+ STATIC
+ INT32

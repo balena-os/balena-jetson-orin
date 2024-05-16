@@ -1,8 +1,12 @@
-do_install:tegra234() {
+inherit deploy
+
+do_install() {
     install -d ${D}/boot/extlinux
     cp ${DEPLOY_DIR_IMAGE}/extlinux/extlinux.conf ${B}/
     install -m 0644 ${B}/extlinux.conf ${D}/boot/extlinux/
-    #install -m 0644 ${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}${KERNEL_INITRAMFS}-${MACHINE}.bin ${D}/boot/${KERNEL_IMAGETYPE}
+}
+
+do_deploy() {
     touch ${DEPLOY_DIR_IMAGE}/extra_uEnv.txt
 }
 
@@ -13,3 +17,5 @@ do_compile() {
 }
 
 FILES:${PN} = "/boot/extlinux/extlinux.conf"
+
+addtask do_deploy after do install
