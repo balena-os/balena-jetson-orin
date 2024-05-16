@@ -6,6 +6,7 @@ SRC_URI:append = " \
     file://0001-edk2-Disable-PXE-and-HTTP-boot.patch;patchdir=../edk2 \
     file://0001-FmpDevicePkg-Force-accept-old-UEFI-capsule.patch;patchdir=../edk2 \
     file://0001-TegraVirt-Set-UEFI-boot-timeout-to-5-seconds.patch;patchdir=../edk2-nvidia \
+    file://0001-BootChainDxePrivate-Increase-maximum-bootchain-retry.patch;patchdir=../edk2-nvidia \
 "
 
 SRC_URI:append:jetson-agx-orin-devkit = " \
