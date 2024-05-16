@@ -5,20 +5,59 @@ set -o errexit
 # device tree with embedded cmdline
 # and updates the kernel, as well as
 # the rest of the bootloader binaries
-
 . /usr/libexec/os-helpers-fs
 . /usr/sbin/balena-config-vars
+source /usr/bin/uefi_common.func
 
 DURING_UPDATE=${DURING_UPDATE:-0}
+bootloader_blob="/opt/tegra-binaries/TEGRA_BL_3701.Cap.gz"
 bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/mmcblk0"
 use_capsule=1
+efivars_dir="/sys/firmware/efi/efivars/"
+# See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
+platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
+platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
+os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
+tmp_file="/tmp/platformspecfile.bin"
+device_type="jetson-agx-orin-devkit"
+boardspec=$(tegra-boardspec 2>/dev/null)
+TegraPlatformSpec="${boardspec}-${device_type}-"
+compatspec=$(echo "$boardspec" | gen_compat_spec)
+TegraPlatformCompatSpec="${compatspec}-${device_type}-"
 
-bootloader_blob="/opt/tegra-binaries/TEGRA_BL_3701.Cap.gz"
+write_jetson_update_efivars() {
+    info "Writing of jetson efivars triggered from old OS hook"
+    if [ -d $efivars_dir ]; then
+        # If the file already exists, writing to it will fail
+        # causing the entire hook to fail
+        if [ ! -e ${platform_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
+            dd if=${tmp_file} of=${platform_spec_efivar}
+            info "PlatformSpec variable created"
+        else
+            info "PlatformSpec variable already exists"
+        fi
 
-info_log()
-{
-    echo "[INFO] $@"
+        if [ ! -e ${platform_compat_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+            dd if=${tmp_file} of=${platform_compat_spec_efivar}
+            info "PlatformCompatSpec variable created"
+        else
+            info "PlatformCompatSpec variable already exists"
+        fi
+
+        printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
+        dd if=${tmp_file} of=${os_indications_efivar}
+        info "OsIndications variable written"
+    else
+        fail "sysfs not accessible!"
+        return 1
+    fi
+
+    return 0
 }
 
 check_disable_xudc()
@@ -27,17 +66,17 @@ check_disable_xudc()
 
     if [ -e $extlinuxfile ]; then
        if grep -q "l4tver=35.1.0" "${extlinuxfile}"; then
-            info_log "Old root is running L4T 35.1.0, will disable tegra-xudc from the device-trees"
+            info "Old root is running L4T 35.1.0, will disable tegra-xudc from the device-trees"
             use_capsule=0
             for dtbfile in `find /mnt/sysroot/active/ -name "*.dtb" -type f`; do
-                info_log "Disabling tegra-xudc in $dtbfile ...";
+                info "Disabling tegra-xudc in $dtbfile ...";
                 fdtput -t s $dtbfile /xudc status disabled
                 fdtput -t s $dtbfile / nvidia,dtsfilename "tegra234-p3701-0000-p3737-0000_xudc_disabled.dts"
                 current_xudc_status=$(fdtget $dtbfile /xudc status)
-                info_log "$dtbfile now has xudc $current_xudc_status"
+                info "$dtbfile now has xudc $current_xudc_status"
             done
         else
-            info_log "extlinux file not found in old rootfs"
+            info "extlinux file not found in old rootfs"
         fi;
     fi;
 }
@@ -65,19 +104,19 @@ check_and_update_esp_flags() {
     resin_boot_part_type=$(sfdisk --part-type $internal_storage $resin_boot_index)
 
     if [ "$esp_type" = "$esp_part_type" ]; then
-        info_log "esp partition has esp flag, will be cleared"
+        info "esp partition has esp flag, will be cleared"
         sfdisk --part-type $internal_storage $esp_index $data_type
         sync
     else
-        info_log "no type change needed on esp partition"
+        info "no type change needed on esp partition"
     fi
 
     if [ "$resin_boot_part_type" != "$esp_type" ]; then
-        info_log "resin-boot partition does not have esp type, must be added"
+        info "resin-boot partition does not have esp type, must be added"
         sfdisk --part-type $internal_storage $resin_boot_index $esp_type
         sync
     else
-        info_log "no type change needed on resin-boot partition"
+        info "no type change needed on resin-boot partition"
     fi
 }
 
@@ -90,14 +129,7 @@ do_capsule_update() {
     mkdir -p /mnt/boot/EFI/UpdateCapsule/
     gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
     sync
-
-    if [ $(ls -l ${efivars_dir}OsIndications* | wc -l) -gt 0 ]; then
-        info "Once a release that bindmounts sysfs is available in production, the efi vars can be updated from here instead of the after hook"
-    else
-        # Once the above condition is met, we could drop the after hook and use the legacy update mode if the base release is older
-        # than the one with sysfs bindmount in hostapp-update
-        info "Sysfs directory exists, but is not bindmounted. After hook will write the efi variables from the old OS"
-    fi
+    write_jetson_update_efivars
 }
 
 do_legacy_update() {
@@ -106,13 +138,13 @@ do_legacy_update() {
     update_bootloader_md5sum=$(md5sum $bootloader_blob | awk '{print $1}')
 
     if [ ! "$existing_bootloader_md5sum" = "$update_bootloader_md5sum" ]; then
-        info_log "Will clear bootloader device before the update"
+        info "Will clear bootloader device before the update"
         flash_erase /dev/mtd0 0 0 || true
-        info_log "Updating bootloader device"
+        info "Updating bootloader device"
         gunzip -k -c $bootloader_blob | dd of=$bootloader_device
-        info_log "Updated bootloader device"
+        info "Updated bootloader device"
     else
-        info_log "No need to update bootloader device"
+        info "No need to update bootloader device"
     fi
 
     # Sync internal memory
