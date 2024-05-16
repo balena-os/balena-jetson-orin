@@ -117,5 +117,27 @@ info "=========================="
 /usr/sbin/nvbootctrl dump-slots-info || true
 info "=========================="
 
+# This allows for writing UEFI variables
+# in L4T 36.3, in the case where the hook
+# is triggered by the rollback-health script
+unload_spi_drivers() {
+spi_modules=("spi_tegra210_quad" "spi_tegra114")
+
+for spi_module in "${spi_modules[@]}"
+do
+    if lsmod | grep -q $spi_module ; then
+        echo "Unloading $spi_module"
+        rmmod $spi_module
+
+        if [ $? -eq 0 ]; then
+            echo "Unloaded $spi_module"
+        fi
+    fi
+done
+}
+
+unload_spi_drivers
+
 do_capsule_update
 check_and_update_esp_flags
+
