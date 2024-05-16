@@ -5,6 +5,7 @@ SRC_URI:append = " \
     file://0006-boot.patch;patchdir=.. \
     file://skip_network_boot.patch;patchdir=.. \
     file://0001-FmpDevicePkg-Force-accept-old-UEFI-capsule.patch;patchdir=../edk2 \
+    file://0001-BootChainDxePrivate-Increase-maximum-bootchain-retry.patch;patchdir=../edk2-nvidia \
 "
 
 SRC_URI:append:jetson-agx-orin-devkit = " \
