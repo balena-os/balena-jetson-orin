@@ -1,5 +1,4 @@
 FILESEXTRAPATHS:append := ":${THISDIR}/files"
-FILESEXTRAPATHS:append := ":${THISDIR}/98-efivars-orin-nx-xavier-nx-devkit"
 FILESEXTRAPATHS:append := ":${THISDIR}/98-clear-agx-orin-unused-capsule"
 
 DEPENDS:append = " tegra-flash-dry"
@@ -24,14 +23,7 @@ HOSTAPP_HOOKS:append:jetson-orin-nano-devkit-nvme = " \
 HOSTAPP_HOOKS_DIRS:append:jetson-agx-orin-devkit = " 98-clear-agx-orin-unused-capsule"
 HOSTAPP_HOOKS:append:jetson-agx-orin-devkit = " 98-clear-agx-orin-unused-capsule/before "
 
-HOSTAPP_HOOKS_DIRS:append:jetson-orin-nx-xavier-nx-devkit = " 98-efivars-orin-nx-xavier-nx-devkit"
-HOSTAPP_HOOKS:append:jetson-orin-nx-xavier-nx-devkit = " 98-efivars-orin-nx-xavier-nx-devkit/after "
-
 HOSTAPP_HOOKS:remove:jetson-orin-nx-seeed-j4012 = "99-resin-bootfiles-orin-nx-xavier-nx-devkit"
-
 HOSTAPP_HOOKS:append:jetson-orin-nx-seeed-j4012 = " \
      99-resin-bootfiles-orin-nx-seeed-j4012 \
 "
-
-HOSTAPP_HOOKS_DIRS:remove:jetson-orin-nx-seeed-j4012 = " 98-efivars-orin-nx-xavier-nx-devkit"
-HOSTAPP_HOOKS:remove:jetson-orin-nx-seeed-j4012 = " 98-efivars-orin-nx-xavier-nx-devkit/after"
