@@ -8,17 +8,56 @@ set -o errexit
 
 . /usr/libexec/os-helpers-fs
 . /usr/sbin/balena-config-vars
+source /usr/bin/uefi_common.func
 
+efivars_dir="/sys/firmware/efi/efivars/"
+# See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
+platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
+platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
+os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
+tmp_file="/tmp/platformspecfile.bin"
+device_type="jetson-orin-nano-devkit"
 DURING_UPDATE=${DURING_UPDATE:-0}
 bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/nvme0n1"
 use_capsule=1
-
 bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Orin_Nano.Cap.gz"
+boardspec=$(tegra-boardspec 2>/dev/null)
+TegraPlatformSpec="${boardspec}-${device_type}-"
+compatspec=$(echo "$boardspec" | gen_compat_spec)
+TegraPlatformCompatSpec="${compatspec}-${device_type}-"
 
-info_log()
-{
-    echo "[INFO] $@"
+write_jetson_update_efivars() {
+    info "Writing of jetson efivars triggered from old OS hook"
+    if [ -d $efivars_dir ]; then
+        # If the file already exists, writing to it will fail
+        # causing the entire hook to fail
+        if [ ! -e ${platform_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
+            dd if=${tmp_file} of=${platform_spec_efivar}
+            info "PlatformSpec variable created"
+        else
+            info "PlatformSpec variable already exists"
+        fi
+
+        if [ ! -e ${platform_compat_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+            dd if=${tmp_file} of=${platform_compat_spec_efivar}
+            info "PlatformCompatSpec variable created"
+        else
+            info "PlatformCompatSpec variable already exists"
+        fi
+
+        printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
+        dd if=${tmp_file} of=${os_indications_efivar}
+        info "OsIndications variable written"
+    else
+        fail "sysfs not accessible!"
+    fi
+
+    return 0
 }
 
 # While the UEFI firmware accepts loading the uefi bootloader
@@ -29,7 +68,6 @@ info_log()
 # which sets these flags for the 'esp' partition only and
 # we preferred to include the efi bootloader in our
 # own 'resin-boot' partition instead, we do not have the flags
-# set by the nvidia flashing tools and have to
 # set them now. This way, on the next update the
 # UEFI firmware will not load the UEFI bootloader
 # from the boot partition, and instead will read the
@@ -44,19 +82,19 @@ check_and_update_esp_flags() {
     resin_boot_part_type=$(sfdisk --part-type $internal_storage $resin_boot_index)
 
     if [ "$esp_type" = "$esp_part_type" ]; then
-        info_log "esp partition has esp flag, will be cleared"
+        info "esp partition has esp flag, will be cleared"
         sfdisk --part-type $internal_storage $esp_index $data_type
         sync
     else
-        info_log "no type change needed on esp partition"
+        info "no type change needed on esp partition"
     fi
 
     if [ "$resin_boot_part_type" != "$esp_type" ]; then
-        info_log "resin-boot partition does not have esp type, must be added"
+        info "resin-boot partition does not have esp type, must be added"
         sfdisk --part-type $internal_storage $resin_boot_index $esp_type
         sync
     else
-        info_log "no type change needed on resin-boot partition"
+        info "no type change needed on resin-boot partition"
     fi
 }
 
@@ -64,17 +102,12 @@ info "Bootloader blob is $bootloader_blob"
 
 do_capsule_update() {
     # Unzip capsule to the boot partition
+    info "Will extract UEFI Capsule..."
     mkdir -p /mnt/boot/EFI/UpdateCapsule/
     gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
     sync
-
-    if [ $(ls -l ${efivars_dir}OsIndications* | wc -l) -gt 0 ]; then
-        info "Once a release that bindmounts sysfs is available in production, the efi vars can be updated from here instead of the after hook"
-    else
-        # Once the above condition is met, we could drop the after hook and use the legacy update mode if the base release is older
-        # than the one with sysfs bindmount in hostapp-update
-        info "Sysfs directory exists, but is not bindmounted. After hook will write the efi variables from the old OS"
-    fi
+    info "Extracted UEFI Capsule."
+    write_jetson_update_efivars
 }
 
 info "Pre-update A/B slots info:"
