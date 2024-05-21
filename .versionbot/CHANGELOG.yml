@@ -1,4 +1,24 @@
 - commits:
+    - subject: "hostapp-update-hooks: AGX Orin - write UEFI variables from current
+        hostOS"
+      hash: a6e289927f062b875fc1506822a2631990a2753d
+      body: |
+        because the efivars sysfs is accessible since balenaOS v3.1.10
+        and we need this to trigger the capsule update when rolling back
+        from L4T 35.5.0 (rollback health).
+      footer:
+        Changelog-entry: "hostapp-update-hooks: AGX Orin - write UEFI variables from
+          current hostOS"
+        changelog-entry: "hostapp-update-hooks: AGX Orin - write UEFI variables from
+          current hostOS"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.2.4+rev3
+  title: ""
+  date: 2024-05-21T19:18:53.105Z
+- commits:
     - subject: Update balena-yocto-scripts to 466d6ec592656bb950a393fc1c7a5d5ff4cf3455
       hash: 71ad450ce19a6a7bba5ea9845a9101e49cff4774
       body: Update balena-yocto-scripts

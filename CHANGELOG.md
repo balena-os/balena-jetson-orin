@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.2.4+rev3
+## (2024-05-21)
+
+* hostapp-update-hooks: AGX Orin - write UEFI variables from current hostOS [Alexandru Costache]
+
 # v5.2.4+rev2
 ## (2024-05-16)
 
