@@ -1,4 +1,37 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v5.3.10"
+      hash: b1a2f41e1cf7f818b63229a259a5ef6f3f47dd51
+      body: >
+        This version passed OS tests for:
+
+
+        - Orin NX in Xavier NX Devkit
+
+        - AGX Orin Devkit
+
+        - Orin Nano 8GB SD
+
+        - Seeed J4012
+
+
+        However, PR 442 has been force pushed for a newer
+
+        meta-balena update and test results were overwritten.
+
+
+        See
+        https://github.com/balena-os/balena-jetson-orin/pull/442#issuecomment-2132324577
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v5.3.10"
+        changelog-entry: "layers/meta-balena: Update to v5.3.10"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.3.10
+  title: ""
+  date: 2024-05-28T14:48:40.458Z
+- commits:
     - subject: "hostapp-update-hooks: AGX Orin - write UEFI variables from current
         hostOS"
       hash: a6e289927f062b875fc1506822a2631990a2753d
