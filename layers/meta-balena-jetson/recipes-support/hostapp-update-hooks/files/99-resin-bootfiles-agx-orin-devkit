@@ -81,21 +81,7 @@ check_disable_xudc()
     fi;
 }
 
-# While the UEFI firmware accepts loading the uefi bootloader
-# from any partition, it doesn't do the same for
-# the update capsule, which needs to reside on a partition
-# that has the boot,esp flags set. Since we originally
-# integrated this device type using the default xml
-# which sets these flags for the 'esp' partition only and
-# we preferred to include the efi bootloader in our
-# own 'resin-boot' partition instead, we do not have the flags
-# set by the nvidia flashing tools and have to
-# set them now. This way, on the next update the
-# UEFI firmware will not load the UEFI bootloader
-# from the boot partition, and instead will read the
-# capsule and perform the update.
 check_and_update_esp_flags() {
-    data_type="EBD0A0A2-B9E5-4433-87C0-68B6B72699C7"
     esp_type="C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
     esp_index="5"
     resin_boot_index="6"
@@ -103,12 +89,12 @@ check_and_update_esp_flags() {
     esp_part_type=$(sfdisk --part-type $internal_storage $esp_index)
     resin_boot_part_type=$(sfdisk --part-type $internal_storage $resin_boot_index)
 
-    if [ "$esp_type" = "$esp_part_type" ]; then
-        info "esp partition has esp flag, will be cleared"
-        sfdisk --part-type $internal_storage $esp_index $data_type
-        sync
+    if [ "$esp_type" != "$esp_part_type" ]; then
+        info "type change needed on esp partition"
+	sfdisk --part-type $internal_storage $esp_index $esp_type
+	sync
     else
-        info "no type change needed on esp partition"
+        info "ok - esp partition has esp flag"
     fi
 
     if [ "$resin_boot_part_type" != "$esp_type" ]; then
@@ -124,11 +110,41 @@ check_disable_xudc
 
 info "Bootloader blob is $bootloader_blob"
 
+# This allows for writing UEFI variables
+# in L4T 36.3, in the case where the hook
+# is triggered by the rollback-health script
+unload_spi_drivers() {
+spi_modules=("spi_tegra210_quad" "spi_tegra114")
+
+for spi_module in "${spi_modules[@]}"
+do
+    if lsmod | grep -q $spi_module ; then
+        echo "Unloading $spi_module"
+        rmmod $spi_module
+
+        if [ $? -eq 0 ]; then
+            echo "Unloaded $spi_module"
+        fi
+    fi
+done
+}
+
+unload_spi_drivers
 do_capsule_update() {
-    # Unzip capsule to the boot partition
-    mkdir -p /mnt/boot/EFI/UpdateCapsule/
-    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    esp_dev=$(get_state_path_from_label "esp")
+    esp_tmp_dir="/tmp/esp/"
+    capsule_dir="/EFI/UpdateCapsule/"
+    /usr/sbin/mkfs.vfat ${esp_dev}
+    mkdir -p ${esp_tmp_dir}
+    mount ${esp_dev} ${esp_tmp_dir}
+    mkdir -p "${esp_tmp_dir}${capsule_dir}"
+    # Unzip capsule to the esp partition, because the uncompressed capsule size
+    # is too large for the boot partition
+    mkdir -p "${esp_tmp_dir}${capsule_dir}"
+    gunzip -k -c ${bootloader_blob} | dd of="${esp_tmp_dir}${capsule_dir}TEGRA_BL.Cap"
     sync
+    umount $esp_dev
+    rm -rf $esp_tmp_dir || true
     write_jetson_update_efivars
 }
 
@@ -150,7 +166,6 @@ do_legacy_update() {
     # Sync internal memory
     sync ${bootloader_device}
 }
-
 
 info "Pre-update A/B slots info:"
 info "=========================="
