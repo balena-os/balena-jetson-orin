@@ -3,7 +3,7 @@ From: Alexandru Costache <alexandru@balena.io>
 Date: Tue, 14 May 2024 16:10:55 +0000
 Subject: [PATCH] L4TLauncher: Don't override bootchain with rootfs chain
 
-because the two run independently in balenaOS, and rootfs validation
+... because the two run independently in balenaOS, and rootfs validation
 is performed by balenaOS. balenaOS also handles rollbacks in case of
 an unbootable rootfs.
 

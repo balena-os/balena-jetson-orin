@@ -1,0 +1,52 @@
+From 60ad8c3de34fd7229505944a2753e3bb93812872 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Wed, 29 May 2024 08:43:32 +0000
+Subject: [PATCH] L4T-Launcher: Set partition indexes for Orin NX Seeed
+
+For the Orin NX Seeed we included more device-specific partitions
+on the storage medium, although they are not used right now, to
+account for any potential breaking changes that may appear in
+future BSP releases.
+
+Therefore we update the partition indexes for rootA and rootB,
+and also make sure to parse the index as a hex number, from
+resinOS_uEnv.txt, because it is larger than 10.
+
+Upstream-status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c | 2 +-
+ Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+index 2ad26601..78ec66a3 100644
+--- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
++++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+@@ -2585,7 +2585,7 @@ ProcessResinOSuEnv (
+     CleanLine = CleanExtLinuxLine (FileLine);
+     if (*CleanLine != CHAR_NULL) {
+       if (StrStr(CleanLine, L"resin_root_part=")) {
+-       *RootPart = StrDecimalToUintn(CleanLine + 16);
++       *RootPart = StrHexToUintn(CleanLine + 16);
+        Print(L"RootPart is %d\r\n", *RootPart);
+       } else if (StrStr(CleanLine, L"upgrade_available=")) {
+         *UpgradeAvailable = StrDecimalToUintn(CleanLine + 18);
+diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
+index db3fe605..f5974a56 100644
+--- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
++++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
+@@ -38,8 +38,8 @@
+ #define BALENA_BOOT_CONF_PATH          L"resinOS_uEnv.txt"
+ #define BALENA_BOOTCOUNT_FILE_PATH     L"bootcount.env"
+ #define MAX_RESINOS_UENV_SIZE          256
+-#define BALENA_ROOTFS_INDEX_A          7
+-#define BALENA_ROOTFS_INDEX_B          8
++#define BALENA_ROOTFS_INDEX_A          15
++#define BALENA_ROOTFS_INDEX_B          16
+ #define BALENA_OS_BC_LIM               3
+ #define BALENA_EXTRA_UENV_FILE         L"extra_uEnv.txt"
+ #define BOOTIMG_BASE_NAME       L"kernel"
+-- 
+2.17.1
+

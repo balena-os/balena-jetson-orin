@@ -1,35 +1,36 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI:append = " \ 
-    file://0004-Add-symbolic-links-support-32-5-2.patch;patchdir=.. \
-    file://0006-boot.patch;patchdir=.. \
-    file://skip_network_boot.patch;patchdir=.. \
-    file://0001-FmpDevicePkg-Force-accept-old-UEFI-capsule.patch;patchdir=../edk2 \
-    file://0001-BootChainDxePrivate-Increase-maximum-bootchain-retry.patch;patchdir=../edk2-nvidia \
+    file://0001-Add-symbolic-links-support-35-5-0.patch;patchdir=.. \
+    file://0002-boot.patch;patchdir=.. \
+    file://0003-skip_network_boot.patch;patchdir=.. \
+    file://0004-FmpDevicePkg-Force-accept-old-UEFI-capsule.patch;patchdir=../edk2 \
+    file://0005-BootChainDxePrivate-Increase-maximum-bootchain-retry.patch;patchdir=../edk2-nvidia \
+    file://0006-L4TLauncher-Don-t-override-bootchain-with-rootfs-cha.patch;patchdir=../edk2-nvidia \
 "
+
+# TODO: Check if we really need to switch boot chains in 35.5.0
+# because in the case of a rollback, the UEFI bootloader
+# is always the new one. This does not appear to be needed
+# on the AGX Orin Devkit 32GB on rollback altboot to 35.4.1
+#  file://0001-Switch-boot-chains.patch;patchdir=../edk2-nvidia
 
 SRC_URI:append:jetson-agx-orin-devkit = " \
-    file://0005-Add-hup-and-rollback-support-agx-orin-32-5-2.patch;patchdir=.. \
+    file://Add-hup-and-rollback-support-agx-orin-35-5-0.patch;patchdir=.. \
 "
 
-SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \ 
-    file://0005-L4TLauncher-hup-rollback-support-orin-nx.patch;patchdir=.. \
-    file://set_boot_order.patch;patchdir=.. \
+SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \
+    file://0007-set-boot-order.patch;patchdir=.. \
+    file://Add-hup-and-rollback-support-orin-nx-35-5-0.patch;patchdir=../edk2-nvidia \
 "
 
-SRC_URI:append:jetson-orin-nano-devkit-nvme = " \ 
-    file://0005-Add-hup-and-rollback-support-orin-nano-35-5-0.patch;patchdir=.. \
-    file://set_boot_order.patch;patchdir=.. \
-    file://0001-Switch-boot-chains.patch;patchdir=../edk2-nvidia \
-    file://0001-L4TLauncher-Don-t-override-bootchain-with-rootfs-cha.patch;patchdir=../edk2-nvidia \
-"
-
-SRC_URI:remove:jetson-orin-nx-seeed-j4012 = " \
-    file://0005-L4TLauncher-hup-rollback-support-orin-nx.patch;patchdir=.. \
+SRC_URI:append:jetson-orin-nano-devkit-nvme = " \
+    file://0007-set-boot-order.patch;patchdir=.. \
+    file://Add-hup-and-rollback-support-orin-nano-35-5-0.patch;patchdir=.. \
 "
 
 SRC_URI:append:jetson-orin-nx-seeed-j4012 = " \
-    file://0005-L4TLauncher-hup-rollback-support-orin-nx-seed-j4012.patch;patchdir=.. \
+    file://Add-hup-and-rollback-support-orin-nx-seed-j4012-35-5-0.patch;patchdir=../edk2-nvidia \ 
 "
 
 do_deploy:append() {
