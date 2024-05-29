@@ -1,8 +1,8 @@
-
-
-L4TLauncher is loaded by the UEFI firmware from
-the resin-boot partition. The launcher's name
-is BOOTAARCH64.efi.
+From bc1654489a0a56262d5279047e330f652ca9d2fa Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Tue, 28 May 2024 14:34:56 +0000
+Subject: [PATCH] L4TLauncher is loaded by the UEFI firmware from the
+ resin-boot partition. The launcher's name is BOOTAARCH64.efi.
 
 With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
 extra_uEnv.txt and bootcount.env in order to load the
@@ -16,12 +16,16 @@ Supervisor for the rest of the boards that use u-boot.
 
 Upstream-status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ .../Application/L4TLauncher/L4TLauncher.c     | 443 +++++++++++++++++-
+ .../Application/L4TLauncher/L4TLauncher.h     |  15 +-
+ 2 files changed, 444 insertions(+), 14 deletions(-)
 
-Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-===================================================================
---- edk2-tegra.orig/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-+++ edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-@@ -986,6 +986,145 @@ CheckCommandString (
+diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+index 1538bb0b..2ad26601 100644
+--- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
++++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+@@ -1123,6 +1123,145 @@ CheckCommandString (
    return EFI_NOT_FOUND;
  }
  
@@ -167,7 +171,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
  /**
    Process the extlinux.conf file
  
-@@ -1003,6 +1142,7 @@ EFIAPI
+@@ -1140,6 +1279,7 @@ EFIAPI
  ProcessExtLinuxConfig (
    IN EFI_HANDLE             DeviceHandle,
    IN UINT32                 BootChain,
@@ -175,7 +179,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
    OUT EXTLINUX_BOOT_CONFIG  *BootConfig,
    OUT EFI_HANDLE            *RootFsHandle
    )
-@@ -1015,8 +1155,11 @@ ProcessExtLinuxConfig (
+@@ -1152,8 +1292,11 @@ ProcessExtLinuxConfig (
    CHAR16           *Timeout      = NULL;
    CHAR16           *CbootArg     = NULL;
    CHAR16           *PostCbootArg = NULL;
@@ -187,7 +191,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
  
    ZeroMem (BootConfig, sizeof (EXTLINUX_BOOT_CONFIG));
  
-@@ -1024,12 +1167,8 @@ ProcessExtLinuxConfig (
+@@ -1161,12 +1304,8 @@ ProcessExtLinuxConfig (
      return EFI_INVALID_PARAMETER;
    }
  
@@ -202,7 +206,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
    Status = OpenAndReadFileToBuffer (
               *RootFsHandle,
               EXTLINUX_CONF_PATH,
-@@ -1101,10 +1240,40 @@ ProcessExtLinuxConfig (
+@@ -1238,10 +1377,40 @@ ProcessExtLinuxConfig (
  
          Status = CheckCommandString (CleanLine, EXTLINUX_KEY_FDT, &BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
          if (!EFI_ERROR (Status)) {
@@ -243,7 +247,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
          if (!EFI_ERROR (Status)) {
            CbootArg = StrStr (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs, EXTLINUX_CBOOT_ARG);
            if (CbootArg != NULL) {
-@@ -1315,12 +1484,12 @@ ExtLinuxBoot (
+@@ -1454,12 +1623,12 @@ ExtLinuxBoot (
  
    // Reload fdt if needed
    Status = EfiGetSystemConfigurationTable (&gEfiAcpiTableGuid, &AcpiBase);
@@ -258,7 +262,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
      Status = OpenAndReadFileToBuffer (
                 DeviceHandle,
                 BootOption->DtbPath,
-@@ -1972,6 +2141,220 @@ Exit:
+@@ -2223,6 +2392,220 @@ Exit:
    return Status;
  }
  
@@ -455,7 +459,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +    CleanLine = CleanExtLinuxLine (FileLine);
 +    if (*CleanLine != CHAR_NULL) {
 +      if (StrStr(CleanLine, L"resin_root_part=")) {
-+       *RootPart = StrHexToUintn(CleanLine + 16);
++       *RootPart = StrDecimalToUintn(CleanLine + 16);
 +       Print(L"RootPart is %d\r\n", *RootPart);
 +      } else if (StrStr(CleanLine, L"upgrade_available=")) {
 +        *UpgradeAvailable = StrDecimalToUintn(CleanLine + 18);
@@ -479,7 +483,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
  /**
    This is the declaration of an EFI image entry point. This entry point is
    the same for UEFI Applications, UEFI OS Loaders, and UEFI Drivers, including
-@@ -2001,7 +2384,10 @@ L4TLauncher (
+@@ -2252,7 +2635,10 @@ L4TLauncher (
    EXTLINUX_BOOT_CONFIG       ExtLinuxConfig;
    UINTN                      ExtLinuxBootOption;
    UINTN                      Index;
@@ -491,8 +495,8 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
    if (EFI_ERROR (Status)) {
      ErrorPrint (L"%a: Unable to locate loaded image: %r\r\n", __FUNCTION__, Status);
-@@ -2014,6 +2400,9 @@ L4TLauncher (
-     return Status;
+@@ -2272,6 +2658,9 @@ L4TLauncher (
+     }
    }
  
 +  ErrorPrint(L"BalenaOS: Set BootMode to NVIDIA_L4T_BOOTMODE_DIRECT\r\r\n");
@@ -501,7 +505,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
    if (BootParams.BootMode == NVIDIA_L4T_BOOTMODE_GRUB) {
      ErrorPrint (L"%a: Attempting GRUB Boot\r\n", __FUNCTION__);
      do {
-@@ -2057,11 +2446,41 @@ L4TLauncher (
+@@ -2315,11 +2704,41 @@ L4TLauncher (
    }
  
    if (BootParams.BootMode == NVIDIA_L4T_BOOTMODE_DIRECT) {
@@ -546,11 +550,11 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
          BootParams.BootMode = NVIDIA_L4T_BOOTMODE_BOOTIMG;
          break;
        }
-Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
-===================================================================
---- edk2-tegra.orig/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
-+++ edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
-@@ -31,11 +31,21 @@
+diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
+index 15957ad2..db3fe605 100644
+--- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
++++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
+@@ -32,11 +32,21 @@
  #define BOOT_OS_VARIABLE_NAME  L"BootChainOsCurrent"
  
  #define ROOTFS_BASE_NAME        L"APP"
@@ -560,8 +564,8 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +#define BALENA_BOOT_CONF_PATH          L"resinOS_uEnv.txt"
 +#define BALENA_BOOTCOUNT_FILE_PATH     L"bootcount.env"
 +#define MAX_RESINOS_UENV_SIZE          256
-+#define BALENA_ROOTFS_INDEX_A          15
-+#define BALENA_ROOTFS_INDEX_B          16
++#define BALENA_ROOTFS_INDEX_A          7
++#define BALENA_ROOTFS_INDEX_B          8
 +#define BALENA_OS_BC_LIM               3
 +#define BALENA_EXTRA_UENV_FILE         L"extra_uEnv.txt"
  #define BOOTIMG_BASE_NAME       L"kernel"
@@ -573,7 +577,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
  #define EXTLINUX_KEY_TIMEOUT     L"TIMEOUT"
  #define EXTLINUX_KEY_DEFAULT     L"DEFAULT"
  #define EXTLINUX_KEY_MENU_TITLE  L"MENU TITLE"
-@@ -45,9 +55,10 @@
+@@ -46,9 +56,10 @@
  #define EXTLINUX_KEY_INITRD      L"INITRD"
  #define EXTLINUX_KEY_FDT         L"FDT"
  #define EXTLINUX_KEY_APPEND      L"APPEND"
@@ -585,3 +589,6 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
  #define MAX_EXTLINUX_OPTIONS  10
  
  typedef struct {
+-- 
+2.17.1
+
