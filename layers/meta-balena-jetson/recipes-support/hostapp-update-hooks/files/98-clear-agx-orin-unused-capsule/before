@@ -1,0 +1,11 @@
+#!/bin/sh
+
+set -o errexit
+
+. /usr/libexec/os-helpers-fs
+. /usr/sbin/balena-config-vars
+
+if [ -e /mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap ]; then
+    info "Found unused UEFI Capsule in the boot partition. Will be removed"
+    rm /mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap || true
+fi
