@@ -71,5 +71,21 @@ IMAGE_INSTALL:append:jetson-orin-nx-xavier-nx-devkit = " \
     pciutils \
 "
 
+IMAGE_INSTALL:append:jetson-orin-nano-4g-devkit = " \
+    parted \
+    gptfdisk \
+    tegra-nvpmodel \
+    tegra-configs-nvstartup \
+    tegra-configs-udev \
+    mtd-utils \
+    tegra-bluetooth \
+    tegra-wifi \
+    tegra-firmware-rtl8822 \
+    l4t-launcher-extlinux \
+    jetson-dtbs \
+    nvidia-display-driver \
+    tegra-nvpower \
+"
+
 IMAGE_INSTALL:remove = "kernel-image-image"
 
