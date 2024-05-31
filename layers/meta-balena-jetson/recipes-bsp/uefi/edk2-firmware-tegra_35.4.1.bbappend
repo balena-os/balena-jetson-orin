@@ -20,6 +20,11 @@ SRC_URI:append:jetson-orin-nano-devkit-nvme = " \
     file://set_boot_order.patch;patchdir=.. \
 "
 
+SRC_URI:append:jetson-orin-nano-seeed-j3010 = " \
+    file://0005-L4TLauncher-hup-rollback-support-orin-nano-seed-j3010.patch;patchdir=.. \
+    file://set_boot_order.patch;patchdir=.. \
+"
+
 SRC_URI:remove:jetson-orin-nx-seeed-j4012 = " \
     file://0005-L4TLauncher-hup-rollback-support-orin-nx.patch;patchdir=.. \
 "
