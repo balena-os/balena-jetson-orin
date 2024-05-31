@@ -62,6 +62,37 @@ write_jetson_update_efivars() {
     return 0
 }
 
+# This allows for writing UEFI variables
+# in L4T 36.3, in the case where the hook
+# is triggered by the rollback-health script
+unload_spi_drivers() {
+spi_modules=("spi_tegra210_quad" "spi_tegra114")
+
+for spi_module in "${spi_modules[@]}"
+do
+    if lsmod | grep -q $spi_module ; then
+        echo "Unloading $spi_module"
+        rmmod $spi_module
+
+        if [ $? -eq 0 ]; then
+            echo "Unloaded $spi_module"
+        fi
+    fi
+done
+}
+
+check_corrupted_slots()
+{
+    # Only the alternate slot can be corrupt, otherwise this script
+    # wouldn't be running because the device wouldn't boot
+    if nvbootctrl dump-slots-info | grep -q unbootable ; then
+        warn "alternate boot slot is unbootable and will require legacy boot blob update"
+        info "Will use legacy mode update for boot firmware because the UEFI capsule cannot be applied in the current state"
+        use_capsule=0
+    fi
+}
+
+
 # While the UEFI firmware accepts loading the uefi bootloader
 # from any partition, it doesn't do the same for
 # the update capsule, which needs to reside on a partition
@@ -70,6 +101,7 @@ write_jetson_update_efivars() {
 # which sets these flags for the 'esp' partition only and
 # we preferred to include the efi bootloader in our
 # own 'resin-boot' partition instead, we do not have the flags
+# set by the nvidia flashing tools and have to
 # set them now. This way, on the next update the
 # UEFI firmware will not load the UEFI bootloader
 # from the boot partition, and instead will read the
@@ -102,6 +134,26 @@ check_and_update_esp_flags() {
 
 info "Bootloader blob is $bootloader_blob"
 
+unload_spi_drivers
+
+do_legacy_update() {
+    bootloader_blob="/tmp/boot0.img"
+    mtdblock="/dev/mtdblock0"
+    gunzip -k -c /opt/tegra-binaries/boot0.img.gz > $bootloader_blob
+    existing_bootloader_md5sum=$(dd if=$mtdblock bs=1M status=none | md5sum | awk '{print $1}')
+    update_bootloader_md5sum=$(md5sum $bootloader_blob | awk '{print $1}')
+
+    if [ ! "$existing_bootloader_md5sum" = "$update_bootloader_md5sum" ]; then
+        info "Will clear bootloader device before legacy mode update"
+        mtd_debug erase /dev/mtd0 0x0 0x4000000 || true
+        info "Updating bootloader device in legacy mode update"
+        mtd_debug write /dev/mtd0 0x0 0x4000000 $bootloader_blob
+        info "Updated bootloader device in legacy mode update"
+    else
+        info "No need to update bootloader device"
+    fi
+}
+
 do_capsule_update() {
     # Unzip capsule to the boot partition
     info "Will extract UEFI Capsule..."
@@ -117,27 +169,19 @@ info "=========================="
 /usr/sbin/nvbootctrl dump-slots-info || true
 info "=========================="
 
-# This allows for writing UEFI variables
-# in L4T 36.3, in the case where the hook
-# is triggered by the rollback-health script
-unload_spi_drivers() {
-spi_modules=("spi_tegra210_quad" "spi_tegra114")
+if [ "$DURING_UPDATE" = "1" ]; then
+    check_corrupted_slots
+fi
 
-for spi_module in "${spi_modules[@]}"
-do
-    if lsmod | grep -q $spi_module ; then
-        echo "Unloading $spi_module"
-        rmmod $spi_module
+# See AGX Orin Devkit 32GB hook notes
+# for potential MB2 failure to read some qspi
+# partitions after 35.4.1 -> 35.5.0 and back.
+# This was not reproducible on the Orin Nano but we
+# want to avoid it, should it occur
+if [ $use_capsule -eq 1 ]; then
+    do_capsule_update
+else
+    do_legacy_update
+fi
 
-        if [ $? -eq 0 ]; then
-            echo "Unloaded $spi_module"
-        fi
-    fi
-done
-}
-
-unload_spi_drivers
-
-do_capsule_update
 check_and_update_esp_flags
-
