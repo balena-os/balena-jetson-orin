@@ -26,6 +26,15 @@ TegraPlatformSpec="${boardspec}-${device_type}-"
 compatspec=$(echo "$boardspec" | gen_compat_spec)
 TegraPlatformCompatSpec="${compatspec}-${device_type}-"
 
+get_board_sku() {
+    IFS=- read boardid fab boardsku boardrev fuselevel chiprev
+    if gen_compat_$boardid 2>/dev/null; then
+        echo "$boardsku"
+        return 0
+    fi
+    echo ""
+}
+
 write_jetson_update_efivars() {
     info "Writing of jetson efivars triggered from old OS hook"
     if [ -d $efivars_dir ]; then
@@ -81,6 +90,28 @@ check_disable_xudc()
     fi;
 }
 
+check_corrupted_slots()
+{
+    # Only the alternate slot can be corrupt, otherwise this script
+    # wouldn't be running because the device wouldn't boot
+    if nvbootctrl dump-slots-info | grep -q unbootable ; then
+	warn "alternate boot slot is unbootable and will require legacy boot blob update"
+        # 32GB units have SKUs 0000 and 0004 - see https://forums.developer.nvidia.com/t/which-agx-orin-i-have/276195/10
+        # We avoid sku 0005, because it's a 64GB and the boot blob
+        # is taken from a 32GB Devkit. This image shouldn't be
+        # used with 64GB units in production anyway.
+
+        boardsku=$(echo "$boardspec" | get_board_sku)
+
+        if [ "$boardsku" = "0000" -o "$boardsku" = "0004" ]; then
+	    info "Will use legacy mode update for boot firmware because the UEFI capsule cannot be applied in the current state"
+            use_capsule=0
+	else
+	    fail "Running on a non 32GB AGX Orin model with corrupt alternate slots. Cannot proceed with boot firmware update"
+	fi
+    fi
+}
+
 check_and_update_esp_flags() {
     esp_type="C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
     esp_index="5"
@@ -119,17 +150,22 @@ spi_modules=("spi_tegra210_quad" "spi_tegra114")
 for spi_module in "${spi_modules[@]}"
 do
     if lsmod | grep -q $spi_module ; then
-        echo "Unloading $spi_module"
+        info "Unloading $spi_module"
         rmmod $spi_module
 
         if [ $? -eq 0 ]; then
-            echo "Unloaded $spi_module"
+            info "Unloaded $spi_module"
         fi
     fi
 done
 }
 
+# Unload SPI drivers before any
+# nvbootctrl call. When running in L4T
+# 36.3, this is mandatory to avoid
+# system hangs.
 unload_spi_drivers
+
 do_capsule_update() {
     esp_dev=$(get_state_path_from_label "esp")
     esp_tmp_dir="/tmp/esp/"
@@ -149,22 +185,21 @@ do_capsule_update() {
 }
 
 do_legacy_update() {
-    bootloader_blob="/opt/tegra-binaries/boot0.img.gz"
-    existing_bootloader_md5sum=$(dd if=$bootloader_device bs=1M status=none | md5sum | awk '{print $1}')
+    bootloader_blob="/tmp/boot0.img"
+    mtdblock="/dev/mtdblock0"
+    gunzip -k -c /opt/tegra-binaries/boot0.img.gz > $bootloader_blob
+    existing_bootloader_md5sum=$(dd if=$mtdblock bs=1M status=none | md5sum | awk '{print $1}')
     update_bootloader_md5sum=$(md5sum $bootloader_blob | awk '{print $1}')
 
     if [ ! "$existing_bootloader_md5sum" = "$update_bootloader_md5sum" ]; then
-        info "Will clear bootloader device before the update"
-        flash_erase /dev/mtd0 0 0 || true
-        info "Updating bootloader device"
-        gunzip -k -c $bootloader_blob | dd of=$bootloader_device
-        info "Updated bootloader device"
+        info "Will clear bootloader device before legacy mode update"
+	mtd_debug erase /dev/mtd0 0x0 0x4000000 || true
+        info "Updating bootloader device in legacy mode update"
+	mtd_debug write /dev/mtd0 0x0 0x4000000 $bootloader_blob
+        info "Updated bootloader device in legacy mode update"
     else
         info "No need to update bootloader device"
     fi
-
-    # Sync internal memory
-    sync ${bootloader_device}
 }
 
 info "Pre-update A/B slots info:"
@@ -172,10 +207,31 @@ info "=========================="
 /usr/sbin/nvbootctrl dump-slots-info || true
 info "=========================="
 
+# In some cases of switching back and forth
+# between 35.4.1 and 35.5.0, i.e rollback altboot
+# the alternate slot may become corrupt
+# and the MB2 precompiled bootloader will refuse
+# to boot from the alternate slot, will fallback
+# to the previous one and also future capsule
+# updates will not work. In this case, we
+# have to fall back to the legacy update mode
+# which implies erasing and re-writing the
+# QSPI. Example MB2 logs for this scenario:
+# I> Successfully register XUSB FW load task with MB2 loader
+# I> Active chain: 1
+# I> Partition name: B_spe-fw
+# E> Cannot find partition B_spe-fw
+# E> Partition B_spe-fw not found
+# E> MB2_FW_LOAD: Failed to load FW.
+# C> Task 0x0 failed (err: 0x224d090d)
+# E> Top caller module: LOADER, error module: PARTITION_MANAGER, reason: 0x0d, aux_info: 0x09
+if [ "$DURING_UPDATE" = "1" ]; then
+    check_corrupted_slots
+fi
+
 if [ $use_capsule -eq 1 ]; then
     do_capsule_update
+    check_and_update_esp_flags
 else
     do_legacy_update
 fi
-
-check_and_update_esp_flags
