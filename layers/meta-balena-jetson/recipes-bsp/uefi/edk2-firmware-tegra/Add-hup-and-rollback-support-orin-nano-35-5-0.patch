@@ -92,7 +92,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +
 +  // Set default dtb as fail-safe
 +  *CustomFdtName = AllocateZeroPool(MAX_DTB_PATH_LEN);
-+  UnicodeSPrint (*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_ORIN_NX_DVK_DTB_NAME);
++  UnicodeSPrint (*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_ORIN_NANO_DTB_NAME);
 +
 +  Status = FindPartitionInfo (DeviceHandle, BALENA_BOOT_PARTITION, BootChain, NULL, &BootPartHandle);
 +  if (EFI_ERROR (Status)) {
@@ -146,7 +146,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +
 +      if (EFI_ERROR(Status)) {
 +        ErrorPrint(L"Selected dtb not found! Using the default DTB for this device type\n");
-+        UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_ORIN_NX_DVK_DTB_NAME);
++        UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_ORIN_NANO_DTB_NAME);
 +        return Status;
 +      }
 +    }
@@ -377,7 +377,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
 +       if (*CleanLine != CHAR_NULL) {
 +         if (StrStr(CleanLine, L"bootcount=")) {
 +           *BootCountValue = StrDecimalToUintn(CleanLine + 10);
-+           Print(L"%a: BootCount is %d : %s\r\n", __FUNCTION__, *BootCountValue);
++           Print(L"%a: BootCount is %d \r\n", __FUNCTION__, *BootCountValue);
 +
 +           if (FileHandle != NULL) {
 +             FileHandleClose (FileHandle);
@@ -569,7 +569,7 @@ Index: edk2-tegra/edk2-nvidia/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher
  #define RECOVERY_BASE_NAME      L"recovery"
  #define RECOVERY_DTB_BASE_NAME  L"recovery-dtb"
 -
-+#define DEFAULT_ORIN_NX_DVK_DTB_NAME     L"tegra234-p3767-0000-p3509-a02.dtb"
++#define DEFAULT_ORIN_NANO_DTB_NAME     L"tegra234-p3767-0003-p3768-0000-a0.dtb"
  #define EXTLINUX_KEY_TIMEOUT     L"TIMEOUT"
  #define EXTLINUX_KEY_DEFAULT     L"DEFAULT"
  #define EXTLINUX_KEY_MENU_TITLE  L"MENU TITLE"
