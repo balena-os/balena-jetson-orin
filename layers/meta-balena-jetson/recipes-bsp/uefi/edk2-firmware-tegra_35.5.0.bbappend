@@ -28,8 +28,8 @@ SRC_URI:append:jetson-orin-nx-seeed-j4012 = " \
 "
 
 SRC_URI:append:jetson-orin-nano-seeed-j3010 = " \
-    file://0005-L4TLauncher-hup-rollback-support-orin-nano-seed-j3010.patch;patchdir=.. \
-    file://set_boot_order.patch;patchdir=.. \
+    file://0007-set-boot-order.patch;patchdir=.. \
+    file://0008-L4TLauncher-hup-rollback-support-orin-nano-seed-j3010.patch;patchdir=.. \
 "
 
 do_deploy:append() {
