@@ -27,6 +27,11 @@ SRC_URI:append:jetson-orin-nx-seeed-j4012 = " \
     file://Add-hup-and-rollback-support-orin-nx-seed-j4012-35-5-0.patch;patchdir=../edk2-nvidia \ 
 "
 
+SRC_URI:append:jetson-orin-nano-seeed-j3010 = " \
+    file://0005-L4TLauncher-hup-rollback-support-orin-nano-seed-j3010.patch;patchdir=.. \
+    file://set_boot_order.patch;patchdir=.. \
+"
+
 do_deploy:append() {
      mkdir -p ${DEPLOYDIR}/bootfiles/EFI/BOOT/
      cp ${WORKDIR}/build/images/BOOTAA64.efi ${DEPLOYDIR}/bootfiles/EFI/BOOT/BOOTAA64.efi
