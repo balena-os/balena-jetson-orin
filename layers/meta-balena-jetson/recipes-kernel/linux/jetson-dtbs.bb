@@ -14,7 +14,6 @@ SRC_URI:append:jetson-agx-orin-devkit = " file://tegra234-p3701-0000-p3737-0000-
 do_install:jetson-agx-orin-devkit() {
 	install -d ${D}/boot/
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
-        install -m 0644 "${DEPLOY_DIR_IMAGE}/tegra234-p3701-0004-p3737-0000.dtb" "${D}/boot/tegra234-p3701-0004-p3737-0000.dtb"
         install -m 0644 "${WORKDIR}/tegra234-p3701-0000-p3737-0000-spi.dtb" "${D}/boot/tegra234-p3701-0000-p3737-0000-spi.dtb"
 }
 

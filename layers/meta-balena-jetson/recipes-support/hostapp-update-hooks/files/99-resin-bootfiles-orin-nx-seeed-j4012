@@ -8,34 +8,31 @@ set -o errexit
 
 . /usr/libexec/os-helpers-fs
 . /usr/sbin/balena-config-vars
+source /usr/bin/uefi_common.func
 
 DURING_UPDATE=${DURING_UPDATE:-0}
+bootloader_device="/dev/mtdblock0"
+internal_storage="/dev/nvme0n1"
+use_capsule=1
+bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Seeed_j4012.Cap.gz"
 efivars_dir="/sys/firmware/efi/efivars/"
 # See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
 platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
 platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
 os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
-capsule_file="/opt/tegra-binaries/TEGRA_BL_Seeed_j4012.Cap.gz"
 tmp_file="/tmp/platformspecfile.bin"
 
 # As per the UpdateAndRedundancy bup gen docs,
 # the Orin NX uses the Orin Nano type
 device_type="jetson-orin-nano-devkit"
 
-source /usr/bin/uefi_common.func
-
 boardspec=$(tegra-boardspec 2>/dev/null)
 TegraPlatformSpec="${boardspec}-${device_type}-"
 compatspec=$(echo "$boardspec" | gen_compat_spec)
 TegraPlatformCompatSpec="${compatspec}-${device_type}-"
 
-info_log()
-{
-    echo "[INFO] $@"
-}
-
 write_jetson_update_efivars() {
-    echo "Writing of jetson efivars triggered from old OS hook"
+    info "Writing of jetson efivars triggered from old OS hook"
     if [ -d $efivars_dir ]; then
         # If the file already exists, writing to it will fail
         # causing the entire hook to fail
@@ -43,37 +40,90 @@ write_jetson_update_efivars() {
             printf "\x07\x00\x00\x00" > ${tmp_file}
             printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
             dd if=${tmp_file} of=${platform_spec_efivar}
-            echo "PlatformSpec variable created"
+            info "PlatformSpec variable created"
         else
-            echo "PlatformSpec variable already exists"
+            info "PlatformSpec variable already exists"
         fi
 
         if [ ! -e ${platform_compat_spec_efivar} ]; then
             printf "\x07\x00\x00\x00" > ${tmp_file}
             printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
             dd if=${tmp_file} of=${platform_compat_spec_efivar}
-            echo "PlatformCompatSpec variable created"
+            info "PlatformCompatSpec variable created"
         else
-            echo "PlatformCompatSpec variable already exists"
+            info "PlatformCompatSpec variable already exists"
         fi
 
         printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
         dd if=${tmp_file} of=${os_indications_efivar}
-        echo "OsIndications variable written"
+        info "OsIndications variable written"
     else
-        echo "sysfs not accessible!"
-        return 1
+        fail "sysfs not accessible!"
     fi
 
     return 0
 }
 
+# This allows for writing UEFI variables
+# in L4T 36.3, in the case where the hook
+# is triggered by the rollback-health script
+unload_spi_drivers() {
+spi_modules=("spi_tegra210_quad" "spi_tegra114")
+
+for spi_module in "${spi_modules[@]}"
+do
+    if lsmod | grep -q $spi_module ; then
+        echo "Unloading $spi_module"
+        rmmod $spi_module
+
+        if [ $? -eq 0 ]; then
+            echo "Unloaded $spi_module"
+        fi
+    fi
+done
+}
+
+check_corrupted_slots()
+{
+    # Only the alternate slot can be corrupt, otherwise this script
+    # wouldn't be running because the device wouldn't boot
+    if nvbootctrl dump-slots-info | grep -q unbootable ; then
+        warn "alternate boot slot is unbootable and will require legacy boot blob update"
+        info "Will use legacy mode update for boot firmware because the UEFI capsule cannot be applied in the current state"
+        use_capsule=0
+    fi
+}
+
+info "Bootloader blob is $bootloader_blob"
+
+unload_spi_drivers
+
+do_legacy_update() {
+    bootloader_blob="/tmp/boot0.img"
+    mtdblock="/dev/mtdblock0"
+    gunzip -k -c /opt/tegra-binaries/boot0.img.gz > $bootloader_blob
+    existing_bootloader_md5sum=$(dd if=$mtdblock bs=1M status=none | md5sum | awk '{print $1}')
+    update_bootloader_md5sum=$(md5sum $bootloader_blob | awk '{print $1}')
+
+    if [ ! "$existing_bootloader_md5sum" = "$update_bootloader_md5sum" ]; then
+        info "Will clear bootloader device before legacy mode update"
+        mtd_debug erase /dev/mtd0 0x0 0x4000000 || true
+        info "Updating bootloader device in legacy mode update"
+        mtd_debug write /dev/mtd0 0x0 0x4000000 $bootloader_blob
+        info "Updated bootloader device in legacy mode update"
+    else
+        info "No need to update bootloader device"
+    fi
+}
 
 do_capsule_update() {
     # Unzip capsule to the boot partition
+    info "Will extract UEFI Capsule..."
     mkdir -p /mnt/boot/EFI/UpdateCapsule/
-    gunzip -k -c ${capsule_file} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
     sync
+    info "Extracted UEFI Capsule."
+    write_jetson_update_efivars
 }
 
 info "Pre-update A/B slots info:"
@@ -81,5 +131,17 @@ info "=========================="
 /usr/sbin/nvbootctrl dump-slots-info || true
 info "=========================="
 
-write_jetson_update_efivars
-do_capsule_update
+if [ "$DURING_UPDATE" = "1" ]; then
+    check_corrupted_slots
+fi
+
+# See AGX Orin Devkit 32GB hook notes
+# for potential MB2 failure to read some qspi
+# partitions after 35.4.1 -> 35.5.0 and back.
+# This was not reproducible on the Orin Nano but we
+# want to avoid it, should it occur
+if [ $use_capsule -eq 1 ]; then
+    do_capsule_update
+else
+    do_legacy_update
+fi
