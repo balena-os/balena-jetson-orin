@@ -1,4 +1,52 @@
 - commits:
+    - subject: "hostapp-update-hooks: Allow reprovisioning the QSPI if alternate slot
+        becomes unbootable"
+      hash: c721006d12f4673dd1316b6918196cca6007d5d1
+      body: |
+        During rollbacks we trigger the UEFI capsule update from l4T 35.5.0
+        back to to L4T 35.4.1. The UEFI firmware does not allow this by default,
+        so we patched it to accept downgrades when checking versions.
+
+        However, the alternate slot may become unbootable in this process,
+        as reported by the MB2 precompiled bootloader
+        (see AGX Orin comments in HUP hook). In this case, we re-write the
+        entire QSPI on the next HUP, and start off with a
+        clean-flashed QSPI at the latest version 35.5.0.
+
+        Apart from this we unload spi modules, to allow for future
+        rollbacks from L4T 36.3 to be able to write the necessary
+        UEFI variables necessary for triggering the rollback
+        UEFI capsule update.
+      footer:
+        Changelog-entry: "hostapp-update-hooks: Allow reprovisioning the QSPI if
+          alternate slot becomes unbootable"
+        changelog-entry: "hostapp-update-hooks: Allow reprovisioning the QSPI if
+          alternate slot becomes unbootable"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "edk2-firmware-tegra: Refactor all integration patches when switching
+        to L4T 35.5.0"
+      hash: 96de6f0c02a610dbee67d64e396819b6096a208c
+      body: >
+        ... and also disable UEFI capsule version checks in the firmware, so
+        that the older
+
+        L4T 35.4.1 UEFI capsule can be applied during rollback.
+      footer:
+        Changelog-entry: "edk2-firmware-tegra: Refactor all integration patches when
+          switching to L4T 35.5.0"
+        changelog-entry: "edk2-firmware-tegra: Refactor all integration patches when
+          switching to L4T 35.5.0"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.3.10+rev1
+  title: ""
+  date: 2024-06-06T12:23:15.841Z
+- commits:
     - subject: "layers/meta-balena: Update to v5.3.10"
       hash: b1a2f41e1cf7f818b63229a259a5ef6f3f47dd51
       body: >

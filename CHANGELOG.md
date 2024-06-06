@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v5.3.10+rev1
+## (2024-06-06)
+
+* hostapp-update-hooks: Allow reprovisioning the QSPI if alternate slot becomes unbootable [Alexandru Costache]
+* edk2-firmware-tegra: Refactor all integration patches when switching to L4T 35.5.0 [Alexandru Costache]
+
 # v5.3.10
 ## (2024-05-28)
 
