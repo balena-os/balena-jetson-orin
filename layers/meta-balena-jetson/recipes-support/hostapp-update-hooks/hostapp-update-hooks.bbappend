@@ -27,3 +27,8 @@ HOSTAPP_HOOKS:remove:jetson-orin-nx-seeed-j4012 = "99-resin-bootfiles-orin-nx-xa
 HOSTAPP_HOOKS:append:jetson-orin-nx-seeed-j4012 = " \
      99-resin-bootfiles-orin-nx-seeed-j4012 \
 "
+
+HOSTAPP_HOOKS:append:jetson-orin-nano-seeed-j3010 = " \
+    99-resin-uboot \
+    99-resin-bootfiles-orin-nano-seeed-j3010 \
+"

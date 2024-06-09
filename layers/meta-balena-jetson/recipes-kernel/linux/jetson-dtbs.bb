@@ -37,6 +37,14 @@ do_install:jetson-orin-nano-devkit-nvme() {
         install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
 }
 
+do_install:jetson-orin-nano-4g-devkit() {
+        install -d ${D}/boot/
+        install -m 0644 "${DEPLOY_DIR_IMAGE}/${DTBNAME}" "${D}/boot/${DTBNAME}"
+}
+
 FILES:${PN}:jetson-orin-nano-devkit-nvme += " \
         /boot/tegra234-p3767-0003-p3768-0000-a0.dtb \
+"
+FILES:${PN}:jetson-orin-nano-4g-devkit += " \
+        /boot/tegra234-p3767-0004-p3768-0000-a0.dtb \
 "
