@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v5.3.12
+## (2024-06-09)
+
+* layers/meta-balena: update to v5.3.12 [Alexandru Costache]
+* uefi/edk2-firmware-tegra: Update Seeed J3010 to L4T 35.5.0 [Alexandru Costache]
+* jetson-orin-nano-seeed-j3010: Add new device type [Alex Suykov]
+
 # v5.3.10+rev1
 ## (2024-06-06)
 

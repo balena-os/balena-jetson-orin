@@ -1,4 +1,38 @@
 - commits:
+    - subject: "layers/meta-balena: update to v5.3.12"
+      hash: e29e8d52f1b53c3d577e4976aec1a4aea65948e5
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: update to v5.3.12"
+        changelog-entry: "layers/meta-balena: update to v5.3.12"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "uefi/edk2-firmware-tegra: Update Seeed J3010 to L4T 35.5.0"
+      hash: 27b210fe48d86c9fba93af2b8bb5febf69dcaf82
+      body: ""
+      footer:
+        Changelog-entry: "uefi/edk2-firmware-tegra: Update Seeed J3010 to L4T 35.5.0"
+        changelog-entry: "uefi/edk2-firmware-tegra: Update Seeed J3010 to L4T 35.5.0"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "jetson-orin-nano-seeed-j3010: Add new device type"
+      hash: 82ba0a188b1513ca745eb7591ce543ffb35afc9d
+      body: ""
+      footer:
+        Signed-off-by: Alex Suykov <alex.suykov@sirinsoftware.com>
+        signed-off-by: Alex Suykov <alex.suykov@sirinsoftware.com>
+        Changelog-entry: "jetson-orin-nano-seeed-j3010: Add new device type"
+        changelog-entry: "jetson-orin-nano-seeed-j3010: Add new device type"
+      author: Alex Suykov
+      nested: []
+  version: 5.3.12
+  title: ""
+  date: 2024-06-09T20:15:24.819Z
+- commits:
     - subject: "hostapp-update-hooks: Allow reprovisioning the QSPI if alternate slot
         becomes unbootable"
       hash: c721006d12f4673dd1316b6918196cca6007d5d1
