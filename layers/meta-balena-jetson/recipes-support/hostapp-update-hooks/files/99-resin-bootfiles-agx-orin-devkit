@@ -25,6 +25,7 @@ boardspec=$(tegra-boardspec 2>/dev/null)
 TegraPlatformSpec="${boardspec}-${device_type}-"
 compatspec=$(echo "$boardspec" | gen_compat_spec)
 TegraPlatformCompatSpec="${compatspec}-${device_type}-"
+fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
 
 get_board_sku() {
     IFS=- read boardid fab boardsku boardrev fuselevel chiprev
@@ -95,7 +96,7 @@ check_corrupted_slots()
     # Only the alternate slot can be corrupt, otherwise this script
     # wouldn't be running because the device wouldn't boot
     if nvbootctrl dump-slots-info | grep -q unbootable ; then
-	warn "alternate boot slot is unbootable and will require legacy boot blob update"
+	warn "alternate boot slot is unbootable and may require legacy boot blob update"
         # 32GB units have SKUs 0000 and 0004 - see https://forums.developer.nvidia.com/t/which-agx-orin-i-have/276195/10
         # We avoid sku 0005, because it's a 64GB and the boot blob
         # is taken from a 32GB Devkit. This image shouldn't be
@@ -104,8 +105,13 @@ check_corrupted_slots()
         boardsku=$(echo "$boardspec" | get_board_sku)
 
         if [ "$boardsku" = "0000" -o "$boardsku" = "0004" ]; then
-	    info "Will use legacy mode update for boot firmware because the UEFI capsule cannot be applied in the current state"
-            use_capsule=0
+	    info "Device is a 32GB AGX Orin with SKU ${boardsku}"
+	    if [ $fw_version == "35.5" ]; then
+                info "Will not re-write QSPI because the device is running L4T 35.5. It should handle the capsule update even if the alternate slot is marked unbootable"
+            else
+                info "Will use legacy mode update for boot firmware because the UEFI capsule cannot be applied in the current state"
+                use_capsule=0
+            fi
 	else
 	    fail "Running on a non 32GB AGX Orin model with corrupt alternate slots. Cannot proceed with boot firmware update"
 	fi
