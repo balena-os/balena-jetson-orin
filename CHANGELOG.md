@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v5.3.21
+## (2024-06-14)
+
+* layers/meta-balena: Update to v5.3.21 [Alexandru Costache]
+* hostapp-update-hooks: Apply capsule update on AGX Orin even if alternate slot is unbootable [Alexandru Costache]
+
 # v5.3.12
 ## (2024-06-09)
 

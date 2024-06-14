@@ -1,4 +1,34 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v5.3.21"
+      hash: 23e4d94633e3c9265998929bcbd1c9d28f37bd87
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v5.3.21"
+        changelog-entry: "layers/meta-balena: Update to v5.3.21"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "hostapp-update-hooks: Apply capsule update on AGX Orin even if
+        alternate slot is unbootable"
+      hash: b975eb4da71708ac2fc23681f8b7276c46a783ea
+      body: |
+        If the device is running L4T 35.5.0 already and the alternate
+        slot is marked unbootable for any reason, try to apply the
+        update capsule instead of re-flashing the QSPI.
+      footer:
+        Changelog-entry: "hostapp-update-hooks: Apply capsule update on AGX Orin even if
+          alternate slot is unbootable"
+        changelog-entry: "hostapp-update-hooks: Apply capsule update on AGX Orin even if
+          alternate slot is unbootable"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.3.21
+  title: ""
+  date: 2024-06-14T15:13:35.477Z
+- commits:
     - subject: "layers/meta-balena: update to v5.3.12"
       hash: e29e8d52f1b53c3d577e4976aec1a4aea65948e5
       body: ""
