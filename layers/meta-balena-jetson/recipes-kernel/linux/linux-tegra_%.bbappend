@@ -89,13 +89,6 @@ BALENA_CONFIGS[binder] = " \
 "
 
 BALENA_CONFIGS:append:jetson-orin-nano-4g-devkit = " binder"
-BALENA_CONFIGS[binder] = " \
-    CONFIG_ANDROID=y \
-    CONFIG_ASHMEM=y \
-    CONFIG_ANDROID_BINDER_IPC=y \
-    CONFIG_ANDROID_BINDER_DEVICES=\"binder,hwbinder,vndbinder\" \
-    CONFIG_ANDROID_BINDER_IPC_SELFTEST=y \
-"
 
 L4TVER=" l4tver=${L4T_VERSION}"
 
