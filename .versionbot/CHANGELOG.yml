@@ -1,4 +1,18 @@
 - commits:
+    - subject: "recipes-kernel/linux-tegra: remove duplicate binder configs"
+      hash: be95600eb816a2cf219719376786bb99a4488318
+      body: ""
+      footer:
+        Changelog-entry: "recipes-kernel/linux-tegra: remove duplicate binder configs"
+        changelog-entry: "recipes-kernel/linux-tegra: remove duplicate binder configs"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.3.21+rev2
+  title: ""
+  date: 2024-06-18T12:48:56.761Z
+- commits:
     - subject: Update balena-os/github-workflows to v0.0.27
       hash: 4569d477fb5b2d32c2ffb471cb2f7d21ab0c74f9
       body: Update balena-os/github-workflows

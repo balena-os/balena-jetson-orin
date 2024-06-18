@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.21+rev2
+## (2024-06-18)
+
+* recipes-kernel/linux-tegra: remove duplicate binder configs [Alexandru Costache]
+
 # v5.3.21+rev1
 ## (2024-06-16)
 
