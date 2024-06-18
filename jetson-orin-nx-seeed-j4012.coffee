@@ -1,7 +1,7 @@
 deviceTypesCommon = require '@resin.io/device-types/common'
 { networkOptions, commonImg, instructions } = deviceTypesCommon
 
-BOARD_PREPARE  = 'Put the NVidia Jetson AGX Orin board in recovery mode'
+BOARD_PREPARE  = 'Put the Nvidia Jetson Orin NX in Seeed ReComputer J4012 board in recovery mode'
 FLASH_TOOL = 'Unzip BalenaOS image and use <a href=\"https://github.com/balena-os/jetson-flash\">Jetson Flash</a> at v0.5.32 or newer to provision the device.'
 DONE_FLASHING  = 'After flashing is completed, please wait until the board is rebooted'
 module.exports =
@@ -18,9 +18,9 @@ module.exports =
 	]
 
 	gettingStartedLink:
-		windows: 'https://docs.balena.io/jetson-agx-orin-devkit/nodejs/getting-started/#adding-your-first-device'
-		osx: 'https://docs.balena.io/jetson-agx-orin-devkit/nodejs/getting-started/#adding-your-first-device'
-		linux: 'https://docs.balena.io/jetson-agx-orin-devkit/nodejs/getting-started/#adding-your-first-device'
+		windows: 'https://docs.balena.io/learn/getting-started/jetson-orin-nx-seeed-j4012/nodejs/'
+		osx: 'https://docs.balena.io/learn/getting-started/jetson-orin-nx-seeed-j4012/nodejs/'
+		linux: 'https://docs.balena.io/learn/getting-started/jetson-orin-nx-seeed-j4012/nodejs/'
 
 	supportsBlink: false
 
