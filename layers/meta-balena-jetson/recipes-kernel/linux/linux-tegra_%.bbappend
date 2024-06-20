@@ -79,7 +79,7 @@ BALENA_CONFIGS[rtc] = " \
     CONFIG_RTC_SYSTOHC_DEVICE="rtc0" \
 "
 
-BALENA_CONFIGS:append:jetson-orin-nano-devkit-nvme = " binder"
+BALENA_CONFIGS:append:jetson-orin-nano-devkit-nvme = " binder touchscreen"
 BALENA_CONFIGS[binder] = " \
     CONFIG_ANDROID=y \
     CONFIG_ASHMEM=y \
@@ -88,7 +88,11 @@ BALENA_CONFIGS[binder] = " \
     CONFIG_ANDROID_BINDER_IPC_SELFTEST=y \
 "
 
-BALENA_CONFIGS:append:jetson-orin-nano-4g-devkit = " binder"
+BALENA_CONFIGS[touchscreen] = " \
+    CONFIG_TOUCHSCREEN_ILI210X=m \
+"
+
+BALENA_CONFIGS:append:jetson-orin-nano-4g-devkit = " binder touchscreen"
 
 L4TVER=" l4tver=${L4T_VERSION}"
 
