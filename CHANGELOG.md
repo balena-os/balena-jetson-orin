@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.21+rev3
+## (2024-06-20)
+
+* recipes-kernel/linux-tegra: Add Ilitek ILI210X based touchscreen kernel module [Alexandru]
+
 # v5.3.21+rev2
 ## (2024-06-18)
 

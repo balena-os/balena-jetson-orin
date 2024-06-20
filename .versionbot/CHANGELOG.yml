@@ -1,4 +1,23 @@
 - commits:
+    - subject: "recipes-kernel/linux-tegra: Add Ilitek ILI210X based touchscreen
+        kernel module"
+      hash: bcb881da761b3b85175fa519309cb757c9bd3425
+      body: >
+        As per the internal thread:
+        https://balena.zulipchat.com/#narrow/stream/345889-balena-io.2Fos/topic/Enable.20Kernel.20config.20flag.20for.20nVidia.20Orin.20Nano.20devices/near/445604932
+      footer:
+        Changelog-entry: "recipes-kernel/linux-tegra: Add Ilitek ILI210X based
+          touchscreen kernel module"
+        changelog-entry: "recipes-kernel/linux-tegra: Add Ilitek ILI210X based
+          touchscreen kernel module"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+  version: 5.3.21+rev3
+  title: ""
+  date: 2024-06-20T21:02:37.971Z
+- commits:
     - subject: "recipes-kernel/linux-tegra: remove duplicate binder configs"
       hash: be95600eb816a2cf219719376786bb99a4488318
       body: ""
