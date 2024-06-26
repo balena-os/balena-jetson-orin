@@ -26,7 +26,6 @@ IMAGE_INSTALL:append = " \
     jetson-dtbs \
     l4t-launcher-extlinux \
     dtc \
-    kernel-module-realtek \
     pciutils \
     nvidia-kernel-oot-devicetrees nvidia-kernel-oot-display nvidia-kernel-oot-cameras nvidia-kernel-oot-bluetooth nvidia-kernel-oot-wifi \
     nvidia-kernel-oot-canbus nvidia-kernel-oot-virtualization nvidia-kernel-oot-base nvidia-drm-loadconf \
