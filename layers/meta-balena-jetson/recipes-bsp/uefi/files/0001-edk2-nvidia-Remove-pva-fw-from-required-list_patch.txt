@@ -4,9 +4,13 @@ Date: Sat, 22 Jun 2024 07:44:32 +0000
 Subject: [PATCH] edk2-nvidia: Remove pva-fw from required list
 
 This allows us to apply back the L4T 35.5.0
-capsule during rollback health.
+capsule during rollback health. Without this patch,
+the 36.3 firmware will fail to apply the old 35.5.0
+UEFI capsule because the old release did not
+include this firmware in any QSPI partition.
 
 Upstream-status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
  Silicon/NVIDIA/Library/FmpDeviceLib/FwImageNames.c | 1 -
  1 file changed, 1 deletion(-)

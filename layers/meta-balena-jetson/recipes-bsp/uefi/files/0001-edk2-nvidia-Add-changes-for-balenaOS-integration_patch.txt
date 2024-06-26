@@ -6,7 +6,7 @@ Subject: [PATCH] edk2-nvidia: Add changes for balenaOS integration
 - Increase boot timeout to 5 seconds in UEFI
 - Increase max bootchain retry so that it does not interfere
   with balenaOS rollbacks
-- Allow access for reflashing the boot medium
+- Allow access for reflashing the boot medium on qspi
 
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>

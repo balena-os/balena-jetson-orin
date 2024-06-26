@@ -6,8 +6,10 @@ Subject: [PATCH] StandaloneMmOptee: Don't assert if var store integrity check
 
 We tried disabling asserts if the var store integrity checks fail,
 however, the change in this patch should end up in tos-optee, which
-is unfortunately crashing for now. We keep this patch bot will not apply
-it. See https://forums.developer.nvidia.com/t/jetson-orin-nano-ota-35-5-0-36-3-failed-to-boot-after-ota-upgrade-from-35-5-0-to-36-3/296205/16
+is unfortunately crashing for now. We keep this patch but will not apply
+it.
+
+See https://forums.developer.nvidia.com/t/jetson-orin-nano-ota-35-5-0-36-3-failed-to-boot-after-ota-upgrade-from-35-5-0-to-36-3/296205/16
 for details.
 
 Upstream-status: Inappropriate [configuration]
