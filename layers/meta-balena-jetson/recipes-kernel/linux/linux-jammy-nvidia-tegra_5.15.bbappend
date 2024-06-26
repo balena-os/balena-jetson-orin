@@ -4,10 +4,6 @@ FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 
 SCMVERSION="n"
 
-# Switch nvmap to built-in to fix the kernel headers
-SRC_URI:append = " file://0001-fix-kernel-headers-test.patch \
-		file://0001-defconfig-Fix-build-failure.patch \
-"
 BALENA_CONFIGS:remove = " mdraid"
 
 BALENA_CONFIGS:append = " debug_kmemleak "
@@ -97,6 +93,11 @@ BALENA_CONFIGS[binder] = " \
     CONFIG_ANDROID_BINDER_IPC_SELFTEST=y \
 "
 
+BALENA_CONFIGS:append = " mtd "
+BALENA_CONFIGS[mtd] = " \
+    CONFIG_MTD_BLOCK=m \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 "
@@ -112,15 +113,10 @@ LABEL primary
       MENU LABEL primary ${KERNEL_IMAGETYPE}
       FDT default
       LINUX /boot/${KERNEL_IMAGETYPE}
-      APPEND \${cbootargs} ${kernelRootspec} sdhci_tegra.en_boot_part_access=1 rootwait
+      APPEND \${cbootargs} ${kernelRootspec} sdhci_tegra.en_boot_part_access=1 rootwait  video=efifb:off
 EOF
 
 }
 
-do_deploy[nostamp] = "1"
 do_deploy[postfuncs] += "generate_extlinux_conf"
 do_install[depends] += "${@['', '${INITRAMFS_IMAGE}:do_image_complete'][(d.getVar('INITRAMFS_IMAGE', True) or '') != '' and (d.getVar('TEGRA_INITRAMFS_INITRD', True) or '') == "1"]}"
-
-# These are needed by tegraflash during signing
-OVERLAY_DTB_FILE:append:jetson-agx-orin-devkit = " tegra234-p3737-overlay-pcie.dtbo,tegra234-p3737-audio-codec-rt5658-40pin.dtbo,tegra234-p3737-a03-overlay.dtbo,tegra234-p3737-a04-overlay.dtbo,tegra234-p3737-camera-dual-imx274-overlay.dtbo,AcpiBoot.dtbo,L4TConfiguration.dtbo,L4TRootfsInfo.dtbo,L4TRootfsABInfo.dtbo,L4TRootfsBrokenInfo.dtbo"
-
