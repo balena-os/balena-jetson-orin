@@ -53,15 +53,6 @@ apply_bs_fix() {
     done
 }
 
-get_board_sku() {
-    IFS=- read boardid fab boardsku boardrev fuselevel chiprev
-    if gen_compat_$boardid 2>/dev/null; then
-        echo "$boardsku"
-        return 0
-    fi
-    echo ""
-}
-
 copy_jp5_dtb() {
     if [ -f ${active_sysroot}${jp5_default_dtb_name} ]; then
         cp ${active_sysroot}${jp5_default_dtb_name} ${active_sysroot}${jp6_default_dtb_name} || true
@@ -97,8 +88,8 @@ write_jetson_update_efivars() {
             info "PlatformCompatSpec variable already exists"
 	    if [[ ${kernel_l4t} == "36.3" ]]; then
                 info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
-		chattr -i ${platform_compat_spec_efivar}
-		printf "\x07\x00\x00\x00" > ${tmp_file}
+                chattr -i ${platform_compat_spec_efivar}
+                printf "\x07\x00\x00\x00" > ${tmp_file}
                 printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
                 tmp_file_size=$(stat -c%s ${tmp_file})
                 dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
@@ -106,8 +97,7 @@ write_jetson_update_efivars() {
         fi
 
         printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
-	#efivar -w -f "${tmp_file}" -n "8be4df61-93ca-11d2-aa0d-00e098032b8c-OsIndications" || true
-	dd if=${tmp_file} of=${os_indications_efivar}; bs=12;
+        dd if=${tmp_file} of=${os_indications_efivar}; bs=12;
         info "OsIndications variable written"
     else
         fail "sysfs not accessible!"
