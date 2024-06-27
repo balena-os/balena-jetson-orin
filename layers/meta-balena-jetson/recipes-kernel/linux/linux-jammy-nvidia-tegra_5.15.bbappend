@@ -93,9 +93,31 @@ BALENA_CONFIGS[binder] = " \
     CONFIG_ANDROID_BINDER_IPC_SELFTEST=y \
 "
 
-BALENA_CONFIGS:append = " mtd "
+BALENA_CONFIGS:append = " mtd nvme"
 BALENA_CONFIGS[mtd] = " \
     CONFIG_MTD_BLOCK=m \
+"
+
+# Needed starting with Jetpack 6
+# so the initramfs can mount the
+# NVME partitions
+BALENA_CONFIGS[nvme] = " \
+    CONFIG_NVME_CORE=m \
+    CONFIG_BLK_DEV_NVME=m \
+    CONFIG_NVME_FABRICS=m \
+    CONFIG_NVME_TCP=m \
+    CONFIG_NVME_TARGET=m \
+    CONFIG_NVME_TARGET_TCP=m \
+"
+
+# These drivers needs to be built-in, otherwise
+# the nvme cannot be detected in the initramfs,
+# when trying to boot from it.
+BALENA_CONFIGS[pcie] = " \
+    CONFIG_PCIE_TEGRA194=m \
+    CONFIG_PCIE_TEGRA194_HOST=m \
+    CONFIG_PCIE_TEGRA194_EP=m \
+    CONFIG_PHY_TEGRA194_P2U=m \
 "
 
 L4TVER=" l4tver=${L4T_VERSION}"

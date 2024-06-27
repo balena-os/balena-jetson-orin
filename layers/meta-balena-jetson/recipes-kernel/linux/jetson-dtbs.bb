@@ -20,7 +20,7 @@ FILES:${PN}:jetson-agx-orin-devkit += " \
 "
 
 FILES:${PN}:jetson-orin-nx-xavier-nx-devkit += " \
-	/boot/tegra234-p3767-0000-p3509-a02.dtb \
+	/boot/tegra234-p3768-0000+p3767-0000-nv.dtb \
 "
 
 FILES:${PN}:jetson-orin-nano-devkit-nvme += " \
