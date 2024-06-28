@@ -1,6 +1,6 @@
 IMAGE_FSTYPES += "balenaos-img"
 
-do_rootfs:balenaos-img[depends] += " linux-tegra:do_deploy tegra-flash-dry:do_install nvidia-kernel-oot:do_deploy"
+do_rootfs:balenaos-img[depends] += " tegra-flash-dry:do_install nvidia-kernel-oot:do_deploy edk2-container:do_deploy "
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
 IMAGE_INSTALL:append = " \
