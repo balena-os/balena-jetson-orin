@@ -28,5 +28,5 @@ FILES:${PN}:jetson-orin-nano-devkit-nvme += " \
 "
 
 FILES:${PN}:jetson-orin-nano-4g-devkit += " \
-        /boot/tegra234-p3767-0004-p3768-0000-a0.dtb \
+        /boot/tegra234-p3768-0000+p3767-0004-nv.dtb \
 "
