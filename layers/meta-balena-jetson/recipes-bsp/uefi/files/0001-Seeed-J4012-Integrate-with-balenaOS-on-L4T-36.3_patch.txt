@@ -1,6 +1,6 @@
-From 62ffe3c9fe936df9a866da362eb00721bda4b819 Mon Sep 17 00:00:00 2001
+From 2da60da2fdec13c87e5a1d2a3507df95d405274b Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Thu, 20 Jun 2024 14:28:36 +0000
+Date: Mon, 1 Jul 2024 12:54:19 +0000
 Subject: [PATCH] Seeed J4012: Integrate with balenaOS on L4T 36.3
 
 With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
@@ -11,12 +11,12 @@ rootfs.
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
- .../Application/L4TLauncher/L4TLauncher.c     | 574 +++++++++++++++++-
+ .../Application/L4TLauncher/L4TLauncher.c     | 582 +++++++++++++++++-
  .../Application/L4TLauncher/L4TLauncher.h     |  15 +-
- 2 files changed, 569 insertions(+), 20 deletions(-)
+ 2 files changed, 577 insertions(+), 20 deletions(-)
 
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-index ab86f3e0..e8567090 100644
+index ab86f3e0..aaf6c383 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 @@ -1125,6 +1125,147 @@ CheckCommandString (
@@ -633,7 +633,7 @@ index ab86f3e0..e8567090 100644
    }
  
    return EFI_SUCCESS;
-@@ -2434,7 +2911,13 @@ L4TLauncher (
+@@ -2434,7 +2911,14 @@ L4TLauncher (
    EXTLINUX_BOOT_CONFIG       ExtLinuxConfig;
    UINTN                      ExtLinuxBootOption;
    UINTN                      Index;
@@ -645,10 +645,11 @@ index ab86f3e0..e8567090 100644
 +  UINTN                      UpdatedBootSlot = 0;
 +  BOOLEAN                    RunningUpdatedBootSlot = FALSE;
 +  BOOLEAN                    BootLimitReached = FALSE;
++  BOOLEAN                    BootSlotProcessed = FALSE;
    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
    if (EFI_ERROR (Status)) {
      ErrorPrint (L"%a: Unable to locate loaded image: %r\r\n", __FUNCTION__, Status);
-@@ -2498,12 +2981,65 @@ L4TLauncher (
+@@ -2498,12 +2982,72 @@ L4TLauncher (
      } while (FALSE);
    }
  
@@ -679,6 +680,7 @@ index ab86f3e0..e8567090 100644
 +        ErrorPrint(L"%a: Error while processing boot slot value\r\n", __FUNCTION__);
 +      } else {
 +        ErrorPrint(L"%a: Updated (target) boot slot: %u - Current running boot slot: %u\r\n", __FUNCTION__, UpdatedBootSlot, BootParams.BootChain);
++        BootSlotProcessed = TRUE;
 +      }
 +
 +      /* If boot limit is reached while upgrade_available=1, switch partitions */
@@ -698,10 +700,16 @@ index ab86f3e0..e8567090 100644
 +          ResetCold();
 +        } else {
 +          ErrorPrint(L"%a: Running the fallback (pre-update) boot slot %u because boot limit was reached. Updated boot slot booted previously was %u\r\n", __FUNCTION__, BootParams.BootChain, UpdatedBootSlot);
-+          /* TODO: Check if this allows for capsule to be applied during rollback-altboot */
 +          ValidateActiveBootChain();
 +          ErrorPrint(L"%a: Running the fallback (pre-update) boot slot %u because boot limit was reached, and marked current one as active. Updated boot slot booted previously was %u\r\n", __FUNCTION__, BootParams.BootChain, UpdatedBootSlot);
 +        }
++      } else if (1 == UpgradeAvailable && BootSlotProcessed && !RunningUpdatedBootSlot) {
++          ErrorPrint(L"%a: Capsule update failed or was interrupted, because current boot slot is %u when it should be %u. Forcing altboot mode so the system can recover by booting the compatible rootfs. \r\n", __FUNCTION__, BootParams.BootChain, UpdatedBootSlot);
++         if (BALENA_ROOTFS_INDEX_B == RootFsIndex) {
++            RootFsIndex = BALENA_ROOTFS_INDEX_A;
++         } else {
++            RootFsIndex = BALENA_ROOTFS_INDEX_B;
++         }
 +      }
 +
 +      if (BALENA_ROOTFS_INDEX_B == RootFsIndex) {
