@@ -1,0 +1,69 @@
+From 3e01469c3db135e1c0c88613f3d8949937ff00b8 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Thu, 20 Jun 2024 11:15:20 +0000
+Subject: [PATCH] edk2: Disable network boot and allow UEFI capsule downgrades
+
+In this patch we disable network boot to prevent boot delays
+as well as force disable the downgrade capsule checks,
+to allow older UEFI capsules to be apploed by newer UEFI firmware.
+
+Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ FmpDevicePkg/FmpDxe/FmpDxe.c          | 4 +++-
+ NetworkPkg/HttpBootDxe/HttpBootImpl.c | 3 +++
+ NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c   | 3 +++
+ 3 files changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/FmpDevicePkg/FmpDxe/FmpDxe.c b/FmpDevicePkg/FmpDxe/FmpDxe.c
+index 1e7ec4a09e..342c77af32 100644
+--- a/FmpDevicePkg/FmpDxe/FmpDxe.c
++++ b/FmpDevicePkg/FmpDxe/FmpDxe.c
+@@ -982,13 +982,15 @@ CheckTheImageInternal (
+   if (Version < Private->Descriptor.LowestSupportedImageVersion) {
+     DEBUG (
+       (DEBUG_ERROR,
+-       "FmpDxe(%s): CheckTheImage() - Version Lower than lowest supported version. 0x%08X < 0x%08X\n",
++       "FmpDxe(%s): CheckTheImage() - Version Lower than lowest supported version. 0x%08X < 0x%08X - continuing anyway\n",
+        mImageIdName, Version, Private->Descriptor.LowestSupportedImageVersion)
+       );
++    /* Allow applying a capsule with a version lower than the current running one, for rollback support
+     *ImageUpdatable    = IMAGE_UPDATABLE_INVALID_OLD;
+     Status             = EFI_SUCCESS;
+     *LastAttemptStatus = LAST_ATTEMPT_STATUS_DRIVER_ERROR_VERSION_TOO_LOW;
+     goto cleanup;
++    */
+   }
+ 
+   //
+diff --git a/NetworkPkg/HttpBootDxe/HttpBootImpl.c b/NetworkPkg/HttpBootDxe/HttpBootImpl.c
+index b4c61925b9..061f89465f 100644
+--- a/NetworkPkg/HttpBootDxe/HttpBootImpl.c
++++ b/NetworkPkg/HttpBootDxe/HttpBootImpl.c
+@@ -580,6 +580,9 @@ HttpBootDxeLoadFile (
+   EFI_STATUS              Status;
+   HTTP_BOOT_IMAGE_TYPE    ImageType;
+ 
++  AsciiPrint("\n HttpBootDxeLoadFile: Force skip HTTP boot");
++  return EFI_NO_MEDIA;
++
+   if ((This == NULL) || (BufferSize == NULL) || (FilePath == NULL)) {
+     return EFI_INVALID_PARAMETER;
+   }
+diff --git a/NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c b/NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c
+index 0a4baf6f90..1582c4496d 100644
+--- a/NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c
++++ b/NetworkPkg/UefiPxeBcDxe/PxeBcImpl.c
+@@ -2359,6 +2359,9 @@ EfiPxeLoadFile (
+   EFI_STATUS                  Status;
+   EFI_STATUS                  MediaStatus;
+ 
++  AsciiPrint("\n EfiPxeLoadFile: Force skip PXE boot");
++  return EFI_NO_MEDIA;
++
+   if ((This == NULL) || (BufferSize == NULL) || (FilePath == NULL) || !IsDevicePathEnd (FilePath)) {
+     return EFI_INVALID_PARAMETER;
+   }
+-- 
+2.34.1
+

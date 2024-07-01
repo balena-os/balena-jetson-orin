@@ -1,0 +1,32 @@
+From cd1de67c1d30473bb89630d0f10a5f4ca38c9ab0 Mon Sep 17 00:00:00 2001
+From: Your Name <you@example.com>
+Date: Sat, 22 Jun 2024 07:44:32 +0000
+Subject: [PATCH] edk2-nvidia: Remove pva-fw from required list
+
+This allows us to apply back the L4T 35.5.0
+capsule during rollback health. Without this patch,
+the 36.3 firmware will fail to apply the old 35.5.0
+UEFI capsule because the old release did not
+include this firmware in any QSPI partition.
+
+Upstream-status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ Silicon/NVIDIA/Library/FmpDeviceLib/FwImageNames.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Silicon/NVIDIA/Library/FmpDeviceLib/FwImageNames.c b/Silicon/NVIDIA/Library/FmpDeviceLib/FwImageNames.c
+index 846712c3..a32ffa06 100644
+--- a/Silicon/NVIDIA/Library/FmpDeviceLib/FwImageNames.c
++++ b/Silicon/NVIDIA/Library/FmpDeviceLib/FwImageNames.c
+@@ -45,7 +45,6 @@ STATIC CONST CHAR16  *SystemFwImageNamesT234[] = {
+   L"psc_bl1",
+   L"psc-fw",
+   L"pscrf",
+-  L"pva-fw",
+   NULL
+ };
+ 
+-- 
+2.34.1
+
