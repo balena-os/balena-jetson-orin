@@ -1,6 +1,6 @@
 include balena-image.inc
 
-do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy"
+do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy l4t-launcher-extlinux:do_install edk2-container:do_deploy"
 
 # Leave some space, just in case future L4Ts add device specific partitions
 # All values are in KiB
@@ -43,17 +43,17 @@ check_size() {
 
 device_specific_configuration() {
     partitions=$(cat "${DEPLOY_DIR_IMAGE}/tegra-binaries/${PART_SPEC_FILE}")
-    echo ">>> Partitions list: ${partitions}"
+    echo "device_specific_configuration: Partitions list: ${partitions}"
     START=40
     for n in ${partitions}; do
         part_name=$(echo $n | cut -d ':' -f 1)
         file_name=$(echo $n | cut -d ':' -f 2)
         part_size=$(echo $n | cut -d ':' -f 3)
-        file_path=$(find ${DEPLOY_DIR_IMAGE}/bootfiles -name $file_name)
         END=$(expr ${START} \+ ${part_size} \- 1)
-        echo ">>> file: ${file_path}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
+        echo "device_specific_configuration: file: ${file_name}, part: ${part_name}, start: ${START} - size: ${part_size} end: ${END}"
         parted -s ${BALENA_RAW_IMG} unit s mkpart $part_name ${START} ${END}
         if [ ! "$file_name" = "none.bin" ]; then
+            file_path=$(find ${DEPLOY_DIR_IMAGE}/tegra-binaries -name $file_name)
             check_size ${file_path} $(expr ${part_size} \* 512)
             dd if=$file_path of=${BALENA_RAW_IMG} conv=notrunc seek=${START} bs=512
         else
