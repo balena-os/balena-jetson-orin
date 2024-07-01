@@ -4,10 +4,6 @@ FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 
 SCMVERSION="n"
 
-# Switch nvmap to built-in to fix the kernel headers
-SRC_URI:append = " file://0001-fix-kernel-headers-test.patch \
-		file://0001-defconfig-Fix-build-failure.patch \
-"
 BALENA_CONFIGS:remove = " mdraid"
 
 BALENA_CONFIGS:append = " debug_kmemleak "
@@ -79,7 +75,7 @@ BALENA_CONFIGS[rtc] = " \
     CONFIG_RTC_SYSTOHC_DEVICE="rtc0" \
 "
 
-BALENA_CONFIGS:append:jetson-orin-nano-devkit-nvme = " binder touchscreen"
+BALENA_CONFIGS:append:jetson-orin-nano-devkit-nvme = " binder"
 BALENA_CONFIGS[binder] = " \
     CONFIG_ANDROID=y \
     CONFIG_ASHMEM=y \
@@ -88,11 +84,41 @@ BALENA_CONFIGS[binder] = " \
     CONFIG_ANDROID_BINDER_IPC_SELFTEST=y \
 "
 
-BALENA_CONFIGS[touchscreen] = " \
-    CONFIG_TOUCHSCREEN_ILI210X=m \
+BALENA_CONFIGS:append:jetson-orin-nano-4g-devkit = " binder"
+BALENA_CONFIGS[binder] = " \
+    CONFIG_ANDROID=y \
+    CONFIG_ASHMEM=y \
+    CONFIG_ANDROID_BINDER_IPC=y \
+    CONFIG_ANDROID_BINDER_DEVICES=\"binder,hwbinder,vndbinder\" \
+    CONFIG_ANDROID_BINDER_IPC_SELFTEST=y \
 "
 
-BALENA_CONFIGS:append:jetson-orin-nano-4g-devkit = " binder touchscreen"
+BALENA_CONFIGS:append = " mtd nvme"
+BALENA_CONFIGS[mtd] = " \
+    CONFIG_MTD_BLOCK=m \
+"
+
+# Needed starting with Jetpack 6
+# so the initramfs can mount the
+# NVME partitions
+BALENA_CONFIGS[nvme] = " \
+    CONFIG_NVME_CORE=m \
+    CONFIG_BLK_DEV_NVME=m \
+    CONFIG_NVME_FABRICS=m \
+    CONFIG_NVME_TCP=m \
+    CONFIG_NVME_TARGET=m \
+    CONFIG_NVME_TARGET_TCP=m \
+"
+
+# These drivers needs to be built-in, otherwise
+# the nvme cannot be detected in the initramfs,
+# when trying to boot from it.
+BALENA_CONFIGS[pcie] = " \
+    CONFIG_PCIE_TEGRA194=m \
+    CONFIG_PCIE_TEGRA194_HOST=m \
+    CONFIG_PCIE_TEGRA194_EP=m \
+    CONFIG_PHY_TEGRA194_P2U=m \
+"
 
 L4TVER=" l4tver=${L4T_VERSION}"
 
@@ -109,15 +135,10 @@ LABEL primary
       MENU LABEL primary ${KERNEL_IMAGETYPE}
       FDT default
       LINUX /boot/${KERNEL_IMAGETYPE}
-      APPEND \${cbootargs} ${kernelRootspec} sdhci_tegra.en_boot_part_access=1 rootwait
+      APPEND \${cbootargs} ${kernelRootspec} sdhci_tegra.en_boot_part_access=1 rootwait  video=efifb:off
 EOF
 
 }
 
-do_deploy[nostamp] = "1"
 do_deploy[postfuncs] += "generate_extlinux_conf"
 do_install[depends] += "${@['', '${INITRAMFS_IMAGE}:do_image_complete'][(d.getVar('INITRAMFS_IMAGE', True) or '') != '' and (d.getVar('TEGRA_INITRAMFS_INITRD', True) or '') == "1"]}"
-
-# These are needed by tegraflash during signing
-OVERLAY_DTB_FILE:append:jetson-agx-orin-devkit = " tegra234-p3737-overlay-pcie.dtbo,tegra234-p3737-audio-codec-rt5658-40pin.dtbo,tegra234-p3737-a03-overlay.dtbo,tegra234-p3737-a04-overlay.dtbo,tegra234-p3737-camera-dual-imx274-overlay.dtbo,AcpiBoot.dtbo,L4TConfiguration.dtbo,L4TRootfsInfo.dtbo,L4TRootfsABInfo.dtbo,L4TRootfsBrokenInfo.dtbo"
-
