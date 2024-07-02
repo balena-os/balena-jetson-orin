@@ -1,6 +1,6 @@
 include balena-image.inc
 
-do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy l4t-launcher-extlinux:do_install edk2-container:do_deploy"
+do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy l4t-launcher-extlinux:do_install edk2-container:do_package"
 
 # Leave some space, just in case future L4Ts add device specific partitions
 # All values are in KiB

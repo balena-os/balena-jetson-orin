@@ -48,8 +48,7 @@ do_compile () {
     chmod +x ${B}/build.sh
     cp -r ${WORKDIR}/*_patch.txt ${B}/
 
-    #IMAGETAG="${PN}:$(date +%s)"
-    IMAGETAG="${PN}:edk2build"
+    IMAGETAG="${PN}:$(date +%s)"
 
     DOCKER_API_VERSION=1.22 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"
     DOCKER_API_VERSION=1.22 docker run --rm -v ${WORKDIR}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build/build.sh && cp /build/nvidia-uefi/images/uefi_Jetson_DEBUG.bin /out/uefi_jetson.bin && cp /build/nvidia-uefi/images/BOOTAA64_Jetson_DEBUG.efi /out/BOOTAA64.efi"
@@ -76,5 +75,7 @@ do_deploy () {
 }
 
 FILES:${PN} = " /opt/tegra-binaries/ "
+
+do_deploy[nostamp] = "1"
 
 addtask do_deploy before do_package after do_install
