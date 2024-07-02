@@ -1,0 +1,36 @@
+From ccb5a6b7a371a943ec2ec55a848ee7f076f1cd3b Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Tue, 25 Jun 2024 13:49:39 +0300
+Subject: [PATCH] StandaloneMmOptee: Don't assert if var store integrity check
+ failed
+
+We tried disabling asserts if the var store integrity checks fail,
+however, the change in this patch should end up in tos-optee, which
+is unfortunately crashing for now. We keep this patch but will not apply
+it.
+
+See https://forums.developer.nvidia.com/t/jetson-orin-nano-ota-35-5-0-36-3-failed-to-boot-after-ota-upgrade-from-35-5-0-to-36-3/296205/16
+for details.
+
+Upstream-status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ Platform/NVIDIA/StandaloneMmOptee/StandaloneMmOptee.dsc.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Platform/NVIDIA/StandaloneMmOptee/StandaloneMmOptee.dsc.inc b/Platform/NVIDIA/StandaloneMmOptee/StandaloneMmOptee.dsc.inc
+index 93a0939c..56171107 100644
+--- a/Platform/NVIDIA/StandaloneMmOptee/StandaloneMmOptee.dsc.inc
++++ b/Platform/NVIDIA/StandaloneMmOptee/StandaloneMmOptee.dsc.inc
+@@ -51,7 +51,7 @@
+   gArmTokenSpaceGuid.PcdFfaEnable|TRUE
+   gNVIDIATokenSpaceGuid.PcdOpteePresent|TRUE
+   gNVIDIATokenSpaceGuid.PcdVarStoreIntegritySupported|TRUE
+-  gNVIDIATokenSpaceGuid.PcdAssertOnVarStoreIntegrityCheckFail|TRUE
++  gNVIDIATokenSpaceGuid.PcdAssertOnVarStoreIntegrityCheckFail|FALSE
+ 
+ [PcdsPatchableInModule]
+   #
+-- 
+2.34.1
+
