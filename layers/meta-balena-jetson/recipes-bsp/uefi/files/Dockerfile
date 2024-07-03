@@ -1,10 +1,9 @@
 FROM ghcr.io/tianocore/containers/ubuntu-22-dev:latest
 
-RUN apt-get update && apt-get install git vim
-
 ARG DEVICE_TYPE
 
-RUN mkdir build && cd build && \
+RUN apt-get update && apt-get install git vim && \
+    mkdir build && cd build && \
     edkrepo manifest-repos add nvidia https://github.com/NVIDIA/edk2-edkrepo-manifest.git main nvidia && \
     edkrepo clone nvidia-uefi NVIDIA-Platforms r36.3.0-updates
 
