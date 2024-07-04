@@ -98,6 +98,13 @@ BALENA_CONFIGS[mtd] = " \
     CONFIG_MTD_BLOCK=m \
 "
 
+BALENA_CONFIGS:append = " iwlwifi"
+BALENA_CONFIGS[iwlwifi] = " \
+    CONFIG_IWLWIFI=m \
+    CONFIG_IWLDVM=m \
+    CONFIG_IWLMVM=m \
+"
+
 # Needed starting with Jetpack 6
 # so the initramfs can mount the
 # NVME partitions
