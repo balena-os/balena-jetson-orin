@@ -13,7 +13,7 @@ DURING_UPDATE=${DURING_UPDATE:-0}
 bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/nvme0n1"
 use_capsule=1
-bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Orin_NX.Cap.gz"
+bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Seeed_j4012.Cap.gz"
 efivars_dir="/sys/firmware/efi/efivars/"
 # See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
 platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
@@ -128,6 +128,7 @@ check_running_l4t() {
 
 check_and_update_esp_flags() {
     esp_type="C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
+    data_type="EBD0A0A2-B9E5-4433-87C0-68B6B72699C7"
     esp_index="5"
     resin_boot_index="6"
     esp_part_type=$(sfdisk --part-type $internal_storage $esp_index)
@@ -138,7 +139,7 @@ check_and_update_esp_flags() {
         sfdisk --part-type $internal_storage $esp_index $data_type
         sync
     else
-        info "ok - esp partition has esp flag"
+        info "ok - esp partition has data flag"
     fi
 
     if [ "$resin_boot_part_type" != "$esp_type" ]; then
