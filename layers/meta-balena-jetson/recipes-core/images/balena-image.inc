@@ -23,6 +23,8 @@ IMAGE_INSTALL:append = " \
     tegra-wifi \
     tegra-firmware-rtl8822 \
     linux-firmware-rtl8168 \
+    linux-firmware-ibt-12-16 \
+    linux-firmware-iwlwifi-8265 \
     jetson-dtbs \
     l4t-launcher-extlinux \
     dtc \
