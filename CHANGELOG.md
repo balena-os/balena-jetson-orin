@@ -1,6 +1,15 @@
 Change log
 -----------
 
+# v5.3.22
+## (2024-07-08)
+
+* layers/meta-balena: Update to v5.3.22 [Alexandru Costache]
+* README: Add L4T 36.3 upgrade notes [Alexandru Costache]
+* jetson-dtbs: Update default device-tree names in Jetpack 6, drop AGX Orin SPI dtb [Alexandru Costache]
+* balena-image-initramfs: Install out-of-tree drivers to allow NVME to be discovered [Alexandru Costache]
+* layers/meta-tegra: Switch to l4t_36_3_kirkstone in our meta-tegra mirror [Alexandru Costache]
+
 # v5.3.21+rev3
 ## (2024-06-20)
 

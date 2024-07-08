@@ -1,4 +1,80 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v5.3.22"
+      hash: 09019d6f0c14681f23c38075ed76f939848afcef
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v5.3.22"
+        changelog-entry: "layers/meta-balena: Update to v5.3.22"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "README: Add L4T 36.3 upgrade notes"
+      hash: 3a2e7393b1a1f5773a423ddf5a325abf83aca4b3
+      body: ""
+      footer:
+        Changelog-entry: "README: Add L4T 36.3 upgrade notes"
+        changelog-entry: "README: Add L4T 36.3 upgrade notes"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "jetson-dtbs: Update default device-tree names in Jetpack 6, drop AGX
+        Orin SPI dtb"
+      hash: b1d904b51af8c681eddcef3d1313f2c614e9e5c7
+      body: |
+        The SPI device-tree is deleted for now because it cannot be used
+        for booting Jetpack 6, since Jetpack 5 device-trees are incompatible
+        with this new release.
+
+        Thus, the dtb will need to be re-created and added back for the new
+        L4T 36.3.
+      footer:
+        Changelog-entry: "jetson-dtbs: Update default device-tree names in Jetpack 6,
+          drop AGX Orin SPI dtb"
+        changelog-entry: "jetson-dtbs: Update default device-tree names in Jetpack 6,
+          drop AGX Orin SPI dtb"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "balena-image-initramfs: Install out-of-tree drivers to allow NVME to
+        be discovered"
+      hash: c2a53a8077fa46d98c2f415aca65ee56037573e4
+      body: |
+        If the Tegra OOT drivers for PCIE and NVME are not installed
+        in the initramfs, the NVME will not be discovered after provisioning.
+
+        These drivers cannot be converted to built-in.
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Changelog-entry: "balena-image-initramfs: Install out-of-tree drivers to allow
+          NVME to be discovered"
+        changelog-entry: "balena-image-initramfs: Install out-of-tree drivers to allow
+          NVME to be discovered"
+      author: Alexandru Costache
+      nested: []
+    - subject: "layers/meta-tegra: Switch to l4t_36_3_kirkstone in our meta-tegra
+        mirror"
+      hash: b5ebe00a62d354b571d329137caa8d7fd039440b
+      body: |
+        This branch is located in our meta-tegra mirror solely, and has
+        modified sources which allow us to build the L4T 36.3 kernel,
+        out of tree Nvidia drivers and device-tree files using Poky Kirkstone.
+      footer:
+        Changelog-entry: "layers/meta-tegra: Switch to l4t_36_3_kirkstone in our
+          meta-tegra mirror"
+        changelog-entry: "layers/meta-tegra: Switch to l4t_36_3_kirkstone in our
+          meta-tegra mirror"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.3.22
+  title: ""
+  date: 2024-07-08T12:48:19.402Z
+- commits:
     - subject: "recipes-kernel/linux-tegra: Add Ilitek ILI210X based touchscreen
         kernel module"
       hash: bcb881da761b3b85175fa519309cb757c9bd3425
