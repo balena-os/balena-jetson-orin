@@ -1,5 +1,21 @@
 #  balena-jetson-orin repository
 
+## Linux for Tegra (L4T) Support
+
+All Jetson Orin boards in this repository are using L4T 36.3 - Jetpack 6.
+
+The last L4T 35.5.0 - Jetpack 5-based releases are:
+* v5.3.21+rev3
+* v5.3.21+rev2
+* v5.3.21+rev1
+* v5.3.21
+
+Given there is a major BSP upgrade from Jetpack 5 to Jetpack 6, prior to updating your devices to an L4T 36.3-based OS release, we recommend you to:
+* Always test any OS update using lab devices first, to ensure the upgrade path is suitable for your devices and that your container applications are in sync with the host OS
+* If your device has been originally provisioned on an L4T version older than 35.5.0, first update to the last two L4T 35.5.0-based releases. This implies updating first to v5.3.21+rev2, then to v5.3.1+rev3, as this ensures both bootchains are updated to L4T 35.5.0, as required by the Jetpack 6 BSP.
+* Avoid interrupting the update process by rebooting or by cutting power to the device
+
+
 ## Clone/Initialize the repository
 
 There are two ways of initializing this repository:

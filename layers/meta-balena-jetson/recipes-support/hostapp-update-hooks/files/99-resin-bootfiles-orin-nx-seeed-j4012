@@ -5,7 +5,6 @@ set -o errexit
 # device tree with embedded cmdline
 # and updates the kernel, as well as
 # the rest of the bootloader binaries
-
 . /usr/libexec/os-helpers-fs
 . /usr/sbin/balena-config-vars
 source /usr/bin/uefi_common.func
@@ -30,6 +29,43 @@ boardspec=$(tegra-boardspec 2>/dev/null)
 TegraPlatformSpec="${boardspec}-${device_type}-"
 compatspec=$(echo "$boardspec" | gen_compat_spec)
 TegraPlatformCompatSpec="${compatspec}-${device_type}-"
+fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
+kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+active_sysroot="/mnt/sysroot/active/current/boot/"
+jp5_default_dtb_name="tegra234-p3767-0000-p3509-a02.dtb"
+jp6_default_dtb_name="tegra234-p3768-0000+p3767-0000-nv.dtb"
+
+
+apply_bs_fix() {
+    for hook_file in `find /mnt/sysroot/active/ -name "99-resin-bootfiles-orin-nx-seeed-j4012" -type f`; do
+        info "Found ${hook_file}"
+        if grep -q "bs=12" ${hook_file}; then
+            info "Block size fix already applied to ${hook_file}"
+        else
+            info "Applying block size fix to ${hook_file}"
+            sed -i 's|dd if=\${tmp_file} of=\${os_indications_efivar}|dd if=\${tmp_file} of=\${os_indications_efivar} bs=12; sync;|g' ${hook_file}
+            info "Applied block size fix to ${hook_file}"
+        fi
+        if grep -q "spi6.0" ${hook_file}; then
+            info "Spi unbind procedure already applied to ${hook_file}"
+        else
+            info "Applying spi unbind procedure to ${hook_file}"
+            sed -i '3 i if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi; ' ${hook_file}
+            info "Applied spi unbind procedure to ${hook_file}"
+        fi
+
+    done
+}
+
+copy_jp5_dtb() {
+    if [ -f ${active_sysroot}${jp5_default_dtb_name} ]; then
+        cp ${active_sysroot}${jp5_default_dtb_name} ${active_sysroot}${jp6_default_dtb_name} || true
+        info "Copied old dtb under new name"
+    else
+        info "Jetpack 5 default device-tree not found"
+    fi
+}
+
 
 write_jetson_update_efivars() {
     info "Writing of jetson efivars triggered from old OS hook"
@@ -39,7 +75,8 @@ write_jetson_update_efivars() {
         if [ ! -e ${platform_spec_efivar} ]; then
             printf "\x07\x00\x00\x00" > ${tmp_file}
             printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
-            dd if=${tmp_file} of=${platform_spec_efivar}
+            tmp_file_size=$(stat -c%s ${tmp_file})
+            dd if=${tmp_file} of=${platform_spec_efivar} bs=${tmp_file_size}
             info "PlatformSpec variable created"
         else
             info "PlatformSpec variable already exists"
@@ -48,74 +85,121 @@ write_jetson_update_efivars() {
         if [ ! -e ${platform_compat_spec_efivar} ]; then
             printf "\x07\x00\x00\x00" > ${tmp_file}
             printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
-            dd if=${tmp_file} of=${platform_compat_spec_efivar}
+            tmp_file_size=$(stat -c%s ${tmp_file})
+            dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
             info "PlatformCompatSpec variable created"
         else
             info "PlatformCompatSpec variable already exists"
+            if [[ ${kernel_l4t} == "36.3" ]]; then
+                info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
+                chattr -i ${platform_compat_spec_efivar}
+                printf "\x07\x00\x00\x00" > ${tmp_file}
+                printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+                tmp_file_size=$(stat -c%s ${tmp_file})
+                dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
+            fi
         fi
 
         printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
-        dd if=${tmp_file} of=${os_indications_efivar}
+        dd if=${tmp_file} of=${os_indications_efivar}; bs=12;
         info "OsIndications variable written"
     else
         fail "sysfs not accessible!"
+        return 1
     fi
 
     return 0
 }
 
-# This allows for writing UEFI variables
-# in L4T 36.3, in the case where the hook
-# is triggered by the rollback-health script
-unload_spi_drivers() {
-spi_modules=("spi_tegra210_quad" "spi_tegra114")
+check_running_l4t() {
+    fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
+    kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+    old_extlinux_file="/mnt/sysroot/inactive/current/boot/extlinux/extlinux.conf"
 
-for spi_module in "${spi_modules[@]}"
-do
-    if lsmod | grep -q $spi_module ; then
-        echo "Unloading $spi_module"
-        rmmod $spi_module
-
-        if [ $? -eq 0 ]; then
-            echo "Unloaded $spi_module"
-        fi
+    if [[ "$fw_version" == "35.5" ]] || [[ "$fw_version" == "36.3" ]]; then
+        info "Firmware version $fw_version is suitable for Jetpack 6 upgrade."
+	# mtd may cause interference with sporadic failures when writing efivars
+	if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi;
+    else
+        warn "Firmware version $fw_version is not suitable Jetpack 6 upgrade. Please first upgrade to an L4T 35.5.0 based balenaOS image."
+	fail
     fi
-done
 }
 
-check_corrupted_slots()
-{
-    # Only the alternate slot can be corrupt, otherwise this script
-    # wouldn't be running because the device wouldn't boot
-    if nvbootctrl dump-slots-info | grep -q unbootable ; then
-        warn "alternate boot slot is unbootable and will require legacy boot blob update"
-        info "Will use legacy mode update for boot firmware because the UEFI capsule cannot be applied in the current state"
-        use_capsule=0
+check_and_update_esp_flags() {
+    esp_type="C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
+    data_type="EBD0A0A2-B9E5-4433-87C0-68B6B72699C7"
+    esp_index="5"
+    resin_boot_index="6"
+    esp_part_type=$(sfdisk --part-type $internal_storage $esp_index)
+    resin_boot_part_type=$(sfdisk --part-type $internal_storage $resin_boot_index)
+
+    if [ "$esp_type" = "$esp_part_type" ]; then
+        info "esp partition has esp flag, will be cleared"
+        sfdisk --part-type $internal_storage $esp_index $data_type
+        sync
+    else
+        info "ok - esp partition has data flag"
+    fi
+
+    if [ "$resin_boot_part_type" != "$esp_type" ]; then
+        info "resin-boot partition does not have esp type, must be added"
+        sfdisk --part-type $internal_storage $resin_boot_index $esp_type
+        sync
+    else
+        info "no type change needed on resin-boot partition"
     fi
 }
 
 info "Bootloader blob is $bootloader_blob"
 
-unload_spi_drivers
+# Save next active boot slot
+# so it can be processed by the UEFI bootloader
+process_bootslot_file() {
+    if [ "$DURING_UPDATE" = "1" ]; then
+        bootslotchar=$(nvbootctrl dump-slots-info | grep Active | awk '{print $4}')
 
-do_legacy_update() {
-    bootloader_blob="/tmp/boot0.img"
-    mtdblock="/dev/mtdblock0"
-    gunzip -k -c /opt/tegra-binaries/boot0.img.gz > $bootloader_blob
-    existing_bootloader_md5sum=$(dd if=$mtdblock bs=1M status=none | md5sum | awk '{print $1}')
-    update_bootloader_md5sum=$(md5sum $bootloader_blob | awk '{print $1}')
+        info "bootslotchar is $bootslotchar"
 
-    if [ ! "$existing_bootloader_md5sum" = "$update_bootloader_md5sum" ]; then
-        info "Will clear bootloader device before legacy mode update"
-        mtd_debug erase /dev/mtd0 0x0 0x4000000 || true
-        info "Updating bootloader device in legacy mode update"
-        mtd_debug write /dev/mtd0 0x0 0x4000000 $bootloader_blob
-        info "Updated bootloader device in legacy mode update"
+        if [ "$bootslotchar" = "A" ]; then
+            # next slot will be B
+            nextbootslot="1";
+        else
+            # next slot will be A
+            nextbootslot="0";
+        fi
+
+        info "Next boot slot is ${nextbootslot}. Will be written to bootslot.env"
+        echo "bootslot=${nextbootslot}" > /mnt/boot/bootslot.env
+        cat /mnt/boot/bootslot.env
     else
-        info "No need to update bootloader device"
+        info "During rollback, will remove bootslot.env"
+        rm -rf /mnt/boot/bootslot.env || true
     fi
 }
 
+process_bootslot_file
+copy_jp5_dtb
+
+unload_spi_drivers() {
+    spi_modules=("spi_tegra210_quad" "spi_tegra114" "mtdblock")
+
+    for spi_module in "${spi_modules[@]}"
+    do
+        if lsmod | grep -q $spi_module ; then
+            info "Unloading $spi_module"
+            rmmod $spi_module
+            if [ $? -eq 0 ]; then
+                info "Unloaded $spi_module"
+            fi
+        fi
+    done
+}
+
+# Also unload SPI drivers before any
+# nvbootctrl call. When running in L4T
+# 36.3, this is mandatory to avoid
+# system hangs.
 do_capsule_update() {
     # Unzip capsule to the boot partition
     info "Will extract UEFI Capsule..."
@@ -131,17 +215,8 @@ info "=========================="
 /usr/sbin/nvbootctrl dump-slots-info || true
 info "=========================="
 
-if [ "$DURING_UPDATE" = "1" ]; then
-    check_corrupted_slots
-fi
-
-# See AGX Orin Devkit 32GB hook notes
-# for potential MB2 failure to read some qspi
-# partitions after 35.4.1 -> 35.5.0 and back.
-# This was not reproducible on the Orin Nano but we
-# want to avoid it, should it occur
-if [ $use_capsule -eq 1 ]; then
-    do_capsule_update
-else
-    do_legacy_update
-fi
+check_running_l4t
+apply_bs_fix
+unload_spi_drivers
+do_capsule_update
+check_and_update_esp_flags

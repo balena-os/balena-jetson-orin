@@ -1,0 +1,73 @@
+From 0dea9ea4adff6dbb1a674f814134d58a2d3fd281 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Thu, 20 Jun 2024 09:12:25 +0000
+Subject: [PATCH] edk2-nvidia: Add changes for balenaOS integration
+
+- Increase boot timeout to 5 seconds in UEFI
+- Increase max bootchain retry so that it does not interfere
+  with balenaOS rollbacks
+- Allow access for reflashing the boot medium on qspi
+
+Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ Platform/NVIDIA/NVIDIA.common.dsc.inc                     | 1 +
+ Platform/NVIDIA/TegraVirt/TegraVirt.dsc                   | 2 +-
+ Silicon/NVIDIA/Drivers/BootChainDxe/BootChainDxePrivate.h | 2 +-
+ Silicon/NVIDIA/NVIDIA.dec                                 | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Platform/NVIDIA/NVIDIA.common.dsc.inc b/Platform/NVIDIA/NVIDIA.common.dsc.inc
+index e56a31b3..69447581 100644
+--- a/Platform/NVIDIA/NVIDIA.common.dsc.inc
++++ b/Platform/NVIDIA/NVIDIA.common.dsc.inc
+@@ -1146,6 +1146,7 @@ gEfiSecurityPkgTokenSpaceGuid.PcdSingleBootApplicationGuid|{ GUID("cbf481fb-b373
+   gNVIDIATokenSpaceGuid.PcdBrBctDataSize|0x2000
+   gNVIDIATokenSpaceGuid.PcdAffinityMpIdrSupported|TRUE
+   gNVIDIATokenSpaceGuid.PcdGptIsPerBootChain|TRUE
++  gNVIDIATokenSpaceGuid.PcdAllowOsAccessQspi|TRUE
+ 
+ [PcdsDynamicHii.common.T234SLT]
+   gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|2
+diff --git a/Platform/NVIDIA/TegraVirt/TegraVirt.dsc b/Platform/NVIDIA/TegraVirt/TegraVirt.dsc
+index f457392c..1575aa4b 100644
+--- a/Platform/NVIDIA/TegraVirt/TegraVirt.dsc
++++ b/Platform/NVIDIA/TegraVirt/TegraVirt.dsc
+@@ -237,7 +237,7 @@
+ 
+ [PcdsDynamicHii]
+ !if $(TARGET) == RELEASE
+-  gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|0
++  gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|5
+ !else
+   gEfiMdePkgTokenSpaceGuid.PcdPlatformBootTimeOut|L"Timeout"|gEfiGlobalVariableGuid|0x0|5
+ !endif
+diff --git a/Silicon/NVIDIA/Drivers/BootChainDxe/BootChainDxePrivate.h b/Silicon/NVIDIA/Drivers/BootChainDxe/BootChainDxePrivate.h
+index d8847e5b..7c8b1657 100644
+--- a/Silicon/NVIDIA/Drivers/BootChainDxe/BootChainDxePrivate.h
++++ b/Silicon/NVIDIA/Drivers/BootChainDxe/BootChainDxePrivate.h
+@@ -16,7 +16,7 @@
+ #include <Protocol/BrBctUpdateProtocol.h>
+ 
+ #define NUM_BOOT_CHAINS             2
+-#define BOOT_CHAIN_MAX_RESET_COUNT  3
++#define BOOT_CHAIN_MAX_RESET_COUNT  9999
+ 
+ #define STATUS_SUCCESS                          0
+ #define STATUS_IN_PROGRESS                      1
+diff --git a/Silicon/NVIDIA/NVIDIA.dec b/Silicon/NVIDIA/NVIDIA.dec
+index c5c96b8b..ff5f6fe1 100644
+--- a/Silicon/NVIDIA/NVIDIA.dec
++++ b/Silicon/NVIDIA/NVIDIA.dec
+@@ -662,7 +662,7 @@
+   gNVIDIATokenSpaceGuid.PcdNewDeviceHierarchy|0x01|UINT8|0x00000068
+ 
+ #Enable OS access to QSPI DTB
+-  gNVIDIATokenSpaceGuid.PcdAllowOsAccessQspi|FALSE|BOOLEAN|0x0000006B
++  gNVIDIATokenSpaceGuid.PcdAllowOsAccessQspi|TRUE|BOOLEAN|0x0000006B
+ 
+ #Enable STMM Secure Variable Store
+   gNVIDIATokenSpaceGuid.PcdTegraStmmEnabled|TRUE|BOOLEAN|0x0000006C
+-- 
+2.34.1
+
