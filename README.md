@@ -111,7 +111,7 @@ An example of a valid commit updating `meta-balena` is:
 ```
 layers/meta-balena: Update to v2.24.0
 
-Update meta-balena from 2.19.0 to 2.24.0
+Update meta-balena from 2.19.0 to 2.24.0.
 
 Changelog-entry: Update the meta-balena submodule from v2.19.0 to v2.24.0
 ```
