@@ -1,7 +1,7 @@
-From c79fe40dd2881a798214d975d1bf34a113e37ed8 Mon Sep 17 00:00:00 2001
+From 9e06dbf1557acaae9eae46010e0ebde182a31571 Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Mon, 1 Jul 2024 12:40:26 +0000
-Subject: [PATCH] 2 Orin Nano: Integrate with balenaOS on L4T 36.3
+Date: Tue, 16 Jul 2024 09:16:00 +0000
+Subject: [PATCH] Orin Nano: Integrate with balenaOS on L4T 36.3
 
 With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
 extra_uEnv.txt and bootcount.env in order to load the
@@ -11,12 +11,12 @@ rootfs.
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
- .../Application/L4TLauncher/L4TLauncher.c     | 584 +++++++++++++++++-
+ .../Application/L4TLauncher/L4TLauncher.c     | 583 +++++++++++++++++-
  .../Application/L4TLauncher/L4TLauncher.h     |  15 +-
- 2 files changed, 579 insertions(+), 20 deletions(-)
+ 2 files changed, 578 insertions(+), 20 deletions(-)
 
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-index ab86f3e0..23338b7c 100644
+index ab86f3e0..87d32558 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 @@ -1125,6 +1125,147 @@ CheckCommandString (
@@ -140,7 +140,7 @@ index ab86f3e0..23338b7c 100644
 +    if (NULL != DtbName) {
 +      DtbName += StrLen(L"custom_fdt_file=");
 +      UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DtbName);
-+      Print(L"Selected dtb name is %s:\n", CustomFdtName);
++      Print(L"Selected dtb name is %s:\n", *CustomFdtName);
 +      Status = CheckDtbExists(DeviceHandle, BootChain, BalenaOSRootFs, *CustomFdtName);
 +
 +      if (EFI_ERROR(Status)) {
@@ -150,14 +150,14 @@ index ab86f3e0..23338b7c 100644
 +      }
 +    }
 +
-+    if (FileHandle != NULL) {
-+      FileHandleClose (FileHandle);
-+    }
-+
 +    if (FileLine != NULL) {
 +      FreePool (FileLine);
 +      FileLine = NULL;
 +    }
++  }
++
++  if (FileHandle != NULL) {
++    FileHandleClose (FileHandle);
 +  }
 +
 +  return EFI_SUCCESS;
@@ -266,7 +266,7 @@ index ab86f3e0..23338b7c 100644
      Status = OpenAndReadFileToBuffer (
                 DeviceHandle,
                 BootOption->DtbPath,
-@@ -1690,6 +1864,300 @@ Exit:
+@@ -1690,6 +1864,299 @@ Exit:
    return Status;
  }
  
@@ -386,10 +386,6 @@ index ab86f3e0..23338b7c 100644
 +         if (StrStr(CleanLine, L"bootcount=")) {
 +           *BootCountValue = StrDecimalToUintn(CleanLine + 10);
 +           Print(L"%a: BootCount is %d\r\n", __FUNCTION__, *BootCountValue);
-+
-+           if (FileHandle != NULL) {
-+             FileHandleClose (FileHandle);
-+           }
 +         }
 +
 +         if (FileLine != NULL) {
@@ -400,6 +396,10 @@ index ab86f3e0..23338b7c 100644
 +         Status = WriteBootCountFile (DeviceHandle, BootChain, ++(*BootCountValue));
 +         if (EFI_ERROR (Status)) {
 +          ErrorPrint (L"%a: Failed to write bootcount file value %d\r\n", __FUNCTION__, *BootCountValue);
++         }
++
++         if (FileHandle != NULL) {
++           FileHandleClose (FileHandle);
 +         }
 +
 +         return Status;
@@ -545,15 +545,14 @@ index ab86f3e0..23338b7c 100644
 +            ErrorPrint(L"%a: Running on fallback slot %u\r\n", __FUNCTION__, BootChain);
 +            *IsRunningUpdatedSlot = FALSE;
 +           }
-+
-+           if (FileHandle != NULL) {
-+             FileHandleClose (FileHandle);
-+           }
 +         }
 +
 +         if (FileLine != NULL) {
 +           FreePool (FileLine);
 +           FileLine = NULL;
++         }
++         if (FileHandle != NULL) {
++           FileHandleClose (FileHandle);
 +         }
 +         return Status;
 +       }
@@ -567,7 +566,7 @@ index ab86f3e0..23338b7c 100644
  /**
    Process the boot mode selection from command line and variables
  
-@@ -1718,7 +2186,7 @@ ProcessBootParams (
+@@ -1718,7 +2185,7 @@ ProcessBootParams (
    }
  
    BootParams->BootChain = 0;
@@ -576,7 +575,7 @@ index ab86f3e0..23338b7c 100644
    DataSize = sizeof (BootParams->BootMode);
    Status   = gRT->GetVariable (L4T_BOOTMODE_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootParams->BootMode);
    if (EFI_ERROR (Status) || (BootParams->BootMode > NVIDIA_L4T_BOOTMODE_RECOVERY)) {
-@@ -1729,17 +2197,22 @@ ProcessBootParams (
+@@ -1729,17 +2196,22 @@ ProcessBootParams (
    Status   = gRT->GetVariable (BOOT_FW_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootChain);
    // If variable does not exist, is >4 bytes or has a value larger than 1, boot partition A
    if (!EFI_ERROR (Status) && (BootChain <= 1)) {
@@ -601,7 +600,7 @@ index ab86f3e0..23338b7c 100644
    if (LoadedImage->LoadOptionsSize) {
      CurrentBootOption = StrStr (LoadedImage->LoadOptions, BOOTMODE_DIRECT_STRING);
      if (CurrentBootOption != NULL) {
-@@ -1769,7 +2242,9 @@ ProcessBootParams (
+@@ -1769,7 +2241,9 @@ ProcessBootParams (
        if (EFI_ERROR (Status)) {
          ErrorPrint (L"Failed to read boot chain override: %r\r\n", Status);
        } else if (StringValue <= 1) {
@@ -611,7 +610,7 @@ index ab86f3e0..23338b7c 100644
        } else {
          ErrorPrint (L"Boot chain override value out of range, ignoring\r\n");
        }
-@@ -1777,15 +2252,17 @@ ProcessBootParams (
+@@ -1777,15 +2251,17 @@ ProcessBootParams (
    }
  
    // Find valid Rootfs Chain. If not, select recovery kernel
@@ -633,7 +632,7 @@ index ab86f3e0..23338b7c 100644
    }
  
    return EFI_SUCCESS;
-@@ -2434,7 +2911,14 @@ L4TLauncher (
+@@ -2434,7 +2910,14 @@ L4TLauncher (
    EXTLINUX_BOOT_CONFIG       ExtLinuxConfig;
    UINTN                      ExtLinuxBootOption;
    UINTN                      Index;
@@ -649,7 +648,7 @@ index ab86f3e0..23338b7c 100644
    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
    if (EFI_ERROR (Status)) {
      ErrorPrint (L"%a: Unable to locate loaded image: %r\r\n", __FUNCTION__, Status);
-@@ -2498,12 +2982,74 @@ L4TLauncher (
+@@ -2498,12 +2981,74 @@ L4TLauncher (
      } while (FALSE);
    }
  

@@ -27,9 +27,6 @@ SRC_URI = " \
     file://0001-Seeed-J4012-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
     file://0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
     file://0001-edk2-nvidia-Remove-pva-fw-from-required-list_patch.txt \
-    file://0001-feat-add-a-null-version-of-the-FwVariableLib_patch.txt \
-    file://0002-fix-don-t-try-to-erase-early-vars-partition-in-Jetso_patch.txt \
-    file://0003-fix-reset-the-meas-buffer-after-computing-the-first-_patch.txt \
     file://0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit_patch.txt \
 "
 

@@ -22,9 +22,6 @@ COPY ./0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt /build/nv
 COPY ./0001-Seeed-J4012-Integrate-with-balenaOS-on-L4T-36.3_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-Seeed-J4012-Integrate-with-balenaOS-on-L4T-36.3.patch
 COPY ./0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3.patch
 COPY ./0001-edk2-nvidia-Remove-pva-fw-from-required-list_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-edk2-nvidia-Remove-pva-fw-from-required-list.patch
-COPY ./0001-feat-add-a-null-version-of-the-FwVariableLib_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-feat-add-a-null-version-of-the-FwVariableLib.patch
-COPY ./0002-fix-don-t-try-to-erase-early-vars-partition-in-Jetso_patch.txt /build/nvidia-uefi/edk2-nvidia/0002-fix-don-t-try-to-erase-early-vars-partition-in-Jetso.patch
-COPY ./0003-fix-reset-the-meas-buffer-after-computing-the-first-_patch.txt /build/nvidia-uefi/edk2-nvidia/0003-fix-reset-the-meas-buffer-after-computing-the-first-.patch
 
 # We keep the reference to the patch below, but don't use it right now because the tos-optee built using the public atf & optee sources
 # using the standalone_optee binary generated here crashes. See https://forums.developer.nvidia.com/t/jetson-orin-nano-ota-35-5-0-36-3-failed-to-boot-after-ota-upgrade-from-35-5-0-to-36-3/296205/16
