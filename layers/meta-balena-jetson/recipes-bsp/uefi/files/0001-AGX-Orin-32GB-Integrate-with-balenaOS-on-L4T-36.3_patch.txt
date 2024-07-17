@@ -1,7 +1,7 @@
-From 1d89db43997d5d9da55a88491a6a63826c37f3a0 Mon Sep 17 00:00:00 2001
+From 98de665db6d2a9eb3b12289449b125f69f3d10d2 Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Mon, 1 Jul 2024 09:21:33 +0000
-Subject: [PATCH] 2 AGX-Orin 32GB: Integrate with balenaOS on L4T 36.3
+Date: Tue, 16 Jul 2024 09:17:34 +0000
+Subject: [PATCH] AGX-Orin 32GB: Integrate with balenaOS on L4T 36.3
 
 With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
 extra_uEnv.txt and bootcount.env in order to load the
@@ -14,14 +14,14 @@ compatible with the dtb selection mechanism implemented in the
 Supervisor for the rest of the boards that use u-boot.
 
 Upstream-status: Inappropriate [configuration]
-Signed-off-by: Alexandru Costache <alexandru@balena.io>
+Signed-off-by: Alexandru Costache <alexandru@balena.io
 ---
  .../Application/L4TLauncher/L4TLauncher.c     | 583 +++++++++++++++++-
  .../Application/L4TLauncher/L4TLauncher.h     |  15 +-
  2 files changed, 578 insertions(+), 20 deletions(-)
 
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-index ab86f3e0..1d5d16ee 100644
+index ab86f3e0..9323611e 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 @@ -1125,6 +1125,147 @@ CheckCommandString (
@@ -145,7 +145,7 @@ index ab86f3e0..1d5d16ee 100644
 +    if (NULL != DtbName) {
 +      DtbName += StrLen(L"custom_fdt_file=");
 +      UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DtbName);
-+      Print(L"Selected dtb name is %s:\n", CustomFdtName);
++      Print(L"Selected dtb name is %s\n", *CustomFdtName);
 +      Status = CheckDtbExists(DeviceHandle, BootChain, BalenaOSRootFs, *CustomFdtName);
 +
 +      if (EFI_ERROR(Status)) {
@@ -155,14 +155,14 @@ index ab86f3e0..1d5d16ee 100644
 +      }
 +    }
 +
-+    if (FileHandle != NULL) {
-+      FileHandleClose (FileHandle);
-+    }
-+
 +    if (FileLine != NULL) {
 +      FreePool (FileLine);
 +      FileLine = NULL;
 +    }
++  }
++
++  if (FileHandle != NULL) {
++    FileHandleClose (FileHandle);
 +  }
 +
 +  return EFI_SUCCESS;
@@ -391,10 +391,6 @@ index ab86f3e0..1d5d16ee 100644
 +         if (StrStr(CleanLine, L"bootcount=")) {
 +           *BootCountValue = StrDecimalToUintn(CleanLine + 10);
 +           Print(L"%a: BootCount is %d\r\n", __FUNCTION__, *BootCountValue);
-+
-+           if (FileHandle != NULL) {
-+             FileHandleClose (FileHandle);
-+           }
 +         }
 +
 +         if (FileLine != NULL) {
@@ -405,6 +401,9 @@ index ab86f3e0..1d5d16ee 100644
 +         Status = WriteBootCountFile (DeviceHandle, BootChain, ++(*BootCountValue));
 +         if (EFI_ERROR (Status)) {
 +          ErrorPrint (L"%a: Failed to write bootcount file value %d\r\n", __FUNCTION__, *BootCountValue);
++         }
++         if (FileHandle != NULL) {
++           FileHandleClose (FileHandle);
 +         }
 +
 +         return Status;
@@ -550,16 +549,17 @@ index ab86f3e0..1d5d16ee 100644
 +            ErrorPrint(L"%a: Running on fallback slot %u\r\n", __FUNCTION__, BootChain);
 +            *IsRunningUpdatedSlot = FALSE;
 +           }
-+
-+           if (FileHandle != NULL) {
-+             FileHandleClose (FileHandle);
-+           }
 +         }
 +
 +         if (FileLine != NULL) {
 +           FreePool (FileLine);
 +           FileLine = NULL;
 +         }
++
++         if (FileHandle != NULL) {
++           FileHandleClose (FileHandle);
++         }
++
 +         return Status;
 +       }
 +     }

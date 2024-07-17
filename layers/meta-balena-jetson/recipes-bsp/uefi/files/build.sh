@@ -13,12 +13,8 @@ device_specific_patches["jetson-orin-nx-seeed-j4012"]="0001-Seeed-J4012-Integrat
 device_specific_patches["jetson-orin-nano-seeed-j3010"]="0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3.patch"
 
 edk2_patch="0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow.patch"
-
 edk2_nvidia_patches=( "0001-edk2-nvidia-Add-changes-for-balenaOS-integration.patch " \
-			"0001-edk2-nvidia-Remove-pva-fw-from-required-list.patch" \
-			"0001-feat-add-a-null-version-of-the-FwVariableLib.patch" \
-			"0002-fix-don-t-try-to-erase-early-vars-partition-in-Jetso.patch" \
-			"0003-fix-reset-the-meas-buffer-after-computing-the-first-.patch" )
+	"0001-edk2-nvidia-Remove-pva-fw-from-required-list.patch" )
 
 cd /build/nvidia-uefi/edk2 && \
     git reset --hard HEAD && \
