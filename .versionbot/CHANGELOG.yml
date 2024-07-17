@@ -1,4 +1,36 @@
 - commits:
+    - subject: Update meta-balena to v5.3.23
+      hash: 4f22ae935f7af4862b0155c8cda9b929cc5377b6
+      body: ""
+      footer:
+        Changelog-entry: Update meta-balena to v5.3.23
+        changelog-entry: Update meta-balena to v5.3.23
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "edk2-container: Remove patches now included in upstrea, fix custom dtb
+        loading"
+      hash: bf233d23c16ca224804abd216fa3bd06ecdbe4ba
+      body: |
+        In this commit we:
+        - Fix custom dtb loading by closing the extra_uEnv.txt
+          in the proper location
+        - Remove patches that have been merged in upstream in the
+          meanwhile
+      footer:
+        Changelog-entry: "edk2-container: Remove patches now included in upstrea, fix
+          custom dtb loading"
+        changelog-entry: "edk2-container: Remove patches now included in upstrea, fix
+          custom dtb loading"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.3.23
+  title: ""
+  date: 2024-07-17T08:55:16.553Z
+- commits:
     - subject: "layers/meta-balena: Update to v5.3.22"
       hash: 09019d6f0c14681f23c38075ed76f939848afcef
       body: ""

@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v5.3.23
+## (2024-07-17)
+
+* Update meta-balena to v5.3.23 [Alexandru Costache]
+* edk2-container: Remove patches now included in upstrea, fix custom dtb loading [Alexandru Costache]
+
 # v5.3.22
 ## (2024-07-08)
 
