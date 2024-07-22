@@ -1,4 +1,16 @@
 - commits:
+    - subject: Update .gitmodules with submodule branch information
+      hash: aabe9ead819aff2935aee288dfc3e3bdfef646f4
+      body: ""
+      footer:
+        Changelog-entry: Update .gitmodules with submodule branch information
+        changelog-entry: Update .gitmodules with submodule branch information
+      author: Kyle Harding
+      nested: []
+  version: 5.3.23+rev1
+  title: ""
+  date: 2024-07-22T13:23:45.371Z
+- commits:
     - subject: Update meta-balena to v5.3.23
       hash: 4f22ae935f7af4862b0155c8cda9b929cc5377b6
       body: ""
