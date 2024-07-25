@@ -26,6 +26,7 @@ SRC_URI = " \
     file://0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
     file://0001-Seeed-J4012-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
     file://0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
+    file://0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
     file://0001-edk2-nvidia-Remove-pva-fw-from-required-list_patch.txt \
     file://0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit_patch.txt \
 "

@@ -8,6 +8,11 @@ HOSTAPP_HOOKS:append:jetson-agx-orin-devkit = " \
     99-resin-bootfiles-agx-orin-devkit \
 "
 
+HOSTAPP_HOOKS:append:jetson-agx-orin-devkit-64gb = " \
+    99-resin-uboot \
+    99-resin-bootfiles-agx-orin-devkit-64gb \
+"
+
 HOSTAPP_HOOKS:append:jetson-orin-nx-xavier-nx-devkit = " \
      99-resin-uboot \
      99-resin-bootfiles-orin-nx-xavier-nx-devkit \

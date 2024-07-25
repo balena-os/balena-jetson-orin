@@ -11,6 +11,7 @@ device_specific_patches["jetson-orin-nano-devkit-nvme"]="0001-Orin-Nano-Integrat
 device_specific_patches["jetson-orin-nx-xavier-nx-devkit"]="0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.3.patch"
 device_specific_patches["jetson-orin-nx-seeed-j4012"]="0001-Seeed-J4012-Integrate-with-balenaOS-on-L4T-36.3.patch"
 device_specific_patches["jetson-orin-nano-seeed-j3010"]="0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3.patch"
+device_specific_patches["jetson-agx-orin-devkit-64gb"]="0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-36.3.patch"
 
 edk2_patch="0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow.patch"
 edk2_nvidia_patches=( "0001-edk2-nvidia-Add-changes-for-balenaOS-integration.patch " \
