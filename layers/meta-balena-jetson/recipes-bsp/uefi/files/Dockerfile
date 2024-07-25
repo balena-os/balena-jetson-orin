@@ -21,6 +21,7 @@ COPY ./0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-36.3_patch.txt /build/nvidi
 COPY ./0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.3.patch
 COPY ./0001-Seeed-J4012-Integrate-with-balenaOS-on-L4T-36.3_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-Seeed-J4012-Integrate-with-balenaOS-on-L4T-36.3.patch
 COPY ./0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3.patch
+COPY ./0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-36.3.patch
 COPY ./0001-edk2-nvidia-Remove-pva-fw-from-required-list_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-edk2-nvidia-Remove-pva-fw-from-required-list.patch
 
 # We keep the reference to the patch below, but don't use it right now because the tos-optee built using the public atf & optee sources
