@@ -2,13 +2,42 @@
 
 set -e
 
-mtd_debug erase /dev/mtd0 0x0 0x4000000
-gunzip -k -c /opt/tegra-binaries/boot0.img.gz | dd of=/tmp/boot0.img bs=1M
-mtd_debug write /dev/mtd0 0x0 0x4000000 /tmp/boot0.img
+. /usr/libexec/os-helpers-logging
+
+MMC_DEV="mmcblk0"
+NVME_DEV="nvme0n1"
+MTD_DEV="mtd0"
+FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
+BOOT_BLOB="boot0.img"
+
+if [ -f ${FLASHER_CONF_FILE} ]; then
+    source ${FLASHER_CONF_FILE}
+else
+    fail "No configuration for resin-init-flasher found."
+fi
+
+mtd_debug erase /dev/${MTD_DEV} 0x0 0x4000000
+gunzip -k -c "/opt/tegra-binaries/${BOOT_BLOB}.gz" | dd of=/tmp/${BOOT_BLOB} bs=1M
+mtd_debug write /dev/${MTD_DEV} 0x0 0x4000000 /tmp/${BOOT_BLOB}
 sync
 
 # Relocate secondary gpt after writing image to the nvme with dd
-sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/nvme0n1
+sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${INTERNAL_DEVICE_KERNEL}
     v
     w
 EOF
+
+# All flasher images provision the internal storage (eMMC or NVME) and QSPI,
+# so let's ensure there's nothing else that can be booted
+# apart from the target media
+if [[ "${INTERNAL_DEVICE_KERNEL}" = "${MMC_DEV}" ]]; then
+    log "Target internal device is the eMMC"
+    if [[ -b /dev/${NVME_DEV} ]]; then
+        log "NVME drive found. Erasing NVME partition table to prevent potential NVME booting"
+        sgdisk -Z /dev/${NVME_DEV}
+    fi
+elif [[ -b /dev/${MMC_DEV} ]]; then
+    log "Target internal device is not the eMMC. Erasing eMMC partition table to prevent potential eMMC booting"
+    sgdisk -Z /dev/${MMC_DEV}
+fi
+
