@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v5.3.24
+## (2024-07-25)
+
+* layers/meta-balena: Update to v5.3.24 [Alexandru Costache]
+* balena-image: Install linux-firmware-qca and linux-firmware-ath10k [Alexandru Costache]
+* conf/machine: Add AGX Orin Devkit 64GB yocto machine [Alexandru Costache]
+
 # v5.3.23+rev1
 ## (2024-07-22)
 

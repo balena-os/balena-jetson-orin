@@ -1,4 +1,40 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v5.3.24"
+      hash: 29cf5ef9f848b56a6093b27b7f490ca99a80f8d5
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v5.3.24"
+        changelog-entry: "layers/meta-balena: Update to v5.3.24"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "balena-image: Install linux-firmware-qca and linux-firmware-ath10k"
+      hash: fb49c00b0bfa9f600233cb43968f2b8a49d5cbce
+      body: |
+        These firmware files add a total of about 5MB to the root filesystem.
+        This commit includes the change from PR 471.
+      footer:
+        Changelog-entry: "balena-image: Install linux-firmware-qca and linux-firmware-ath10k"
+        changelog-entry: "balena-image: Install linux-firmware-qca and linux-firmware-ath10k"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "conf/machine: Add AGX Orin Devkit 64GB yocto machine"
+      hash: 324c0eab8db9c913d623c45fe0d24dc2786221a3
+      body: ""
+      footer:
+        Changelog-entry: "conf/machine: Add AGX Orin Devkit 64GB yocto machine"
+        changelog-entry: "conf/machine: Add AGX Orin Devkit 64GB yocto machine"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.3.24
+  title: ""
+  date: 2024-07-25T13:09:49.261Z
+- commits:
     - subject: Update .gitmodules with submodule branch information
       hash: aabe9ead819aff2935aee288dfc3e3bdfef646f4
       body: ""
