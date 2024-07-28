@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v5.3.25+rev1
+## (2024-07-28)
+
+* Decrease AGX Orin 64GB rootfs size [Alexandru Costache]
+
 # v5.3.25
 ## (2024-07-26)
 

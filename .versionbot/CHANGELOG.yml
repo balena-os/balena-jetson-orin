@@ -1,4 +1,21 @@
 - commits:
+    - subject: Decrease AGX Orin 64GB rootfs size
+      hash: b1806d5fdc0cbee20342d122dc8ed008ff71f542
+      body: |
+        and also the boot partition size, otherwise the flasher
+        image becomes larger than 4GB, which is the limit for zip
+        files.
+      footer:
+        Changelog-entry: Decrease AGX Orin 64GB rootfs size
+        changelog-entry: Decrease AGX Orin 64GB rootfs size
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 5.3.25+rev1
+  title: ""
+  date: 2024-07-28T11:02:24.821Z
+- commits:
     - subject: "layers/meta-balena: Update to v5.3.25"
       hash: c6289bcb2d5f6c758eb6cdc9f81c75e5232d566b
       body: ""
