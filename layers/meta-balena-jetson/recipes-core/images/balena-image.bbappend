@@ -14,14 +14,14 @@ DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit-64gb = "598016"
 BALENA_BOOT_SIZE:jetson-orin-nx-xavier-nx-devkit = "121440"
 BALENA_BOOT_SIZE:jetson-orin-nano-devkit-nvme = "121440"
 BALENA_BOOT_SIZE:jetson-orin-nano-seeed-j3010 = "121440"
-BALENA_BOOT_SIZE:jetson-agx-orin-devkit-64gb = "121440"
+BALENA_BOOT_SIZE:jetson-agx-orin-devkit-64gb = "97280"
 
 IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit = "1003520"
 IMAGE_ROOTFS_SIZE:jetson-orin-nx-xavier-nx-devkit = "983040"
 IMAGE_ROOTFS_SIZE:jetson-orin-nx-seeed-j4012 = "733184"
 IMAGE_ROOTFS_SIZE:jetson-orin-nano-devkit-nvme = "733184"
 IMAGE_ROOTFS_SIZE:jetson-orin-nano-seeed-j3010 = "733184"
-IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit-64gb = "983040"
+IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit-64gb = "827392"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
