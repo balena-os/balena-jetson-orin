@@ -1,4 +1,18 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v6.0.6"
+      hash: e9757d645c06cb55d547738c9626697d4108307e
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v6.0.6"
+        changelog-entry: "layers/meta-balena: Update to v6.0.6"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.0.6
+  title: ""
+  date: 2024-08-06T08:53:32.479Z
+- commits:
     - subject: Decrease AGX Orin 64GB rootfs size
       hash: b1806d5fdc0cbee20342d122dc8ed008ff71f542
       body: |
