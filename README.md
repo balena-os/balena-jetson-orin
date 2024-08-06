@@ -4,7 +4,23 @@
 
 All Jetson Orin boards in this repository are using L4T 36.3 - Jetpack 6.
 
-The last L4T 35.5.0 - Jetpack 5-based releases are:
+Only draft releases are provided currently for Jetpack 6. These are meant for testing purposes only and can be accessed using balena CLI.
+
+To view the available draft releases for a device-type:
+
+`balena os versions <device_slug> --include-draft`
+
+For the Jetson Orin Nano, the above line becomes:
+
+`balena os versions jetson-orin-nano-devkit-nvme --include-draft`
+
+All device type slugs are available in the coffee files present in this repository.
+
+To update a device to a draft release:
+
+`balena device os-update <device_uuid> --include-draft`
+
+The last L4T 35.5.0 - Jetpack 5-based production releases are:
 * v5.3.21+rev3
 * v5.3.21+rev2
 * v5.3.21+rev1

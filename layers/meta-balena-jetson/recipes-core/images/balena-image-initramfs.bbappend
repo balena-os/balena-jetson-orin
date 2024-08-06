@@ -8,6 +8,7 @@ PACKAGE_INSTALL:append = " kernel-module-pcie-tegra194 "
 PACKAGE_INSTALL:append = " nv-kernel-module-pcie-tegra-vf "
 PACKAGE_INSTALL:append = " kernel-module-nvme "
 PACKAGE_INSTALL:append = " kernel-module-phy-tegra194-p2u"
+PACKAGE_INSTALL:append:jetson-orin-nx-seeed-j4012 = " initramfs-module-nvme-wait"
 
 # Below modules are needed for the AGX Orin 64GB to
 # detect USB keys
