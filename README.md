@@ -2,15 +2,18 @@
 
 ## Linux for Tegra (L4T) Support
 
-All Jetson Orin boards in this repository are using L4T 36.3 - Jetpack 6.
+All Jetson Orin boards in this repository at versions v5.3.23 and newer are using L4T 36.3 - Jetpack 6.
 
-Only draft releases are provided currently for Jetpack 6. These are meant for testing purposes only and can be accessed using balena CLI.
+For devices which don't have production releases at versions greater than v5.3.23 in balena-cloud yet,
+draft releases can be accessed using balena CLI.
+
+IMPORTANT: Draft releases are meant for testing purposes only and should not be used in production environments
 
 To view the available draft releases for a device-type:
 
 `balena os versions <device_slug> --include-draft`
 
-For the Jetson Orin Nano, the above line becomes:
+For example, to check the available production and draft releases for the Jetson Orin Nano 8GB (SD) Devkit NVME device-type, use the following command:
 
 `balena os versions jetson-orin-nano-devkit-nvme --include-draft`
 
