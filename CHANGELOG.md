@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.6+rev1
+## (2024-08-06)
+
+* README: Reword info on L4T draft releases [Alexandru Costache]
+
 # v6.0.6
 ## (2024-08-06)
 

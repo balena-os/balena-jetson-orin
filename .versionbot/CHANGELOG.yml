@@ -1,4 +1,18 @@
 - commits:
+    - subject: "README: Reword info on L4T draft releases"
+      hash: 87caed7c197d4105cf5b7150fb873587804d52ce
+      body: ""
+      footer:
+        Changelog-entry: "README: Reword info on L4T draft releases"
+        changelog-entry: "README: Reword info on L4T draft releases"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.0.6+rev1
+  title: ""
+  date: 2024-08-06T09:31:07.761Z
+- commits:
     - subject: "layers/meta-balena: Update to v6.0.6"
       hash: e9757d645c06cb55d547738c9626697d4108307e
       body: ""
