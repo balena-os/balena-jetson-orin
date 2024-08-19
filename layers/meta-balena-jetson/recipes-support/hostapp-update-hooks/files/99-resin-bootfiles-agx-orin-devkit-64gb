@@ -13,7 +13,7 @@ DURING_UPDATE=${DURING_UPDATE:-0}
 bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/nvme0n1"
 use_capsule=1
-bootloader_blob="/opt/tegra-binaries/TEGRA_BL_3701.Cap.gz"
+bootloader_blob="/opt/tegra-binaries/TEGRA_BL_3701_64.Cap.gz"
 efivars_dir="/sys/firmware/efi/efivars/"
 # See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
 platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"

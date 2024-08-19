@@ -1,22 +1,31 @@
-From ccb5a6b7a371a943ec2ec55a848ee7f076f1cd3b Mon Sep 17 00:00:00 2001
+From d1331595e71615745049ad5ccfb14b2c11791e3c Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Tue, 25 Jun 2024 13:49:39 +0300
-Subject: [PATCH] StandaloneMmOptee: Don't assert if var store integrity check
- failed
+Date: Mon, 12 Aug 2024 12:32:16 +0300
+Subject: [PATCH] Platform: Don't assert on Variable store check integrity
+ failure
 
-We tried disabling asserts if the var store integrity checks fail,
-however, the change in this patch should end up in tos-optee, which
-is unfortunately crashing for now. We keep this patch but will not apply
-it.
+This change ends up both in tos_optee as well as in the uefi_firmware. See nv-optee from https://forums.developer.nvidia.com/t/updating-tos-in-jetpack-6/302620/3
+for details on building bl31, uefi_StandaloneMmOptee and tos.img
 
-See https://forums.developer.nvidia.com/t/jetson-orin-nano-ota-35-5-0-36-3-failed-to-boot-after-ota-upgrade-from-35-5-0-to-36-3/296205/16
-for details.
+Both are packed in the final UEFI capsule. The change in
+StandaloneMmOptee.dsc.inc  ensures there's no assert and
+hang if the var store validation fails, and the second change
+ends up the UEFI firmware and prevents a reboot
+right before the capsule is applied, to avoid
+booting the old L4T 35.5.0 firmware with the new
+L4T 36.3 OS.
+
+In this configuration the rollback tests pass.
+
+Also see https://forums.developer.nvidia.com/t/jetson-orin-nano-ota-35-5-0-36-3-failed-to-boot-after-ota-upgrade-from-35-5-0-to-36-3/296205/16
+for more details.
 
 Upstream-status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
- Platform/NVIDIA/StandaloneMmOptee/StandaloneMmOptee.dsc.inc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Platform/NVIDIA/StandaloneMmOptee/StandaloneMmOptee.dsc.inc   | 2 +-
+ .../NVIDIA/Drivers/DefaultVariableDxe/DefaultVariableDxe.c    | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/Platform/NVIDIA/StandaloneMmOptee/StandaloneMmOptee.dsc.inc b/Platform/NVIDIA/StandaloneMmOptee/StandaloneMmOptee.dsc.inc
 index 93a0939c..56171107 100644
@@ -31,6 +40,28 @@ index 93a0939c..56171107 100644
  
  [PcdsPatchableInModule]
    #
+diff --git a/Silicon/NVIDIA/Drivers/DefaultVariableDxe/DefaultVariableDxe.c b/Silicon/NVIDIA/Drivers/DefaultVariableDxe/DefaultVariableDxe.c
+index ee8cd349..0164d698 100644
+--- a/Silicon/NVIDIA/Drivers/DefaultVariableDxe/DefaultVariableDxe.c
++++ b/Silicon/NVIDIA/Drivers/DefaultVariableDxe/DefaultVariableDxe.c
+@@ -112,7 +112,7 @@ CheckVarStoreState (
+     DEBUG ((DEBUG_ERROR, "%a: %s not found %r\n", __FUNCTION__, VARINT_CHECK_FAILED, Status));
+   } else {
+     if (VarStoreCheckFailed == 1) {
+-      DEBUG ((DEBUG_ERROR, "Rebooting the System to re-init Var Store\n"));
++      DEBUG ((DEBUG_ERROR, "NOT Rebooting the System to re-init Var Store\n"));
+       Status = gRT->SetVariable (
+                       VARINT_CHECK_FAILED,
+                       &gEfiGlobalVariableGuid,
+@@ -124,7 +124,7 @@ CheckVarStoreState (
+         DEBUG ((DEBUG_ERROR, "%aFailed to Delete %s %r\n", __FUNCTION__, VARINT_CHECK_FAILED, Status));
+       }
+ 
+-      ResetCold ();
++      //ResetCold ();
+     }
+   }
+ }
 -- 
 2.34.1
 
