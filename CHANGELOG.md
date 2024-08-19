@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.7
+## (2024-08-19)
+
+* recipes-bsp/tegra-binaries: Update Orin NX and Orin NANO UEFI capsules [Alexandru Costache]
+
 # v6.0.6+rev1
 ## (2024-08-06)
 

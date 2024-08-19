@@ -1,4 +1,22 @@
 - commits:
+    - subject: "recipes-bsp/tegra-binaries: Update Orin NX and Orin NANO UEFI capsules"
+      hash: dbf84ef8f390610c8c20f9a9499edddaae9e6dd2
+      body: |
+        These include an updated tos and uefi firmware which reinitializes
+        the var store in case it fails the validation checks.
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Changelog-entry: "recipes-bsp/tegra-binaries: Update Orin NX and Orin NANO UEFI
+          capsules"
+        changelog-entry: "recipes-bsp/tegra-binaries: Update Orin NX and Orin NANO UEFI
+          capsules"
+      author: Alexandru Costache
+      nested: []
+  version: 6.0.7
+  title: ""
+  date: 2024-08-19T14:47:27.552Z
+- commits:
     - subject: "README: Reword info on L4T draft releases"
       hash: 87caed7c197d4105cf5b7150fb873587804d52ce
       body: ""
