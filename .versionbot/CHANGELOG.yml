@@ -1,4 +1,18 @@
 - commits:
+    - subject: "README.md: Fix typo, mention Jetpack 6 starting balenaOS version"
+      hash: 14e1e9acfde736d68c1cfe241b20df8a3909a3f6
+      body: ""
+      footer:
+        Changelog-entry: "README.md: Fix typo, mention Jetpack 6 starting balenaOS version"
+        changelog-entry: "README.md: Fix typo, mention Jetpack 6 starting balenaOS version"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+  version: 6.0.7+rev1
+  title: ""
+  date: 2024-08-21T16:11:37.896Z
+- commits:
     - subject: "recipes-bsp/tegra-binaries: Update Orin NX and Orin NANO UEFI capsules"
       hash: dbf84ef8f390610c8c20f9a9499edddaae9e6dd2
       body: |

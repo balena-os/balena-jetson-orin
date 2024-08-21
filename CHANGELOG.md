@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.7+rev1
+## (2024-08-21)
+
+* README.md: Fix typo, mention Jetpack 6 starting balenaOS version [Alexandru]
+
 # v6.0.7
 ## (2024-08-19)
 
