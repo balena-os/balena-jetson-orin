@@ -1,6 +1,88 @@
 Change log
 -----------
 
+# v6.0.12
+## (2024-08-26)
+
+
+<details>
+<summary> Update layers/meta-balena to a8d6ff62e7ab5bc1f8b1d0a6a8d06d6da84e11af [balena-renovate[bot]] </summary>
+
+> ## meta-balena-6.0.12
+> ### (2024-08-23)
+> 
+> * Update balena-os/balena-yocto-scripts action to v1.25.25 [balena-renovate[bot]]
+> 
+> ## meta-balena-6.0.11
+> ### (2024-08-21)
+> 
+> * Update balena-os/balena-yocto-scripts action to v1.25.24 [balena-renovate[bot]]
+> 
+> ## meta-balena-6.0.10
+> ### (2024-08-14)
+> 
+> 
+> <details>
+> <summary> Update balena-supervisor to v16.4.6 [balena-renovate[bot]] </summary>
+> 
+>> ### balena-supervisor-16.4.6
+>> #### (Invalid date)
+>> 
+>> * Update semver to v7.6.3 [Self-hosted Renovate Bot]
+>> 
+>> ### balena-supervisor-16.4.5
+>> #### (2024-07-25)
+>> 
+>> * Update balena-io/deploy-to-balena-action action to v2.0.74 [Self-hosted Renovate Bot]
+>> 
+> 
+> </details>
+> 
+> 
+> ## meta-balena-6.0.9
+> ### (2024-08-14)
+> 
+> 
+> <details>
+> <summary> Update tests/leviathan digest to f4e9332 [balena-renovate[bot]] </summary>
+> 
+>> ### leviathan-2.31.25
+>> #### (2024-08-06)
+>> 
+>> * Update actions/upload-artifact digest to 834a144 [balena-renovate[bot]]
+>> 
+>> ### leviathan-2.31.24
+>> #### (2024-08-06)
+>> 
+>> * Update core/contracts digest to 6d69a05 [balena-renovate[bot]]
+>> 
+>> ### leviathan-2.31.23
+>> #### (2024-07-23)
+>> 
+>> * core: remove nested retries in getDutIp function [rcooke-warwick]
+>> 
+>> ### leviathan-2.31.22
+>> #### (2024-07-23)
+>> 
+>> * patch: Add migration & secureboot options to e2e test suite [Vipul Gupta (@vipulgupta2048)]
+>> 
+>> ### leviathan-2.31.21
+>> #### (2024-07-22)
+>> 
+>> * Update docker/setup-buildx-action digest to aa33708 [Self-hosted Renovate Bot]
+>> 
+> 
+> </details>
+> 
+> 
+> ## meta-balena-6.0.8
+> ### (2024-08-14)
+> 
+> * tests: os: add check for iptables rules [rcooke-warwick]
+> 
+
+</details>
+
 # v6.0.7+rev1
 ## (2024-08-21)
 
