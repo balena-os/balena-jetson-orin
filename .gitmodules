@@ -13,7 +13,7 @@
 [submodule "layers/poky"]
 	path = layers/poky
 	url = https://github.com/balena-os/poky.git
-	branch = backport_addpylib
+	branch = backport_addpylib_0ae3b2bd
 [submodule "layers/meta-openembedded"]
 	path = layers/meta-openembedded
 	url = https://github.com/openembedded/meta-openembedded.git
