@@ -1,4 +1,42 @@
 - commits:
+    - subject: Update Poky to kirkstone HEAD
+      hash: 8494d485d43c592bff25ee796955d3ab4445fb3c
+      body: >
+        We are maintaining a fork of Poky and using a branch there as source
+
+        as we need to backport a bitbake patch that is still not contained
+
+        in the current Yocto LTS release.
+
+
+        The patch in question is:
+
+        https://github.com/balena-os/poky/commit/debd42be214be6bce50a0f0a2fe186b20e6fe6bc
+
+
+        This commit updates the branch to rebase that commit to the current
+
+        kirkstone HEAD which includes security and bug fixes.
+
+
+        The old branch is maintained not to loose history, and a new branch has
+
+        been preferred over a merge into the current one as that would only
+
+        bury the backported patch making it more difficult to follow what the
+
+        reasoning for the branch is.
+      footer:
+        Changelog-entry: Update Poky to kirkstone HEAD
+        changelog-entry: Update Poky to kirkstone HEAD
+        Signed-off-by: Alex Gonzalez <alexg@balena.io>
+        signed-off-by: Alex Gonzalez <alexg@balena.io>
+      author: Alex Gonzalez
+      nested: []
+  version: 6.0.21
+  title: ""
+  date: 2024-09-10T15:00:44.738Z
+- commits:
     - subject: Update layers/meta-balena to a8d6ff62e7ab5bc1f8b1d0a6a8d06d6da84e11af
       hash: fb803d8eea8195e279bf55a04f4e413e6f47fde7
       body: Update layers/meta-balena

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.21
+## (2024-09-10)
+
+* Update Poky to kirkstone HEAD [Alex Gonzalez]
+
 # v6.0.12
 ## (2024-08-26)
 
