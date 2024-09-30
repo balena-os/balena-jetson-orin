@@ -4,6 +4,8 @@
 # from github with balenaOS specific changes
 # and then builds the UEFI firmware and bootloader
 
+set -e
+
 declare -A device_specific_patches
 
 device_specific_patches["jetson-agx-orin-devkit"]="0001-AGX-Orin-32GB-Integrate-with-balenaOS-on-L4T-36.3.patch"
