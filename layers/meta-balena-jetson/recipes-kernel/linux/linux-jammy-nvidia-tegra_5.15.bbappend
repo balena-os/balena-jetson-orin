@@ -127,6 +127,12 @@ BALENA_CONFIGS[pcie] = " \
     CONFIG_PHY_TEGRA194_P2U=m \
 "
 
+BALENA_CONFIGS:append = " rfcomm "
+BALENA_CONFIGS[rfcomm] = " \
+    CONFIG_BT_RFCOMM=m \
+    CONFIG_BT_RFCOMM_TTY=y \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 "
