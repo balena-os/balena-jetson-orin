@@ -1,6 +1,6 @@
-From 824c4b6f21069e8a74fb27c5aacf48c0f2ec8c81 Mon Sep 17 00:00:00 2001
+From c4a648c008471ac692b56cac3f5e09d0e265e1a4 Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Thu, 26 Sep 2024 10:36:27 +0000
+Date: Sun, 6 Oct 2024 13:38:26 +0300
 Subject: [PATCH] Orin NX 16GB: Integrate with balenaOS on L4T 36.3
 
 With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
@@ -12,12 +12,12 @@ the firmware in the QSPI is based on Jetpack 6.
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
- .../Application/L4TLauncher/L4TLauncher.c     | 658 +++++++++++++++++-
+ .../Application/L4TLauncher/L4TLauncher.c     | 653 +++++++++++++++++-
  .../Application/L4TLauncher/L4TLauncher.h     |  18 +
- 2 files changed, 657 insertions(+), 19 deletions(-)
+ 2 files changed, 652 insertions(+), 19 deletions(-)
 
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-index ab86f3e0..8fccd8dd 100644
+index ab86f3e0..d41394a1 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 @@ -1125,6 +1125,147 @@ CheckCommandString (
@@ -639,7 +639,7 @@ index ab86f3e0..8fccd8dd 100644
    }
  
    return EFI_SUCCESS;
-@@ -2404,6 +2886,55 @@ GetDeviceHandleForFvBoot (
+@@ -2404,6 +2886,50 @@ GetDeviceHandleForFvBoot (
    return LoadedHandle;
  }
  
@@ -687,15 +687,10 @@ index ab86f3e0..8fccd8dd 100644
 +
 +}
 +
-+
-+
-+
-+
-+
  /**
    This is the declaration of an EFI image entry point. This entry point is
    the same for UEFI Applications, UEFI OS Loaders, and UEFI Drivers, including
-@@ -2434,7 +2965,15 @@ L4TLauncher (
+@@ -2434,7 +2960,15 @@ L4TLauncher (
    EXTLINUX_BOOT_CONFIG       ExtLinuxConfig;
    UINTN                      ExtLinuxBootOption;
    UINTN                      Index;
@@ -712,7 +707,7 @@ index ab86f3e0..8fccd8dd 100644
    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
    if (EFI_ERROR (Status)) {
      ErrorPrint (L"%a: Unable to locate loaded image: %r\r\n", __FUNCTION__, Status);
-@@ -2498,12 +3037,93 @@ L4TLauncher (
+@@ -2498,12 +3032,93 @@ L4TLauncher (
      } while (FALSE);
    }
  
@@ -810,7 +805,7 @@ index ab86f3e0..8fccd8dd 100644
          break;
        }
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
-index fc46a70d..cc07b84b 100644
+index fc46a70d..56400a4d 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
 @@ -32,11 +32,27 @@

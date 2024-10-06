@@ -1,25 +1,23 @@
-From 824c4b6f21069e8a74fb27c5aacf48c0f2ec8c81 Mon Sep 17 00:00:00 2001
+From 6ebf0ad4cfe96f56c74f8a8869eca51555a2342d Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Thu, 26 Sep 2024 10:36:27 +0000
-Subject: [PATCH] AGX Orin 64GB: Integrate with balenaOS on L4T 36.3
-
-With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
-extra_uEnv.txt and bootcount.env in order to load the
-extlinux.conf and the selected dtb from the current active
-rootfs. It is also able to boot a flasher image if
-the firmware in the QSPI is based on Jetpack 6.
+Date: Sun, 6 Oct 2024 12:30:26 +0300
+Subject: [PATCH] With this patch, the Nvidia bootloader parses
+ resinos_uEnv.txt, extra_uEnv.txt and bootcount.env in order to load the
+ extlinux.conf and the selected dtb from the current active rootfs. It is also
+ able to boot a flasher image if the firmware in the QSPI is based on Jetpack
+ 6.
 
 We also now leave the boot order as it comes by default
 
-Upstream-Status: Inappropriate [configuration]
+Upstream-status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
- .../Application/L4TLauncher/L4TLauncher.c     | 658 +++++++++++++++++-
+ .../Application/L4TLauncher/L4TLauncher.c     | 652 +++++++++++++++++-
  .../Application/L4TLauncher/L4TLauncher.h     |  18 +
- 2 files changed, 657 insertions(+), 19 deletions(-)
+ 2 files changed, 651 insertions(+), 19 deletions(-)
 
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-index ab86f3e0..8fccd8dd 100644
+index ab86f3e0..0e2a796e 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 @@ -1125,6 +1125,147 @@ CheckCommandString (
@@ -641,7 +639,7 @@ index ab86f3e0..8fccd8dd 100644
    }
  
    return EFI_SUCCESS;
-@@ -2404,6 +2886,55 @@ GetDeviceHandleForFvBoot (
+@@ -2404,6 +2886,49 @@ GetDeviceHandleForFvBoot (
    return LoadedHandle;
  }
  
@@ -686,18 +684,12 @@ index ab86f3e0..8fccd8dd 100644
 +  }
 +
 +  return EFI_SUCCESS;
-+
 +}
-+
-+
-+
-+
-+
 +
  /**
    This is the declaration of an EFI image entry point. This entry point is
    the same for UEFI Applications, UEFI OS Loaders, and UEFI Drivers, including
-@@ -2434,7 +2965,15 @@ L4TLauncher (
+@@ -2434,7 +2959,15 @@ L4TLauncher (
    EXTLINUX_BOOT_CONFIG       ExtLinuxConfig;
    UINTN                      ExtLinuxBootOption;
    UINTN                      Index;
@@ -714,7 +706,7 @@ index ab86f3e0..8fccd8dd 100644
    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
    if (EFI_ERROR (Status)) {
      ErrorPrint (L"%a: Unable to locate loaded image: %r\r\n", __FUNCTION__, Status);
-@@ -2498,12 +3037,93 @@ L4TLauncher (
+@@ -2498,12 +3031,93 @@ L4TLauncher (
      } while (FALSE);
    }
  
@@ -812,7 +804,7 @@ index ab86f3e0..8fccd8dd 100644
          break;
        }
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
-index fc46a70d..cc07b84b 100644
+index fc46a70d..e6528b29 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
 @@ -32,11 +32,27 @@
