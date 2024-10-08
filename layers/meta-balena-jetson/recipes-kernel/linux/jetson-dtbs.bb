@@ -13,10 +13,12 @@ DTBNAME = "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 do_install() {
 	install -d ${D}/boot/
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/${DTBNAME}" "${D}/boot/${DTBNAME}"
+	install -m 0644 "${WORKDIR}/tegra234-p3737-0000+p3701-0000-nv-spi.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb"
 }
 
 FILES:${PN}:jetson-agx-orin-devkit += " \
 	/boot/tegra234-p3737-0000+p3701-0000-nv.dtb \
+    /boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb \
 "
 
 FILES:${PN}:jetson-orin-nx-xavier-nx-devkit += " \
