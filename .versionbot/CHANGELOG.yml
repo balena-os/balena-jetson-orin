@@ -1,4 +1,18 @@
 - commits:
+    - subject: Add GHA Build Test Deploy workflows
+      hash: d4e1d1957fa3d2527b76ded6306235e389c8ece0
+      body: ""
+      footer:
+        Changelog-entry: Add GHA Build Test Deploy workflows
+        changelog-entry: Add GHA Build Test Deploy workflows
+        Signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+        signed-off-by: Vipul Gupta (@vipulgupta2048) <vipulgupta2048@gmail.com>
+      author: Vipul Gupta (@vipulgupta2048)
+      nested: []
+  version: 6.0.36
+  title: ""
+  date: 2024-10-08T14:14:59.043Z
+- commits:
     - subject: Update Poky to kirkstone HEAD
       hash: 8494d485d43c592bff25ee796955d3ab4445fb3c
       body: >
