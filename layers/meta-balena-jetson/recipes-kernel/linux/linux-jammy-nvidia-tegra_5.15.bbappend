@@ -127,6 +127,26 @@ BALENA_CONFIGS[pcie] = " \
     CONFIG_PHY_TEGRA194_P2U=m \
 "
 
+BALENA_CONFIGS:append = " rfcomm "
+BALENA_CONFIGS[rfcomm] = " \
+    CONFIG_BT_RFCOMM=m \
+    CONFIG_BT_RFCOMM_TTY=y \
+"
+
+BALENA_CONFIGS:append = " hid-logitech "
+BALENA_CONFIGS[hid-logitech] = " \
+    CONFIG_HID_LOGITECH=m \
+    CONFIG_HID_LOGITECH_DJ=m \
+    CONFIG_HID_LOGITECH_HIDPP=m \
+"
+
+BALENA_CONFIGS:append = " joystick "
+BALENA_CONFIGS[joystick] = " \
+    CONFIG_JOYSTICK_XPAD=m \
+    CONFIG_INPUT_JOYDEV=m \
+    CONFIG_INPUT_JOYSTICK=y \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 "
