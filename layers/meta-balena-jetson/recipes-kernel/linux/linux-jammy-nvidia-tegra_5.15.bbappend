@@ -143,6 +143,8 @@ BALENA_CONFIGS[hid-logitech] = " \
 BALENA_CONFIGS:append = " joystick "
 BALENA_CONFIGS[joystick] = " \
     CONFIG_JOYSTICK_XPAD=m \
+    CONFIG_INPUT_JOYDEV=m \
+    CONFIG_INPUT_JOYSTICK=y \
 "
 
 L4TVER=" l4tver=${L4T_VERSION}"
