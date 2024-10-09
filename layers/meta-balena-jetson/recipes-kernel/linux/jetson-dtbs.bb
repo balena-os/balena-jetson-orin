@@ -7,18 +7,23 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 # In Jetpack 6 the nvidia-kernel-oot provides all device-trees
 do_install[depends] += " nvidia-kernel-oot:do_deploy "
 
+SRC_URI += " file://tegra234-p3737-0000+p3701-0000-nv-spi.dtb "
+
 S = "${WORKDIR}"
 DTBNAME = "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
 do_install() {
 	install -d ${D}/boot/
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/${DTBNAME}" "${D}/boot/${DTBNAME}"
+}
+
+do_install:append:jetson-agx-orin-devkit() {
 	install -m 0644 "${WORKDIR}/tegra234-p3737-0000+p3701-0000-nv-spi.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb"
 }
 
 FILES:${PN}:jetson-agx-orin-devkit += " \
 	/boot/tegra234-p3737-0000+p3701-0000-nv.dtb \
-    /boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb \
+	/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb \
 "
 
 FILES:${PN}:jetson-orin-nx-xavier-nx-devkit += " \
