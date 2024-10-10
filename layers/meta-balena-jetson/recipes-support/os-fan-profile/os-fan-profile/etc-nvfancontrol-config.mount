@@ -1,0 +1,13 @@
+[Unit]
+Description=Bind mount for /etc/nvfancontrol.conf
+Requires=resin-state.service resin-state-reset.service
+After=resin-state.service resin-state-reset.service
+
+[Mount]
+What=/mnt/state/root-overlay/etc/nvfancontrol-config
+Where=/etc/nvfancontrol-config
+Type=none
+Options=bind
+
+[Install]
+WantedBy=multi-user.target

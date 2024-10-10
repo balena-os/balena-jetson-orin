@@ -1,0 +1,82 @@
+#!/bin/bash
+
+set -e
+
+. /usr/libexec/os-helpers-logging
+
+BINDMOUNTED_NVFANCONTROL_PATH="/etc/nvfancontrol-config"
+NVFANCONTROL_FILE="nvfancontrol.conf"
+TARGET_FAN_PROFILE=""
+MACHINE_DEFAULT_PROFILE="quiet"
+
+print_applied_profile() {
+    APPLIED_PROFILE=$(/usr/sbin/nvfancontrol -q | grep FAN_PROFILE | cut -d ":" -f3)
+    if [[ "$APPLIED_PROFILE" == null ]] || [[ -z "$APPLIED_PROFILE" ]]; then
+        fail "Fan profile '${TARGET_FAN_PROFILE}' could not be applied!"
+    else
+        info "Applied fan profile: $APPLIED_PROFILE"
+    fi
+}
+
+restart_nvfancontrol() {
+    systemctl stop nvfancontrol.service
+    if [ -e /var/lib/nvfancontrol/status ]; then
+         rm /var/lib/nvfancontrol/status || true
+    fi
+    systemctl start nvfancontrol.service
+}
+
+wait_for_nvfancontrol() {
+    C=0
+    max_retries=5
+    until [[ $C -gt $max_retries ]]; do
+        if systemctl -q is-active nvfancontrol.service ; then
+            info "nvfancontrol is running"
+            return
+        fi
+
+        info "Sleeping 1 second for nvfancontrol to start"
+        sleep 1
+        C=$(( $C + 1 ))
+    done
+}
+
+apply_profile_change() {
+    restart_nvfancontrol
+    wait_for_nvfancontrol
+    print_applied_profile
+}
+
+if [ -f "/etc/os-release" ]; then
+    source /etc/os-release
+fi
+
+if [ -f "/usr/sbin/balena-config-vars" ]; then
+        source /usr/sbin/balena-config-vars --no-cache
+fi
+
+if [[ "${MACHINE}" == "jetson-agx-orin-devkit" ]] || [[ "${MACHINE}" == "jetson-agx-orin-devkit-64gb" ]]; then
+    MACHINE_DEFAULT_PROFILE="cool"
+fi
+
+if [[ "$OS_FAN_PROFILE" == null ]] || [[ -z "$OS_FAN_PROFILE" ]]; then
+    info "No OS fan profile set. Using BSP default."
+    cat /etc/${NVFANCONTROL_FILE} > ${BINDMOUNTED_NVFANCONTROL_PATH}/${NVFANCONTROL_FILE}
+else
+    info "Requested fan profile: $OS_FAN_PROFILE"
+    case $OS_FAN_PROFILE in
+        default)
+            TARGET_FAN_PROFILE=${MACHINE_DEFAULT_PROFILE}
+            info "BSP default profile for ${MACHINE} is: ${TARGET_FAN_PROFILE}"
+            ;;
+        quiet | cool | *)
+            TARGET_FAN_PROFILE=$OS_FAN_PROFILE
+            ;;
+    esac
+
+    # TODO: Check initial value in bind-mounted path
+    info "Applying fan profile: ${TARGET_FAN_PROFILE}"
+    cat /etc/${NVFANCONTROL_FILE} | sed -e "s/\(FAN_DEFAULT_PROFILE \)\(.*\)/\1${TARGET_FAN_PROFILE}/" > ${BINDMOUNTED_NVFANCONTROL_PATH}/${NVFANCONTROL_FILE}
+fi
+
+apply_profile_change
