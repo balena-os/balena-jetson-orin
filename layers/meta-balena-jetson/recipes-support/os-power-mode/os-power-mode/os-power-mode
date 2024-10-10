@@ -1,0 +1,121 @@
+#!/bin/bash
+
+# Available power modes mapping:
+#
+#  Device name         | Power level / Power mode name / Power mode index / Slug
+#
+#  AGX Orin Devkit 32GB: Low = 15W (1),    Mid = 40W (3),   High = MAXN (0) - [jetson-agx-orin-devkit]
+#
+#  AGX Orin Devkit 64GB: Low = 15W (1),    Mid = 50W (3),   High = MAXN (0) - [jetson-agx-orin-devkit-64gb]
+#
+#  AGX Orin Industrial:  Low = 15W (1),    Mid = 60W (3),   High = MAXN (0) - [N/A]
+#
+#  Orin NX 16GB:         Low = 10W (1),    Mid = 25W (3),   High = MAXN (0) - [jetson-orin-nx-xavier-nx-devkit, jetson-orin-nx-seeed-j4012]
+#
+#  Orin Nano 8GB (SD):   Low = 7W  (1),    Mid = 15W (0),   High = 15W  (0) - [jetson-orin-nano-devkit-nvme]
+#
+#  Orin Nano 4GB:        Low = 7W_CPU (2), Mid = 7W_AI (1), High = 10W (0)  - [jetson-orin-nano-seeed-j3010]
+
+
+set -e
+
+. /usr/libexec/os-helpers-logging
+
+BINDMOUNTED_NVPMODEL_PATH="/etc/nvpmodel-config"
+NVPMODEL_FILE="nvpmodel.conf"
+
+current_power_mode=""
+target_power_mode=""
+declare -A power_modes
+
+query_power_mode() {
+    applied_power_mode=$(/usr/sbin/nvpmodel -q)
+    if [[ "$applied_power_mode" == null ]] || [[ -z "$applied_power_mode" ]]; then
+        fail "Power mode could not be queried!"
+    else
+        power_mode_name=$(echo "${applied_power_mode}" | sed -n 1p)
+        power_mode_index=$(echo "${applied_power_mode}" | sed -n 2p)
+        info "Current power mode: $power_mode_name"
+        info "Current power mode index: $power_mode_index"
+
+        exit 0
+    fi
+}
+
+while [ "$#" -gt "0" ]; do
+    key=$1
+    case $key in
+        -q|--query)
+            query_power_mode
+            ;;
+        *)
+            warn "[WARNING] Unknown argument '$1', ignoring"
+            ;;
+      esac
+      shift
+done
+
+if [ -f "/etc/os-release" ]; then
+    source /etc/os-release
+fi
+
+if [ -f "/usr/sbin/balena-config-vars" ]; then
+        source /usr/sbin/balena-config-vars --no-cache
+fi
+
+if [[ "$OS_POWER_MODE" == null ]] || [[ -z "$OS_POWER_MODE" ]]; then
+    update_bindmount=false
+    if [ -e ${BINDMOUNTED_NVPMODEL_PATH}/${NVPMODEL_FILE} ]; then
+        bindmount_config_md5sum=$(md5sum ${BINDMOUNTED_NVPMODEL_PATH}/${NVPMODEL_FILE} | awk '{print $1}')
+        bsp_config_md5sum=$(md5sum /etc/${NVPMODEL_FILE} | awk '{print $1}')
+        if [ ! "$bindmount_config_md5sum" == "$bsp_config_md5sum" ]; then
+            update_bindmount=true
+        else
+            info "No need to update bind mounted configuration file. BSP default power mode will be used."
+        fi
+    else
+        update_bindmount=true
+    fi
+
+    if [[ "$update_bindmount" == true ]]; then
+        cat /etc/${NVPMODEL_FILE} > ${BINDMOUNTED_NVPMODEL_PATH}/${NVPMODEL_FILE}
+        info "Created / updated bind mounted configuration file. BSP default power mode will be used."
+    fi
+else
+    if [ -e ${BINDMOUNTED_NVPMODEL_PATH}/${NVPMODEL_FILE} ]; then
+       current_power_mode=$(cat ${BINDMOUNTED_NVPMODEL_PATH}/${NVPMODEL_FILE} | grep "PM_CONFIG DEFAULT" | cut -d "=" -f 2 | tail -n 1 | awk '{print $1}')
+    fi
+
+    case $MACHINE in
+        jetson-agx-orin-devkit|jetson-agx-orin-devkit-64gb|jetson-agx-orin-industrial|jetson-orin-nx-xavier-nx-devkit|jetson-orin-nx-seeed-j4012)
+            power_modes=(["low"]="1" ["mid"]="3" ["high"]="0")
+            ;;
+        jetson-orin-nano-devkit-nvme)
+            power_modes=(["low"]="2" ["mid"]="0" ["high"]="0")
+            ;;
+        jetson-orin-nano-seeed-j3010)
+            power_modes=(["low"]="2" ["mid"]="1" ["high"]="0")
+            ;;
+        *)
+            fail "Unsupported device type: $MACHINE"
+            ;;
+    esac
+
+    case $OS_POWER_MODE in
+        low|mid|high)
+            target_power_mode="${power_modes[$OS_POWER_MODE]}"
+            ;;
+        *)
+            target_power_mode="$OS_POWER_MODE"
+            ;;
+    esac
+
+    info "Requested power mode: $OS_POWER_MODE"
+    info "Target power mode: $target_power_mode"
+    if [[ "$target_power_mode" == "$current_power_mode" ]]; then
+        info "Target power mode is already applied"
+    else
+        cat /etc/${NVPMODEL_FILE} | sed -e "s/\(PM_CONFIG DEFAULT=\)\(.*\)/\1${target_power_mode} >/g" > ${BINDMOUNTED_NVPMODEL_PATH}/${NVPMODEL_FILE}
+        info "Target power mode was written to the configuration file"
+    fi
+fi
