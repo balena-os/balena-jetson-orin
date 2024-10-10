@@ -1,0 +1,55 @@
+#!/bin/bash
+
+set -e
+
+. /usr/libexec/os-helpers-logging
+
+BINDMOUNTED_NVPMODEL_PATH="/etc/nvpmodel-config"
+NVPMODEL_FILE="nvpmodel.conf"
+TARGET_POWER_MODE=""
+
+query_power_mode() {
+    APPLIED_POWER_MODE=$(/usr/sbin/nvpmodel -q)
+    if [[ "$APPLIED_POWER_MODE=" == null ]] || [[ -z "$APPLIED_POWER_MODE=" ]]; then
+        fail "Power mode could not be queried!"
+    else
+        POWER_MODE_NAME=$(echo "${APPLIED_POWER_MODE}" | sed -n 1p)
+        POWER_MODE_INDEX=$(echo "${APPLIED_POWER_MODE}" | sed -n 2p)
+        info "Current power mode: $POWER_MODE_NAME"
+        info "Current power mode index: $POWER_MODE_INDEX"
+
+        exit 0
+    fi
+}
+
+while [ "$#" -gt "0" ]; do
+    key=$1
+    case $key in
+        -q|--query)
+            query_power_mode
+            ;;
+        *)
+            warn "[WARNING] Unknown argument '$1', ignoring"
+            ;;
+      esac
+      shift
+done
+
+if [ -f "/etc/os-release" ]; then
+    source /etc/os-release
+fi
+
+if [ -f "/usr/sbin/balena-config-vars" ]; then
+        source /usr/sbin/balena-config-vars --no-cache
+fi
+
+# TODO: Check and compare with the existing value in bindmounted path
+if [[ "$OS_POWER_MODE" == null ]] || [[ -z "$OS_POWER_MODE" ]]; then
+    info "Using BSP default power mode"
+    cat /etc/${NVPMODEL_FILE} > ${BINDMOUNTED_NVPMODEL_PATH}/${NVPMODEL_FILE}
+else
+    cat /etc/${NVPMODEL_FILE} | sed -e "s/\(PM_CONFIG DEFAULT=\)\(.*\)/\1${OS_POWER_MODE}/" > ${BINDMOUNTED_NVPMODEL_PATH}/${NVPMODEL_FILE}
+    info "Applied power mode: ${OS_POWER_MODE}"
+fi
+
+# TODO: Add low/mid/high mapping per device-type
