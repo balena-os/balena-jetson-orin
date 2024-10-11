@@ -1,4 +1,18 @@
 - commits:
+    - subject: "recipes-kernel/linux: Enable rfcomm support and tty emulation"
+      hash: 7c6a7fe63007ca9dfd3915e3ad72a69870c6be84
+      body: ""
+      footer:
+        Changelog-entry: "recipes-kernel/linux: Enable rfcomm support and tty emulation"
+        changelog-entry: "recipes-kernel/linux: Enable rfcomm support and tty emulation"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru
+      nested: []
+  version: 6.0.36+rev1
+  title: ""
+  date: 2024-10-11T10:12:48.406Z
+- commits:
     - subject: Add GHA Build Test Deploy workflows
       hash: d4e1d1957fa3d2527b76ded6306235e389c8ece0
       body: ""

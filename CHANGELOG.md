@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.36+rev1
+## (2024-10-11)
+
+* recipes-kernel/linux: Enable rfcomm support and tty emulation [Alexandru]
+
 # v6.0.36
 ## (2024-10-08)
 
