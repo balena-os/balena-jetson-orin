@@ -1,4 +1,26 @@
 - commits:
+    - subject: Update balena-os/balena-yocto-scripts to v1.25.63
+      hash: ccc398c9092ee812ccd4460459c12982058ce4f9
+      body: Update balena-os/balena-yocto-scripts
+      footer:
+        Changelog-entry: Update balena-os/balena-yocto-scripts to v1.25.63
+        changelog-entry: Update balena-os/balena-yocto-scripts to v1.25.63
+      author: balena-renovate[bot]
+      nested: []
+    - subject: "balena-yocto-scripts: Update layer to v1.25.63"
+      hash: 41de2149ad1dc62a5a422107976bc2a8749aff92
+      body: ""
+      footer:
+        Changelog-entry: "balena-yocto-scripts: Update layer to v1.25.63"
+        changelog-entry: "balena-yocto-scripts: Update layer to v1.25.63"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.0.43
+  title: ""
+  date: 2024-10-15T10:49:18.696Z
+- commits:
     - subject: "recipes-kernel/linux: Enable rfcomm support and tty emulation"
       hash: 7c6a7fe63007ca9dfd3915e3ad72a69870c6be84
       body: ""
