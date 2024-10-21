@@ -1,0 +1,112 @@
+#!/bin/bash
+
+set -e
+
+. /usr/libexec/os-helpers-logging
+
+BINDMOUNTED_NVFANCONTROL_PATH="/etc/nvfancontrol-config"
+NVFANCONTROL_FILE="nvfancontrol.conf"
+
+machine_default_profile="quiet"
+target_fan_profile=""
+current_fan_profile=""
+nvfancontrol_restart_needed=true
+
+print_applied_profile() {
+    running_profile=$(/usr/sbin/nvfancontrol -q | grep FAN_PROFILE | cut -d ":" -f3)
+    if [[ "$running_profile" == null ]] || [[ -z "$running_profile" ]]; then
+        fail "Fan profile '${target_fan_profile}' could not be applied!"
+    else
+        info "Fan profile '$running_profile' is active"
+    fi
+}
+
+restart_nvfancontrol() {
+    systemctl stop nvfancontrol.service
+    if [ -e /var/lib/nvfancontrol/status ]; then
+         rm /var/lib/nvfancontrol/status || true
+    fi
+    systemctl start nvfancontrol.service
+}
+
+wait_for_nvfancontrol() {
+    C=0
+    max_retries=5
+    until [[ $C -gt $max_retries ]]; do
+        if systemctl -q is-active nvfancontrol.service ; then
+            info "nvfancontrol daemon is now running"
+            return
+        fi
+
+        info "Sleeping 1 second for nvfancontrol to start..."
+        sleep 1
+        C=$(( $C + 1 ))
+    done
+}
+
+apply_profile_change() {
+    restart_nvfancontrol
+    wait_for_nvfancontrol
+    print_applied_profile
+}
+
+if [ -f "/etc/os-release" ]; then
+    source /etc/os-release
+fi
+
+if [ -f "/usr/sbin/balena-config-vars" ]; then
+        source /usr/sbin/balena-config-vars --no-cache
+fi
+
+if [[ "${MACHINE}" == "jetson-agx-orin-devkit" ]] || [[ "${MACHINE}" == "jetson-agx-orin-devkit-64gb" ]]; then
+    machine_default_profile="cool"
+fi
+
+if [[ "$OS_FAN_PROFILE" == null ]] || [[ -z "$OS_FAN_PROFILE" ]]; then
+    update_bindmount=false
+
+    if [ -e ${BINDMOUNTED_NVFANCONTROL_PATH}/${NVFANCONTROL_FILE} ]; then
+        bindmount_config_md5sum=$(md5sum ${BINDMOUNTED_NVFANCONTROL_PATH}/${NVFANCONTROL_FILE} | awk '{print $1}')
+        bsp_config_md5sum=$(md5sum /etc/${NVFANCONTROL_FILE} | awk '{print $1}')
+
+        if [ ! "$bindmount_config_md5sum" == "$bsp_config_md5sum" ]; then
+            update_bindmount=true
+        else
+            info "No need to update bind mounted configuration file. BSP default fan profile will be used."
+        fi
+    else
+        update_bindmount=true
+    fi
+
+    if [[ "$update_bindmount" == true ]]; then
+        info "No OS fan profile set - using BSP default"
+        cat /etc/${NVFANCONTROL_FILE} > ${BINDMOUNTED_NVFANCONTROL_PATH}/${NVFANCONTROL_FILE}
+    fi
+else
+    if [ -e ${BINDMOUNTED_NVFANCONTROL_PATH}/${NVFANCONTROL_FILE} ]; then
+        current_fan_profile=$(cat ${BINDMOUNTED_NVFANCONTROL_PATH}/${NVFANCONTROL_FILE} | grep FAN_DEFAULT_PROFILE | awk '{print $2}')
+        info "Current fan profile (before configuration changes): $current_fan_profile"
+    fi
+
+    info "Requested fan profile: $OS_FAN_PROFILE"
+    case $OS_FAN_PROFILE in
+        default)
+            target_fan_profile=${machine_default_profile}
+            info "BSP default profile for ${MACHINE} is: ${target_fan_profile}"
+            ;;
+        quiet | cool | *)
+            target_fan_profile=$OS_FAN_PROFILE
+            ;;
+    esac
+
+    if [[ "$target_fan_profile" == "$current_fan_profile" ]]; then
+        info "Target fan profile '$target_fan_profile' matches existing configuration"
+    else
+        info "Applying fan profile: ${target_fan_profile}"
+        cat /etc/${NVFANCONTROL_FILE} | sed -e "s/\(FAN_DEFAULT_PROFILE \)\(.*\)/\1${target_fan_profile}/" > ${BINDMOUNTED_NVFANCONTROL_PATH}/${NVFANCONTROL_FILE}
+    fi
+fi
+
+if [[ "$nvfancontrol_restart_needed" == true ]]; then
+    apply_profile_change
+fi
