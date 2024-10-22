@@ -93,6 +93,11 @@ BALENA_CONFIGS[binder] = " \
     CONFIG_ANDROID_BINDER_IPC_SELFTEST=y \
 "
 
+BALENA_CONFIGS:append:jetson-orin-nx-seeed-j4012 = " lan743x"
+BALENA_CONFIGS[lan743x] = " \
+    CONFIG_LAN743X=m \
+"
+
 BALENA_CONFIGS:append = " mtd nvme"
 BALENA_CONFIGS[mtd] = " \
     CONFIG_MTD_BLOCK=m \
