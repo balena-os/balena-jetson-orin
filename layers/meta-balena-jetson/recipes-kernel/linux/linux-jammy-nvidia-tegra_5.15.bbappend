@@ -147,6 +147,11 @@ BALENA_CONFIGS[joystick] = " \
     CONFIG_INPUT_JOYSTICK=y \
 "
 
+BALENA_CONFIGS:append:jetson-orin-nx-seeed-j4012 = " lan743x "
+BALENA_CONFIGS[lan743x] = " \
+    CONFIG_LAN743X=m \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 "
