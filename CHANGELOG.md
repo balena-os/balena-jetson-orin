@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.0.46
+## (2024-10-24)
+
+* recipes-support/os-power-mode: Add device-specific power mode configuration script [Alexandru Costache]
+
 # v6.0.43
 ## (2024-10-15)
 

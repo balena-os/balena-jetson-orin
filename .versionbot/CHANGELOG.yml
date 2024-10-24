@@ -1,4 +1,26 @@
 - commits:
+    - subject: "recipes-support/os-power-mode: Add device-specific power mode
+        configuration script"
+      hash: 27ec55fbb8d8b109c2f4d079c2abadc46c5ad4b8
+      body: |
+        This script is run one, at startup, before nvpmodel.service.
+        It takes the os power mode configuration from config.json,
+        translates it into a device-specific power mode or
+        passes it as is into a bind-mounted configuration
+        file, which is later applied by the nvpmodel daemon.
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Changelog-entry: "recipes-support/os-power-mode: Add device-specific power mode
+          configuration script"
+        changelog-entry: "recipes-support/os-power-mode: Add device-specific power mode
+          configuration script"
+      author: Alexandru Costache
+      nested: []
+  version: 6.0.46
+  title: ""
+  date: 2024-10-24T04:58:51.295Z
+- commits:
     - subject: Update balena-os/balena-yocto-scripts to v1.25.63
       hash: ccc398c9092ee812ccd4460459c12982058ce4f9
       body: Update balena-os/balena-yocto-scripts
