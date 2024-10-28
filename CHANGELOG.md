@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v6.0.47
+## (2024-10-28)
+
+* Update balena-os/balena-yocto-scripts to v1.27.2 [balena-renovate[bot]]
+* layers/meta-balena: Update to v6.0.47 [Alexandru Costache]
+* recipes-kernel/linux: Add reComputer Industrial J4012 ethernet driver [Alexandru Costache]
+
 # v6.0.46
 ## (2024-10-24)
 

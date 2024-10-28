@@ -1,4 +1,38 @@
 - commits:
+    - subject: Update balena-os/balena-yocto-scripts to v1.27.2
+      hash: 2a2a68985ccd0449dc64353623e74fce96d8594c
+      body: Update balena-os/balena-yocto-scripts
+      footer:
+        Changelog-entry: Update balena-os/balena-yocto-scripts to v1.27.2
+        changelog-entry: Update balena-os/balena-yocto-scripts to v1.27.2
+      author: balena-renovate[bot]
+      nested: []
+    - subject: "layers/meta-balena: Update to v6.0.47"
+      hash: f138490ba69e91220eb74953f4254f6d1add445d
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v6.0.47"
+        changelog-entry: "layers/meta-balena: Update to v6.0.47"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "recipes-kernel/linux: Add reComputer Industrial J4012 ethernet driver"
+      hash: b9a13ffc064d6c4ae149e5ac9ed1341d3c9ab425
+      body: |
+        Adds in the LAN743x driver for the non-PoE ethernet port on the Seeed
+        Studio reComputer Industrial J4012
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Changelog-entry: "recipes-kernel/linux: Add reComputer Industrial J4012 ethernet driver"
+        changelog-entry: "recipes-kernel/linux: Add reComputer Industrial J4012 ethernet driver"
+      author: Alexandru Costache
+      nested: []
+  version: 6.0.47
+  title: ""
+  date: 2024-10-28T07:30:19.227Z
+- commits:
     - subject: "recipes-support/os-power-mode: Add device-specific power mode
         configuration script"
       hash: 27ec55fbb8d8b109c2f4d079c2abadc46c5ad4b8
