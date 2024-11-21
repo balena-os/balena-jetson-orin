@@ -1,0 +1,14 @@
+[Unit]
+Description=Jetson Orin QSPI management service
+DefaultDependencies=no
+After=resin-boot.service
+Before=umount.target
+Conflicts=umount.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=@BASE_BINDIR@/sh -c '@BINDIR@/jetson-qspi-manager -u'
+
+[Install]
+WantedBy=multi-user.target
