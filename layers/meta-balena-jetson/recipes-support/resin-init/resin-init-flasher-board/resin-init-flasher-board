@@ -3,11 +3,13 @@
 set -e
 
 . /usr/libexec/os-helpers-logging
+source /usr/libexec/jetson-qspi-helpers
 
 MMC_DEV="mmcblk0"
 MTD_DEV="mtd0"
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 BOOT_BLOB="boot0.img"
+INTERNAL_BOOT_MP="/tmp/internal_boot"
 
 if [ -f ${FLASHER_CONF_FILE} ]; then
     source ${FLASHER_CONF_FILE}
@@ -27,11 +29,12 @@ if [[ -e /dev/${MTD_DEV} ]]; then
 
     log "QSPI is accessible, it will be updated"
     mtd_debug erase /dev/${MTD_DEV} 0x0 0x4000000
-    gunzip -k -c "${BOOT_BLOB_PATH}" | dd of=/tmp/${BOOT_BLOB} bs=1M
+    gunzip -k -f -c "${BOOT_BLOB_PATH}" | dd of=/tmp/${BOOT_BLOB} bs=1M
     mtd_debug write /dev/${MTD_DEV} 0x0 0x4000000 /tmp/${BOOT_BLOB}
     sync
 else
-    log "QSPI is inaccessible, it will not be updated"
+    log "QSPI is inaccessible in the hostOS update hook, will attempt update trough capsule on next boot"
+    try_capsule_update $INTERNAL_BOOT_MP $INTERNAL_BOOT_MP
 fi
 
 # Relocate secondary gpt after writing image to the internal medium
