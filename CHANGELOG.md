@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.10
+## (2024-11-21)
+
+* recipes-core: remove linux firmware packages from the image recipe [Alexandru Costache]
+
 # v6.0.47
 ## (2024-10-28)
 

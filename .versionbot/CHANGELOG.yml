@@ -1,4 +1,19 @@
 - commits:
+    - subject: "recipes-core: remove linux firmware packages from the image recipe"
+      hash: 4053827d11a0574e92310b594477caeada81f247
+      body: |
+        as we'll add them to the balena-connectivity packagegroup
+      footer:
+        Changelog-entry: "recipes-core: remove linux firmware packages from the image recipe"
+        changelog-entry: "recipes-core: remove linux firmware packages from the image recipe"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.1.10
+  title: ""
+  date: 2024-11-21T08:33:35.592Z
+- commits:
     - subject: Update balena-os/balena-yocto-scripts to v1.27.2
       hash: 2a2a68985ccd0449dc64353623e74fce96d8594c
       body: Update balena-os/balena-yocto-scripts
@@ -107,30 +122,20 @@
 - commits:
     - subject: Update Poky to kirkstone HEAD
       hash: 8494d485d43c592bff25ee796955d3ab4445fb3c
-      body: >
+      body: |
         We are maintaining a fork of Poky and using a branch there as source
-
         as we need to backport a bitbake patch that is still not contained
-
         in the current Yocto LTS release.
 
-
         The patch in question is:
-
         https://github.com/balena-os/poky/commit/debd42be214be6bce50a0f0a2fe186b20e6fe6bc
 
-
         This commit updates the branch to rebase that commit to the current
-
         kirkstone HEAD which includes security and bug fixes.
 
-
         The old branch is maintained not to loose history, and a new branch has
-
         been preferred over a merge into the current one as that would only
-
         bury the backported patch making it more difficult to follow what the
-
         reasoning for the branch is.
       footer:
         Changelog-entry: Update Poky to kirkstone HEAD
@@ -568,9 +573,8 @@
     - subject: "recipes-kernel/linux-tegra: Add Ilitek ILI210X based touchscreen
         kernel module"
       hash: bcb881da761b3b85175fa519309cb757c9bd3425
-      body: >
-        As per the internal thread:
-        https://balena.zulipchat.com/#narrow/stream/345889-balena-io.2Fos/topic/Enable.20Kernel.20config.20flag.20for.20nVidia.20Orin.20Nano.20devices/near/445604932
+      body: |
+        As per the internal thread: https://balena.zulipchat.com/#narrow/stream/345889-balena-io.2Fos/topic/Enable.20Kernel.20config.20flag.20for.20nVidia.20Orin.20Nano.20devices/near/445604932
       footer:
         Changelog-entry: "recipes-kernel/linux-tegra: Add Ilitek ILI210X based
           touchscreen kernel module"
@@ -724,26 +728,18 @@
 - commits:
     - subject: "layers/meta-balena: Update to v5.3.10"
       hash: b1a2f41e1cf7f818b63229a259a5ef6f3f47dd51
-      body: >
+      body: |
         This version passed OS tests for:
 
-
         - Orin NX in Xavier NX Devkit
-
         - AGX Orin Devkit
-
         - Orin Nano 8GB SD
-
         - Seeed J4012
 
-
         However, PR 442 has been force pushed for a newer
-
         meta-balena update and test results were overwritten.
 
-
-        See
-        https://github.com/balena-os/balena-jetson-orin/pull/442#issuecomment-2132324577
+        See https://github.com/balena-os/balena-jetson-orin/pull/442#issuecomment-2132324577
       footer:
         Changelog-entry: "layers/meta-balena: Update to v5.3.10"
         changelog-entry: "layers/meta-balena: Update to v5.3.10"
@@ -1076,38 +1072,21 @@
               nested: []
             - subject: "os-helpers: compute_pcr7: merge event log digests"
               hash: e10d67084621e5ce10f14557f2466e91ff684b41
-              body: >
+              body: |
                 The main variables measured into PCR7 to ensure secure boot
-
-                configuration integrity are the state and EFI vars, including
-                PK, KEK,
-
+                configuration integrity are the state and EFI vars, including PK, KEK,
                 db, dbx, etc.
 
-
-                However, some systems have firmware that will measure other,
-                unexpected
-
-                events, such as "DMA Protection Disabled" (related to a Windows
-                feature
-
+                However, some systems have firmware that will measure other, unexpected
+                events, such as "DMA Protection Disabled" (related to a Windows feature
                 [0]), or "Unknown event type" with strange data.
 
-
-                These events can't be predicted, and other devices may have
-                different
-
-                measured events that aren't compliant with the TCG spec, so
-                attempt to
-
-                check the TPM event log and extend our digest with any unknown
-                events
-
+                These events can't be predicted, and other devices may have different
+                measured events that aren't compliant with the TCG spec, so attempt to
+                check the TPM event log and extend our digest with any unknown events
                 that fit the bill.
 
-
-                [0]
-                https://learn.microsoft.com/en-us/windows/security/hardware-security/kernel-dma-protection-for-thunderbolt
+                [0] https://learn.microsoft.com/en-us/windows/security/hardware-security/kernel-dma-protection-for-thunderbolt
               footer:
                 Change-type: patch
                 change-type: patch
@@ -1573,15 +1552,9 @@
                 - commits:
                     - subject: Remove dependency on @balena/happy-eyeballs
                       hash: 08727ed2b5f67c55b2469d3ee5c5e2857119521b
-                      body: >
-                        Node 20 now implements the happy eyeballs algorithm as
-                        part of its core
-
-                        `net` module, with the
-                        [autoSelectFamily](https://nodejs.org/docs/latest-v20.x/api/net.html#netgetdefaultautoselectfamily)
-                        option of `socket.connect`. This option defaults to
-                        `true`, meaning that a separate
-
+                      body: |
+                        Node 20 now implements the happy eyeballs algorithm as part of its core
+                        `net` module, with the [autoSelectFamily](https://nodejs.org/docs/latest-v20.x/api/net.html#netgetdefaultautoselectfamily) option of `socket.connect`. This option defaults to `true`, meaning that a separate
                         implementation of happy eyeballs is no longer needed.
                       footer:
                         Change-type: patch
@@ -1957,15 +1930,10 @@
             - subject: "resin-init-flasher: Allow building images for non-flasher devices that
                 have internal storage"
               hash: 3a887512b343b80208196f6792a48f81d1a8c8f9
-              body: >
-                As per the internal thread:
-                https://balena.zulipchat.com/#narrow/stream/360838-balena-io.2Fos.2Fdevices/topic/balena-raspberrypi.20jenkins.20build.20failures/near/423970246
+              body: |
+                As per the internal thread: https://balena.zulipchat.com/#narrow/stream/360838-balena-io.2Fos.2Fdevices/topic/balena-raspberrypi.20jenkins.20build.20failures/near/423970246
 
-
-                Currently devices with on-board storage fail to build in
-                jenkins, if they don't provide a flasher image. One example is
-                the CM4. Since there are multiple devices using this
-                configuration, let's re-enable builds for all of them.
+                Currently devices with on-board storage fail to build in jenkins, if they don't provide a flasher image. One example is the CM4. Since there are multiple devices using this configuration, let's re-enable builds for all of them.
               footer:
                 Change-type: patch
                 change-type: patch
@@ -2044,17 +2012,10 @@
                 - commits:
                     - subject: Fix support for rsync deltas
                       hash: 24e222045ac511cd4fbb3be66e57eb678a29d854
-                      body: >
-                        Rsync (v2) deltas have been broken since [Supervisor
-                        v14](https://github.com/balena-os/balena-supervisor/commit/460c3ba0aab31d18a02e3f5dda1838691768c494).
-                        While considered legacy,
-
-                        they are still used by a few customers with devices
-                        running OS < 2.47.1.
-
-                        This should fix v2 delta support for those devices until
-                        we can
-
+                      body: |
+                        Rsync (v2) deltas have been broken since [Supervisor v14](https://github.com/balena-os/balena-supervisor/commit/460c3ba0aab31d18a02e3f5dda1838691768c494). While considered legacy,
+                        they are still used by a few customers with devices running OS < 2.47.1.
+                        This should fix v2 delta support for those devices until we can
                         completely remove rsync deltas from the supervisor
                       footer:
                         Change-type: patch
@@ -2129,39 +2090,19 @@
                 - commits:
                     - subject: Add special case for base DTO params on RPI config
                       hash: 6e6a796da5ecc846248eae4c8495bc626964c038
-                      body: >
-                        While ordering is important in the RPI firmware
-                        configuration file (config.txt),
-
-                        some dt params are by default considered part of the
-                        base dt overlay
-
+                      body: |
+                        While ordering is important in the RPI firmware configuration file (config.txt),
+                        some dt params are by default considered part of the base dt overlay
                         if they are not used by other overlays.
-
-                        Unfortunately the [list of
-                        dtparams](https://github.com/raspberrypi/firmware/blob/master/boot/overlays/README#L133)
-
-                        is too long to add all of them as exceptions, but we can
-                        add the params
-
-                        used in the default config.txt provided in OS images, to
-                        avoid reboots
-
-                        when updating to this new supervisor and correctly
-                        parsing the
-
+                        Unfortunately the [list of dtparams](https://github.com/raspberrypi/firmware/blob/master/boot/overlays/README#L133)
+                        is too long to add all of them as exceptions, but we can add the params
+                        used in the default config.txt provided in OS images, to avoid reboots
+                        when updating to this new supervisor and correctly parsing the
                         provisioning config.txt as variables.
 
-
-                        While this addition handles most common scenarios, there
-                        is still a
-
-                        chance a user may have use other base overlay dt params
-                        in the initial
-
-                        config, in which case those will be interpreted
-                        according to the
-
+                        While this addition handles most common scenarios, there is still a
+                        chance a user may have use other base overlay dt params in the initial
+                        config, in which case those will be interpreted according to the
                         relative ordering
                       footer:
                         Change-type: patch
@@ -4901,9 +4842,8 @@
         - commits:
             - subject: "automation/balena-deploy: Pin to known working version of balena-img"
               hash: 927310397896f35bd1921202e8b1f30ba3ef47d8
-              body: >
-                As per internal thread
-                https://balena.zulipchat.com/#narrow/stream/345890-balena-io/topic/Jenkins.20build.20failures/near/409602914
+              body: |
+                As per internal thread https://balena.zulipchat.com/#narrow/stream/345890-balena-io/topic/Jenkins.20build.20failures/near/409602914
               footer:
                 Change-type: patch
                 change-type: patch
@@ -6549,15 +6489,11 @@
         - commits:
             - subject: 'Revert "kernel-balena: Remove apparmor support"'
               hash: ddc94ae58072323cf94ac39d6c2d16c78ff794d8
-              body: >
-                This is no longer needed after the balena_os/balena-engine
-                commit:
-
+              body: |
+                This is no longer needed after the balena_os/balena-engine commit:
                 https://github.com/balena-os/balena-engine/commit/ed8ba18e8776a7bf37b3326baeca8196b4ea76b0
 
-
                 released in balena-engine v20.10.39
-
 
                 This reverts commit 18cd233a83554b58b3540164afd768fdeda60b03.
               footer:
@@ -10083,12 +10019,9 @@
         - commits:
             - subject: "linux/kernel-devsrc: Fix aarch64 kernel-headers-test build"
               hash: 65abb381ec266066b24f53fa3119dd47ec8af1a3
-              body: >
+              body: |
                 This fix has been ported from the following upstream
-
-                change:
-                https://patchwork.yoctoproject.org/project/oe-core/patch/002c31d6add77e1002fb1ccd4050ce826a654170.1659653543.git.bruce.ashfield@gmail.com/
-
+                change: https://patchwork.yoctoproject.org/project/oe-core/patch/002c31d6add77e1002fb1ccd4050ce826a654170.1659653543.git.bruce.ashfield@gmail.com/
                 and fixes the following compilation error on generic-aarch64:
 
                     make[1]: *** No rule to make target 'arch/arm64/tools/gen-sysreg.awk',
@@ -10827,20 +10760,14 @@
         - commits:
             - subject: "kernel-devsrc: fix for v6.1+"
               hash: 1687110706cbde4a4d968afb04b3abc07e5c7eaa
-              body: >
+              body: |
                 Adapted as a bbappend from:
-
                 https://git.yoctoproject.org/poky/commit/meta/recipes-kernel/linux/kernel-devsrc.bb?id=2be1b5d7d38d72c35ec593b98366d128fe5ce12c
 
-
                 The 6.1 kernel has a number of Kbuild and architecture changes
-
                 that required us to update our devsrc recipe. With these changes
-
                 we are once again able to build on target modules for all
-
                 supported archectures.
-
 
                 (From OE-Core rev: a3972b3f919400a12bb9a546ae98092cbfdcdbb8)
               footer:
@@ -13003,10 +12930,8 @@
         - commits:
             - subject: Fix LED support for ISG-503
               hash: 8c779e12dbb16892528af17d8749cff1902146ad
-              body: >
-                The LED support was incorrectly changed in
-                https://github.com/balena-io/contracts/commit/4bb6eb1f732957e605f00e47b068199f14ff1765
-
+              body: |
+                The LED support was incorrectly changed in https://github.com/balena-io/contracts/commit/4bb6eb1f732957e605f00e47b068199f14ff1765
                 Let's switch it back to unsupported. 
               footer:
                 Change-type: patch
@@ -14630,24 +14555,13 @@
                 - commits:
                     - subject: Log uncaught promise exceptions on the app entry
                       hash: 676464142690da2e36a810cb35e4ea4d0d751636
-                      body: >
-                        Node 15 [changed the way it treats unhandled promise
-                        rejections](https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V15.md#throw-on-unhandled-rejections---33021)
-                        from a warning to a throw.
+                      body: |
+                        Node 15 [changed the way it treats unhandled promise rejections](https://github.com/nodejs/node/blob/main/doc/changelogs/CHANGELOG_V15.md#throw-on-unhandled-rejections---33021) from a warning to a throw.
+                        For this reason errors like a corrupt migration directory, that happens when trying to
+                        roll back to a previous supervisor version were no longer showing a
+                        message but dumping the full minimized code into the journal logs.
 
-                        For this reason errors like a corrupt migration
-                        directory, that happens when trying to
-
-                        roll back to a previous supervisor version were no
-                        longer showing a
-
-                        message but dumping the full minimized code into the
-                        journal logs.
-
-
-                        This PR adds a catchall on app.ts to log the exception
-                        and throw an exit
-
+                        This PR adds a catchall on app.ts to log the exception and throw an exit
                         code of 1.
                       footer:
                         Change-type: patch
@@ -14660,15 +14574,10 @@
                 - commits:
                     - subject: Fix assertion error in restart-service
                       hash: b9e1464d96824f5332c71324d753d94ddbdecf90
-                      body: >
-                        From:
-                        https://github.com/balena-os/balena-supervisor/pull/2153/commits/c0b4fafe842115933b1da9b4d68e601a19c3e4eb
-
-                        Restart-service checks that both services have restarted
-                        in its test assertion, which is
-
-                        incorrect as restart-service should only restart one
-                        service.
+                      body: |
+                        From: https://github.com/balena-os/balena-supervisor/pull/2153/commits/c0b4fafe842115933b1da9b4d68e601a19c3e4eb
+                        Restart-service checks that both services have restarted in its test assertion, which is
+                        incorrect as restart-service should only restart one service.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -15223,20 +15132,14 @@
               nested: []
             - subject: Make sure balenaEngine owns the container cgroups
               hash: 5efa793c5af63ef177de95b8b4251799b0de7f40
-              body: >
-                Setting `Delegate=yes` ensures that systemd will not change
-                anything on
-
+              body: |
+                Setting `Delegate=yes` ensures that systemd will not change anything on
                 the cgroups created for running the containers.
 
-
                 This setting is used upstream since this commit:
-
                 https://github.com/moby/moby/commit/d16737f971092767c1b9d28302a3f5aedbe2f576
 
-
-                And also is recommended by systemd:
-                https://systemd.io/CGROUP_DELEGATION/
+                And also is recommended by systemd: https://systemd.io/CGROUP_DELEGATION/
               footer:
                 Signed-off-by: Leandro Motta Barros <leandro@balena.io>
                 signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -15826,9 +15729,8 @@
         - commits:
             - subject: "kernel-balena: Include NFS V2, V3 and V4 client and server modules"
               hash: 54c4090b518bccfdba0b635ead129502572685be
-              body: >
+              body: |
                 As per internal discussion thread
-
                 https://balena.zulipchat.com/#narrow/stream/345882-_help/topic/.E2.9C.94.20nfs.20.283.20or.204.29.20on.20jetson.20nano/near/342072698
               footer:
                 Change-type: patch
@@ -15843,23 +15745,15 @@
         - commits:
             - subject: "dunfell+: remove obsolete systemd patch"
               hash: f649288c2b284cb06081d296e52b4562f512107b
-              body: >
+              body: |
                 The patch applied to systemd addressed this upstream moby issue:
-
                 https://github.com/moby/moby/issues/27202
 
-
                 This was fixed in containerd 1.0.2:
-
                 https://github.com/containerd/console/pull/10/commits/c358734ec94e72903243bd1c9034874a1de09424
 
-
-                This fix is present in balena engine since v17.13.5, which has
-                been in
-
-                use since commit 53ce147. Drop this patch from
-                meta-balena-dunfell and
-
+                This fix is present in balena engine since v17.13.5, which has been in
+                use since commit 53ce147. Drop this patch from meta-balena-dunfell and
                 later.
               footer:
                 Change-type: patch
@@ -16183,15 +16077,11 @@
         - commits:
             - subject: "balena-image-flasher: Default image type to balenaos-img"
               hash: 36750c1d0e75d82ec096faeff6d61579c075e0c4
-              body: >
-                This avoids device repositories having to specify it, and it can
-                always
-
+              body: |
+                This avoids device repositories having to specify it, and it can always
                 be overwritten in append files.
 
-
-                This change is an extension of
-                https://github.com/balena-os/meta-balena/commit/a3c276a1058d05e66991871bf167079fc2824843
+                This change is an extension of https://github.com/balena-os/meta-balena/commit/a3c276a1058d05e66991871bf167079fc2824843
               footer:
                 Change-type: patch
                 change-type: patch
@@ -17066,19 +16956,13 @@
           date: 2023-02-28T18:19:17.093Z
     - subject: trigger deploy builds on multi-digit revisions too
       hash: 94114a4edd3771e73d383cce744d8fb15d29ddab
-      body: >
+      body: |
         According to github action syntax [1], there is no special character
-
         to denote a match on zero or more of the preceding character, so
-
         replace `[0-9]?` which only matches zero or one of the preceding
-
         characters with a `*`.
 
-
-        [1]
-        https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
-
+        [1] https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
 
         [skip ci]
       footer:
@@ -17945,42 +17829,21 @@
                       nested: []
                     - subject: Reference networks by Id instead of by name
                       hash: 180c4ff31ad719fb2b00217548514d42a4b5c4cf
-                      body: >
-                        We have seen a few times devices with duplicated network
-                        names for some
-
-                        reason. While we don't know the cause the networks get
-                        duplicates,
-
-                        this is disruptive of updates, as the supervisor usually
-                        queries
-
-                        resource by name, resulting in a 400 error from the
-                        engine because of
-
+                      body: |
+                        We have seen a few times devices with duplicated network names for some
+                        reason. While we don't know the cause the networks get duplicates,
+                        this is disruptive of updates, as the supervisor usually queries
+                        resource by name, resulting in a 400 error from the engine because of
                         the ambiguity.
 
-
-                        This replaces those queries by name to queries by id.
-                        This includes
-
-                        network removal. If a `removeNetwork` step is generated,
-                        the supervisor
-
-                        opts to remove all instances of the network with the
-                        same name as it
-
+                        This replaces those queries by name to queries by id. This includes
+                        network removal. If a `removeNetwork` step is generated, the supervisor
+                        opts to remove all instances of the network with the same name as it
                         cannot easily resolve the ambiguity.
 
-
-                        This doesn't solve the problem of ambiguous networks,
-                        because even if
-
-                        networks are referenced by id when creating a container,
-                        the engine will
-
-                        throw an error (see
-                        https://github.com/balena-os/balena-supervisor/issues/590#issuecomment-1423557871)
+                        This doesn't solve the problem of ambiguous networks, because even if
+                        networks are referenced by id when creating a container, the engine will
+                        throw an error (see https://github.com/balena-os/balena-supervisor/issues/590#issuecomment-1423557871)
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -18869,9 +18732,8 @@
         - commits:
             - subject: "efitools: backport patch to fix build failure"
               hash: 4497229d9d3435384564cde802a3d16cbc47300c
-              body: >
+              body: |
                 Copied from buildroot mailing list:
-
                 http://lists.busybox.net/pipermail/buildroot/2021-April/610255.html
               footer:
                 Change-type: patch
@@ -19834,15 +19696,11 @@
         - commits:
             - subject: "redsocks: Increase maximum number of open files"
               hash: e90b9159ed5f0dac3d9fe1b1b486201ee85f1161
-              body: >
-                This increases the number of open connections that redsocks can
-                support
-
+              body: |
+                This increases the number of open connections that redsocks can support
                 to a new maximum of 2048.
 
-
-                See
-                https://github.com/darkk/redsocks/blob/19b822e345f6a291f6cff6b168f1cfdfeeb2cd7d/base.c#L419
+                See https://github.com/darkk/redsocks/blob/19b822e345f6a291f6cff6b168f1cfdfeeb2cd7d/base.c#L419
               footer:
                 Change-type: patch
                 change-type: patch
@@ -20526,35 +20384,22 @@
         - commits:
             - subject: "Engine healthcheck: deal with empty uuid file"
               hash: 345d1440d34fe042f03884c4ae32f0ba7e7768e8
-              body: >
-                In rare cases (believed to be caused by a non-atomic file
-                creation and
-
-                writing operation in containerd), we end up with an empty file
-                at
-
+              body: |
+                In rare cases (believed to be caused by a non-atomic file creation and
+                writing operation in containerd), we end up with an empty file at
                 `/mnt/data/docker/containerd/daemon/io.containerd.grpc.v1.introspection/uuid`.
-
-                This causes `ctr version` (and hence the health check) to fail.
-                See
-
+                This causes `ctr version` (and hence the health check) to fail. See
                 https://github.com/balena-os/balena-engine/issues/322
-
 
                 This commit addresses this issue in two ways:
 
-
-                1. Before running `ctr version`, we check if the uuid file
-                exists and is
+                1. Before running `ctr version`, we check if the uuid file exists and is
                    empty. If so, we remove it. (The subsequent execution of `ctr
                    version` by the healthcheck will create the file again.)
-                2. After running `ctr version`, we check if the uuid file was
-                really
+                2. After running `ctr version`, we check if the uuid file was really
                    created and is not empty.
 
-                In both cases, when an empty uuid file is detected, we log the
-                event to
-
+                In both cases, when an empty uuid file is detected, we log the event to
                 help us confirm our hypothesis about the root cause.
               footer:
                 Signed-off-by: Leandro Motta Barros <leandro@balena.io>
@@ -21752,21 +21597,14 @@
                     - subject: "core: Reduce to 30 the retries number when trying to get the IP
                         address of the DUT"
                       hash: 02b270e1c55429c7316a9c65f70362185bbe3aec
-                      body: >
-                        Instead of retrying to get the DUT IP address 120 times
-                        on a 1 seconds interval,
-
-                        let's reduce it to 30 times because the
-                        resolveLocalTarget which we call will
-
+                      body: |
+                        Instead of retrying to get the DUT IP address 120 times on a 1 seconds interval,
+                        let's reduce it to 30 times because the resolveLocalTarget which we call will
                         timeout too in 15 seconds:
-
 
                         https://github.com/balena-os/leviathan-worker/blob/master/lib/helpers/index.ts#L162
 
-
-                        So reducing the retries number to 30 will effectly bring
-                        the total combined timeout to a maximum of 8 minutes.
+                        So reducing the retries number to 30 will effectly bring the total combined timeout to a maximum of 8 minutes.
                       footer:
                         Change-type: patch
                         change-type: patch
@@ -23206,11 +23044,9 @@
         - commits:
             - subject: "wpa-supplicant: Sync with v2.10 from upstream"
               hash: 5464be07070bbc4a06a4d432250dd70b2b2e1522
-              body: >
+              body: |
                 Synced from:
-
                 http://cgit.openembedded.org/openembedded-core/commit/meta/recipes-connectivity/wpa-supplicant?id=3a43c2a82881688d85238464db371f695e60b572
-
 
                 Closes #2838
               footer:
@@ -23725,39 +23561,21 @@
         - commits:
             - subject: "ntp: Remove race condition from directory creation"
               hash: 5fd19e26d35d7160e2531277a9a14e194d0b95c6
-              body: >
-                Chronyd checks that the directory specified as `sourcedir` in
-                `chrony.conf`
-
-                (in this case `/var/chrony`) is not world accessible if it
-                exists (chrony
-
-                will create it correctly if it does not exist), and does not
-                start
-
+              body: |
+                Chronyd checks that the directory specified as `sourcedir` in `chrony.conf`
+                (in this case `/var/chrony`) is not world accessible if it exists (chrony
+                will create it correctly if it does not exist), and does not start
                 if that's the case.
 
-
-                The way that the `/var/chrony` is created when it does not exist
-                opens
-
-                the possibility of the directory existing with the wrong
-                permissions and
-
+                The way that the `/var/chrony` is created when it does not exist opens
+                the possibility of the directory existing with the wrong permissions and
                 hitting this problem.
 
-
-                This commit creates the directory with the correct permissions
-                from the
-
+                This commit creates the directory with the correct permissions from the
                 start to avoid the race condition.
 
-
-                It also changes the permissiong from 750 to 770 to match what
-                chrony
-
+                It also changes the permissiong from 750 to 770 to match what chrony
                 does (see
-
                 https://github.com/mlichvar/chrony/blob/7b197953e8add5515b7e58c4638dc55aa4bb91b7/conf.c#L1761)
               footer:
                 Change-type: patch
