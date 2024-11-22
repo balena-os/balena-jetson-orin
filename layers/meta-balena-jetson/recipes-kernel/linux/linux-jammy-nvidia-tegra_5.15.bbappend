@@ -154,7 +154,7 @@ BALENA_CONFIGS[lan743x] = " \
 
 L4TVER=" l4tver=${L4T_VERSION}"
 
-KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 "
+KERNEL_ARGS = " firmware_class.path=/etc/firmware fbcon=map:0 rootdelay=1 roottimeout=60"
 KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=tty0 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} "
 
 generate_extlinux_conf() {
