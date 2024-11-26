@@ -12,6 +12,7 @@ RETRY_COUNT_FILE="jetson-qspi-retry-count"
 CAPSULE_TARGET_PATH="/EFI/UpdateCapsule/TEGRA_BL.Cap"
 BOOT_MOUNTPOINT="/mnt/boot/"
 UEFI_CAPSULE_TARGET_MOUNTPOINT="$BOOT_MOUNTPOINT"
+force_capsule_update="n"
 
 efivars_dir="/sys/firmware/efi/efivars/"
 # See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
@@ -104,6 +105,8 @@ prepare_capsule() {
     write_jetson_update_efivars
 }
 
+# $1 - number of retries
+# $2 - path to where $RETRY_COUNT_FILE should be stored
 write_retries_file() {
     tmpfile=$(mktemp)
     echo "jetson_capsule_retries=$1" > $tmpfile
@@ -128,6 +131,9 @@ remove_retries_file() {
 
 # $1 - boot partition mountpoint - if unspecified, defaults to /mnt/boot/
 # $2 - UEFI capsule target mountpoint - if unspecified, defaults to /mnt/boot/
+# $3 - force capsule update application, even if the QSPI is accessible. This is
+#      useful when provisioning a device which has been provisioned with balenaOS
+#      previously, and we want to update the QSPI as well.
 try_capsule_update() {
     if [ ! -z "${1}" ]; then
         BOOT_MOUNTPOINT=${1}
@@ -137,11 +143,23 @@ try_capsule_update() {
         UEFI_CAPSULE_TARGET_MOUNTPOINT=${2}                                                                                                 
     fi
 
-    if qspi_accessible; then
-        info "OK: QSPI is accessible"
-        remove_retries_file $BOOT_MOUNTPOINT
+    # We can only force the capsule update once if
+    # the QSPI is already accessible, because we don't
+    # know if it's accessible due to a succesfull past capsule application
+    # or if it's because the QSPI was raw flashed like that but with
+    # a different balenaOS build.
+    if [ ! -z "${3}" ]; then
+        force_capsule_update="y"
+    fi
 
-        exit 0
+    if qspi_accessible; then
+        if [[ "y" == "$force_capsule_update" ]]; then
+            info "QSPI is accessible, and forced update was requested"
+	else
+            info "OK: QSPI is accessible, no forced update requested"
+            remove_retries_file $BOOT_MOUNTPOINT
+            exit 0
+	fi
     fi
 
     if capsule_update_prepared; then
@@ -152,7 +170,6 @@ try_capsule_update() {
     else
         if [ -f ${BOOT_MOUNTPOINT}/${RETRY_COUNT_FILE} ]; then
             source ${BOOT_MOUNTPOINT}/${RETRY_COUNT_FILE}
-
             if [ ! -z $jetson_capsule_retries ]; then    
                 if [ $jetson_capsule_retries -le 3 ]; then
                     prepare_capsule $UEFI_CAPSULE_TARGET_MOUNTPOINT
