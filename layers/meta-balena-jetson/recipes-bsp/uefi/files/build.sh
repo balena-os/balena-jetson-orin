@@ -20,6 +20,11 @@ edk2_nvidia_patches=( "0001-edk2-nvidia-Add-changes-for-balenaOS-integration.pat
 	"0001-edk2-nvidia-Remove-pva-fw-from-required-list.patch" \
 	"0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit.patch" )
 
+if [[ "${DEVICE_TYPE}" == "jetson-agx-orin-devkit-64gb" ]]; then
+    echo "Applying edk2-nvidia jetson-agx-orin-devkit-64gb NewDeviceHierarchy override patch"
+    edk2_nvidia_patches+=("0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe.patch")
+fi	
+
 cd /build/nvidia-uefi/edk2 && \
     git reset --hard HEAD && \
     git apply ${edk2_patch} && \
