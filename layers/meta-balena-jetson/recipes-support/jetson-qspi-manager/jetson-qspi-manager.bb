@@ -16,6 +16,10 @@ RDEPENDS:${PN} += " bash "
 
 inherit allarch systemd
 
+COMPAT_SPEC_NAME="jetson-orin-nano-devkit"
+COMPAT_SPEC_NAME:jetson-agx-orin-devkit="jetson-agx-orin-devkit"
+COMPAT_SPEC_NAME:jetson-agx-orin-devkit-64gb="jetson-agx-orin-devkit"
+
 SYSTEMD_SERVICE:${PN} = " \
     jetson-qspi-manager.service \
     "
@@ -29,6 +33,8 @@ do_install() {
     install -d ${D}/${libexecdir}/
     install -m 0755 ${WORKDIR}/jetson-qspi-manager ${D}${bindir}/
     install -m 0644 ${WORKDIR}/jetson-qspi-helpers ${D}/${libexecdir}/
+
+    sed -i -e 's,@ORIN_DEVICE_TYPE@,${COMPAT_SPEC_NAME},g' ${D}/${libexecdir}/jetson-qspi-helpers
 
     if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
         install -d ${D}${systemd_unitdir}/system/
