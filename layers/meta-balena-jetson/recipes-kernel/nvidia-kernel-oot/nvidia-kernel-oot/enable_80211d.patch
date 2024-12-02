@@ -1,0 +1,18 @@
+Enable CONFIG_80211D for rtl8822ce
+
+Upstream-Status: Inappropriate[configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+
+Index: nvidia-kernel-oot/nvidia-oot/drivers/net/wireless/realtek/rtl8822ce/Makefile
+===================================================================
+--- nvidia-kernel-oot.orig/nvidia-oot/drivers/net/wireless/realtek/rtl8822ce/Makefile
++++ nvidia-kernel-oot/nvidia-oot/drivers/net/wireless/realtek/rtl8822ce/Makefile
+@@ -75,7 +75,7 @@ CONFIG_TXPWR_LIMIT_EN = auto
+ CONFIG_RTW_CHPLAN = 0xFFFF
+ CONFIG_RTW_ADAPTIVITY_EN = disable
+ CONFIG_RTW_ADAPTIVITY_MODE = normal
+-CONFIG_80211D = n
++CONFIG_80211D = y
+ CONFIG_SIGNAL_SCALE_MAPPING = n
+ CONFIG_80211W = y
+ CONFIG_REDUCE_TX_CPU_LOADING = n
