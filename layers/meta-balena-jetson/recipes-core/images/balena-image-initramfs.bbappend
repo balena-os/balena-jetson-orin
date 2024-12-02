@@ -18,7 +18,6 @@ PACKAGE_INSTALL:append = " kernel-module-phy-tegra194-p2u"
 # allow access to the QSPI, but install the qspi driver
 # in case it is accessible
 PACKAGE_INSTALL:append = " mtd-utils fatrw gptfdisk kernel-module-spi-tegra210-quad"
-PACKAGE_INSTALL:append:jetson-orin-nx-seeed-j4012 = " initramfs-module-nvme-wait"
 PACKAGE_INSTALL:append = " mtd-utils fatrw gptfdisk kernel-module-spi-tegra210-quad jetson-qspi-manager setup-nv-boot-control"
 # Below modules are needed for the AGX Orin 64GB to
 # detect USB keys
