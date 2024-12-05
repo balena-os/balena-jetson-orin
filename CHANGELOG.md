@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.1.16
+## (2024-12-05)
+
+* recipes-bsp/tegra-binaries: Update AGX 64 boot blob and UEFI capsule [Alexandru Costache]
+* layers/meta-balena: Update to v6.1.16 [Alexandru Costache]
+
 # v6.1.10
 ## (2024-11-21)
 
