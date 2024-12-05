@@ -1,0 +1,57 @@
+#!/bin/bash
+
+set -e
+
+. /usr/libexec/jetson-qspi-helpers
+
+help () {
+    cat << EOF
+Script for QSPI management on Jetson Orin Devices
+jetson-qspi-manager [options]
+
+Options:
+    -h, --help
+        Display this help and exit.
+
+    -r, --reset
+        Remove the retries count file, and thus reset the number of capsule updates
+
+    -u, --prepare-update
+        Prepare the UEFI capsule update to be applied on the next boot
+
+    -c, --check
+        Check if the QSPI is accessible
+EOF
+}
+
+# Parse arguments
+if [ "$#" -eq "0" ]; then
+    help
+    exit 1
+else
+    while [ "$#" -gt "0" ]; do
+        key=$1
+        case $key in
+            -h|--help)
+                help
+                exit 0
+                ;;
+            -c|--check)
+                check_qspi_accessible
+                shift
+                ;;
+            -u|--prepare-update)
+                try_capsule_update
+                shift
+                ;;
+            -r|--reset)
+                remove_retries_file
+                shift
+                ;;
+            *)
+                echo "[WARNING] $0 : Argument '$1' unknown."
+                exit 1
+                ;;
+         esac
+     done
+fi

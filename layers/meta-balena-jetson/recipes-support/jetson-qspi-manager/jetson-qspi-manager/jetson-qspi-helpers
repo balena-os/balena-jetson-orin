@@ -1,0 +1,192 @@
+#!/bin/bash
+
+set -e
+
+. /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-fs
+
+source /usr/bin/uefi_common.func
+
+MAX_CAPSULE_UPDATE_RETRIES=3
+RETRY_COUNT_FILE="jetson-qspi-retry-count"
+CAPSULE_TARGET_PATH="/EFI/UpdateCapsule/TEGRA_BL.Cap"
+BOOT_MOUNTPOINT="/mnt/boot/"
+UEFI_CAPSULE_TARGET_MOUNTPOINT="$BOOT_MOUNTPOINT"
+force_capsule_update="n"
+
+efivars_dir="/sys/firmware/efi/efivars/"
+# See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
+platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
+platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
+os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
+tmp_file="/tmp/platformspecfile.bin"
+
+device_type="@ORIN_DEVICE_TYPE@"
+boardspec=$(tegra-boardspec 2>/dev/null)
+TegraPlatformSpec="${boardspec}-${device_type}-"
+compatspec=$(echo "$boardspec" | gen_compat_spec)
+TegraPlatformCompatSpec="${compatspec}-${device_type}-"
+
+qspi_accessible() {
+    if [ -e /dev/mtd0 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+check_qspi_accessible() {
+    if qspi_accessible ; then
+        info "QSPI is accessible"
+        exit 0
+    else
+        info "QSPI is inaccessible"
+        exit 1
+    fi
+}
+
+capsule_update_prepared() {
+    if [ -e ${os_indications_efivar} ] && [ -e ${CAPSULE_TARGET_PATH} ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+write_jetson_update_efivars() {
+    if [ -d $efivars_dir ]; then
+        # If the file already exists, writing to it will fail
+        # causing the entire hook to fail
+        if [ ! -e ${platform_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
+            tmp_file_size=$(stat -c%s ${tmp_file})
+            dd if=${tmp_file} of=${platform_spec_efivar} bs=${tmp_file_size}
+        fi
+
+        if [ ! -e ${platform_compat_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+            tmp_file_size=$(stat -c%s ${tmp_file})
+            dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
+            #info "PlatformCompatSpec variable created"
+        else
+            #info "PlatformCompatSpec variable already exists"
+            if [[ ${kernel_l4t} == "36.3" ]]; then
+                #info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
+                chattr -i ${platform_compat_spec_efivar}
+                printf "\x07\x00\x00\x00" > ${tmp_file}
+                printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+                tmp_file_size=$(stat -c%s ${tmp_file})
+                dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
+            fi
+        fi
+
+        printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
+        dd if=${tmp_file} of=${os_indications_efivar}; bs=12;
+    else
+        fail "sysfs not accessible!"
+        return 1
+    fi
+
+    return 0
+}
+
+# $1 - target path for unpacking UEFI capsule
+prepare_capsule() {
+    uefi_capsule=$(find / -xdev -type f -name "TEGRA_BL*.Cap.gz")
+
+    # Unzip capsule to the boot partition
+    #info "Will extract UEFI Capsule..."
+    mkdir -p ${1}/EFI/UpdateCapsule/
+    gunzip -k -f -c ${uefi_capsule} | dd of=${1}/${CAPSULE_TARGET_PATH}
+    sync
+    #info "Extracted UEFI Capsule."
+    write_jetson_update_efivars
+}
+
+# $1 - number of retries
+# $2 - path to where $RETRY_COUNT_FILE should be stored
+write_retries_file() {
+    tmpfile=$(mktemp)
+    echo "jetson_capsule_retries=$1" > $tmpfile
+    mv $tmpfile ${2}/${RETRY_COUNT_FILE} && sync
+    info "Attempt $jetson_capsule_retries: The QSPI will be updated on the next boot"                                                      
+    info "Please do not power off or reset the device during the next boot, until the device shows up online."
+}
+
+# $1 - directory which stores the retries file
+remove_retries_file() {
+    if [ ! -z "${1}" ]; then
+        retry_count_file_path="${1}/$RETRY_COUNT_FILE"
+    else
+        retry_count_file_path="${BOOT_MOUNTPOINT}/${RETRY_COUNT_FILE}"
+    fi
+
+    if [ -f "${retry_count_file_path}" ]; then
+        #info "Retry count file found, will be removed"
+        rm $retry_count_file_path 
+    fi
+}
+
+# $1 - boot partition mountpoint - if unspecified, defaults to /mnt/boot/
+# $2 - UEFI capsule target mountpoint - if unspecified, defaults to /mnt/boot/
+# $3 - force capsule update application, even if the QSPI is accessible. This is
+#      useful when provisioning a device which has been provisioned with balenaOS
+#      previously, and we want to update the QSPI as well.
+try_capsule_update() {
+    if [ ! -z "${1}" ]; then
+        BOOT_MOUNTPOINT=${1}
+    fi
+
+    if [ ! -z "${2}" ]; then                                                                                  
+        UEFI_CAPSULE_TARGET_MOUNTPOINT=${2}                                                                                                 
+    fi
+
+    # We can only force the capsule update once if
+    # the QSPI is already accessible, because we don't
+    # know if it's accessible due to a succesfull past capsule application
+    # or if it's because the QSPI was raw flashed like that but with
+    # a different balenaOS build.
+    if [ ! -z "${3}" ]; then
+        force_capsule_update="y"
+    fi
+
+    if qspi_accessible; then
+        if [[ "y" == "$force_capsule_update" ]]; then
+            info "QSPI is accessible, and forced update was requested"
+	else
+            info "OK: QSPI is accessible, no forced update requested"
+            remove_retries_file $BOOT_MOUNTPOINT
+            exit 0
+	fi
+    fi
+
+    if capsule_update_prepared; then
+        info "UEFI capsule already triggered externally"
+        remove_retries_file $BOOT_MOUNTPOINT
+
+        exit 0
+    else
+        if [ -f ${BOOT_MOUNTPOINT}/${RETRY_COUNT_FILE} ]; then
+            source ${BOOT_MOUNTPOINT}/${RETRY_COUNT_FILE}
+            if [ ! -z $jetson_capsule_retries ]; then    
+                if [ $jetson_capsule_retries -le 3 ]; then
+                    prepare_capsule $UEFI_CAPSULE_TARGET_MOUNTPOINT
+                    jetson_capsule_retries=$(( $jetson_capsule_retries + 1 ))
+                    write_retries_file $jetson_capsule_retries $BOOT_MOUNTPOINT
+                elif [ $jetson_capsule_retries -gt 3 ]; then
+                    warn "Reached max number of capsule update retries!"
+                    warn "Please re-flash your QSPI, or issue 'jetson-qspi-manager -r -u'"
+                    exit 1
+                fi
+            else
+                warn "Jetson QSPI retry count file empty or corrupt!"
+                exit 1
+            fi
+        else
+            prepare_capsule $UEFI_CAPSULE_TARGET_MOUNTPOINT
+            write_retries_file 1 $BOOT_MOUNTPOINT
+        fi
+    fi
+}

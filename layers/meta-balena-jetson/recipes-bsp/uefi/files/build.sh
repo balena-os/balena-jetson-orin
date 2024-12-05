@@ -4,6 +4,8 @@
 # from github with balenaOS specific changes
 # and then builds the UEFI firmware and bootloader
 
+set -e
+
 declare -A device_specific_patches
 
 device_specific_patches["jetson-agx-orin-devkit"]="0001-AGX-Orin-32GB-Integrate-with-balenaOS-on-L4T-36.3.patch"
@@ -17,6 +19,11 @@ edk2_patch="0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow.patch"
 edk2_nvidia_patches=( "0001-edk2-nvidia-Add-changes-for-balenaOS-integration.patch " \
 	"0001-edk2-nvidia-Remove-pva-fw-from-required-list.patch" \
 	"0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit.patch" )
+
+if [[ "${DEVICE_TYPE}" == "jetson-agx-orin-devkit-64gb" ]]; then
+    echo "Applying edk2-nvidia jetson-agx-orin-devkit-64gb NewDeviceHierarchy override patch"
+    edk2_nvidia_patches+=("0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe.patch")
+fi	
 
 cd /build/nvidia-uefi/edk2 && \
     git reset --hard HEAD && \

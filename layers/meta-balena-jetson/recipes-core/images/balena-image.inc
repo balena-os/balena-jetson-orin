@@ -25,6 +25,7 @@ IMAGE_INSTALL:append = " \
     l4t-launcher-extlinux \
     dtc \
     pciutils \
+    jetson-qspi-manager \
     nvidia-kernel-oot-devicetrees nvidia-kernel-oot-display nvidia-kernel-oot-cameras nvidia-kernel-oot-bluetooth nvidia-kernel-oot-wifi \
     nvidia-kernel-oot-canbus nvidia-kernel-oot-virtualization nvidia-kernel-oot-base nvidia-drm-loadconf \
 "

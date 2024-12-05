@@ -3,12 +3,14 @@
 set -e
 
 . /usr/libexec/os-helpers-logging
+. /usr/libexec/os-helpers-fs
 
-MMC_DEV="mmcblk0"
-NVME_DEV="nvme0n1"
+source /usr/libexec/jetson-qspi-helpers
+
 MTD_DEV="mtd0"
 FLASHER_CONF_FILE=/etc/resin-init-flasher.conf
 BOOT_BLOB="boot0.img"
+INTERNAL_BOOT_MP="/tmp/internal_boot"
 
 if [ -f ${FLASHER_CONF_FILE} ]; then
     source ${FLASHER_CONF_FILE}
@@ -16,25 +18,22 @@ else
     fail "No configuration for resin-init-flasher found."
 fi
 
-mtd_debug erase /dev/${MTD_DEV} 0x0 0x4000000
-gunzip -k -c "/opt/tegra-binaries/${BOOT_BLOB}.gz" | dd of=/tmp/${BOOT_BLOB} bs=1M
-mtd_debug write /dev/${MTD_DEV} 0x0 0x4000000 /tmp/${BOOT_BLOB}
-sync
+if grep -q "jf_rcm_boot=1" /proc/cmdline ; then
+    # Find path to the compressed boot blob image
+    # that gets written to the QSPI
+    BOOT_BLOB_PATH=$(find / -xdev -type f -name "${BOOT_BLOB}.gz")
+    if [ ! -f "${BOOT_BLOB_PATH}" ]; then
+        fail "Boot blob not found in rootfs"
+    else
+        log "Found boot blob in ${BOOT_BLOB_PATH}"
+    fi
 
-# Relocate secondary gpt after writing image to the nvme with dd
-sed -e 's/\s*\([\+0-9a-zA-Z]*\).*/\1/' << EOF | fdisk /dev/${INTERNAL_DEVICE_KERNEL}
-    v
-    w
-EOF
-
-# All flasher images provision the internal storage (eMMC or NVME) and QSPI,
-# so let's ensure the desired target is booted. The pre-set UEFI boot order
-# in the boot blob for AGX Orin 64GB is eMMC followed by NVME, so we'll clear the
-# eMMC to prevent it from being used.
-if [[ "${INTERNAL_DEVICE_KERNEL}" = "${MMC_DEV}" ]]; then
-    log "Target internal device is the eMMC. Will not erase NVME or any other boot media."
-elif [[ -b /dev/${MMC_DEV} ]]; then
-    log "Target internal device is ${INTERNAL_DEVICE_KERNEL}. Erasing eMMC partition table to prevent booting from it. Default boot order is dictated by UEFI variables."
-    sgdisk -Z /dev/${MMC_DEV}
+    log "QSPI is accessible, it will be updated"
+    mtd_debug erase /dev/${MTD_DEV} 0x0 0x4000000
+    gunzip -k -f -c "${BOOT_BLOB_PATH}" | dd of=/tmp/${BOOT_BLOB} bs=1M
+    mtd_debug write /dev/${MTD_DEV} 0x0 0x4000000 /tmp/${BOOT_BLOB}
+    sync
+else
+    log "QSPI is inaccessible in the hostOS update hook, will attempt update trough capsule on next boot"
+    try_capsule_update $INTERNAL_BOOT_MP $INTERNAL_BOOT_MP y
 fi
-

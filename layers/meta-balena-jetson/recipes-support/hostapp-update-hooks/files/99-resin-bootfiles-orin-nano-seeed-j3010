@@ -11,7 +11,7 @@ source /usr/bin/uefi_common.func
 
 DURING_UPDATE=${DURING_UPDATE:-0}
 bootloader_device="/dev/mtdblock0"
-internal_storage="/dev/nvme0n1"
+internal_storage="/dev/$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/active/" | xargs lsblk -no pkname)"
 use_capsule=1
 bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Seeed_j3010.Cap.gz"
 efivars_dir="/sys/firmware/efi/efivars/"

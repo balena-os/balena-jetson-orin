@@ -12,7 +12,7 @@ source /usr/bin/uefi_common.func
 DURING_UPDATE=${DURING_UPDATE:-0}
 bootloader_blob="/opt/tegra-binaries/TEGRA_BL_3701.Cap.gz"
 bootloader_device="/dev/mtdblock0"
-internal_storage="/dev/mmcblk0"
+internal_storage="/dev/$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/active/" | xargs lsblk -no pkname)"
 use_capsule=1
 efivars_dir="/sys/firmware/efi/efivars/"
 # See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in

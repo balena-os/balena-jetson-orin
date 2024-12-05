@@ -1,0 +1,39 @@
+From 42a758bc63a58e29e6ce622e65d3c4d4301f1bfc Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Thu, 28 Nov 2024 12:15:53 +0200
+Subject: [PATCH] TegraPlatformBootManager/TegraPlatformBootManagerDxe: Force
+ new device hierarchy
+
+---
+ .../TegraPlatformBootManagerDxe.c                         | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/Silicon/NVIDIA/Drivers/TegraPlatformBootManager/TegraPlatformBootManagerDxe.c b/Silicon/NVIDIA/Drivers/TegraPlatformBootManager/TegraPlatformBootManagerDxe.c
+index c164689f..e961a92a 100644
+--- a/Silicon/NVIDIA/Drivers/TegraPlatformBootManager/TegraPlatformBootManagerDxe.c
++++ b/Silicon/NVIDIA/Drivers/TegraPlatformBootManager/TegraPlatformBootManagerDxe.c
+@@ -903,6 +903,7 @@ RefreshNvBootOptions (
+   UINTN                         NvBootOptionsCount;
+   UINTN                         Index;
+   INTN                          Match;
++  BOOLEAN                       PcdNewDeviceHierarchyOverride = FALSE;
+ 
+   if ((BootOptions == NULL) ||
+       (BootOptionsCount == 0))
+@@ -910,7 +911,12 @@ RefreshNvBootOptions (
+     return EFI_INVALID_PARAMETER;
+   }
+ 
+-  if (PcdGet8 (PcdNewDeviceHierarchy)) {
++  if (!PcdGet8 (PcdNewDeviceHierarchy)) {
++      DEBUG ((DEBUG_ERROR, "%a: This device has been flashed with PcdNewDeviceHierarchy = 0. Overriding to allow flasher images to be booted directly.\n", __FUNCTION__));
++      PcdNewDeviceHierarchyOverride = TRUE;
++  }
++  DEBUG ((DEBUG_ERROR, "%a: >>>>> This firmware is updated\n", __FUNCTION__));
++  if (PcdGet8 (PcdNewDeviceHierarchy) || TRUE == PcdNewDeviceHierarchyOverride) {
+     NvBootOptions = NULL;
+     NvBootOptions = EfiBootManagerGetLoadOptions (
+                       &NvBootOptionsCount,
+-- 
+2.34.1
+

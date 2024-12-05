@@ -1,0 +1,41 @@
+Copy jetson boot artifacts during migration, so that the
+QSPI can be flashed directly or trough an UEFI capsule application
+on the next boot.
+
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+
+Index: 1.0-r4/migrate
+===================================================================
+--- 1.0-r4.orig/migrate
++++ 1.0-r4/migrate
+@@ -99,6 +99,8 @@ migrate_enabled() {
+ 
+ # Main module function
+ migrate_run() {
++    jetson_orin_capsule=$(find "${ROOTFS_DIR}" -xdev -type f -name "TEGRA_BL_*Cap*")
++    jetson_orin_boot_artifact=$(find "${ROOTFS_DIR}" -xdev -type f -name "boot0.img.gz")
+     # Find the raw image in the rootfs partition
+     image=$(find "${ROOTFS_DIR}" -xdev -type f -name "${BALENA_IMAGE}")
+     kernel_images=$(find "${ROOTFS_DIR}" -xdev -type f -name "@@KERNEL_IMAGETYPE@@*")
+@@ -125,6 +127,21 @@ migrate_run() {
+         # shellcheck disable=SC2086
+         cp -a ${kernel_images} "/tmp"
+ 
++        # If this is a Jetson Orin device, the flasher image contains
++        # a compressed boot blob as well as a UEFI capsule.
++        # If the QSPI is accessible, it will be written directly,
++        # otherwise a capsule update will be triggered on the next boot
++        # after provisioning
++        if [ -f "${jetson_orin_capsule}" ]; then
++            cp "${jetson_orin_capsule}" "/tmp/"
++            info "Copied ${jetson_orin_capsule}"
++        fi
++
++        if [ -f "${jetson_orin_boot_artifact}" ]; then
++            cp "${jetson_orin_boot_artifact}" "/tmp/"
++            info "Copied ${jetson_orin_boot_artifact}"
++        fi
++
+         # Need to source this again to set CONFIG_PATH correctly
+         unset CONFIG_PATH
+         # shellcheck disable=SC1091
