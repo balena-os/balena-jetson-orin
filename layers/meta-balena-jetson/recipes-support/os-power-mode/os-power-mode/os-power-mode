@@ -91,7 +91,7 @@ else
             power_modes=(["low"]="1" ["mid"]="3" ["high"]="0")
             ;;
         jetson-orin-nano-devkit-nvme)
-            power_modes=(["low"]="2" ["mid"]="0" ["high"]="0")
+            power_modes=(["low"]="1" ["mid"]="0" ["high"]="0")
             ;;
         jetson-orin-nano-seeed-j3010)
             power_modes=(["low"]="2" ["mid"]="1" ["high"]="0")
