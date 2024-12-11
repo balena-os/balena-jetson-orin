@@ -37,9 +37,9 @@ cd /build/nvidia-uefi/edk2 && \
     done
 
     echo "Device type is ${DEVICE_TYPE}"
-    for device_specific_patch in ${!device_specific_patches[@]}
+    for device_type_i in ${!device_specific_patches[@]}
     do
-        if [[ "${DEVICE_TYPE}" == "${device_specific_patch}" ]]; then
+        if [[ "${DEVICE_TYPE}" == "${device_type_i}" ]]; then
 		echo "Applying ${device_specific_patches[${DEVICE_TYPE}]} for ${DEVICE_TYPE}"
 		git apply ${device_specific_patches[${DEVICE_TYPE}]}
 
