@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.1.24
+## (2024-12-13)
+
+* os-power-mode: Fix Orin Nano low power mode index [Alexandru Costache]
+
 # v6.1.16
 ## (2024-12-05)
 
