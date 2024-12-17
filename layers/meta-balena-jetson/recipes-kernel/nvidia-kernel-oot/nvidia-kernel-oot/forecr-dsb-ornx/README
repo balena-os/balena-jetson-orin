@@ -1,0 +1,16 @@
+DT overlays from the vendor-provided BSP.
+For the base device trees see recipes-kernel/linux/jetson-dtbs.bb instead.
+
+It is not exactly clear whether these are even necessary right now,
+but they do come as a part of the BSP and the camera ones in particular
+might get useful in the future.
+
+tegra234-p3768-0000+p3767-0000-dynamic.dtbo is mostly for the bootloader,
+but the original L4T setup still keeps a copy in /boot. Forecr BSP overwirtes
+this file, mostly for the bootloader (which happens outside of Yocto in this
+case) but the new file ends up in /boot as well. To avoid confusion, we keep
+the copy in /boot matched to the one in the bootloader.
+
+Since both the original tegra234-p3768-0000+p3767-0000-dynamic.dtbo and the rest
+of the camera overlays are normally provided by nvidia-kernel-oot in meta-tegra,
+we do overlays here and not in jetson-dtbs.

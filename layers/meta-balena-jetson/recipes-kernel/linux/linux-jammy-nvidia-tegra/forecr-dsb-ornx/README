@@ -1,0 +1,5 @@
+The device trees here come from the BSP packages found at:
+
+https://www.forecr.io/blogs/installation/jetpack-6-x-installation-for-dsboard-ornx
+
+note the BSP overlays (dtbo) go to nvidia-kernel-oot instead.

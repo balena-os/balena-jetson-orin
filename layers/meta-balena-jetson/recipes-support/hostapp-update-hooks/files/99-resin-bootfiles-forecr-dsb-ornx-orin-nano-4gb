@@ -1,0 +1,198 @@
+#!/bin/sh
+set -o errexit
+
+# Script which writes the appropriate
+# device tree with embedded cmdline
+# and updates the kernel, as well as
+# the rest of the bootloader binaries
+. /usr/libexec/os-helpers-fs
+. /usr/sbin/balena-config-vars
+source /usr/bin/uefi_common.func
+
+efivars_dir="/sys/firmware/efi/efivars/"
+# See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
+platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
+platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
+os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
+tmp_file="/tmp/platformspecfile.bin"
+
+device_type="forecr-dsb-ornx-orin-nano-4gb"
+
+DURING_UPDATE=${DURING_UPDATE:-0}
+bootloader_device="/dev/mtdblock0"
+internal_storage="/dev/nvme0n1"
+use_capsule=1
+bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Forecr_ORNX_Nano_4gb.Cap.gz"
+boardspec=$(tegra-boardspec 2>/dev/null)
+TegraPlatformSpec="${boardspec}-${device_type}-"
+compatspec=$(echo "$boardspec" | gen_compat_spec)
+TegraPlatformCompatSpec="${compatspec}-${device_type}-"
+fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
+kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+active_sysroot="/mnt/sysroot/active/current/boot/"
+jp5_default_dtb_name="tegra234-p3767-0003-p3768-0000-a0.dtb"
+jp6_default_dtb_name="tegra234-p3768-0000+p3767-0004-nv.dtb"
+
+copy_jp5_dtb() {
+    if [ -f ${active_sysroot}${jp5_default_dtb_name} ]; then
+        cp ${active_sysroot}${jp5_default_dtb_name} ${active_sysroot}${jp6_default_dtb_name} || true
+        info "Copied old dtb under new name"
+    else
+        info "Jetpack 5 default device-tree not found"
+    fi
+}
+
+
+write_jetson_update_efivars() {
+    info "Writing of jetson efivars triggered from old OS hook"
+    if [ -d $efivars_dir ]; then
+        # If the file already exists, writing to it will fail
+        # causing the entire hook to fail
+        if [ ! -e ${platform_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
+            tmp_file_size=$(stat -c%s ${tmp_file})
+            dd if=${tmp_file} of=${platform_spec_efivar} bs=${tmp_file_size}
+            info "PlatformSpec variable created"
+        else
+            info "PlatformSpec variable already exists"
+        fi
+
+        if [ ! -e ${platform_compat_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+            tmp_file_size=$(stat -c%s ${tmp_file})
+            dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
+            info "PlatformCompatSpec variable created"
+        else
+            info "PlatformCompatSpec variable already exists"
+            if [[ ${kernel_l4t} == "36.3" ]]; then
+                info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
+                chattr -i ${platform_compat_spec_efivar}
+                printf "\x07\x00\x00\x00" > ${tmp_file}
+                printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+                tmp_file_size=$(stat -c%s ${tmp_file})
+                dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
+            fi
+        fi
+
+        printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
+        dd if=${tmp_file} of=${os_indications_efivar}; bs=12;
+        info "OsIndications variable written"
+    else
+        fail "sysfs not accessible!"
+        return 1
+    fi
+
+    return 0
+}
+
+check_running_l4t() {
+    fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
+    kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+    old_extlinux_file="/mnt/sysroot/inactive/current/boot/extlinux/extlinux.conf"
+
+    if [[ "$fw_version" == "35.5" ]] || [[ "$fw_version" == "36.3" ]]; then
+        info "Firmware version $fw_version is suitable for Jetpack 6 upgrade."
+	# mtd may cause interference with sporadic failures when writing efivars
+	if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi;
+    else
+        warn "Firmware version $fw_version is not suitable Jetpack 6 upgrade. Please first upgrade to an L4T 35.5.0 based balenaOS image."
+	fail
+    fi
+}
+
+check_and_update_esp_flags() {
+    data_type="EBD0A0A2-B9E5-4433-87C0-68B6B72699C7"
+    esp_type="C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
+    esp_index="10"
+    resin_boot_index="14"
+
+    esp_part_type=$(sfdisk --part-type $internal_storage $esp_index)
+    resin_boot_part_type=$(sfdisk --part-type $internal_storage $resin_boot_index)
+
+    if [ "$esp_type" = "$esp_part_type" ]; then
+        info "esp partition has esp flag, will be cleared"
+        sfdisk --part-type $internal_storage $esp_index $data_type
+        sync
+    else
+        info "ok - esp partition does not have esp flag"
+    fi
+
+    if [ "$resin_boot_part_type" != "$esp_type" ]; then
+        info "resin-boot partition does not have esp type, must be added"
+        sfdisk --part-type $internal_storage $resin_boot_index $esp_type
+        sync
+    else
+        info "no type change needed on resin-boot partition"
+    fi
+}
+
+info "Bootloader blob is $bootloader_blob"
+
+# Save next active boot slot
+# so it can be processed by the UEFI bootloader
+process_bootslot_file() {
+    if [ "$DURING_UPDATE" = "1" ]; then
+        bootslotchar=$(nvbootctrl dump-slots-info | grep Active | awk '{print $4}')
+
+        info "bootslotchar is $bootslotchar"
+
+        if [ "$bootslotchar" = "A" ]; then
+            # next slot will be B
+            nextbootslot="1";
+        else
+            # next slot will be A
+            nextbootslot="0";
+        fi
+
+        info "Next boot slot is ${nextbootslot}. Will be written to bootslot.env"
+        echo "bootslot=${nextbootslot}" > /mnt/boot/bootslot.env
+        cat /mnt/boot/bootslot.env
+    else
+        info "During rollback, will remove bootslot.env"
+        rm -rf /mnt/boot/bootslot.env || true
+    fi
+}
+
+process_bootslot_file
+copy_jp5_dtb
+
+unload_spi_drivers() {
+    spi_modules=("spi_tegra210_quad" "spi_tegra114" "mtdblock")
+
+    for spi_module in "${spi_modules[@]}"
+    do
+        if lsmod | grep -q $spi_module ; then
+            info "Unloading $spi_module"
+            rmmod $spi_module
+            if [ $? -eq 0 ]; then
+                info "Unloaded $spi_module"
+            fi
+        fi
+    done
+}
+
+# Also unload SPI drivers before any
+# nvbootctrl call. When running in L4T
+# 36.3, this is mandatory to avoid
+# system hangs.
+do_capsule_update() {
+    # Unzip capsule to the boot partition
+    info "Will extract UEFI Capsule..."
+    mkdir -p /mnt/boot/EFI/UpdateCapsule/
+    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    sync
+    info "Extracted UEFI Capsule."
+    write_jetson_update_efivars
+}
+
+info "Pre-update A/B slots info:"
+info "=========================="
+/usr/sbin/nvbootctrl dump-slots-info || true
+info "=========================="
+
+check_running_l4t
+unload_spi_drivers
+do_capsule_update
+check_and_update_esp_flags

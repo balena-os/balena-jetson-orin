@@ -30,6 +30,8 @@ IMAGE_INSTALL:append = " \
     nvidia-kernel-oot-canbus nvidia-kernel-oot-virtualization nvidia-kernel-oot-base nvidia-drm-loadconf \
 "
 
+IMAGE_INSTALL:append:forecr-dsb-ornx = " can-utils "
+
 # We don't mount or use the esp partition, so let's
 # remove the systemd mounts that delay booting
 IMAGE_INSTALL:remove = "setup-nv-boot-control-service"

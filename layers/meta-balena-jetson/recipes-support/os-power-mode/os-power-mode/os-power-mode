@@ -96,6 +96,9 @@ else
         jetson-orin-nano-seeed-j3010)
             power_modes=(["low"]="2" ["mid"]="1" ["high"]="0")
             ;;
+        forecr-dsb-ornx-*)
+            power_modes=(["low"]="2" ["mid"]="1" ["high"]="0")
+            ;;
         *)
             fail "Unsupported device type: $MACHINE"
             ;;

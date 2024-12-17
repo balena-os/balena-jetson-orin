@@ -14,12 +14,18 @@ UEFI_CAPSULE:jetson-orin-nano-devkit-nvme = "TEGRA_BL_Orin_Nano.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nx-seeed-j4012 = "TEGRA_BL_Seeed_j4012.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nano-seeed-j3010 = "TEGRA_BL_Seeed_j3010.Cap.gz"
 UEFI_CAPSULE:jetson-agx-orin-devkit-64gb = "TEGRA_BL_3701_64.Cap.gz"
+UEFI_CAPSULE:forecr-dsb-ornx-orin-nano-8gb = "TEGRA_BL_Forecr_ORNX_Nano_8gb.Cap.gz"
+UEFI_CAPSULE:forecr-dsb-ornx-orin-nano-4gb = "TEGRA_BL_Forecr_ORNX_Nano_4gb.Cap.gz"
+UEFI_CAPSULE:forecr-dsb-ornx-orin-nx-16gb = "TEGRA_BL_Forecr_ORNX_NX_16gb.Cap.gz"
 
 BOOTBLOB:jetson-orin-nx-xavier-nx-devkit = "boot0_orin_nx_xavier_nx_devkit.img.gz"
 BOOTBLOB:jetson-orin-nano-devkit-nvme = "boot0_orin_nano_devkit_nvme.img.gz"
 BOOTBLOB:jetson-orin-nx-seeed-j4012 = "boot0_orin_nx_seed_j4012.img.gz"
 BOOTBLOB:jetson-orin-nano-seeed-j3010 = "boot0_orin_nano_seeed_j3010.img.gz"
 BOOTBLOB:jetson-agx-orin-devkit-64gb = "boot0_agx_orin_devkit_64.img.gz"
+BOOTBLOB:forecr-dsb-ornx-orin-nano-8gb = "boot0_forecr_dsb_ornx_orin_nano_8gb.img.gz"
+BOOTBLOB:forecr-dsb-ornx-orin-nano-4gb = "boot0_forecr_dsb_ornx_orin_nano_4gb.img.gz"
+BOOTBLOB:forecr-dsb-ornx-orin-nx-16gb = "boot0_forecr_dsb_ornx_orin_nx_16gb.img.gz"
 
 PARTSPEC:jetson-agx-orin-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nx-xavier-nx-devkit = "partition_specification234.txt"
@@ -27,6 +33,7 @@ PARTSPEC:jetson-orin-nano-devkit-nvme = "partition_specification234_orin_nano.tx
 PARTSPEC:jetson-orin-nx-seeed-j4012 = "partition_specification234_orin_nano.txt"
 PARTSPEC:jetson-orin-nano-seeed-j3010 = "partition_specification234_orin_nano.txt"
 PARTSPEC:jetson-agx-orin-devkit-64gb = "partition_specification234_orin_nano.txt"
+PARTSPEC:forecr-dsb-ornx = "partition_specification234_orin_nano.txt"
 
 BINARY_INSTALL_PATH = "/opt/tegra-binaries/"
 
