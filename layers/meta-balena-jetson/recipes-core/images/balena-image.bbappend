@@ -10,6 +10,7 @@ DEVICE_SPECIFIC_SPACE:jetson-orin-nano-devkit-nvme = "598016"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nx-seeed-j4012 = "598016"
 DEVICE_SPECIFIC_SPACE:jetson-orin-nano-seeed-j3010 = "598016"
 DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit-64gb = "598016"
+DEVICE_SPECIFIC_SPACE:forecr-dsb-ornx = "598016"
 
 BALENA_BOOT_SIZE:jetson-orin-nx-xavier-nx-devkit = "121440"
 BALENA_BOOT_SIZE:jetson-orin-nano-devkit-nvme = "121440"
@@ -22,6 +23,7 @@ IMAGE_ROOTFS_SIZE:jetson-orin-nx-seeed-j4012 = "733184"
 IMAGE_ROOTFS_SIZE:jetson-orin-nano-devkit-nvme = "733184"
 IMAGE_ROOTFS_SIZE:jetson-orin-nano-seeed-j3010 = "733184"
 IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit-64gb = "827392"
+IMAGE_ROOTFS_SIZE:forecr-dsb-ornx = "983040"
 
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
@@ -33,6 +35,7 @@ PART_SPEC_FILE:jetson-orin-nano-devkit-nvme = "partition_specification234_orin_n
 PART_SPEC_FILE:jetson-orin-nx-seeed-j4012 = "partition_specification234_orin_nano.txt"
 PART_SPEC_FILE:jetson-orin-nano-seeed-j3010 = "partition_specification234_orin_nano.txt"
 PART_SPEC_FILE:jetson-agx-orin-devkit-64gb = "partition_specification234_orin_nano.txt"
+PART_SPEC_FILE:forecr-dsb-ornx = "partition_specification234_orin_nano.txt"
 
 check_size() {
     file_path=${1}

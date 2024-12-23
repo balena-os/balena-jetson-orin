@@ -23,6 +23,9 @@ SRC_URI = " \
     file://0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow_patch.txt \
     file://0001-AGX-Orin-32GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
     file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
+    file://0001-Orin-Nano-0000-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
+    file://0001-Orin-Nano-0003-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
+    file://0001-Orin-Nano-0004-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
     file://0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
     file://0001-Seeed-J4012-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
     file://0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
