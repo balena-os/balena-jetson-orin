@@ -7,7 +7,7 @@ DONE_FLASHING  = 'After flashing is completed, please wait until the board is re
 module.exports =
 	version: 1
 	slug: 'forecr-dsb-ornx-orin-nx-16gb'
-	name: 'Forecr DSB ORNX / Orin NX 16GB'
+	name: 'Forecr DSB ORNX Orin NX 16GB'
 	arch: 'aarch64'
 	state: 'released'
 
