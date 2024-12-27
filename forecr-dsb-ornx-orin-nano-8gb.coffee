@@ -6,7 +6,7 @@ FLASH_TOOL = 'Unzip BalenaOS image and use <a href=\"https://github.com/balena-o
 DONE_FLASHING  = 'After flashing is completed, please wait until the board is rebooted'
 module.exports =
 	version: 1
-	slug: 'forecr-dsb-ornx-lan-orin-nano-8gb'
+	slug: 'forecr-dsb-ornx-orin-nano-8gb'
 	name: 'Forecr DSBOARD-ORNX-LAN Nano 8GB'
 	arch: 'aarch64'
 	state: 'released'
@@ -25,11 +25,11 @@ module.exports =
 	supportsBlink: false
 
 	yocto:
-		machine: 'forecr-dsb-ornx-lan-orin-nano-8gb'
+		machine: 'forecr-dsb-ornx-orin-nano-8gb'
 		image: 'balena-image-flasher'
 		fstype: 'balenaos-img'
 		version: 'yocto-kirkstone'
-		deployArtifact: 'balena-image-flasher-forecr-dsb-ornx-lan-orin-nano-8gb.balenaos-img'
+		deployArtifact: 'balena-image-flasher-forecr-dsb-ornx-orin-nano-8gb.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]

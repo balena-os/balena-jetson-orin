@@ -38,7 +38,7 @@ HOSTAPP_HOOKS:append:jetson-orin-nano-seeed-j3010 = " \
     99-resin-bootfiles-orin-nano-seeed-j3010 \
 "
 
-HOSTAPP_HOOKS:append:forecr-dsb-ornx-lan-orin-nano-8gb = " \
+HOSTAPP_HOOKS:append:forecr-dsb-ornx-orin-nano-8gb = " \
     99-resin-uboot \
     99-resin-bootfiles-forecr-dsb-ornx-lan-orin-nano-8gb \
 "
