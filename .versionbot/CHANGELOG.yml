@@ -1,4 +1,31 @@
 - commits:
+    - subject: "github/workflows: Add Forecr ORNX Orin Nano 8GB workflow file"
+      hash: b26362f4a3655b4ca0bdd650fd8de524e21e73dc
+      body: |
+        Since only one carrier board is available, autokit tests
+        can be run on one device at a time, same applies for
+        releasing them to production.
+      footer:
+        Changelog-entry: "github/workflows: Add Forecr ORNX Orin Nano 8GB workflow file"
+        changelog-entry: "github/workflows: Add Forecr ORNX Orin Nano 8GB workflow file"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "conf/machine: Forecr DSBOARD-ORNX-LAN"
+      hash: 6f9e56b4a20a8c0b62e0db0aa75bf0c81350e8bc
+      body: ""
+      footer:
+        Changelog-entry: "conf/machine: Forecr DSBOARD-ORNX-LAN"
+        changelog-entry: "conf/machine: Forecr DSBOARD-ORNX-LAN"
+        Signed-off-by: Alex Suykov <alex.suykov@sirinsoftware.com>
+        signed-off-by: Alex Suykov <alex.suykov@sirinsoftware.com>
+      author: Alex Suykov
+      nested: []
+  version: 6.2.5
+  title: ""
+  date: 2025-01-02T09:27:57.515Z
+- commits:
     - subject: "os-power-mode: Fix Orin Nano low power mode index"
       hash: 1b3e1791dbd4e43ddb330d7d567a872a62d99249
       body: |

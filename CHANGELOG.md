@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.2.5
+## (2025-01-02)
+
+* github/workflows: Add Forecr ORNX Orin Nano 8GB workflow file [Alexandru Costache]
+* conf/machine: Forecr DSBOARD-ORNX-LAN [Alex Suykov]
+
 # v6.1.24
 ## (2024-12-13)
 
