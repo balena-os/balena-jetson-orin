@@ -9,6 +9,12 @@ do_install[depends] += " nvidia-kernel-oot:do_deploy "
 
 SRC_URI += " file://tegra234-p3737-0000+p3701-0000-nv-spi.dtb "
 
+SRC_URI:append:forecr-dsb-ornx-lan = " \
+    file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0000-nv.dtb \
+    file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv.dtb \
+    file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0004-nv.dtb \
+"
+
 S = "${WORKDIR}"
 DTBNAME = "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
@@ -19,6 +25,13 @@ do_install() {
 
 do_install:append:jetson-agx-orin-devkit() {
 	install -m 0644 "${WORKDIR}/tegra234-p3737-0000+p3701-0000-nv-spi.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb"
+}
+
+# Forecr boards come with pre-built device trees.
+# DTBNAME comes from the the machine config
+do_install:forecr-dsb-ornx-lan() {
+	install -d ${D}/boot/
+	install -m 0644 "${WORKDIR}/forecr-dsb-ornx-lan/${DTBNAME}" "${D}/boot/${DTBNAME}"
 }
 
 FILES:${PN}:jetson-agx-orin-devkit += " \
@@ -40,4 +53,8 @@ FILES:${PN}:jetson-orin-nano-4g-devkit += " \
 
 FILES:${PN}:jetson-agx-orin-devkit-64gb += " \
 	/boot/tegra234-p3737-0000+p3701-0005-nv.dtb \
+"
+
+FILES:${PN}:forecr-dsb-ornx-lan += " \
+        /boot/${DTBNAME} \
 "
