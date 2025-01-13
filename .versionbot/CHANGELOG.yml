@@ -1,4 +1,28 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v6.2.8"
+      hash: 519955141ef73fd72f8fa682f7eb6f9bc8c08e04
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v6.2.8"
+        changelog-entry: "layers/meta-balena: Update to v6.2.8"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "workflows: Add workflow file for Forecr DSBOARD-ORNX-LAN Orin NX 16GB"
+      hash: d4f1ddc3623dd60ef6daf0b6927bf4529fd7d2a3
+      body: ""
+      footer:
+        Changelog-entry: "workflows: Add workflow file for Forecr DSBOARD-ORNX-LAN Orin NX 16GB"
+        changelog-entry: "workflows: Add workflow file for Forecr DSBOARD-ORNX-LAN Orin NX 16GB"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.2.8
+  title: ""
+  date: 2025-01-13T10:30:05.949Z
+- commits:
     - subject: "github/workflows: Add Forecr ORNX Orin Nano 8GB workflow file"
       hash: b26362f4a3655b4ca0bdd650fd8de524e21e73dc
       body: |

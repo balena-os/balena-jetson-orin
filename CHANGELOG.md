@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.2.8
+## (2025-01-13)
+
+* layers/meta-balena: Update to v6.2.8 [Alexandru Costache]
+* workflows: Add workflow file for Forecr DSBOARD-ORNX-LAN Orin NX 16GB [Alexandru Costache]
+
 # v6.2.5
 ## (2025-01-02)
 
