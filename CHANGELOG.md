@@ -1,6 +1,56 @@
 Change log
 -----------
 
+# v6.3.6
+## (2025-01-17)
+
+
+<details>
+<summary> Update layers/meta-balena to a65d804761370a77ce74c65db7a553ec8bfbe8da [balena-renovate[bot]] </summary>
+
+> ## meta-balena-6.3.6
+> ### (2025-01-17)
+> 
+> * images: balena-image*: Set balenaos-img.sig image type for signed builds [Alex Gonzalez]
+> * classes: balenaos-img.sig: Rename the sign image type to balenaos-img.sig [Alex Gonzalez]
+> * image_types_balena.bbclass: Move image signing code here [Florin Sarbu]
+> 
+> ## meta-balena-6.3.5
+> ### (2025-01-16)
+> 
+> * classes/kernel-balena: Avoid re-building kernel modules when not signed [Alexandru Costache]
+> 
+> ## meta-balena-6.3.4
+> ### (2025-01-16)
+> 
+> * workflows: iot-gate-imx8: add custom template path [Alex Gonzalez]
+> 
+> ## meta-balena-6.3.3
+> ### (2025-01-15)
+> 
+> * tests: hup: rollback-altboot: replace while loop over SSH to speed up tests [Ryan Cooke]
+> 
+> ## meta-balena-6.3.2
+> ### (2025-01-14)
+> 
+> * tests: secureboot: imx: refactor bootloader config integrity tests [Alex Gonzalez]
+> * tests: secureboot: imx: refactor bootloader integrity test [Alex Gonzalez]
+> * tests: secureboot: imx: support compressed files pattern replacement [Alex Gonzalez]
+> * tests: secureboot: fix function that confirms a failed boot [Alex Gonzalez]
+> 
+> ## meta-balena-6.3.1
+> ### (2025-01-13)
+> 
+> * peak: Update to version 8.19.0 [Florin Sarbu]
+> 
+> ## meta-balena-6.3.0
+> ### (2025-01-09)
+> 
+> * Update usb-modeswitch to version 2.6.1 [Florin Sarbu]
+> 
+
+</details>
+
 # v6.2.8
 ## (2025-01-13)
 
