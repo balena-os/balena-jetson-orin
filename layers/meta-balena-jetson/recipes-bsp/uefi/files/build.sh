@@ -18,6 +18,7 @@ device_specific_patches["jetson-agx-orin-devkit-64gb"]="0001-AGX-Orin-64GB-Integ
 device_specific_patches["forecr-dsb-ornx-orin-nano-8gb"]="$orin_nano_generic_patch"
 device_specific_patches["forecr-dsb-ornx-lan-orin-nano-4gb"]="$orin_nano_generic_patch"
 device_specific_patches["forecr-dsb-ornx-lan-orin-nx-16gb"]="$orin_nano_generic_patch"
+device_specific_patches["syslogic-rsa4na8"]="$orin_nano_generic_patch"
 
 edk2_patch="0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow.patch"
 edk2_nvidia_patches=( "0001-edk2-nvidia-Add-changes-for-balenaOS-integration.patch " \

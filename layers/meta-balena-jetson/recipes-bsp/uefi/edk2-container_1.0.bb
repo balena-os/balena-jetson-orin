@@ -21,6 +21,7 @@ DEFAULT_DTB:jetson-agx-orin-devkit-64gb = "tegra234-p3737-0000+p3701-0005-nv.dtb
 DEFAULT_DTB:forecr-dsb-ornx-orin-nano-8gb = "tegra234-p3768-0000+p3767-0003-nv.dtb"
 DEFAULT_DTB:forecr-dsb-ornx-lan-orin-nano-4gb ="tegra234-p3768-0000+p3767-0004-nv.dtb"
 DEFAULT_DTB:forecr-dsb-ornx-lan-orin-nx-16gb = "tegra234-p3768-0000+p3767-0000-nv.dtb"
+DEFAULT_DTB:syslogic-rsa4na8 = "tegra234-brma3n-11x-orin-nx.dtb"
 
 SRC_URI = " \
     https://raw.githubusercontent.com/NVIDIA/edk2/r36.4.3-updates/License.txt;downloadfilename=edk2_License.txt;name=edk2_license \
