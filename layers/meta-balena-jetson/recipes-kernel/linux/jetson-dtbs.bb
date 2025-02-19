@@ -78,3 +78,7 @@ FILES:${PN}:jetson-agx-orin-devkit-64gb += " \
 FILES:${PN}:forecr-dsb-ornx-lan += " \
         /boot/${DTBNAME} \
 "
+
+FILES:${PN}:syslogic-rsa4 += " \
+        /boot/${DTBNAME} \
+"
