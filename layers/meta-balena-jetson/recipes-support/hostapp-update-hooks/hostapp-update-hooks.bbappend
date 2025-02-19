@@ -52,3 +52,8 @@ HOSTAPP_HOOKS:append:forecr-dsb-ornx-lan-orin-nx-16gb = " \
     99-resin-uboot \
     99-resin-bootfiles-forecr-dsb-ornx-lan-orin-nx-16gb \
 "
+
+HOSTAPP_HOOKS:append:syslogic-rsa4na8 = " \
+    99-resin-uboot \
+    99-resin-bootfiles-syslogic-rsa4na8 \
+"
