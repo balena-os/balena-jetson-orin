@@ -1,0 +1,13 @@
+# Syslogic specific rules for brma3n (A4NA/A4NX) boards
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="pci", DRIVERS=="r8168", NAME="lan1"
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="pci", KERNELS=="0001:05:00.0", NAME="lan2"
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="pci", KERNELS=="0004:05:00.0", NAME="poe1"
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="pci", KERNELS=="0004:06:00.0", NAME="poe2"
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="pci", KERNELS=="0004:09:00.0", NAME="poe3"
+SUBSYSTEM=="net", ACTION=="add", SUBSYSTEMS=="pci", KERNELS=="0004:0a:00.0", NAME="poe4"
+
+
+
+
+
+
