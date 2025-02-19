@@ -20,6 +20,7 @@ UEFI_CAPSULE:jetson-agx-orin-devkit-64gb = "TEGRA_BL_3701_64.Cap.gz"
 UEFI_CAPSULE:forecr-dsb-ornx-orin-nano-8gb = "TEGRA_BL_Forecr_ORNX_LAN_Nano_8gb.Cap.gz"
 UEFI_CAPSULE:forecr-dsb-ornx-lan-orin-nano-4gb = "TEGRA_BL_Forecr_ORNX_LAN_Nano_4gb.Cap.gz"
 UEFI_CAPSULE:forecr-dsb-ornx-lan-orin-nx-16gb = "TEGRA_BL_Forecr_ORNX_LAN_NX_16gb.Cap.gz"
+UEFI_CAPSULE:syslogic-rsa4na8 = "TEGRA_BL_Syslogic_RSA4NA8.Cap.gz"
 
 # SPI flash images dumped after flashing the bootloader from L4T
 BOOTBLOB:jetson-agx-orin-devkit = "boot0_agx_orin_devkit.img.gz"
@@ -35,6 +36,7 @@ BOOTBLOB:jetson-orin-nano-seeed-j3010 = "boot0_orin_nano_seeed_j3010_super.img.g
 BOOTBLOB:forecr-dsb-ornx-orin-nano-8gb = "boot0_forecr_dsb_ornx_lan_orin_nano_8gb.img.gz"
 BOOTBLOB:forecr-dsb-ornx-lan-orin-nano-4gb = "boot0_forecr_dsb_ornx_lan_orin_nano_4gb.img.gz"
 BOOTBLOB:forecr-dsb-ornx-lan-orin-nx-16gb = "boot0_forecr_dsb_ornx_lan_orin_nx_16gb.img.gz"
+BOOTBLOB:syslogic-rsa4na8 = "boot0_syslogic_rsa4na8.img.gz"
 
 PARTSPEC:jetson-agx-orin-devkit = "partition_specification234.txt"
 PARTSPEC:jetson-orin-nx-xavier-nx-devkit = "partition_specification234.txt"
@@ -43,6 +45,7 @@ PARTSPEC:jetson-orin-nx-seeed-j4012 = "partition_specification234_orin_nano.txt"
 PARTSPEC:jetson-orin-nano-seeed-j3010 = "partition_specification234_orin_nano.txt"
 PARTSPEC:jetson-agx-orin-devkit-64gb = "partition_specification234_orin_nano.txt"
 PARTSPEC:forecr-dsb-ornx-lan = "partition_specification234_orin_nano.txt"
+PARTSPEC:syslogic-rsa4 = "partition_specification234_orin_nano.txt"
 
 BINARY_INSTALL_PATH = "/opt/tegra-binaries/"
 
