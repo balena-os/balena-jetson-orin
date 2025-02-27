@@ -13,10 +13,10 @@ SRC_URI[edk2_nvidia_license.sha256sum] = "cbae92214cd28ebe743fa231c94b203680fdd0
 SRC_URI[nvgop_chips_platform_license.sha256sum] = "a9406324c8b0d836558c6d6825d1ec756f34f71471e8c7725d32d7016b6a6ad4"
 
 SRC_URI = " \
-    https://raw.githubusercontent.com/NVIDIA/edk2/r36.3.0-updates/License.txt;downloadfilename=edk2_License.txt;name=edk2_license \
-    https://raw.githubusercontent.com/NVIDIA/edk2-platforms/r36.3.0-updates/License.txt;downloadfilename=edk2-platforms_License.txt;name=edk2_platforms_license \
-    https://raw.githubusercontent.com/NVIDIA/edk2-nvidia/r36.3.0-updates/LICENSE;downloadfilename=edk2-nvidia_LICENSE;name=edk2_nvidia_license \
-    https://raw.githubusercontent.com/NVIDIA/edk2-nvidia-non-osi/r36.3.0-updates/Silicon/NVIDIA/Drivers/NvGopDriver/NOTICE.nvgop-chips-platform.efi;name=nvgop_chips_platform_license \
+    https://raw.githubusercontent.com/NVIDIA/edk2/r36.4.3-updates/License.txt;downloadfilename=edk2_License.txt;name=edk2_license \
+    https://raw.githubusercontent.com/NVIDIA/edk2-platforms/r36.4.3-updates/License.txt;downloadfilename=edk2-platforms_License.txt;name=edk2_platforms_license \
+    https://raw.githubusercontent.com/NVIDIA/edk2-nvidia/r36.4.3-updates/LICENSE;downloadfilename=edk2-nvidia_LICENSE;name=edk2_nvidia_license \
+    https://raw.githubusercontent.com/NVIDIA/edk2-nvidia-non-osi/r36.4.3-updates/Silicon/NVIDIA/Drivers/NvGopDriver/NOTICE.nvgop-chips-platform.efi;name=nvgop_chips_platform_license \
     file://Dockerfile \
     file://build.sh \
     file://0001-edk2-nvidia-Add-changes-for-balenaOS-integration_patch.txt \
@@ -52,8 +52,8 @@ do_compile () {
 
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
 
-    DOCKER_API_VERSION=1.22 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"
-    DOCKER_API_VERSION=1.22 docker run --rm -v ${WORKDIR}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build/build.sh && cp /build/nvidia-uefi/images/uefi_Jetson_DEBUG.bin /out/uefi_jetson.bin && cp /build/nvidia-uefi/images/BOOTAA64_Jetson_DEBUG.efi /out/BOOTAA64.efi"
+    DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"
+    DOCKER_API_VERSION=1.24 docker run --rm -v ${WORKDIR}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build/build.sh && cp /build/nvidia-uefi/images/uefi_Jetson_DEBUG.bin /out/uefi_jetson.bin && cp /build/nvidia-uefi/images/BOOTAA64_Jetson_DEBUG.efi /out/BOOTAA64.efi"
 }
 
 do_compile[network] = "1"
@@ -78,7 +78,7 @@ do_deploy () {
 
 FILES:${PN} = " /opt/tegra-binaries/ "
 
-do_compile[nostamp] = "1"
-do_deploy[nostamp] = "1"
+#do_compile[nostamp] = "1"
+#do_deploy[nostamp] = "1"
 
 addtask do_deploy before do_package after do_install

@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y git vim && \
     mkdir build && cd build && \
     edkrepo manifest-repos add nvidia https://github.com/NVIDIA/edk2-edkrepo-manifest.git main nvidia && \
-    edkrepo clone nvidia-uefi NVIDIA-Platforms r36.3.0-updates
+    edkrepo clone nvidia-uefi NVIDIA-Platforms r36.4.3-updates
 
 # We created this dockerfile and the corresponding build script using the
 # edk2 container build documentation available at https://github.com/NVIDIA/edk2-nvidia/wiki/Build-with-docker
