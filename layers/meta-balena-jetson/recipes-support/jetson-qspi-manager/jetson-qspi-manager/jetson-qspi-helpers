@@ -26,6 +26,7 @@ boardspec=$(tegra-boardspec 2>/dev/null)
 TegraPlatformSpec="${boardspec}-${device_type}-"
 compatspec=$(echo "$boardspec" | gen_compat_spec)
 TegraPlatformCompatSpec="${compatspec}-${device_type}-"
+kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
 
 qspi_accessible() {
     if [ -e /dev/mtd0 ]; then
@@ -71,9 +72,9 @@ write_jetson_update_efivars() {
             dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
             #info "PlatformCompatSpec variable created"
         else
-            #info "PlatformCompatSpec variable already exists"
-            if [[ ${kernel_l4t} == "36.3" ]]; then
-                #info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
+            info "PlatformCompatSpec variable already exists and kernel L4T is ${kernel_l4t}"
+            if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]]; then
+                info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
                 chattr -i ${platform_compat_spec_efivar}
                 printf "\x07\x00\x00\x00" > ${tmp_file}
                 printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}

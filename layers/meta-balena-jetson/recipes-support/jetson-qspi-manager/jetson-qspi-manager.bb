@@ -16,7 +16,7 @@ RDEPENDS:${PN} += " bash "
 
 inherit allarch systemd
 
-COMPAT_SPEC_NAME="jetson-orin-nano-devkit"
+COMPAT_SPEC_NAME="jetson-orin-nano-devkit-super"
 COMPAT_SPEC_NAME:jetson-agx-orin-devkit="jetson-agx-orin-devkit"
 COMPAT_SPEC_NAME:jetson-agx-orin-devkit-64gb="jetson-agx-orin-devkit"
 
