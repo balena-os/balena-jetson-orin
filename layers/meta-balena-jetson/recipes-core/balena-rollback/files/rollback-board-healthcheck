@@ -11,6 +11,5 @@ echo "Rollback: Kernel L4T version: ${kernel_l4t}"
 if [[ "$fw_version" == "$kernel_l4t" ]]; then
     echo "Rollback: L4T versions match"
 else
-    echo "Rollback: L4T versions do not match"
-    exit 1
+    echo "Rollback: L4T versions do not match - QSPI will need to be updated entirely from the hostOS"
 fi
