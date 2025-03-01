@@ -52,6 +52,13 @@ apply_bs_fix() {
             info "Applied spi unbind procedure to ${hook_file}"
         fi
 
+	if grep -q "36.4" ${hook_file} ; then
+	    info "Old hook already patched for 36.4 rollback support"
+	else
+            info "36.4 not found in old hook, doing fix"
+            sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\]/g' ${hook_file}
+            sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\]/g' ${hook_file}
+        fi
     done
 }
 
@@ -165,7 +172,7 @@ do_capsule_update() {
     # Unzip capsule to the boot partition
     info "Will extract UEFI Capsule..."
     mkdir -p /mnt/boot/EFI/UpdateCapsule/
-    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap conv=fdatasync
     sync
     info "Extracted UEFI Capsule."
     write_jetson_update_efivars
@@ -181,3 +188,5 @@ apply_bs_fix
 unload_spi_drivers
 do_capsule_update
 check_and_update_esp_flags
+sync /mnt/boot/
+sync ${internal_storage}
