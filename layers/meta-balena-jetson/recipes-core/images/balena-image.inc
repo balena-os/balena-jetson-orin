@@ -29,7 +29,7 @@ IMAGE_INSTALL:append = " \
     tegra-tools-tegrastats tegra-tools-jetson-clocks \
     nvidia-kernel-oot-devicetrees nvidia-kernel-oot-display nvidia-kernel-oot-cameras nvidia-kernel-oot-bluetooth nvidia-kernel-oot-wifi \
     nvidia-kernel-oot-canbus nvidia-kernel-oot-virtualization nvidia-kernel-oot-base nvidia-drm-loadconf \
-    nvidia-kernel-oot-extra \
+    kernel-module-r8126 kernel-module-r8168 \
 "
 
 IMAGE_INSTALL:append:forecr-dsb-ornx-lan = " can-utils "
