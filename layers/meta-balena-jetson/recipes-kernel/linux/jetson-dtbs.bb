@@ -40,6 +40,10 @@ do_install:append:jetson-orin-nano-devkit-nvme() {
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/tegra234-p3768-0000+p3767-0003-nv-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb"
 }
 
+do_install:append:jetson-orin-nx-xavier-nx-devkit() {
+        install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/tegra234-p3768-0000+p3767-0000-nv.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0000-nv.dtb"
+}
+
 FILES:${PN}:jetson-agx-orin-devkit += " \
 	/boot/tegra234-p3737-0000+p3701-0000-nv.dtb \
 	/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb \
@@ -47,6 +51,7 @@ FILES:${PN}:jetson-agx-orin-devkit += " \
 
 FILES:${PN}:jetson-orin-nx-xavier-nx-devkit += " \
 	/boot/tegra234-p3768-0000+p3767-0000-nv.dtb \
+	/boot/tegra234-p3768-0000+p3767-0000-nv-super.dtb \
 "
 
 FILES:${PN}:jetson-orin-nano-devkit-nvme += " \
