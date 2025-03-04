@@ -12,6 +12,16 @@ SRC_URI[edk2_platforms_license.sha256sum] = "50ce20c9cfdb0e19ee34fe0a51fc0afe961
 SRC_URI[edk2_nvidia_license.sha256sum] = "cbae92214cd28ebe743fa231c94b203680fdd0275fd8e1b3de7023a38e1bb232"
 SRC_URI[nvgop_chips_platform_license.sha256sum] = "a9406324c8b0d836558c6d6825d1ec756f34f71471e8c7725d32d7016b6a6ad4"
 
+DEFAULT_DTB:jetson-orin-nano-devkit-nvme = "tegra234-p3768-0000+p3767-0005-nv-super.dtb"
+DEFAULT_DTB:jetson-agx-orin-devkit = "tegra234-p3737-0000+p3701-0000-nv.dtb"
+DEFAULT_DTB:jetson-orin-nx-xavier-nx-devkit = "tegra234-p3768-0000+p3767-0000-nv-super.dtb"
+DEFAULT_DTB:jetson-orin-nx-seeed-j4012 ="tegra234-p3768-0000+p3767-0000-nv.dtb"
+DEFAULT_DTB:jetson-orin-nano-seeed-j3010 ="tegra234-p3768-0000+p3767-0004-nv.dtb"
+DEFAULT_DTB:jetson-agx-orin-devkit-64gb = "tegra234-p3737-0000+p3701-0005-nv.dtb"
+DEFAULT_DTB:forecr-dsb-ornx-orin-nano-8gb = "tegra234-p3768-0000+p3767-0003-nv.dtb"
+DEFAULT_DTB:forecr-dsb-ornx-lan-orin-nano-4gb ="tegra234-p3768-0000+p3767-0004-nv.dtb"
+DEFAULT_DTB:forecr-dsb-ornx-lan-orin-nx-16gb = "tegra234-p3768-0000+p3767-0000-nv.dtb"
+
 SRC_URI = " \
     https://raw.githubusercontent.com/NVIDIA/edk2/r36.4.3-updates/License.txt;downloadfilename=edk2_License.txt;name=edk2_license \
     https://raw.githubusercontent.com/NVIDIA/edk2-platforms/r36.4.3-updates/License.txt;downloadfilename=edk2-platforms_License.txt;name=edk2_platforms_license \
@@ -21,15 +31,10 @@ SRC_URI = " \
     file://build.sh \
     file://0001-edk2-nvidia-Add-changes-for-balenaOS-integration_patch.txt \
     file://0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow_patch.txt \
-    file://0001-AGX-Orin-32GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
-    file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
-    file://0001-Orin-Nano-0000-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
-    file://0001-Orin-Nano-0003-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
-    file://0001-Orin-Nano-0004-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
-    file://0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
-    file://0001-Seeed-J4012-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
-    file://0001-Seeed-J3010-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
-    file://0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-36.3_patch.txt \
+    file://0001-AGX-Orin-32GB-Integrate-with-balenaOS-on-L4T-36.4_patch.txt \
+    file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-36.4_patch.txt \
+    file://0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.4_patch.txt \
+    file://0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-36.4_patch.txt \
     file://0001-edk2-nvidia-Remove-pva-fw-from-required-list_patch.txt \
     file://0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit_patch.txt \
     file://0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe_patch.txt \
@@ -52,8 +57,9 @@ do_compile () {
 
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
 
-    DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"
-    DOCKER_API_VERSION=1.24 docker run --rm -v ${WORKDIR}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build/build.sh && cp /build/nvidia-uefi/images/uefi_Jetson_DEBUG.bin /out/uefi_jetson.bin && cp /build/nvidia-uefi/images/BOOTAA64_Jetson_DEBUG.efi /out/BOOTAA64.efi"
+    DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}" --build-arg "DEFAULT_DTB=${DEFAULT_DTB}"
+    DOCKER_API_VERSION=1.24 docker run --rm -v ${WORKDIR}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" -e "DEFAULT_DTB=${DEFAULT_DTB}" ${IMAGETAG} su /bin/bash -c "/build/build.sh && cp /build/nvidia-uefi/images/uefi_Jetson_DEBUG.bin /out/uefi_jetson.bin && cp /build/nvidia-uefi/images/BOOTAA64_Jetson_DEBUG.efi /out/BOOTAA64.efi"
+    DOCKER_API_VERSION=1.24 docker rmi -f ${IMAGETAG}
 }
 
 do_compile[network] = "1"
@@ -78,7 +84,7 @@ do_deploy () {
 
 FILES:${PN} = " /opt/tegra-binaries/ "
 
-#do_compile[nostamp] = "1"
-#do_deploy[nostamp] = "1"
+do_compile[nostamp] = "1"
+do_deploy[nostamp] = "1"
 
 addtask do_deploy before do_package after do_install
