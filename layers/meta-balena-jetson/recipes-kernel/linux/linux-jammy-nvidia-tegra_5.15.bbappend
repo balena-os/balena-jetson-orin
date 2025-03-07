@@ -157,6 +157,8 @@ L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=tty0 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} rootdelay=1 roottimeout=60 "
 
+KERNEL_ARGS:remove="nospectre_bhb"
+
 generate_extlinux_conf() {
     mkdir -p ${DEPLOY_DIR_IMAGE}/extlinux || true
     kernelRootspec="${KERNEL_ARGS}" ; cat >${DEPLOY_DIR_IMAGE}/extlinux/extlinux.conf << EOF
