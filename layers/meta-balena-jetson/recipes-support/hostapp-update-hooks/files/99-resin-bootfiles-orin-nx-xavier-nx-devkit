@@ -32,7 +32,6 @@ TegraPlatformCompatSpec="${compatspec}-${device_type}-"
 fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
 kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
 active_sysroot="/mnt/sysroot/active/current/boot/"
-jp5_default_dtb_name="tegra234-p3767-0000-p3509-a02.dtb"
 jp6_default_dtb_name="tegra234-p3768-0000+p3767-0000-nv.dtb"
 jp6_2_default_dtb_name="tegra234-p3768-0000+p3767-0000-nv-super.dtb"
 
@@ -60,12 +59,11 @@ apply_bs_fix() {
             sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\]/g' ${hook_file}
             sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\]/g' ${hook_file}
         fi
-        if [[ ${kernel_l4t} == "36.3" ]] && [ -f ${active_sysroot}${jp6_default_dtb_name} ] ; then
-            info "Updating from in L4T 36.3 - copying JP6 default device-tree to JP6.2 default device-tree for rollback-altboot support"
-	    cp ${active_sysroot}${jp6_default_dtb_name} ${active_sysroot}${jp6_2_default_dtb_name}
-        fi
-
     done
+    if [[ ${kernel_l4t} == "36.3" ]] && [ -f ${active_sysroot}${jp6_default_dtb_name} ] ; then
+        info "Updating from in L4T 36.3 - copying JP6 default device-tree to JP6.2 default device-tree for rollback-altboot support"
+        cp ${active_sysroot}${jp6_default_dtb_name} ${active_sysroot}${jp6_2_default_dtb_name}
+    fi
 }
 
 write_jetson_update_efivars() {

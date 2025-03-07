@@ -58,11 +58,11 @@ apply_bs_fix() {
             sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\]/g' ${hook_file}
             sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\]/g' ${hook_file}
         fi
-        if [[ ${kernel_l4t} == "36.3" ]] && [ -f ${active_sysroot}${jp6_default_dtb_name} ] ; then
-            info "Updating from in L4T 36.3 - copying JP6 default device-tree to JP6.2 default device-tree for rollback-altboot support"
-	    cp ${active_sysroot}${jp6_default_dtb_name} ${active_sysroot}${jp6_2_default_dtb_name}
-        fi
     done
+    if [[ ${kernel_l4t} == "36.3" ]] && [ -f ${active_sysroot}${jp6_default_dtb_name} ] ; then
+        info "Updating from in L4T 36.3 - copying JP6 default device-tree to JP6.2 default device-tree for rollback-altboot support"
+        cp ${active_sysroot}${jp6_default_dtb_name} ${active_sysroot}${jp6_2_default_dtb_name}
+    fi
 }
 
 write_jetson_update_efivars() {
