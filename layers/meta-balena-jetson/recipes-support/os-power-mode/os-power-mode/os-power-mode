@@ -10,12 +10,14 @@
 #
 #  AGX Orin Industrial:  Low = 15W (1),    Mid = 60W (3),   High = MAXN (0) - [N/A]
 #
-#  Orin NX 16GB:         Low = 10W (1),    Mid = 25W (3),   High = MAXN (0) - [jetson-orin-nx-xavier-nx-devkit, jetson-orin-nx-seeed-j4012]
+#  Orin NX 16GB Super:   Low = 10W (1),    Mid = 40W (4),   High = MAXN_SUPER (0) - [jetson-orin-nx-xavier-nx-devkit]
 #
-#  Orin Nano 8GB (SD):   Low = 7W  (1),    Mid = 15W (0),   High = 15W  (0) - [jetson-orin-nano-devkit-nvme]
+#  Orin Nano 8GB Super:  Low = 15W  (0),   Mid = 25W (1),   High = MAXN_SUPER (2) - [jetson-orin-nano-devkit-nvme]
 #
-#  Orin Nano 4GB:        Low = 7W_CPU (2), Mid = 7W_AI (1), High = 10W (0)  - [jetson-orin-nano-seeed-j3010]
-
+#  Orin Nano 4GB Super:  Low = 10W (0),    Mid = 25W (1),   High = MAXN_SUPER (2) - [jetson-orin-nano-seeed-j3010]
+#
+#  The current Seeed J4012 carrier boards do not support MAXN_SUPER and hence preserve the JP6.0 default power modes
+#  Orin NX 16GB:         Low = 10W (0),    Mid = 25W (3),   High = MAXN (0) - [jetson-orin-nx-seeed-j4012]
 
 set -e
 
@@ -87,14 +89,17 @@ else
     fi
 
     case $MACHINE in
-        jetson-agx-orin-devkit|jetson-agx-orin-devkit-64gb|jetson-agx-orin-industrial|jetson-orin-nx-xavier-nx-devkit|jetson-orin-nx-seeed-j4012)
+        jetson-agx-orin-devkit|jetson-agx-orin-devkit-64gb|jetson-agx-orin-industrial|jetson-orin-nx-seeed-j4012)
             power_modes=(["low"]="1" ["mid"]="3" ["high"]="0")
             ;;
+        jetson-orin-nx-xavier-nx-devkit)
+            power_modes=(["low"]="1" ["mid"]="4" ["high"]="0")
+            ;;
         jetson-orin-nano-devkit-nvme)
-            power_modes=(["low"]="1" ["mid"]="0" ["high"]="0")
+            power_modes=(["low"]="0" ["mid"]="1" ["high"]="2")
             ;;
         jetson-orin-nano-seeed-j3010)
-            power_modes=(["low"]="2" ["mid"]="1" ["high"]="0")
+            power_modes=(["low"]="0" ["mid"]="1" ["high"]="2")
             ;;
         forecr-dsb-ornx-lan-orin-nano-4gb)
             power_modes=(["low"]="2" ["mid"]="1" ["high"]="0")
