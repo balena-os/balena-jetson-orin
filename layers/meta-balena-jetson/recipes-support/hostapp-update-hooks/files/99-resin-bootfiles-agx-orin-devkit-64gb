@@ -33,6 +33,19 @@ fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version:
 kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
 active_sysroot="/mnt/sysroot/active/current/boot/"
 
+# This allows old hooks to run in newer L4T versions
+update_old_hooks() {
+    for hook_file in `find /mnt/sysroot/active/ -name "99-resin-bootfiles-agx-orin-devkit-64gb" -type f`; do	
+        if grep -q "36.4" ${hook_file} ; then
+            info "Old hook already patched for 36.4 rollback support"
+        else
+            info "36.4 not found in old hook, doing fix"
+            sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\]/g' ${hook_file}
+            sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\]/g' ${hook_file}
+        fi
+    done
+}
+
 write_jetson_update_efivars() {
     info "Writing of jetson efivars triggered from old OS hook"
     if [ -d $efivars_dir ]; then
@@ -56,7 +69,7 @@ write_jetson_update_efivars() {
             info "PlatformCompatSpec variable created"
         else
             info "PlatformCompatSpec variable already exists"
-            if [[ ${kernel_l4t} == "36.3" ]]; then
+            if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]]; then
                 info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
                 chattr -i ${platform_compat_spec_efivar}
                 printf "\x07\x00\x00\x00" > ${tmp_file}
@@ -78,33 +91,6 @@ write_jetson_update_efivars() {
 }
 
 info "Bootloader blob is $bootloader_blob"
-
-# Save next active boot slot
-# so it can be processed by the UEFI bootloader
-process_bootslot_file() {
-    if [ "$DURING_UPDATE" = "1" ]; then
-        bootslotchar=$(nvbootctrl dump-slots-info | grep Active | awk '{print $4}')
-
-        info "bootslotchar is $bootslotchar"
-
-        if [ "$bootslotchar" = "A" ]; then
-            # next slot will be B
-            nextbootslot="1";
-        else
-            # next slot will be A
-            nextbootslot="0";
-        fi
-
-        info "Next boot slot is ${nextbootslot}. Will be written to bootslot.env"
-        echo "bootslot=${nextbootslot}" > /mnt/boot/bootslot.env
-        cat /mnt/boot/bootslot.env
-    else
-        info "During rollback, will remove bootslot.env"
-        rm -rf /mnt/boot/bootslot.env || true
-    fi
-}
-
-process_bootslot_file
 
 unload_spi_drivers() {
     spi_modules=("spi_tegra210_quad" "spi_tegra114" "mtdblock")
@@ -129,7 +115,7 @@ do_capsule_update() {
     # Unzip capsule to the boot partition
     info "Will extract UEFI Capsule..."
     mkdir -p /mnt/boot/EFI/UpdateCapsule/
-    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap conv=fdatasync
     sync
     info "Extracted UEFI Capsule."
     write_jetson_update_efivars
