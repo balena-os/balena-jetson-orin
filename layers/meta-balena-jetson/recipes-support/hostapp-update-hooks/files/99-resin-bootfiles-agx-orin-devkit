@@ -28,9 +28,6 @@ TegraPlatformCompatSpec="${compatspec}-${device_type}-"
 fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
 kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
 active_sysroot="/mnt/sysroot/active/current/boot/"
-jp5_default_dtb_name="tegra234-p3701-0000-p3737-0000.dtb"
-jp6_default_dtb_name="tegra234-p3737-0000+p3701-0000-nv.dtb"
-
 
 apply_bs_fix() {
     for hook_file in `find /mnt/sysroot/active/ -name "99-resin-bootfiles-agx-orin-devkit" -type f`; do
@@ -49,19 +46,15 @@ apply_bs_fix() {
             sed -i '3 i if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi; ' ${hook_file}
             info "Applied spi unbind procedure to ${hook_file}"
         fi
-
+        if grep -q "36.4" ${hook_file} ; then
+            info "Old hook already patched for 36.4 rollback support"
+        else
+            info "36.4 not found in old hook, doing fix"
+            sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\]/g' ${hook_file}
+            sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\]/g' ${hook_file}
+        fi
     done
 }
-
-copy_jp5_dtb() {
-    if [ -f ${active_sysroot}${jp5_default_dtb_name} ]; then
-        cp ${active_sysroot}${jp5_default_dtb_name} ${active_sysroot}${jp6_default_dtb_name} || true
-        info "Copied old dtb under new name"
-    else
-        info "Jetpack 5 default device-tree not found"
-    fi
-}
-
 
 write_jetson_update_efivars() {
     info "Writing of jetson efivars triggered from old OS hook"
@@ -86,8 +79,8 @@ write_jetson_update_efivars() {
             info "PlatformCompatSpec variable created"
         else
             info "PlatformCompatSpec variable already exists"
-	    if [[ ${kernel_l4t} == "36.3" ]]; then
-                info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
+	    if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]]; then
+                info "PlatformCompatSpec variable already exists and we are running in L4T 36.X, it needs to be re-written."
                 chattr -i ${platform_compat_spec_efivar}
                 printf "\x07\x00\x00\x00" > ${tmp_file}
                 printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
@@ -112,7 +105,7 @@ check_running_l4t() {
     kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
     old_extlinux_file="/mnt/sysroot/inactive/current/boot/extlinux/extlinux.conf"
 
-    if [[ "$fw_version" == "35.5" ]] || [[ "$fw_version" == "36.3" ]]; then
+    if [[ "$fw_version" == "35.5" ]] || [[ "$fw_version" == "36.3" ]] || [[ "$fw_version" == "36.4" ]]; then
         info "Firmware version $fw_version is suitable for Jetpack 6 upgrade."
 	# mtd may cause interference with sporadic failures when writing efivars
 	if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi;
@@ -149,34 +142,6 @@ check_and_update_esp_flags() {
 
 info "Bootloader blob is $bootloader_blob"
 
-# Save next active boot slot
-# so it can be processed by the UEFI bootloader
-process_bootslot_file() {
-    if [ "$DURING_UPDATE" = "1" ]; then
-        bootslotchar=$(nvbootctrl dump-slots-info | grep Active | awk '{print $4}')
-
-        info "bootslotchar is $bootslotchar"
-
-        if [ "$bootslotchar" = "A" ]; then
-            # next slot will be B
-            nextbootslot="1";
-        else
-            # next slot will be A
-            nextbootslot="0";
-        fi
-
-        info "Next boot slot is ${nextbootslot}. Will be written to bootslot.env"
-        echo "bootslot=${nextbootslot}" > /mnt/boot/bootslot.env
-        cat /mnt/boot/bootslot.env
-    else
-        info "During rollback, will remove bootslot.env"
-        rm -rf /mnt/boot/bootslot.env || true
-    fi
-}
-
-process_bootslot_file
-copy_jp5_dtb
-
 unload_spi_drivers() {
     spi_modules=("spi_tegra210_quad" "spi_tegra114" "mtdblock")
 
@@ -207,7 +172,7 @@ do_capsule_update() {
     # Unzip capsule to the esp partition, because the uncompressed capsule size
     # is too large for the boot partition
     mkdir -p "${esp_tmp_dir}${capsule_dir}"
-    gunzip -k -c ${bootloader_blob} | dd of="${esp_tmp_dir}${capsule_dir}TEGRA_BL.Cap"
+    gunzip -k -c ${bootloader_blob} | dd of="${esp_tmp_dir}${capsule_dir}TEGRA_BL.Cap"  conv=fdatasync
     sync
     umount $esp_dev
     rm -rf $esp_tmp_dir || true
