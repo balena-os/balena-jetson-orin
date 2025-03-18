@@ -1,4 +1,32 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v6.4.0"
+      hash: 6fa40e2cf7fced50fb8b9dda67b45377b070a341
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v6.4.0"
+        changelog-entry: "layers/meta-balena: Update to v6.4.0"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "layers/meta-tegra: Switch to our modified lt4 36.4.3 fork of meta-tegra"
+      hash: 587d811d02e4160605d4d49eb525496087ef1d65
+      body: |
+        This forked and modified branch allows for building l4t 36.4.3
+        with Kirkstone
+      footer:
+        Changelog-entry: "layers/meta-tegra: Switch to our modified lt4 36.4.3 fork of
+          meta-tegra"
+        changelog-entry: "layers/meta-tegra: Switch to our modified lt4 36.4.3 fork of
+          meta-tegra"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.4.0
+  title: ""
+  date: 2025-03-18T10:47:53.960Z
+- commits:
     - subject: Update layers/meta-balena to a65d804761370a77ce74c65db7a553ec8bfbe8da
       hash: a8f009857adeb02c42a55dd301e4551350f83a74
       body: Update layers/meta-balena

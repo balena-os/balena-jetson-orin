@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.4.0
+## (2025-03-18)
+
+* layers/meta-balena: Update to v6.4.0 [Alexandru Costache]
+* layers/meta-tegra: Switch to our modified lt4 36.4.3 fork of meta-tegra [Alexandru Costache]
+
 # v6.3.6
 ## (2025-01-17)
 
