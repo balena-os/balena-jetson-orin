@@ -153,6 +153,21 @@ BALENA_CONFIGS[lan743x] = " \
     CONFIG_LAN743X=m \
 "
 
+BALENA_CONFIGS:append:syslogic-rsa4 = " mcp251xfd "
+BALENA_CONFIGS[mcp251xfd] = " \
+    CONFIG_CAN_MCP251XFD=m \
+"
+
+BALENA_CONFIGS:append:syslogic-rsa4 = " can-j1939 "
+BALENA_CONFIGS[can-j1939] = " \
+    CONFIG_CAN_J1939=m \
+"
+
+BALENA_CONFIGS:append:syslogic-rsa4 = " igc "
+BALENA_CONFIGS[igc] = " \
+    CONFIG_IGC=m \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=tty0 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} rootdelay=1 roottimeout=60 "
