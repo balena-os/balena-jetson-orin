@@ -5,7 +5,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 # In Jetpack 6.2 the nvidia-kernel-oot-dtb deploys all device-trees
-do_install[depends] += " nvidia-kernel-oot-dtb:do_deploy "
+do_install[depends] += " virtual/dtb:do_deploy "
 
 SRC_URI += " file://tegra234-p3737-0000+p3701-0000-nv-spi.dtb "
 
