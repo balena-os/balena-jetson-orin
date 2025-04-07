@@ -1,0 +1,5 @@
+Software Disclaimer:
+In addition to the hardware, Syslogic provides a basic operating system for development purposes based on Linux4Tegra (L4T) in combination with the Jetpack library from NVIDIA.
+This operating system image has been slightly modified by Syslogic to ensure hardware compatibility with the installed components.
+In fact, the core operating system remains the Ubuntu-based distribution provided by NVIDIA with all its features and limitations. 
+The customer is responsible for the appropriate licensing, final configuration, maintenance and security of the system (e.g. adding new software packages, configuration of wireless modules including country-specific settings, etc.) as well as any middleware required for the customer application (AI). In addition, the license terms of the respective packages, libraries and NVIDIA apply.

@@ -1,0 +1,9 @@
+virtual/dtb packages for vendor-supplied device trees
+
+These are meant to replace nvidia-kernel-oot-devicetrees,
+which is the default option and contains the trees supplied
+by Nvidia as a part of the nvidia-kernel-oot bundle.
+
+The structure is a bit weird because it is a drop-in replacements
+for nvidia's package.
+See meta-tegra/recipes-kernel/nvidia-kernel-oot/nvidia-kernel-oot-dtb*
