@@ -13,6 +13,7 @@ SRC_URI:append:forecr-dsb-ornx-lan = " \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0000-nv.dtb \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv.dtb \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0004-nv.dtb \
+    file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv-super.dtb \
 "
 
 S = "${WORKDIR}"
