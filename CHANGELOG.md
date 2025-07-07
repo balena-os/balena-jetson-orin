@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v6.5.25
+## (2025-07-07)
+
+* balena-yocto-scripts: Update to v1.35.3 [Alexandru Costache]
+* layers/meta-balena: Update to v6.5.25 [Alexandru Costache]
+* balena-image: Fix sporadic error caued by missing extra_uEnv.txt [Alexandru Costache]
+
 # v6.4.0
 ## (2025-03-18)
 

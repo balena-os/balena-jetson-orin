@@ -1,4 +1,38 @@
 - commits:
+    - subject: "balena-yocto-scripts: Update to v1.35.3"
+      hash: 781b0fc98b4c22703911daabe6ffb1f64dd245c7
+      body: ""
+      footer:
+        Changelog-entry: "balena-yocto-scripts: Update to v1.35.3"
+        changelog-entry: "balena-yocto-scripts: Update to v1.35.3"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "layers/meta-balena: Update to v6.5.25"
+      hash: eadfad6890299f69a6c18ede513162bd3e8b2c58
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v6.5.25"
+        changelog-entry: "layers/meta-balena: Update to v6.5.25"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "balena-image: Fix sporadic error caued by missing extra_uEnv.txt"
+      hash: f2e4b7c2dd75ef54a79cf76ce7ca8b12cd24139d
+      body: ""
+      footer:
+        Changelog-entry: "balena-image: Fix sporadic error caued by missing extra_uEnv.txt"
+        changelog-entry: "balena-image: Fix sporadic error caued by missing extra_uEnv.txt"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.5.25
+  title: ""
+  date: 2025-07-07T07:35:41.418Z
+- commits:
     - subject: "layers/meta-balena: Update to v6.4.0"
       hash: 6fa40e2cf7fced50fb8b9dda67b45377b070a341
       body: ""
