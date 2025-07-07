@@ -13,6 +13,7 @@ SRC_URI:append:forecr-dsb-ornx-lan = " \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0000-nv.dtb \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv.dtb \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0004-nv.dtb \
+    file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv-super.dtb \
 "
 
 S = "${WORKDIR}"
@@ -32,6 +33,7 @@ do_install:append:jetson-agx-orin-devkit() {
 do_install:forecr-dsb-ornx-lan() {
 	install -d ${D}/boot/
 	install -m 0644 "${WORKDIR}/forecr-dsb-ornx-lan/${DTBNAME}" "${D}/boot/${DTBNAME}"
+        install -m 0644 "${WORKDIR}/forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb"
 }
 
 do_install:append:jetson-orin-nano-devkit-nvme() {
@@ -77,4 +79,5 @@ FILES:${PN}:jetson-agx-orin-devkit-64gb += " \
 
 FILES:${PN}:forecr-dsb-ornx-lan += " \
         /boot/${DTBNAME} \
+	/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb \
 "

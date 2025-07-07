@@ -18,7 +18,7 @@ DEFAULT_DTB:jetson-orin-nx-xavier-nx-devkit = "tegra234-p3768-0000+p3767-0000-nv
 DEFAULT_DTB:jetson-orin-nx-seeed-j4012 ="tegra234-p3768-0000+p3767-0000-nv.dtb"
 DEFAULT_DTB:jetson-orin-nano-seeed-j3010 ="tegra234-p3768-0000+p3767-0004-nv-super.dtb"
 DEFAULT_DTB:jetson-agx-orin-devkit-64gb = "tegra234-p3737-0000+p3701-0005-nv.dtb"
-DEFAULT_DTB:forecr-dsb-ornx-orin-nano-8gb = "tegra234-p3768-0000+p3767-0003-nv.dtb"
+DEFAULT_DTB:forecr-dsb-ornx-orin-nano-8gb = "tegra234-p3768-0000+p3767-0003-nv-super.dtb"
 DEFAULT_DTB:forecr-dsb-ornx-lan-orin-nano-4gb ="tegra234-p3768-0000+p3767-0004-nv.dtb"
 DEFAULT_DTB:forecr-dsb-ornx-lan-orin-nx-16gb = "tegra234-p3768-0000+p3767-0000-nv.dtb"
 

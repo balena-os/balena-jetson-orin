@@ -2,6 +2,8 @@ include balena-image.inc
 
 do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy l4t-launcher-extlinux:do_install edk2-container:do_package"
 
+do_resin_boot_dirgen_and_deploy:balenaos-img[depends] += " l4t-launcher-extlinux:do_install "
+
 # Leave some space, just in case future L4Ts add device specific partitions
 # All values are in KiB
 DEVICE_SPECIFIC_SPACE:jetson-agx-orin-devkit = "331776"

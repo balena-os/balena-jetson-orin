@@ -105,7 +105,7 @@ else
             power_modes=(["low"]="2" ["mid"]="1" ["high"]="0")
             ;;
         forecr-dsb-ornx-orin-nano-8gb)
-            power_modes=(["low"]="1" ["mid"]="0" ["high"]="0")
+            power_modes=(["low"]="0" ["mid"]="1" ["high"]="2")
             ;;
         forecr-dsb-ornx-lan-orin-nx-16gb)
             power_modes=(["low"]="1" ["mid"]="3" ["high"]="0")
