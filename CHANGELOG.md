@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.5.25+rev3
+## (2025-07-24)
+
+* Discontinue Forecr DSB ORNX-LAN Orin NX 16GB [Alexandru Costache]
+
 # v6.5.25+rev2
 ## (2025-07-10)
 

@@ -1,4 +1,22 @@
 - commits:
+    - subject: Discontinue Forecr DSB ORNX-LAN Orin NX 16GB
+      hash: c039fe97ace458f5d53f8a078dfae550190c295b
+      body: |
+        This device is not autokitted and will be discontinued
+        for now. We also remove the Orin Nano 4GB coffee file and
+        workflow since it never had any release, and it will not be
+        placed in an autokit nor have any release for the time being.
+      footer:
+        Changelog-entry: Discontinue Forecr DSB ORNX-LAN Orin NX 16GB
+        changelog-entry: Discontinue Forecr DSB ORNX-LAN Orin NX 16GB
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.5.25+rev3
+  title: ""
+  date: 2025-07-24T17:51:58.314Z
+- commits:
     - subject: Update balena-yocto-scripts to ccb8899d87c181fa3198a496fe1a514a93de90e5
       hash: e3f5489c8fce0c873a226a530f611d0ce844c968
       body: Update balena-yocto-scripts
