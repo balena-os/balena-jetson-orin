@@ -3,6 +3,8 @@ IMAGE_FSTYPES += "balenaos-img"
 do_rootfs:balenaos-img[depends] += " tegra-flash-dry:do_install nvidia-kernel-oot:do_deploy edk2-container:do_deploy "
 DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
+do_resin_boot_dirgen_and_deploy[depends] += "l4t-launcher-extlinux:do_install"
+
 IMAGE_INSTALL:append = " \
     tegra-flash-dry \
     kernel-image-initramfs \
