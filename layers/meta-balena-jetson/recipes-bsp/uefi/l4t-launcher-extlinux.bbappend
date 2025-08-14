@@ -1,3 +1,5 @@
+do_install[depends] += "linux-jammy-nvidia-tegra:do_deploy"
+
 do_install() {
     install -d ${D}/boot/extlinux
     cp ${DEPLOY_DIR_IMAGE}/extlinux/extlinux.conf ${B}/
