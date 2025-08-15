@@ -30,6 +30,29 @@ on:
         required: false
         type: string
         default: balena-staging.com
+  # Allow this workflow to be called by other workflows
+  workflow_call:
+    inputs:
+      deploy-environment:
+        description: Environment to use for build and deploy
+        required: false
+        type: string
+        default: balena-staging.com
+      meta-balena-ref:
+        description: meta-balena ref if not the currently pinned version
+        required: false
+        type: string
+        default: ''
+      device-repo-ref:
+        description: device-repo ref if not the currently pinned version
+        required: false
+        type: string
+        default: ''
+      test_matrix:
+        description: "JSON Leviathan test matrix to use for testing. No tests will be run if not provided."
+        required: false
+        type: string
+        default: ''
 
 permissions:
   id-token: write # This is required for requesting the JWT #https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-amazon-web-services#requesting-the-access-token
@@ -50,6 +73,9 @@ jobs:
     secrets: inherit
     with:
       machine: jetson-orin-nano-seeed-j3010
+      # Hardcode the device repo in case this workflow is called by another workflow
+      device-repo: balena-os/balena-jetson-orin
+      device-repo-ref: ${{ inputs.device-repo-ref || github.ref }}
       # worker_type defaults to testbot
       # worker_fleets defaults to balena/testbot-rig,balena/testbot-rig-partners,balena/testbot-rig-x86,balena/testbot-rig-partners-x86
       test_matrix: >
