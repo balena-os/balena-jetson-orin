@@ -1,4 +1,4 @@
-ILESEXTRAPATHS:prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 SUMMARY = "Deploy compressed flash artifacts"
 
@@ -70,6 +70,10 @@ do_install() {
     install -d ${D}/${BINARY_INSTALL_PATH}
     install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
     install ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
+}
+
+# Keep the pre-built capsule for this board only for now
+do_install:append:forecr-dsb-ornx-lan() {
     install ${WORKDIR}/${UEFI_CAPSULE} ${D}/${BINARY_INSTALL_PATH}/
 }
 
