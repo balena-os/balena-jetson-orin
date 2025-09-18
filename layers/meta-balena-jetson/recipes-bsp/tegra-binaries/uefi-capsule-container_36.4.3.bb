@@ -3,7 +3,13 @@ SUMMARY = "UEFI Capsule container build"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://${BALENA_COREBASE}/COPYING.Apache-2.0;md5=89aea4e17d99a7cacdbeed46a0096b10"
 
+# Jetson Orin Nano 8GB and Orin NX 16GB Devkits
+JETSON_BOARD_SPEC:jetson-orin-nano-devkit-nvme="jetson_board_spec_nano.cfg"
+JETSON_BOARD_SPEC:jetson-orin-nx-xavier-nx-devkit="jetson_board_spec_nx.cfg"
 JETSON_BOARD_SPEC:jetson-agx-orin-devkit="jetson_board_spec_agx_32gb.cfg"
+JETSON_BOARD_SPEC:jetson-agx-orin-devkit-64gb="jetson_board_spec_agx_64gb.cfg"
+JETSON_BOARD_SPEC:jetson-orin-nano-seeed-j3010="jetson_board_spec_j3010_j4012.cfg"
+JETSON_BOARD_SPEC:jetson-orin-nx-seeed-j4012="jetson_board_spec_j3010_j4012.cfg"
 UEFI_CAPSULE:jetson-orin-nx-xavier-nx-devkit = "TEGRA_BL_Orin_NX.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nano-devkit-nvme = "TEGRA_BL_Orin_Nano.Cap.gz"
 UEFI_CAPSULE:jetson-orin-nx-seeed-j4012 = "TEGRA_BL_Seeed_j4012.Cap.gz"
@@ -68,6 +74,6 @@ FILES:${PN} = " /opt/tegra-binaries/ "
 
 do_compile[nostamp] = "1"
 do_deploy[nostamp] = "1"
-#do_install[depends] += "edk2-container:do_deploy"
+#do_compile[depends] += "edk2-container:do_deploy"
 
 addtask do_deploy before do_package after do_install

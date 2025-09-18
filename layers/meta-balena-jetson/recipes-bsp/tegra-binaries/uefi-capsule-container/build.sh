@@ -11,22 +11,27 @@ mb2_bct_paths=(
 	)
 
 ToT_BSP=$(pwd)
-bl_spec=""
+bl_spec="t23x_3767_bl_spec"
 lines=(2766 2771 2776 2781 2786 2791 2796 2801 2806 2811 2816 2821 2826 2831 25712 25717 25722 25727 25732 25737 25742 25747 25752 25757 25762 25767)
 old_str="exclusion-info = <2>;"
 new_str="exclusion-info = <0>;"
 
-case "${DEVICE_TYPE}" in
-    "jetson-agx-orin-devkit-64gb" | "jetson-agx-orin-devkit")
-        bl_spec="t23x_agx_bl_spec"
-	;;
+pushd /build_dir/Linux_for_Tegra/
 
-    *)
-        bl_spec="t23x_3767_bl_spec"
+case "${DEVICE_TYPE}" in
+	"jetson-agx-orin-devkit-64gb" | "jetson-agx-orin-devkit")
+		bl_spec="t23x_agx_bl_spec"
+		;;
+	"jetson-orin-nano-seeed-j3010" | "jetson-orin-nx-seeed-j4012")
+		cp -r /build_dir/Seeed_36_4_3/Linux_for_Tegra/* /build_dir/Linux_for_Tegra/
+		cp p3768-0000-p3767-0000-a0.conf p3768-0000-p3767-0000-a0_original.conf
+		cat recomputer-orin-j401.conf > p3768-0000-p3767-0000-a0.conf
+		sed -i "s#p3768-0000-p3767-0000-a0.conf#p3768-0000-p3767-0000-a0_original.conf#g" p3768-0000-p3767-0000-a0.conf
+		;;
+	*)
+        :
 	;;
 esac
-
-pushd /build_dir/Linux_for_Tegra/
 
 # Allow the QSPI to be accessible for OTA
 # re-writing / recovery in case of
