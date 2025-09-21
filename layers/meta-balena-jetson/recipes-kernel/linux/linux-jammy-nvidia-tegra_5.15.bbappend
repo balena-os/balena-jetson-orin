@@ -161,6 +161,12 @@ KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_lo
 # in our integration, although upstream does.
 KERNEL_ARGS:remove="nospectre_bhb"
 
+DEFAULT_SEEED_OVERLAYS=",/boot/devicetree/tegra234-dcb-p3767-0000-hdmi.dtbo,/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
+
+DTB_OVERLAYS="/boot/devicetree/tegra234-p3768-0000+p3767-0000-dynamic.dtbo"
+DTB_OVERLAYS:append:jetson-orin-nano-seeed-j3010="${DEFAULT_SEEED_OVERLAYS}"
+DTB_OVERLAYS:append:jetson-orin-nx-seeed-j4012="${DEFAULT_SEEED_OVERLAYS}"
+
 generate_extlinux_conf() {
     mkdir -p ${DEPLOY_DIR_IMAGE}/extlinux || true
     kernelRootspec="${KERNEL_ARGS}" ; cat >${DEPLOY_DIR_IMAGE}/extlinux/extlinux.conf << EOF
@@ -170,6 +176,7 @@ MENU TITLE Boot Options
 LABEL primary
       MENU LABEL primary ${KERNEL_IMAGETYPE}
       FDT default
+      OVERLAYS ${DTB_OVERLAYS}
       LINUX /boot/${KERNEL_IMAGETYPE}
       APPEND \${cbootargs} ${kernelRootspec} sdhci_tegra.en_boot_part_access=1 rootwait video=efifb:off
 EOF
