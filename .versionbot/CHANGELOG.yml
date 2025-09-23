@@ -1,4 +1,19 @@
 - commits:
+    - subject: "workflows: Add workflow call trigger"
+      hash: 3a83426eb5cd626296d5e1575031783894e94cfe
+      body: |
+        To enable workflow to be called from meta-balena
+      footer:
+        Changelog-entry: "workflows: Add workflow call trigger"
+        changelog-entry: "workflows: Add workflow call trigger"
+        Signed-off-by: Ryan Cooke<ryan@balena.io>
+        signed-off-by: Ryan Cooke<ryan@balena.io>
+      author: Ryan Cooke
+      nested: []
+  version: 6.6.4+rev1
+  title: ""
+  date: 2025-09-23T09:58:44.615Z
+- commits:
     - subject: "layers/meta-balena: Update to v6.6.4"
       hash: 663cdb359be377f29f35a562cf2644504b0f3de8
       body: ""
