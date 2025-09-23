@@ -153,6 +153,12 @@ BALENA_CONFIGS[lan743x] = " \
     CONFIG_LAN743X=m \
 "
 
+BALENA_CONFIGS:append:jetson-agx-orin-devkit-64gb = " usb_configfs_f_uac "
+BALENA_CONFIGS[usb_configfs_f_uac] = " \
+    CONFIG_USB_CONFIGFS_F_UAC1=y \
+    CONFIG_USB_CONFIGFS_F_UAC2=y \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=tty0 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} rootdelay=1 roottimeout=60 "
