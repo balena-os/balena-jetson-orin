@@ -179,9 +179,9 @@ index c905f852..ce09f6c0 100644
 +        }
 +      }
 +
-+      DtboValue = StrStr(LineCopy, L"custom_dtbo_files=");
++      DtboValue = StrStr(LineCopy, L"overlay_files=");
 +      if (NULL != DtboValue) {
-+        DtboValue += StrLen(L"custom_dtbo_files=");
++        DtboValue += StrLen(L"overlay_files=");
 +        DtboLen = StrLen(DtboValue);
 +        // Use up to 512 chars for custom dtbo files
 +        if (512 >= DtboLen) {
@@ -190,12 +190,12 @@ index c905f852..ce09f6c0 100644
 +          }
 +          *CustomDtboFiles = AllocateCopyPool(StrSize(DtboValue), DtboValue);
 +          if (*CustomDtboFiles) {
-+            Print(L"%a: custom_dtbo_files present in extra_uEnv.txt: %s\n", __FUNCTION__, *CustomDtboFiles);
++            Print(L"%a: overlay_files present in extra_uEnv.txt: %s\n", __FUNCTION__, *CustomDtboFiles);
 +          } else {
-+            ErrorPrint(L"%a: Failed to allocate memory for custom_dtbo_files\n", __FUNCTION__);
++            ErrorPrint(L"%a: Failed to allocate memory for overlay_files\n", __FUNCTION__);
 +          }
 +        } else {
-+          ErrorPrint(L"%a: custom_dtbo_files value exceeds the 512 character limit and will be ignored.\n", __FUNCTION__);
++          ErrorPrint(L"%a: overlay_files value exceeds the 512 character limit and will be ignored.\n", __FUNCTION__);
 +        }
 +      }
 +    }
@@ -343,7 +343,7 @@ index c905f852..ce09f6c0 100644
  
          Status = CheckCommandString (CleanLine, EXTLINUX_KEY_OVERLAYS, &BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays);
          if (!EFI_ERROR (Status)) {
-+          // Override OVERLAYS if custom_dtbo_files was loaded from extra_uEnv.txt.
++          // Override OVERLAYS if overlay_files was loaded from extra_uEnv.txt.
 +          if (ExtrauEnvDtbo != NULL) {
 +            if (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays != NULL) {
 +              // Free the value read from extlinux.conf, if it was set, because we'll override it
@@ -351,7 +351,7 @@ index c905f852..ce09f6c0 100644
 +            }
 +            BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays = ExtrauEnvDtbo;
 +            ExtrauEnvDtbo = NULL;
-+            Print(L"Overriding overlays with custom_dtbo_files: %s\n", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays);
++            Print(L"Overriding overlays with overlay_files: %s\n", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays);
 +          }
            continue;
          }
