@@ -185,5 +185,7 @@ EOF
 
 }
 
-do_deploy[postfuncs] += "generate_extlinux_conf"
+do_deploy:append() {
+     generate_extlinux_conf
+}
 do_install[depends] += "${@['', '${INITRAMFS_IMAGE}:do_image_complete'][(d.getVar('INITRAMFS_IMAGE', True) or '') != '' and (d.getVar('TEGRA_INITRAMFS_INITRD', True) or '') == "1"]}"
