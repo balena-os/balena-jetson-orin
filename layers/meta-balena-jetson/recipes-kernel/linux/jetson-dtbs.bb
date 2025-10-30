@@ -9,6 +9,7 @@ do_install[depends] += " nvidia-kernel-oot-dtb:do_deploy "
 
 SRC_URI += " \
     file://tegra234-p3737-0000+p3701-0000-nv-spi.dtb \
+	file://tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb \
 "
 
 SRC_URI:jetson-orin-nano-seeed-j3010 += " \
@@ -53,6 +54,7 @@ do_install:append:jetson-orin-nano-devkit-nvme() {
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/tegra234-p3768-0000+p3767-0005-nv.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0005-nv.dtb"
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/tegra234-p3768-0000+p3767-0003-nv.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0003-nv.dtb"
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/tegra234-p3768-0000+p3767-0003-nv-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb"
+	install -m 0644 "${WORKDIR}/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb"
 }
 
 do_install:append:jetson-orin-nx-xavier-nx-devkit() {
@@ -89,6 +91,7 @@ FILES:${PN}:jetson-orin-nx-xavier-nx-devkit += " \
 FILES:${PN}:jetson-orin-nano-devkit-nvme += " \
 	/boot/tegra234-p3768-0000+p3767-0005-nv.dtb \
 	/boot/tegra234-p3768-0000+p3767-0005-nv-super.dtb \
+	/boot/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb \
 	/boot/tegra234-p3768-0000+p3767-0003-nv.dtb \
 	/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb \
 "
