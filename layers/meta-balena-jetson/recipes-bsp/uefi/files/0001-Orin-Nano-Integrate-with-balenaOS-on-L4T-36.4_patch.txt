@@ -1,7 +1,7 @@
-From ecbb87644f051c641872e834667be12e1a2aaa94 Mon Sep 17 00:00:00 2001
+From 6d813eb79cc8a4c0dff1072a89039e3e740d3a44 Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Thu, 20 Feb 2025 18:55:18 +0200
-Subject: [PATCH] Orin Nano: Integrate with balenaOS on L4T 36.3
+Date: Mon, 27 Oct 2025 15:50:54 +0200
+Subject: [PATCH] Orin Nano: Integrate with balenaOS on L4T 36.4.3
 
 With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
 extra_uEnv.txt and bootcount.env in order to load the
@@ -12,15 +12,15 @@ the firmware in the QSPI is based on Jetpack 6.
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
- .../Application/L4TLauncher/L4TLauncher.c     | 653 +++++++++++++++++-
+ .../Application/L4TLauncher/L4TLauncher.c     | 698 ++++++++++++++++--
  .../Application/L4TLauncher/L4TLauncher.h     |  18 +
- 2 files changed, 653 insertions(+), 18 deletions(-)
+ 2 files changed, 666 insertions(+), 50 deletions(-)
 
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-index c905f852..1b8b1b54 100644
+index c905f852..60486344 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-@@ -1156,6 +1156,147 @@ CheckCommandString (
+@@ -1156,13 +1156,208 @@ CheckCommandString (
    return EFI_NOT_FOUND;
  }
  
@@ -73,26 +73,34 @@ index c905f852..1b8b1b54 100644
 +EFI_STATUS
 +EFIAPI
 +ProcessExtrauEnv (
-+  IN EFI_HANDLE            DeviceHandle,
-+  IN UINT32                BootChain,
-+  IN CONST CHAR16          *BalenaOSRootFs,
-+  OUT CHAR16               **CustomFdtName
++  IN EFI_HANDLE           DeviceHandle,
++  IN UINT32               BootChain,
++  IN CONST CHAR16         *BalenaOSRootFs,
++  OUT CHAR16              **CustomFdtName,
++  OUT CHAR16              **ExtraOsCmdline,
++  OUT CHAR16              **CustomDtboFiles
 +)
 +{
-+  EFI_STATUS       Status;
-+  EFI_HANDLE       BootPartHandle;
-+  EFI_DEVICE_PATH  *FullDevicePath;
-+  EFI_DEVICE_PATH  *TmpFullDevicePath;
-+  EFI_FILE_HANDLE  FileHandle = NULL;
-+  CHAR16           *FileLine = NULL;
-+  CHAR16           *DtbName = NULL;
-+  BOOLEAN          Ascii;
-+  CHAR16 *LineCopy = AllocateZeroPool(MAX_DTB_PATH_LEN);
-+  UINT64 len;
++  EFI_STATUS		Status;
++  EFI_HANDLE 		BootPartHandle;
++  EFI_DEVICE_PATH	*FullDevicePath;
++  EFI_DEVICE_PATH	*TmpFullDevicePath;
++  EFI_FILE_HANDLE	FileHandle = NULL;
++  CHAR16		*FileLine = NULL;
++  CHAR16		*DtbName = NULL;
++  CHAR16		*CmdlineValue = NULL;
++  CHAR16		*DtboValue = NULL;
++  BOOLEAN		Ascii;
++  CHAR16 		*LineCopy = AllocateZeroPool(MAX_DTB_PATH_LEN);
++  UINT64 		len;
++  UINTN 		CmdlineLen;
++  UINTN 		DtboLen;
 +
-+  // Set default dtb as fail-safe
++
 +  *CustomFdtName = AllocateZeroPool(MAX_DTB_PATH_LEN);
 +  UnicodeSPrint (*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_ORIN_NANO_DTB_NAME);
++  *ExtraOsCmdline = NULL;
++  *CustomDtboFiles = NULL;
 +
 +  Status = FindPartitionInfo (DeviceHandle, BALENA_BOOT_PARTITION, BootChain, NULL, &BootPartHandle);
 +  if (EFI_ERROR (Status)) {
@@ -126,28 +134,69 @@ index c905f852..1b8b1b54 100644
 +      break;
 +    }
 +
++    // MAX_DTB_PATH_LEN is 512 chars
 +    UnicodeSPrint (LineCopy, MAX_DTB_PATH_LEN, L"%s\0", FileLine);
 +    Print(L"Processing entry: %s\n", LineCopy);
 +
 +    len = StrLen(LineCopy);
 +
-+    if (len < 21 /* dtb name should have at least 1 character + extension */) {
-+      ErrorPrint(L"DTB name is too short. Using default dtb.\n");
-+      return EFI_INVALID_PARAMETER;
-+    }
++    if (0 < len) {
++      // Check for custom_fdt_file in extra_uEnv.txt
++      DtbName = StrStr(LineCopy, L"custom_fdt_file=");
++      if (NULL != DtbName) {
++        DtbName += StrLen(L"custom_fdt_file=");
++        if (*CustomFdtName != NULL) {
++            FreePool(*CustomFdtName);
++            *CustomFdtName = AllocateZeroPool(MAX_DTB_PATH_LEN);
++        }
++        UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DtbName);
++        Print(L"Selected dtb name is %s:\n", *CustomFdtName);
++        Status = CheckDtbExists(DeviceHandle, BootChain, BalenaOSRootFs, *CustomFdtName);
++        if (EFI_ERROR(Status)) {
++          ErrorPrint(L"Selected dtb not found! Using the default DTB for this device type\n");
++          UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_ORIN_NANO_DTB_NAME);
++        }
++      }
 +
-+    DtbName = StrStr(LineCopy, L"custom_fdt_file=");
++      // Check for extra_os_cmdline in extra_uEnv.txt
++      CmdlineValue = StrStr(LineCopy, L"extra_os_cmdline=");
++      if (NULL != CmdlineValue) {
++        CmdlineValue += StrLen(L"extra_os_cmdline=");
++        CmdlineLen = StrLen(CmdlineValue);
++        // Use up to 256 chars from extra_os_cmdline
++        if (256 >= CmdlineLen) {
++          if (*ExtraOsCmdline != NULL) {
++            FreePool(*ExtraOsCmdline);
++          }
++          *ExtraOsCmdline = AllocateCopyPool(StrSize(CmdlineValue), CmdlineValue);
++          if (*ExtraOsCmdline) {
++            Print(L"%a: extra_os_cmdline present in extra_uEnv.txt: %s\n", __FUNCTION__, *ExtraOsCmdline);
++          } else { ErrorPrint(L"10\n");
++            ErrorPrint(L"%a: Failed to allocate memory for extra_os_cmdline\n", __FUNCTION__);
++          }
++        } else {
++          ErrorPrint(L"%a: extra_os_cmdline value exceeds the 256 character limit and will be ignored.\n", __FUNCTION__);
++        }
++      }
 +
-+    if (NULL != DtbName) {
-+      DtbName += StrLen(L"custom_fdt_file=");
-+      UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DtbName);
-+      Print(L"Selected dtb name is %s:\n", *CustomFdtName);
-+      Status = CheckDtbExists(DeviceHandle, BootChain, BalenaOSRootFs, *CustomFdtName);
-+
-+      if (EFI_ERROR(Status)) {
-+        ErrorPrint(L"Selected dtb not found! Using the default DTB for this device type\n");
-+        UnicodeSPrint(*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_ORIN_NANO_DTB_NAME);
-+        return Status;
++      DtboValue = StrStr(LineCopy, L"overlay_files=");
++      if (NULL != DtboValue) {
++        DtboValue += StrLen(L"overlay_files=");
++        DtboLen = StrLen(DtboValue);
++        // Use up to 512 chars for custom dtbo files
++        if (512 >= DtboLen) {
++          if (*CustomDtboFiles != NULL) {
++              FreePool(*CustomDtboFiles);
++          }
++          *CustomDtboFiles = AllocateCopyPool(StrSize(DtboValue), DtboValue);
++          if (*CustomDtboFiles) {
++            Print(L"%a: overlay_files present in extra_uEnv.txt: %s\n", __FUNCTION__, *CustomDtboFiles);
++          } else {
++            ErrorPrint(L"%a: Failed to allocate memory for overlay_files\n", __FUNCTION__);
++          }
++        } else {
++          ErrorPrint(L"%a: overlay_files value exceeds the 512 character limit and will be ignored.\n", __FUNCTION__);
++        }
 +      }
 +    }
 +
@@ -161,39 +210,76 @@ index c905f852..1b8b1b54 100644
 +    FileHandleClose (FileHandle);
 +  }
 +
++
++  if (LineCopy != NULL) {
++    FreePool(LineCopy);
++  }
++
 +  return EFI_SUCCESS;
 +}
-+
 +
  /**
    Process the extlinux.conf file
  
-@@ -1173,8 +1314,10 @@ EFIAPI
+-  @param[in]  DeviceHandle     The handle of partition where this file lives on.
+-  @param[in]  BootChain        Numeric version of the chain
+-  @param[out] ExtLinuxConfig   Pointer to an extlinux config object
+-  @param[out] RootFsHandle     Pointer to the handle of the device tree
++  @param[in]  DeviceHandle      The handle of partition where this file lives on.
++  @param[in]  BootChain         Numeric version of the chain
++  @param[in]  BalenaOSRootFs    The rootfs partition name (e.g. resin-rootA)
++  @param[out] ExtLinuxConfig    Pointer to an extlinux config object
++  @param[out] RootFsHandle      Pointer to the handle of the device tree
+ 
+   @retval EFI_SUCCESS    The operation completed successfully.
+ 
+@@ -1171,22 +1366,31 @@ STATIC
+ EFI_STATUS
+ EFIAPI
  ProcessExtLinuxConfig (
-   IN EFI_HANDLE             DeviceHandle,
-   IN UINT32                 BootChain,
-+  IN CONST CHAR16           *BalenaOSRootFs,  
-   OUT EXTLINUX_BOOT_CONFIG  *BootConfig,
+-  IN EFI_HANDLE             DeviceHandle,
+-  IN UINT32                 BootChain,
+-  OUT EXTLINUX_BOOT_CONFIG  *BootConfig,
 -  OUT EFI_HANDLE            *RootFsHandle
-+  OUT EFI_HANDLE            *RootFsHandle
-+  
++  IN EFI_HANDLE DeviceHandle,
++  IN UINT32 BootChain,
++  IN CONST CHAR16 *BalenaOSRootFs,
++  OUT EXTLINUX_BOOT_CONFIG *BootConfig,
++  OUT EFI_HANDLE *RootFsHandle
++
    )
  {
-   EFI_STATUS       Status;
-@@ -1185,8 +1328,12 @@ ProcessExtLinuxConfig (
-   CHAR16           *Timeout      = NULL;
-   CHAR16           *CbootArg     = NULL;
-   CHAR16           *PostCbootArg = NULL;
-+  CONST CHAR16     *RootL = L"root=LABEL=";
-+  CONST CHAR16     *flasherArg = L"flasher";
-   BOOLEAN          Ascii;
-   UINTN            Index;
-+  CHAR16           *UpdatedCmdline = NULL;
-+  UINTN            argsSize;
+-  EFI_STATUS       Status;
+-  EFI_FILE_HANDLE  FileHandle;
+-  CHAR16           *FileLine = NULL;
+-  CHAR16           *CleanLine;
+-  CHAR16           *DefaultLabel = NULL;
+-  CHAR16           *Timeout      = NULL;
+-  CHAR16           *CbootArg     = NULL;
+-  CHAR16           *PostCbootArg = NULL;
+-  BOOLEAN          Ascii;
+-  UINTN            Index;
++  EFI_STATUS Status;
++  EFI_FILE_HANDLE FileHandle;
++  CHAR16 *FileLine = NULL;
++  CHAR16 *CleanLine;
++  CHAR16 *DefaultLabel = NULL;
++  CHAR16 *Timeout      = NULL;
++  CHAR16 *CbootArg     = NULL;
++  CHAR16 *PostCbootArg = NULL;
++  CONST CHAR16 *RootL = L"root=LABEL=";
++  CONST CHAR16 *flasherArg = L"flasher";
++  BOOLEAN Ascii;
++  UINTN Index;
++  CHAR16 *UpdatedCmdline = NULL;
++  UINTN argsSize;
++  CHAR16 *ExtrauEnvDtb = NULL;
++  CHAR16 *ExtraOsCmdline = NULL;
++  CHAR16 *ExtrauEnvDtbo = NULL;
  
    ZeroMem (BootConfig, sizeof (EXTLINUX_BOOT_CONFIG));
  
-@@ -1194,12 +1341,10 @@ ProcessExtLinuxConfig (
+@@ -1194,24 +1398,26 @@ ProcessExtLinuxConfig (
      return EFI_INVALID_PARAMETER;
    }
  
@@ -202,14 +288,37 @@ index c905f852..1b8b1b54 100644
 -    ErrorPrint (L"%a: Unable to find partition info\r\n", __FUNCTION__);
 -    return Status;
 -  }
-+  //ErrorPrint (L"%a:Running the updated (target) bootchain slot: %s\r\n", __FUNCTION__, RunningUpdatedBootSlot ? L"true" : L"false");
- 
+-
 +  /* Load extlinux.conf from the selected BalenaOS root filesystem */
 +  Status = FindPartitionInfo (DeviceHandle, BalenaOSRootFs, BootChain, NULL, RootFsHandle);
    Status = OpenAndReadFileToBuffer (
-              *RootFsHandle,
-              EXTLINUX_CONF_PATH,
-@@ -1271,6 +1416,23 @@ ProcessExtLinuxConfig (
+-             *RootFsHandle,
+-             EXTLINUX_CONF_PATH,
+-             &FileHandle,
+-             NULL,
+-             NULL
+-             );
++               *RootFsHandle,
++               EXTLINUX_CONF_PATH,
++               &FileHandle,
++               NULL,
++               NULL
++               );
+   if (EFI_ERROR (Status)) {
+     ErrorPrint (L"%a:sds Failed to Authenticate %s (%r)\r\n", __FUNCTION__, EXTLINUX_CONF_PATH, Status);
+     return Status;
+   }
+ 
++  // Get custom dtb, cmdline args and custom dtbo, if set
++  Status = ProcessExtrauEnv(DeviceHandle, BootChain, BalenaOSRootFs, &ExtrauEnvDtb, &ExtraOsCmdline, &ExtrauEnvDtbo);
++  if (EFI_ERROR (Status) && Status != EFI_NOT_FOUND) {
++      ErrorPrint (L"%a: Failed to process extra_uEnv.txt: %r\r\n", __FUNCTION__, Status);
++  }
++
+   while (!FileHandleEof (FileHandle)) {
+     if (FileLine != NULL) {
+       FreePool (FileLine);
+@@ -1271,15 +1477,73 @@ ProcessExtLinuxConfig (
  
          Status = CheckCommandString (CleanLine, EXTLINUX_KEY_FDT, &BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
          if (!EFI_ERROR (Status)) {
@@ -217,48 +326,93 @@ index c905f852..1b8b1b54 100644
 +          if (0 == StrnCmp(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, EXTLINUX_GENERIC_FDT, StrLen (EXTLINUX_GENERIC_FDT))) {
 +            if (NULL != BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath) {
 +              FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
-+              /* Check if a device-tree name is set in extra_uEnv.txt */
-+              CHAR16 *ExtrauEnvDtb = NULL;
-+              Status = ProcessExtrauEnv(DeviceHandle, BootChain, BalenaOSRootFs, &ExtrauEnvDtb);
-+
-+              if (!EFI_ERROR(Status)) {
-+                  Print(L"Using default device-tree\n");
++              if (ExtrauEnvDtb != NULL) {
++                BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath = ExtrauEnvDtb;
++                Print(L"Kernel device-tree after parsing extra_uEnv.txt is %s\n", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
++                ExtrauEnvDtb = NULL;
++              } else {
++                Print(L"Using default device-tree\n");
++                BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath = AllocateCopyPool(StrSize(DEFAULT_ORIN_NANO_DTB_NAME), DEFAULT_ORIN_NANO_DTB_NAME);
 +              }
-+              BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath = ExtrauEnvDtb;
-+              Print(L"Kernel device-tree after parsing extra_uEnv.txt is %s\n", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
 +            }
-+         } else {
-+             Print(L"Kernel device-tree is %s\n", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
-+         }
++          } else {
++              Print(L"Kernel device-tree is %s\n", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
++          }
            continue;
          }
  
-@@ -1280,6 +1442,24 @@ ProcessExtLinuxConfig (
+         Status = CheckCommandString (CleanLine, EXTLINUX_KEY_OVERLAYS, &BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays);
+         if (!EFI_ERROR (Status)) {
++          // Override OVERLAYS if overlay_files was loaded from extra_uEnv.txt.
++          if (ExtrauEnvDtbo != NULL) {
++            if (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays != NULL) {
++              // Free the value read from extlinux.conf, if it was set, because we'll override it
++              FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays);
++            }
++            BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays = ExtrauEnvDtbo;
++            ExtrauEnvDtbo = NULL;
++            Print(L"Overriding overlays with overlay_files: %s\n", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].Overlays);
++          }
+           continue;
          }
  
          Status = CheckCommandString (CleanLine, EXTLINUX_KEY_APPEND, &BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs);
-+        argsSize = StrSize (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs);
-+        UpdatedCmdline = AllocateZeroPool (argsSize + StrSize(RootL) + StrSize(BalenaOSRootFs) + 2);
++
++        UINTN currentArgsSize = (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs != NULL) ? StrSize(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs) : 0;
++
++        argsSize = currentArgsSize + StrSize(RootL) + StrSize(BalenaOSRootFs) + 2;
++        if (ExtraOsCmdline != NULL) {
++            argsSize += StrSize(ExtraOsCmdline) + 1; // +1 for a space
++        }
++
++        UpdatedCmdline = AllocateZeroPool(argsSize);
 +        if (NULL == UpdatedCmdline) {
-+            ErrorPrint (L"%a: Failed to allocate memory for updated cmdline %d\r\n", __FUNCTION__);
-+            return EFI_OUT_OF_RESOURCES;
++          ErrorPrint (L"%a: Failed to allocate memory for updated cmdline %d\r\n", __FUNCTION__, argsSize);
++          return EFI_OUT_OF_RESOURCES;
 +        }
 +
 +        /* Append root label to cmdline that has been read from the extlinux.conf read from the active rootfs */
 +        if (0 == StrnCmp(BalenaOSRootFs, BALENA_FLASHER_ROOT_PARTITION, StrLen(BalenaOSRootFs))) {
-+            Print(L"%a: Flasher image detected, appending flasher arg...\r\n", __FUNCTION__);
-+            UnicodeSPrint (UpdatedCmdline, StrSize(RootL) + StrSize(BalenaOSRootFs) + StrSize(flasherArg) +argsSize, L"%s %s%s %s\0", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs, RootL, BalenaOSRootFs, flasherArg);
++          Print(L"%a: Flasher image detected, appending flasher arg...\r\n", __FUNCTION__);
++          UnicodeSPrint (UpdatedCmdline, argsSize, L"%s %s%s %s\0", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs, RootL, BalenaOSRootFs, flasherArg);
 +        } else {
-+            UnicodeSPrint (UpdatedCmdline, StrSize(RootL) + StrSize(BalenaOSRootFs) + argsSize, L"%s %s%s\0", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs, RootL, BalenaOSRootFs);
++          UnicodeSPrint (UpdatedCmdline, argsSize, L"%s %s%s\0", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs, RootL, BalenaOSRootFs);
 +        }
++
++        if (ExtraOsCmdline != NULL) {
++          StrCatS(UpdatedCmdline, argsSize / sizeof(CHAR16), L" ");
++          StrCatS(UpdatedCmdline, argsSize / sizeof(CHAR16), ExtraOsCmdline);
++        }
++
 +        if (NULL != BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs) {
 +          FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs);
 +        }
 +        BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs = UpdatedCmdline;
++
          if (!EFI_ERROR (Status)) {
            CbootArg = StrStr (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs, EXTLINUX_CBOOT_ARG);
            if (CbootArg != NULL) {
-@@ -1501,12 +1681,12 @@ ExtLinuxBoot (
+@@ -1331,6 +1595,19 @@ ProcessExtLinuxConfig (
+     }
+   }
+ 
++  if (ExtraOsCmdline != NULL) {
++    FreePool(ExtraOsCmdline);
++  }
++
++  // Free extra_uEnv vars if they were allocated but not used
++  if (ExtrauEnvDtb != NULL) {
++    FreePool(ExtrauEnvDtb);
++  }
++
++  if (ExtrauEnvDtbo != NULL) {
++      FreePool(ExtrauEnvDtbo);
++  }
++
+   if (BootConfig->NumberOfBootOptions == 0) {
+     return EFI_NOT_FOUND;
+   } else {
+@@ -1501,12 +1778,12 @@ ExtLinuxBoot (
  
    // Reload fdt if needed
    Status = EfiGetSystemConfigurationTable (&gEfiAcpiTableGuid, &AcpiBase);
@@ -273,7 +427,23 @@ index c905f852..1b8b1b54 100644
      Status = OpenAndReadFileToBuffer (
                 DeviceHandle,
                 BootOption->DtbPath,
-@@ -1726,6 +1906,299 @@ Exit:
+@@ -1563,13 +1840,13 @@ ExtLinuxBoot (
+                    );
+         if (EFI_ERROR (Status)) {
+           ErrorPrint (L"%a: Failed to load overlay %s: %r\r\n", __FUNCTION__, OverlayPath, Status);
+-          goto Exit;
++          continue;
+         }
+ 
+         FdtStatus = fdt_check_header (OverlayBuffer);
+         if (FdtStatus != 0) {
+           ErrorPrint (L"%a: Overlay %s bad header: %lld\r\n", __FUNCTION__, OverlayPath, FdtStatus);
+-          goto Exit;
++          continue;
+         }
+ 
+         if (gL4TSupportProtocol != NULL) {
+@@ -1726,6 +2003,220 @@ Exit:
    return Status;
  }
  
@@ -491,89 +661,10 @@ index c905f852..1b8b1b54 100644
 +  return EFI_SUCCESS;
 +}
 +
-+/*STATIC
-+EFI_STATUS
-+EFIAPI
-+ProcessBootSlotFile (
-+  IN EFI_HANDLE            DeviceHandle,
-+  IN UINT32                BootChain,
-+  OUT UINTN                *BootSlotValue,
-+  OUT BOOLEAN              *IsRunningUpdatedSlot
-+)
-+{
-+  EFI_STATUS       Status;
-+  EFI_DEVICE_PATH  *FullDevicePath;
-+  EFI_DEVICE_PATH  *TmpFullDevicePath;
-+  EFI_HANDLE       BootPartHandle;
-+  EFI_FILE_HANDLE  FileHandle = NULL;
-+  CHAR16           *FileLine = NULL;
-+  CHAR16           *CleanLine;
-+  BOOLEAN          Ascii;
-+
-+  Status = FindPartitionInfo (DeviceHandle, BALENA_BOOT_PARTITION, BootChain, NULL, &BootPartHandle);
-+  if (EFI_ERROR (Status)) {
-+    ErrorPrint (L"%a: Could not find partition resin-boot\r\n", __FUNCTION__);
-+    return Status;
-+  }
-+
-+  FullDevicePath = FileDevicePath (BootPartHandle, BALENA_BOOTSLOT_FILE_PATH);
-+  if (NULL == FullDevicePath) {
-+    ErrorPrint (L"%a: Failed to create file device path for bootcount.env\r\n", __FUNCTION__);
-+    return EFI_OUT_OF_RESOURCES;
-+  }
-+
-+  TmpFullDevicePath = FullDevicePath;
-+  Status = EfiOpenFileByDevicePath (&TmpFullDevicePath, &FileHandle, EFI_FILE_MODE_READ, 0);
-+  if (EFI_ERROR (Status)) {
-+    ErrorPrint (L"%a: Failed to open boot slot file\r\n", __FUNCTION__);
-+    return Status;
-+  } else {
-+     while (!FileHandleEof (FileHandle)) {
-+       if (FileLine != NULL) {
-+         FreePool (FileLine);
-+         FileLine = NULL;
-+       }
-+
-+       FileLine = FileHandleReturnLine (FileHandle, &Ascii);
-+       if (NULL == FileLine) {
-+         break;
-+       }
-+
-+       CleanLine = CleanExtLinuxLine (FileLine);
-+       if (*CleanLine != CHAR_NULL) {
-+         if (StrStr(CleanLine, L"bootslot=")) {
-+           ErrorPrint(L"%a: BootSlotFile contents: %s\r\n", __FUNCTION__, CleanLine);
-+           *BootSlotValue = StrDecimalToUintn(CleanLine + 9);
-+           ErrorPrint(L"%a: BootSlot is %u \r\n", __FUNCTION__, *BootSlotValue);
-+           if (*BootSlotValue == BootChain) {
-+             ErrorPrint(L"%a: Running on updated slot %u\r\n", __FUNCTION__, BootChain);
-+             *IsRunningUpdatedSlot = TRUE;
-+           } else {
-+            ErrorPrint(L"%a: Running on fallback slot %u\r\n", __FUNCTION__, BootChain);
-+            *IsRunningUpdatedSlot = FALSE;
-+           }
-+         }
-+
-+         if (FileLine != NULL) {
-+           FreePool (FileLine);
-+           FileLine = NULL;
-+         }
-+         if (FileHandle != NULL) {
-+           FileHandleClose (FileHandle);
-+         }
-+         return Status;
-+       }
-+     }
-+  }
-+
-+  return EFI_SUCCESS;
-+}*/
-+
-+
  /**
    Process the boot mode selection from command line and variables
  
-@@ -1754,7 +2227,7 @@ ProcessBootParams (
+@@ -1754,7 +2245,7 @@ ProcessBootParams (
    }
  
    BootParams->BootChain = 0;
@@ -582,7 +673,7 @@ index c905f852..1b8b1b54 100644
    DataSize = sizeof (BootParams->BootMode);
    Status   = gRT->GetVariable (L4T_BOOTMODE_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootParams->BootMode);
    if (EFI_ERROR (Status) || (BootParams->BootMode > NVIDIA_L4T_BOOTMODE_RECOVERY)) {
-@@ -1765,17 +2238,22 @@ ProcessBootParams (
+@@ -1765,16 +2256,10 @@ ProcessBootParams (
    Status   = gRT->GetVariable (BOOT_FW_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootChain);
    // If variable does not exist, is >4 bytes or has a value larger than 1, boot partition A
    if (!EFI_ERROR (Status) && (BootChain <= 1)) {
@@ -590,24 +681,18 @@ index c905f852..1b8b1b54 100644
      BootParams->BootChain = BootChain;
    }
 -
+-  // Read current OS boot type to allow for chaining
+-  DataSize = sizeof (BootChain);
+-  Status   = gRT->GetVariable (BOOT_OS_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootChain);
+-  // If variable does not exist, is >4 bytes or has a value larger than 1, boot partition A
+-  if (!EFI_ERROR (Status) && (BootChain <= 1)) {
+-    BootParams->BootChain = BootChain;
+-  }
 +  ErrorPrint(L"%a: Bootchain after checking BOOT_FW_VARIABLE_NAME %u\r\n", __FUNCTION__, BootParams->BootChain);
-+  /* Below section is commented out because we don't know at this point if the active balenaOS rootfs is B and boot chain is A
-+   * and even if it was, they should run independently.
-   // Read current OS boot type to allow for chaining
-   DataSize = sizeof (BootChain);
-   Status   = gRT->GetVariable (BOOT_OS_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootChain);
-   // If variable does not exist, is >4 bytes or has a value larger than 1, boot partition A
-   if (!EFI_ERROR (Status) && (BootChain <= 1)) {
-+    ErrorPrint(L"%a: Set bootchain after reading BOOT_OS_VARIABLE_NAME, %u\r\n", __FUNCTION__);
-     BootParams->BootChain = BootChain;
-   }
--
-+  ErrorPrint(L"%a: Bootchain after checking/setting BOOT_OS_VARIABLE_NAME %u\r\n", __FUNCTION__, BootParams->BootChain);
-+  */
+ 
    if (LoadedImage->LoadOptionsSize) {
      CurrentBootOption = StrStr (LoadedImage->LoadOptions, BOOTMODE_DIRECT_STRING);
-     if (CurrentBootOption != NULL) {
-@@ -1805,7 +2283,9 @@ ProcessBootParams (
+@@ -1805,7 +2290,9 @@ ProcessBootParams (
        if (EFI_ERROR (Status)) {
          ErrorPrint (L"Failed to read boot chain override: %r\r\n", Status);
        } else if (StringValue <= 1) {
@@ -617,7 +702,7 @@ index c905f852..1b8b1b54 100644
        } else {
          ErrorPrint (L"Boot chain override value out of range, ignoring\r\n");
        }
-@@ -1813,15 +2293,17 @@ ProcessBootParams (
+@@ -1813,15 +2300,17 @@ ProcessBootParams (
    }
  
    // Find valid Rootfs Chain. If not, select recovery kernel
@@ -639,7 +724,7 @@ index c905f852..1b8b1b54 100644
    }
  
    return EFI_SUCCESS;
-@@ -2510,6 +2992,50 @@ GetDeviceHandleForFvBoot (
+@@ -2510,6 +2999,50 @@ GetDeviceHandleForFvBoot (
    return LoadedHandle;
  }
  
@@ -690,7 +775,7 @@ index c905f852..1b8b1b54 100644
  /**
    This is the declaration of an EFI image entry point. This entry point is
    the same for UEFI Applications, UEFI OS Loaders, and UEFI Drivers, including
-@@ -2543,6 +3069,15 @@ L4TLauncher (
+@@ -2543,6 +3076,12 @@ L4TLauncher (
    UINTN                         Index;
    VOID                          *Hob;
    TEGRA_PLATFORM_RESOURCE_INFO  *PlatformResourceInfo;
@@ -698,15 +783,12 @@ index c905f852..1b8b1b54 100644
 +  UINTN                      UpgradeAvailable = 0;
 +  UINTN                      BootCountValue = 0;
 +  UINTN                      RootFsIndex = BALENA_ROOTFS_INDEX_A;
-+  //UINTN                      UpdatedBootSlot = 0;
-+  //BOOLEAN                    RunningUpdatedBootSlot = FALSE;
 +  BOOLEAN                    BootLimitReached = FALSE;
-+  //BOOLEAN                    BootSlotProcessed = FALSE;
 +  BOOLEAN                    IsBalenaImageFlasher = FALSE;
  
    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
    if (EFI_ERROR (Status)) {
-@@ -2646,12 +3181,94 @@ L4TLauncher (
+@@ -2646,12 +3185,71 @@ L4TLauncher (
        } while (FALSE);
      }
  
@@ -736,13 +818,6 @@ index c905f852..1b8b1b54 100644
 +          Print (L"%a: BootCountValue is %d\r\n", __FUNCTION__, BootCountValue);
 +        }
 +
-+        //Status = ProcessBootSlotFile(DeviceHandle, BootParams.BootChain, &UpdatedBootSlot, &RunningUpdatedBootSlot);
-+        //if (EFI_ERROR (Status)) {
-+        //  ErrorPrint(L"%a: Error while processing boot slot value\r\n", __FUNCTION__);
-+       // } else {
-+        //  ErrorPrint(L"%a: Updated (target) boot slot: %u - Current running boot slot: %u\r\n", __FUNCTION__, UpdatedBootSlot, BootParams.BootChain);
-+        //  BootSlotProcessed = TRUE;
-+        //}
 +      } else {
 +         ErrorPrint(L"Found balena-image-flasher\n");
 +         IsBalenaImageFlasher = TRUE;
@@ -758,24 +833,8 @@ index c905f852..1b8b1b54 100644
 +	 BootLimitReached = TRUE;
 +        ErrorPrint(L"%a: Reached bootcount limit, will switch partitions... New index is %d\r\n", __FUNCTION__, RootFsIndex);
 +
-+        /* Running the same boot slot as our target, which has been updated by the UEFI capsule */
-+        //if (RunningUpdatedBootSlot) {
-+        //  ErrorPrint(L"%a: Running the updated boot slot %u and boot limit was reached, rebooting into fallback (pre-update) slot %u\r\n", __FUNCTION__, BootParams.BootChain, !BootParams.BootChain);
-+        //  Status = SetNextBootChain(!BootParams.BootChain);
-+        //  gRT->ResetSystem (EfiResetCold, EFI_SUCCESS, 0, NULL);
-+        //} else {
-+        //  ErrorPrint(L"%a: Running the fallback (pre-update) boot slot %u because boot limit was reached. Updated boot slot booted previously was %u\r\n", __FUNCTION__, BootParams.BootChain, UpdatedBootSlot);
-+
-+        // ValidateActiveBootChain();
-+        //  ErrorPrint(L"%a: Running the fallback (pre-update) boot slot %u because boot limit was reached, and marked current one as active. Updated boot slot booted previously was %u\r\n", __FUNCTION__, BootParams.BootChain, UpdatedBootSlot);
-+        //}
 +      } else if (1 == UpgradeAvailable && !IsBalenaImageFlasher) {
 +         ErrorPrint(L"%a: UpgradeAvailable: 1, BootChain: %u\r\n", __FUNCTION__, BootParams.BootChain);
-+         //if (BALENA_ROOTFS_INDEX_B == RootFsIndex) {
-+         //  RootFsIndex = BALENA_ROOTFS_INDEX_A;
-+         //} else {
-+         //  RootFsIndex = BALENA_ROOTFS_INDEX_B;
-+         //}
 +      } else if (IsBalenaImageFlasher) {
 +        RootFsIndex = BALENA_FLASHER_ROOTFS_INDEX;
 +      }
@@ -805,7 +864,7 @@ index c905f852..1b8b1b54 100644
            break;
          }
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
-index 177af9a4..cb36caab 100644
+index 177af9a4..11d0f926 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
 @@ -34,11 +34,27 @@
@@ -848,5 +907,5 @@ index 177af9a4..cb36caab 100644
  
  typedef struct {
 -- 
-2.34.1
+2.51.0
 

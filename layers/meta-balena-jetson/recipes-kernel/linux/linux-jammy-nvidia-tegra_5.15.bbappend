@@ -163,6 +163,8 @@ KERNEL_ARGS:remove="nospectre_bhb"
 
 DEFAULT_SEEED_OVERLAYS=",/boot/devicetree/tegra234-dcb-p3767-0000-hdmi.dtbo,/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
 
+DTB_OVERLAYS:jetson-agx-orin-devkit-64gb="/boot/devicetree/tegra234-p3737-0000+p3701-0000-dynamic.dtbo"
+DTB_OVERLAYS:jetson-agx-orin-devkit="/boot/devicetree/tegra234-p3737-0000+p3701-0000-dynamic.dtbo"
 DTB_OVERLAYS="/boot/devicetree/tegra234-p3768-0000+p3767-0000-dynamic.dtbo"
 DTB_OVERLAYS:append:jetson-orin-nano-seeed-j3010="${DEFAULT_SEEED_OVERLAYS}"
 DTB_OVERLAYS:append:jetson-orin-nx-seeed-j4012="${DEFAULT_SEEED_OVERLAYS}"
@@ -183,5 +185,7 @@ EOF
 
 }
 
-do_deploy[postfuncs] += "generate_extlinux_conf"
+do_deploy:append() {
+     generate_extlinux_conf
+}
 do_install[depends] += "${@['', '${INITRAMFS_IMAGE}:do_image_complete'][(d.getVar('INITRAMFS_IMAGE', True) or '') != '' and (d.getVar('TEGRA_INITRAMFS_INITRD', True) or '') == "1"]}"
