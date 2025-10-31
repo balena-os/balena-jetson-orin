@@ -1,4 +1,19 @@
 - commits:
+    - subject: "recipes-kernel/linux: Fix sporadic build error"
+      hash: ac4251762db7ebc3f3584bc4f34c58c8b61110e6
+      body: >
+        | cp: cannot stat ...  extlinux/extlinux.conf': No such file or directory
+      footer:
+        Changelog-entry: "recipes-kernel/linux: Fix sporadic build error"
+        changelog-entry: "recipes-kernel/linux: Fix sporadic build error"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.6.4+rev3
+  title: ""
+  date: 2025-10-31T15:21:34.768Z
+- commits:
     - subject: "workflows: stop get_inputs job running on both PR and PRT triggers"
       hash: e890fee457525961fa16813067236b94219beffc
       body: >

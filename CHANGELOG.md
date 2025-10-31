@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.4+rev3
+## (2025-10-31)
+
+* recipes-kernel/linux: Fix sporadic build error [Alexandru Costache]
+
 # v6.6.4+rev2
 ## (2025-10-08)
 
