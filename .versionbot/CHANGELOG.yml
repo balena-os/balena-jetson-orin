@@ -1,4 +1,33 @@
 - commits:
+    - subject: "recipes-kernel/jetson-dtbs: Add custom jetson-orin-nano-devkit-nvme dtb"
+      hash: a8fa93e4fa47e8662db74ee1c7dd8535f12ab531
+      body: >
+        which removes the dma and dma-names properties from serial@3100000,
+
+        fixing /dev/ttyTHS1 behavior.
+
+
+        The dtb is submitted by github user @spiderkeys in PR #562 and it
+
+        is a copy of tegra234-p3768-0000+p3767-0005-nv-super.dtb to which
+
+        the following changes have been done:
+
+            fdtput -d /tmp/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb /bus@0/serial@3100000 dmas
+            fdtput -d /tmp/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb /bus@0/serial@3100000 dma-names
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Changelog-entry: "recipes-kernel/jetson-dtbs: Add custom
+          jetson-orin-nano-devkit-nvme dtb"
+        changelog-entry: "recipes-kernel/jetson-dtbs: Add custom
+          jetson-orin-nano-devkit-nvme dtb"
+      author: Charles Cross
+      nested: []
+  version: 6.6.4+rev4
+  title: ""
+  date: 2025-11-03T12:50:21.247Z
+- commits:
     - subject: "recipes-kernel/linux: Fix sporadic build error"
       hash: ac4251762db7ebc3f3584bc4f34c58c8b61110e6
       body: >

@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.4+rev4
+## (2025-11-03)
+
+* recipes-kernel/jetson-dtbs: Add custom jetson-orin-nano-devkit-nvme dtb [Charles Cross]
+
 # v6.6.4+rev3
 ## (2025-10-31)
 
