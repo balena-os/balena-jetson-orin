@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.4+rev5
+## (2025-11-05)
+
+* recipes-kernel/linux: Package and install extlinux.conf [Alexandru Costache]
+
 # v6.6.4+rev4
 ## (2025-11-03)
 

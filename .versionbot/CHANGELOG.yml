@@ -1,4 +1,24 @@
 - commits:
+    - subject: "recipes-kernel/linux: Package and install extlinux.conf"
+      hash: 8d2c86fa5451da18a36b2d993e4e1d211526f687
+      body: |
+        This file was previously installed by the l4t-launcher-extlinux
+        package, but was often causing build failures which may be triggered
+        by the sstate.
+
+        We're now installing the file in the same recipe which builds it,
+        to avoid these sort of errors.
+      footer:
+        Changelog-entry: "recipes-kernel/linux: Package and install extlinux.conf"
+        changelog-entry: "recipes-kernel/linux: Package and install extlinux.conf"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.6.4+rev5
+  title: ""
+  date: 2025-11-05T15:54:09.976Z
+- commits:
     - subject: "recipes-kernel/jetson-dtbs: Add custom jetson-orin-nano-devkit-nvme dtb"
       hash: a8fa93e4fa47e8662db74ee1c7dd8535f12ab531
       body: >
