@@ -170,8 +170,8 @@ DTB_OVERLAYS:append:jetson-orin-nano-seeed-j3010="${DEFAULT_SEEED_OVERLAYS}"
 DTB_OVERLAYS:append:jetson-orin-nx-seeed-j4012="${DEFAULT_SEEED_OVERLAYS}"
 
 generate_extlinux_conf() {
-    mkdir -p ${DEPLOY_DIR_IMAGE}/extlinux || true
-    kernelRootspec="${KERNEL_ARGS}" ; cat >${DEPLOY_DIR_IMAGE}/extlinux/extlinux.conf << EOF
+    mkdir -p ${WORKDIR}/extlinux || true
+    kernelRootspec="${KERNEL_ARGS}" ; cat >${WORKDIR}/extlinux/extlinux.conf << EOF
 DEFAULT primary
 TIMEOUT 10
 MENU TITLE Boot Options
@@ -185,7 +185,15 @@ EOF
 
 }
 
-do_deploy:append() {
-     generate_extlinux_conf
+
+do_install:append() {
+    generate_extlinux_conf
+    install -d ${D}/boot/extlinux
+    install -m 0644 ${WORKDIR}/extlinux/extlinux.conf ${D}/boot/extlinux/
 }
+
+PACKAGES =+ "${PN}-extlinux"
+FILES:${PN}-extlinux = " /boot/extlinux/extlinux.conf "
+RRECOMMENDS:${PN} = "${PN}-extlinux"
+
 do_install[depends] += "${@['', '${INITRAMFS_IMAGE}:do_image_complete'][(d.getVar('INITRAMFS_IMAGE', True) or '') != '' and (d.getVar('TEGRA_INITRAMFS_INITRD', True) or '') == "1"]}"
