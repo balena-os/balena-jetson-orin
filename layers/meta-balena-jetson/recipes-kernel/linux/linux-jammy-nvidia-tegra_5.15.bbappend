@@ -153,6 +153,14 @@ BALENA_CONFIGS[lan743x] = " \
     CONFIG_LAN743X=m \
 "
 
+BALENA_CONFIGS:append = " uvc_gadget "
+BALENA_CONFIGS[uvc_gadget] = " \
+    CONFIG_USB_CONFIGFS=m \
+    CONFIG_USB_LIBCOMPOSITE=m \
+    CONFIG_USB_CONFIGFS_F_UVC=y \
+    CONFIG_USB_F_UVC=m \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=tty0 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} rootdelay=1 roottimeout=60 "
