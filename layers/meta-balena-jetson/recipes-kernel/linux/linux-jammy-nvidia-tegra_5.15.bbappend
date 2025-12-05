@@ -168,6 +168,7 @@ KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_lo
 # Let's not disable this by default
 # in our integration, although upstream does.
 KERNEL_ARGS:remove="nospectre_bhb"
+KERNEL_ARGS:remove="firmware_class.path=/etc/firmware"
 
 DEFAULT_SEEED_OVERLAYS=",/boot/devicetree/tegra234-dcb-p3767-0000-hdmi.dtbo,/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
 
