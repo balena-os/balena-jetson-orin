@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.6.4+rev6
+## (2025-12-10)
+
+* recipes-bsp/uefi: Add support for extra firmware environment variable parsing [Alexandru Costache]
+
 # v6.6.4+rev5
 ## (2025-11-05)
 

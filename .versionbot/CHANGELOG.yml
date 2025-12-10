@@ -1,4 +1,21 @@
 - commits:
+    - subject: "recipes-bsp/uefi: Add support for extra firmware environment variable
+        parsing"
+      hash: 6ceaba91b784ba44d31c6971062839f00a9afc07
+      body: ""
+      footer:
+        Changelog-entry: "recipes-bsp/uefi: Add support for extra firmware environment
+          variable parsing"
+        changelog-entry: "recipes-bsp/uefi: Add support for extra firmware environment
+          variable parsing"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.6.4+rev6
+  title: ""
+  date: 2025-12-10T09:14:59.610Z
+- commits:
     - subject: "recipes-kernel/linux: Package and install extlinux.conf"
       hash: 8d2c86fa5451da18a36b2d993e4e1d211526f687
       body: |
