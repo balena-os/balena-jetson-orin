@@ -1,6 +1,6 @@
-From 6d813eb79cc8a4c0dff1072a89039e3e740d3a44 Mon Sep 17 00:00:00 2001
+From 40b4a2aaaa5ddb46b9f688211bf37487868af827 Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Mon, 27 Oct 2025 15:50:54 +0200
+Date: Thu, 4 Dec 2025 13:16:58 +0200
 Subject: [PATCH] Orin Nano: Integrate with balenaOS on L4T 36.4.3
 
 With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
@@ -12,15 +12,15 @@ the firmware in the QSPI is based on Jetpack 6.
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
- .../Application/L4TLauncher/L4TLauncher.c     | 698 ++++++++++++++++--
+ .../Application/L4TLauncher/L4TLauncher.c     | 734 ++++++++++++++++--
  .../Application/L4TLauncher/L4TLauncher.h     |  18 +
- 2 files changed, 666 insertions(+), 50 deletions(-)
+ 2 files changed, 702 insertions(+), 50 deletions(-)
 
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-index c905f852..60486344 100644
+index c905f852..825c3538 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-@@ -1156,13 +1156,208 @@ CheckCommandString (
+@@ -1156,13 +1156,231 @@ CheckCommandString (
    return EFI_NOT_FOUND;
  }
  
@@ -78,7 +78,8 @@ index c905f852..60486344 100644
 +  IN CONST CHAR16         *BalenaOSRootFs,
 +  OUT CHAR16              **CustomFdtName,
 +  OUT CHAR16              **ExtraOsCmdline,
-+  OUT CHAR16              **CustomDtboFiles
++  OUT CHAR16              **CustomDtboFiles,
++  OUT CHAR16              **ExtraOsFirmwareClassPath
 +)
 +{
 +  EFI_STATUS		Status;
@@ -90,17 +91,19 @@ index c905f852..60486344 100644
 +  CHAR16		*DtbName = NULL;
 +  CHAR16		*CmdlineValue = NULL;
 +  CHAR16		*DtboValue = NULL;
++  CHAR16        	*FirmwareClassPathValue = NULL;
 +  BOOLEAN		Ascii;
 +  CHAR16 		*LineCopy = AllocateZeroPool(MAX_DTB_PATH_LEN);
 +  UINT64 		len;
 +  UINTN 		CmdlineLen;
 +  UINTN 		DtboLen;
-+
++  UINTN         	FirmwareClassPathLen;
 +
 +  *CustomFdtName = AllocateZeroPool(MAX_DTB_PATH_LEN);
 +  UnicodeSPrint (*CustomFdtName, MAX_DTB_PATH_LEN, L"boot\\%s\0", DEFAULT_ORIN_NANO_DTB_NAME);
 +  *ExtraOsCmdline = NULL;
 +  *CustomDtboFiles = NULL;
++  *ExtraOsFirmwareClassPath = NULL;
 +
 +  Status = FindPartitionInfo (DeviceHandle, BALENA_BOOT_PARTITION, BootChain, NULL, &BootPartHandle);
 +  if (EFI_ERROR (Status)) {
@@ -198,6 +201,26 @@ index c905f852..60486344 100644
 +          ErrorPrint(L"%a: overlay_files value exceeds the 512 character limit and will be ignored.\n", __FUNCTION__);
 +        }
 +      }
++
++      FirmwareClassPathValue = StrStr(LineCopy, L"extra_os_firmware_class_path=");
++      if (NULL != FirmwareClassPathValue) {
++        FirmwareClassPathValue += StrLen(L"extra_os_firmware_class_path=");
++        FirmwareClassPathLen = StrLen(FirmwareClassPathValue);
++        // Use up to 256 chars for the firmware class path
++        if (256 >= FirmwareClassPathLen) {
++          if (*ExtraOsFirmwareClassPath != NULL) {
++            FreePool(*ExtraOsFirmwareClassPath);
++          }
++          *ExtraOsFirmwareClassPath = AllocateCopyPool(StrSize(FirmwareClassPathValue), FirmwareClassPathValue);
++          if (*ExtraOsFirmwareClassPath) {
++            Print(L"%a: extra_os_firmware_class_path present in extra_uEnv.txt: %s\n", __FUNCTION__, *ExtraOsFirmwareClassPath);
++          } else {
++            ErrorPrint(L"%a: Failed to allocate memory for extra_os_firmware_class_path\n", __FUNCTION__);
++          }
++        } else {
++          ErrorPrint(L"%a: extra_os_firmware_class_path value exceeds the 256 character limit and will be ignored.\n", __FUNCTION__);
++        }
++      }
 +    }
 +
 +    if (FileLine != NULL) {
@@ -233,7 +256,7 @@ index c905f852..60486344 100644
  
    @retval EFI_SUCCESS    The operation completed successfully.
  
-@@ -1171,22 +1366,31 @@ STATIC
+@@ -1171,22 +1389,32 @@ STATIC
  EFI_STATUS
  EFIAPI
  ProcessExtLinuxConfig (
@@ -276,10 +299,11 @@ index c905f852..60486344 100644
 +  CHAR16 *ExtrauEnvDtb = NULL;
 +  CHAR16 *ExtraOsCmdline = NULL;
 +  CHAR16 *ExtrauEnvDtbo = NULL;
++  CHAR16 *ExtraOsFirmwareClassPath = NULL;
  
    ZeroMem (BootConfig, sizeof (EXTLINUX_BOOT_CONFIG));
  
-@@ -1194,24 +1398,26 @@ ProcessExtLinuxConfig (
+@@ -1194,24 +1422,26 @@ ProcessExtLinuxConfig (
      return EFI_INVALID_PARAMETER;
    }
  
@@ -310,7 +334,7 @@ index c905f852..60486344 100644
    }
  
 +  // Get custom dtb, cmdline args and custom dtbo, if set
-+  Status = ProcessExtrauEnv(DeviceHandle, BootChain, BalenaOSRootFs, &ExtrauEnvDtb, &ExtraOsCmdline, &ExtrauEnvDtbo);
++  Status = ProcessExtrauEnv(DeviceHandle, BootChain, BalenaOSRootFs, &ExtrauEnvDtb, &ExtraOsCmdline, &ExtrauEnvDtbo, &ExtraOsFirmwareClassPath);
 +  if (EFI_ERROR (Status) && Status != EFI_NOT_FOUND) {
 +      ErrorPrint (L"%a: Failed to process extra_uEnv.txt: %r\r\n", __FUNCTION__, Status);
 +  }
@@ -318,7 +342,7 @@ index c905f852..60486344 100644
    while (!FileHandleEof (FileHandle)) {
      if (FileLine != NULL) {
        FreePool (FileLine);
-@@ -1271,15 +1477,73 @@ ProcessExtLinuxConfig (
+@@ -1271,15 +1501,81 @@ ProcessExtLinuxConfig (
  
          Status = CheckCommandString (CleanLine, EXTLINUX_KEY_FDT, &BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
          if (!EFI_ERROR (Status)) {
@@ -364,6 +388,9 @@ index c905f852..60486344 100644
 +        if (ExtraOsCmdline != NULL) {
 +            argsSize += StrSize(ExtraOsCmdline) + 1; // +1 for a space
 +        }
++        if (ExtraOsFirmwareClassPath != NULL) {
++            argsSize += StrSize(ExtraOsFirmwareClassPath) + 1;
++        }
 +
 +        UpdatedCmdline = AllocateZeroPool(argsSize);
 +        if (NULL == UpdatedCmdline) {
@@ -384,6 +411,11 @@ index c905f852..60486344 100644
 +          StrCatS(UpdatedCmdline, argsSize / sizeof(CHAR16), ExtraOsCmdline);
 +        }
 +
++        if (ExtraOsFirmwareClassPath != NULL) {
++          StrCatS(UpdatedCmdline, argsSize / sizeof(CHAR16), L" ");
++          StrCatS(UpdatedCmdline, argsSize / sizeof(CHAR16), ExtraOsFirmwareClassPath);
++        }
++
 +        if (NULL != BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs) {
 +          FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs);
 +        }
@@ -392,7 +424,7 @@ index c905f852..60486344 100644
          if (!EFI_ERROR (Status)) {
            CbootArg = StrStr (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs, EXTLINUX_CBOOT_ARG);
            if (CbootArg != NULL) {
-@@ -1331,6 +1595,19 @@ ProcessExtLinuxConfig (
+@@ -1331,6 +1627,23 @@ ProcessExtLinuxConfig (
      }
    }
  
@@ -408,11 +440,15 @@ index c905f852..60486344 100644
 +  if (ExtrauEnvDtbo != NULL) {
 +      FreePool(ExtrauEnvDtbo);
 +  }
++  
++  if (ExtraOsFirmwareClassPath != NULL) {
++    FreePool(ExtraOsFirmwareClassPath);
++  }
 +
    if (BootConfig->NumberOfBootOptions == 0) {
      return EFI_NOT_FOUND;
    } else {
-@@ -1501,12 +1778,12 @@ ExtLinuxBoot (
+@@ -1501,12 +1814,12 @@ ExtLinuxBoot (
  
    // Reload fdt if needed
    Status = EfiGetSystemConfigurationTable (&gEfiAcpiTableGuid, &AcpiBase);
@@ -427,7 +463,7 @@ index c905f852..60486344 100644
      Status = OpenAndReadFileToBuffer (
                 DeviceHandle,
                 BootOption->DtbPath,
-@@ -1563,13 +1840,13 @@ ExtLinuxBoot (
+@@ -1563,13 +1876,13 @@ ExtLinuxBoot (
                     );
          if (EFI_ERROR (Status)) {
            ErrorPrint (L"%a: Failed to load overlay %s: %r\r\n", __FUNCTION__, OverlayPath, Status);
@@ -443,7 +479,7 @@ index c905f852..60486344 100644
          }
  
          if (gL4TSupportProtocol != NULL) {
-@@ -1726,6 +2003,220 @@ Exit:
+@@ -1726,6 +2039,220 @@ Exit:
    return Status;
  }
  
@@ -664,7 +700,7 @@ index c905f852..60486344 100644
  /**
    Process the boot mode selection from command line and variables
  
-@@ -1754,7 +2245,7 @@ ProcessBootParams (
+@@ -1754,7 +2281,7 @@ ProcessBootParams (
    }
  
    BootParams->BootChain = 0;
@@ -673,7 +709,7 @@ index c905f852..60486344 100644
    DataSize = sizeof (BootParams->BootMode);
    Status   = gRT->GetVariable (L4T_BOOTMODE_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootParams->BootMode);
    if (EFI_ERROR (Status) || (BootParams->BootMode > NVIDIA_L4T_BOOTMODE_RECOVERY)) {
-@@ -1765,16 +2256,10 @@ ProcessBootParams (
+@@ -1765,16 +2292,10 @@ ProcessBootParams (
    Status   = gRT->GetVariable (BOOT_FW_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, NULL, &DataSize, &BootChain);
    // If variable does not exist, is >4 bytes or has a value larger than 1, boot partition A
    if (!EFI_ERROR (Status) && (BootChain <= 1)) {
@@ -692,7 +728,7 @@ index c905f852..60486344 100644
  
    if (LoadedImage->LoadOptionsSize) {
      CurrentBootOption = StrStr (LoadedImage->LoadOptions, BOOTMODE_DIRECT_STRING);
-@@ -1805,7 +2290,9 @@ ProcessBootParams (
+@@ -1805,7 +2326,9 @@ ProcessBootParams (
        if (EFI_ERROR (Status)) {
          ErrorPrint (L"Failed to read boot chain override: %r\r\n", Status);
        } else if (StringValue <= 1) {
@@ -702,7 +738,7 @@ index c905f852..60486344 100644
        } else {
          ErrorPrint (L"Boot chain override value out of range, ignoring\r\n");
        }
-@@ -1813,15 +2300,17 @@ ProcessBootParams (
+@@ -1813,15 +2336,17 @@ ProcessBootParams (
    }
  
    // Find valid Rootfs Chain. If not, select recovery kernel
@@ -724,7 +760,7 @@ index c905f852..60486344 100644
    }
  
    return EFI_SUCCESS;
-@@ -2510,6 +2999,50 @@ GetDeviceHandleForFvBoot (
+@@ -2510,6 +3035,50 @@ GetDeviceHandleForFvBoot (
    return LoadedHandle;
  }
  
@@ -775,7 +811,7 @@ index c905f852..60486344 100644
  /**
    This is the declaration of an EFI image entry point. This entry point is
    the same for UEFI Applications, UEFI OS Loaders, and UEFI Drivers, including
-@@ -2543,6 +3076,12 @@ L4TLauncher (
+@@ -2543,6 +3112,12 @@ L4TLauncher (
    UINTN                         Index;
    VOID                          *Hob;
    TEGRA_PLATFORM_RESOURCE_INFO  *PlatformResourceInfo;
@@ -788,7 +824,7 @@ index c905f852..60486344 100644
  
    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
    if (EFI_ERROR (Status)) {
-@@ -2646,12 +3185,71 @@ L4TLauncher (
+@@ -2646,12 +3221,71 @@ L4TLauncher (
        } while (FALSE);
      }
  

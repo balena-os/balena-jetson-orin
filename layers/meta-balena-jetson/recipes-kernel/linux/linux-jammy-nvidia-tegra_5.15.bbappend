@@ -153,6 +153,14 @@ BALENA_CONFIGS[lan743x] = " \
     CONFIG_LAN743X=m \
 "
 
+BALENA_CONFIGS:append:jetson-orin-nano-seeed-j3010 = " uvc_gadget "
+BALENA_CONFIGS[uvc_gadget] = " \
+    CONFIG_USB_CONFIGFS=m \
+    CONFIG_USB_LIBCOMPOSITE=m \
+    CONFIG_USB_CONFIGFS_F_UVC=y \
+    CONFIG_USB_F_UVC=m \
+"
+
 L4TVER=" l4tver=${L4T_VERSION}"
 
 KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_loglevel=4 console=tty0 console=ttyTCU0,115200 ',' console=null quiet splash vt.global_cursor_default=0 consoleblank=0',d)} l4tver=${L4T_VERSION} rootdelay=1 roottimeout=60 "
@@ -160,6 +168,7 @@ KERNEL_ARGS += "${@bb.utils.contains('DISTRO_FEATURES','osdev-image',' mminit_lo
 # Let's not disable this by default
 # in our integration, although upstream does.
 KERNEL_ARGS:remove="nospectre_bhb"
+KERNEL_ARGS:remove="firmware_class.path=/etc/firmware"
 
 DEFAULT_SEEED_OVERLAYS=",/boot/devicetree/tegra234-dcb-p3767-0000-hdmi.dtbo,/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
 
