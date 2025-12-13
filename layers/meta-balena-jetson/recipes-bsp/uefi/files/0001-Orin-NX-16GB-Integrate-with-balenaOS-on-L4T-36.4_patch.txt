@@ -1,6 +1,6 @@
-From 40b4a2aaaa5ddb46b9f688211bf37487868af827 Mon Sep 17 00:00:00 2001
+From db5e97779a89589fd2f16593bf1bf376f2f162fe Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Thu, 4 Dec 2025 13:16:58 +0200
+Date: Wed, 10 Dec 2025 16:16:41 +0200
 Subject: [PATCH] Orin NX: Integrate with balenaOS on L4T 36.4.3
 
 With this patch, the Nvidia bootloader parses resinos_uEnv.txt,
@@ -12,12 +12,12 @@ the firmware in the QSPI is based on Jetpack 6.
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 ---
- .../Application/L4TLauncher/L4TLauncher.c     | 734 ++++++++++++++++--
+ .../Application/L4TLauncher/L4TLauncher.c     | 731 ++++++++++++++++--
  .../Application/L4TLauncher/L4TLauncher.h     |  18 +
- 2 files changed, 702 insertions(+), 50 deletions(-)
+ 2 files changed, 698 insertions(+), 51 deletions(-)
 
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
-index c905f852..825c3538 100644
+index c905f852..d76902fd 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
 @@ -1156,13 +1156,231 @@ CheckCommandString (
@@ -146,7 +146,7 @@ index c905f852..825c3538 100644
 +    if (0 < len) {
 +      // Check for custom_fdt_file in extra_uEnv.txt
 +      DtbName = StrStr(LineCopy, L"custom_fdt_file=");
-+      if (NULL != DtbName) {
++      if (DtbName != NULL) {
 +        DtbName += StrLen(L"custom_fdt_file=");
 +        if (*CustomFdtName != NULL) {
 +            FreePool(*CustomFdtName);
@@ -163,7 +163,7 @@ index c905f852..825c3538 100644
 +
 +      // Check for extra_os_cmdline in extra_uEnv.txt
 +      CmdlineValue = StrStr(LineCopy, L"extra_os_cmdline=");
-+      if (NULL != CmdlineValue) {
++      if (CmdlineValue != NULL) {
 +        CmdlineValue += StrLen(L"extra_os_cmdline=");
 +        CmdlineLen = StrLen(CmdlineValue);
 +        // Use up to 256 chars from extra_os_cmdline
@@ -172,9 +172,9 @@ index c905f852..825c3538 100644
 +            FreePool(*ExtraOsCmdline);
 +          }
 +          *ExtraOsCmdline = AllocateCopyPool(StrSize(CmdlineValue), CmdlineValue);
-+          if (*ExtraOsCmdline) {
++          if (*ExtraOsCmdline != NULL) {
 +            Print(L"%a: extra_os_cmdline present in extra_uEnv.txt: %s\n", __FUNCTION__, *ExtraOsCmdline);
-+          } else { ErrorPrint(L"10\n");
++          } else {
 +            ErrorPrint(L"%a: Failed to allocate memory for extra_os_cmdline\n", __FUNCTION__);
 +          }
 +        } else {
@@ -183,7 +183,7 @@ index c905f852..825c3538 100644
 +      }
 +
 +      DtboValue = StrStr(LineCopy, L"overlay_files=");
-+      if (NULL != DtboValue) {
++      if (DtboValue != NULL) {
 +        DtboValue += StrLen(L"overlay_files=");
 +        DtboLen = StrLen(DtboValue);
 +        // Use up to 512 chars for custom dtbo files
@@ -192,7 +192,7 @@ index c905f852..825c3538 100644
 +              FreePool(*CustomDtboFiles);
 +          }
 +          *CustomDtboFiles = AllocateCopyPool(StrSize(DtboValue), DtboValue);
-+          if (*CustomDtboFiles) {
++          if (*CustomDtboFiles != NULL) {
 +            Print(L"%a: overlay_files present in extra_uEnv.txt: %s\n", __FUNCTION__, *CustomDtboFiles);
 +          } else {
 +            ErrorPrint(L"%a: Failed to allocate memory for overlay_files\n", __FUNCTION__);
@@ -203,7 +203,7 @@ index c905f852..825c3538 100644
 +      }
 +
 +      FirmwareClassPathValue = StrStr(LineCopy, L"extra_os_firmware_class_path=");
-+      if (NULL != FirmwareClassPathValue) {
++      if (FirmwareClassPathValue != NULL) {
 +        FirmwareClassPathValue += StrLen(L"extra_os_firmware_class_path=");
 +        FirmwareClassPathLen = StrLen(FirmwareClassPathValue);
 +        // Use up to 256 chars for the firmware class path
@@ -212,7 +212,7 @@ index c905f852..825c3538 100644
 +            FreePool(*ExtraOsFirmwareClassPath);
 +          }
 +          *ExtraOsFirmwareClassPath = AllocateCopyPool(StrSize(FirmwareClassPathValue), FirmwareClassPathValue);
-+          if (*ExtraOsFirmwareClassPath) {
++          if (*ExtraOsFirmwareClassPath != NULL) {
 +            Print(L"%a: extra_os_firmware_class_path present in extra_uEnv.txt: %s\n", __FUNCTION__, *ExtraOsFirmwareClassPath);
 +          } else {
 +            ErrorPrint(L"%a: Failed to allocate memory for extra_os_firmware_class_path\n", __FUNCTION__);
@@ -348,7 +348,7 @@ index c905f852..825c3538 100644
          if (!EFI_ERROR (Status)) {
 +          /* extlinux.conf contains a "FDT default" entry */
 +          if (0 == StrnCmp(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath, EXTLINUX_GENERIC_FDT, StrLen (EXTLINUX_GENERIC_FDT))) {
-+            if (NULL != BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath) {
++            if (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath != NULL) {
 +              FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath);
 +              if (ExtrauEnvDtb != NULL) {
 +                BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].DtbPath = ExtrauEnvDtb;
@@ -416,7 +416,7 @@ index c905f852..825c3538 100644
 +          StrCatS(UpdatedCmdline, argsSize / sizeof(CHAR16), ExtraOsFirmwareClassPath);
 +        }
 +
-+        if (NULL != BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs) {
++        if (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs != NULL) {
 +          FreePool(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs);
 +        }
 +        BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs = UpdatedCmdline;
@@ -728,7 +728,7 @@ index c905f852..825c3538 100644
  
    if (LoadedImage->LoadOptionsSize) {
      CurrentBootOption = StrStr (LoadedImage->LoadOptions, BOOTMODE_DIRECT_STRING);
-@@ -1805,7 +2326,9 @@ ProcessBootParams (
+@@ -1805,23 +2326,23 @@ ProcessBootParams (
        if (EFI_ERROR (Status)) {
          ErrorPrint (L"Failed to read boot chain override: %r\r\n", Status);
        } else if (StringValue <= 1) {
@@ -738,18 +738,15 @@ index c905f852..825c3538 100644
        } else {
          ErrorPrint (L"Boot chain override value out of range, ignoring\r\n");
        }
-@@ -1813,15 +2336,17 @@ ProcessBootParams (
+     }
    }
  
-   // Find valid Rootfs Chain. If not, select recovery kernel
+-  // Find valid Rootfs Chain. If not, select recovery kernel
 -  Status = ValidateRootfsStatus (BootParams);
 -  if (EFI_ERROR (Status)) {
 -    ErrorPrint (L"Failed to validate rootfs status: %r\r\n", Status);
 -  }
-+  //Status = ValidateRootfsStatus (BootParams);
-+  //if (EFI_ERROR (Status)) {
-+    ErrorPrint (L"Skip rootfs validation, this is performed by balenaOS.\r\n");
-+  //}
++  ErrorPrint (L"Skip rootfs validation, this is performed by balenaOS.\r\n");
  
    // Store the current boot chain in volatile variable to allow chain loading
    Status = gRT->SetVariable (BOOT_OS_VARIABLE_NAME, &gNVIDIAPublicVariableGuid, EFI_VARIABLE_BOOTSERVICE_ACCESS|EFI_VARIABLE_RUNTIME_ACCESS, sizeof (BootParams->BootChain), &BootParams->BootChain);
@@ -760,7 +757,7 @@ index c905f852..825c3538 100644
    }
  
    return EFI_SUCCESS;
-@@ -2510,6 +3035,50 @@ GetDeviceHandleForFvBoot (
+@@ -2510,6 +3031,50 @@ GetDeviceHandleForFvBoot (
    return LoadedHandle;
  }
  
@@ -811,7 +808,7 @@ index c905f852..825c3538 100644
  /**
    This is the declaration of an EFI image entry point. This entry point is
    the same for UEFI Applications, UEFI OS Loaders, and UEFI Drivers, including
-@@ -2543,6 +3112,12 @@ L4TLauncher (
+@@ -2543,6 +3108,12 @@ L4TLauncher (
    UINTN                         Index;
    VOID                          *Hob;
    TEGRA_PLATFORM_RESOURCE_INFO  *PlatformResourceInfo;
@@ -824,7 +821,7 @@ index c905f852..825c3538 100644
  
    Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
    if (EFI_ERROR (Status)) {
-@@ -2646,12 +3221,71 @@ L4TLauncher (
+@@ -2646,12 +3217,70 @@ L4TLauncher (
        } while (FALSE);
      }
  
@@ -890,7 +887,6 @@ index c905f852..825c3538 100644
 +          BalenaOSRootFs = BALENA_ROOTFS_BASE_NAME_A;
 +      }
 +
-+
 +      Status = ProcessExtLinuxConfig (DeviceHandle, BootParams.BootChain, BalenaOSRootFs, &ExtLinuxConfig, &RootFsDeviceHandle);
 +
          if (EFI_ERROR (Status)) {
@@ -900,7 +896,7 @@ index c905f852..825c3538 100644
            break;
          }
 diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
-index 177af9a4..11d0f926 100644
+index 177af9a4..dd7d6052 100644
 --- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
 +++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.h
 @@ -34,11 +34,27 @@
