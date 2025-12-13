@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.9.4
+## (2025-12-13)
+
+* balena-yocto-scripts: Update to v1.39.0 [Alexandru Costache]
+* layers/meta-balena: Update to v6.9.4 [Alexandru Costache]
+
 # v6.6.4+rev6
 ## (2025-12-10)
 

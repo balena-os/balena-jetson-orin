@@ -1,4 +1,28 @@
 - commits:
+    - subject: "balena-yocto-scripts: Update to v1.39.0"
+      hash: 32dfcc026e98a5bfe640be97ca5566ece41c65a7
+      body: ""
+      footer:
+        Changelog-entry: "balena-yocto-scripts: Update to v1.39.0"
+        changelog-entry: "balena-yocto-scripts: Update to v1.39.0"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "layers/meta-balena: Update to v6.9.4"
+      hash: adfc713d695859cc30e62cc2be153e3c77888464
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v6.9.4"
+        changelog-entry: "layers/meta-balena: Update to v6.9.4"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.9.4
+  title: ""
+  date: 2025-12-13T21:32:42.337Z
+- commits:
     - subject: "recipes-bsp/uefi: Add support for extra firmware environment variable
         parsing"
       hash: 6ceaba91b784ba44d31c6971062839f00a9afc07
