@@ -1,6 +1,98 @@
 Change log
 -----------
 
+# v6.10.4
+## (2025-12-22)
+
+
+<details>
+<summary> Update layers/meta-balena to a5bae83f8032f24e17f47af3673f7eda96561f0c [balena-renovate[bot]] </summary>
+
+> ## meta-balena-6.10.4
+> ### (2025-12-20)
+> 
+> 
+> <details>
+> <summary> Update tests/leviathan digest to c80702b [balena-renovate[bot]] </summary>
+> 
+>> ### leviathan-2.36.77
+>> #### (2025-12-20)
+>> 
+>> * Update docker/setup-buildx-action digest to 8d2750c [balena-renovate[bot]]
+>> 
+>> ### leviathan-2.36.76
+>> #### (2025-12-19)
+>> 
+>> * Update balena-os/leviathan-worker to v2.10.20 [balena-renovate[bot]]
+>> 
+>> ### leviathan-2.36.75
+>> #### (2025-12-19)
+>> 
+>> * Core: worker: enable configurable flashing timeout [Ryan Cooke]
+>> 
+>> ### leviathan-2.36.74
+>> #### (2025-12-16)
+>> 
+>> * Update balena-os/leviathan-worker to v2.10.18 [balena-renovate[bot]]
+>> 
+>> ### leviathan-2.36.73
+>> #### (2025-12-15)
+>> 
+>> * Update Lock file maintenance [balena-renovate[bot]]
+>> 
+>> ### leviathan-2.36.72
+>> #### (2025-12-13)
+>> 
+>> * Update actions/upload-artifact action to v6 [balena-renovate[bot]]
+>> 
+> 
+> </details>
+> 
+> 
+> ## meta-balena-6.10.3
+> ### (2025-12-15)
+> 
+> * remove disk watchdog logs [Yann CARDAILLAC]
+> 
+> ## meta-balena-6.10.2
+> ### (2025-12-13)
+> 
+> 
+> <details>
+> <summary> Update balena-supervisor to v17.2.2 [balena-renovate[bot]] </summary>
+> 
+>> ### balena-supervisor-17.2.2
+>> #### (2025-12-11)
+>> 
+>> * Improve issue of very early container logs potentially being dropped [Pagan Gazzard]
+>> 
+> 
+> </details>
+> 
+> 
+> ## meta-balena-6.10.1
+> ### (2025-12-11)
+> 
+> * balena-os.inc: Enable firmware compression by default [Michal Toman]
+> 
+> ## meta-balena-6.10.0
+> ### (2025-12-11)
+> 
+> * networkmanager: update to 1.52.0 [Michal Toman]
+> 
+> ## meta-balena-6.9.6
+> ### (2025-12-11)
+> 
+> * renovate.json: Remove custom balena-git package rules [Kyle Harding]
+> 
+> ## meta-balena-6.9.5
+> ### (2025-12-10)
+> 
+> * fix initramfs rootfs script wrong indent [Yann CARDAILLAC]
+> 
+
+</details>
+
 # v6.9.4
 ## (2025-12-13)
 

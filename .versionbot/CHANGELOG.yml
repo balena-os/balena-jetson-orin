@@ -1,4 +1,252 @@
 - commits:
+    - subject: Update layers/meta-balena to a5bae83f8032f24e17f47af3673f7eda96561f0c
+      hash: eb58a9c6cabcf2ee4e413277b56dcdcbc33d4f5d
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to a5bae83f8032f24e17f47af3673f7eda96561f0c
+        changelog-entry: Update layers/meta-balena to a5bae83f8032f24e17f47af3673f7eda96561f0c
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: Update tests/leviathan digest to c80702b
+              hash: fdd04ce817ba785c1d9a0e0d25392dd31cadf39a
+              body: Update tests/leviathan
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested:
+                - commits:
+                    - subject: Update docker/setup-buildx-action digest to 8d2750c
+                      hash: 53c1b3b7c93bd7f7f76220ce3b6cbcec88b7d342
+                      body: |
+                        Update docker/setup-buildx-action
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: balena-renovate[bot]
+                      nested: []
+                  version: leviathan-2.36.77
+                  title: ""
+                  date: 2025-12-20T01:10:28.074Z
+                - commits:
+                    - subject: Update balena-os/leviathan-worker to v2.10.20
+                      hash: ceb7c8821ce44300169c59953e8f986d5ddd0452
+                      body: >
+                        Update balena-os/leviathan-worker from 2.10.18 to 2.10.20
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: balena-renovate[bot]
+                      nested: []
+                  version: leviathan-2.36.76
+                  title: ""
+                  date: 2025-12-19T10:49:13.465Z
+                - commits:
+                    - subject: "Core: worker: enable configurable flashing timeout"
+                      hash: fb6228264bcda7fc0be5c0db4ece37ee85089b87
+                      body: >
+                        This is controlled via an env var on the worker - the
+                        worker will send back the time for the core to wait, if
+                        not the default.
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                        Signed-off-by: Ryan Cooke <ryan@balena.io>
+                        signed-off-by: Ryan Cooke <ryan@balena.io>
+                      author: Ryan Cooke
+                      nested: []
+                  version: leviathan-2.36.75
+                  title: ""
+                  date: 2025-12-19T09:49:12.134Z
+                - commits:
+                    - subject: Update balena-os/leviathan-worker to v2.10.18
+                      hash: 22a8e952b4b2a38ff9218c52d5f09a97b8aed70f
+                      body: >
+                        Update balena-os/leviathan-worker from 2.10.17 to 2.10.18
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: balena-renovate[bot]
+                      nested: []
+                  version: leviathan-2.36.74
+                  title: ""
+                  date: 2025-12-16T14:39:06.600Z
+                - commits:
+                    - subject: Update Lock file maintenance
+                      hash: 087cffba7ba15a707f558423d68bbdfec1370358
+                      body: |
+                        Update 
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: balena-renovate[bot]
+                      nested: []
+                  version: leviathan-2.36.73
+                  title: ""
+                  date: 2025-12-15T01:04:43.814Z
+                - commits:
+                    - subject: Update actions/upload-artifact action to v6
+                      hash: 6ff3cfd5341a71f585ec5b631ef89e6777ce0fe1
+                      body: |
+                        Update actions/upload-artifact from 5 to 6
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: balena-renovate[bot]
+                      nested: []
+                  version: leviathan-2.36.72
+                  title: ""
+                  date: 2025-12-13T02:40:01.305Z
+          version: meta-balena-6.10.4
+          title: ""
+          date: 2025-12-20T06:54:56.306Z
+        - commits:
+            - subject: remove disk watchdog logs
+              hash: 426c342e1c3ee87b752c88ef6805da093249bd51
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+                signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+              author: Yann CARDAILLAC
+              nested: []
+          version: meta-balena-6.10.3
+          title: ""
+          date: 2025-12-15T18:38:40.829Z
+        - commits:
+            - subject: Update balena-supervisor to v17.2.2
+              hash: 0d50a5c161c26f741a85aa48169328f989534a80
+              body: |
+                Update balena-supervisor from 17.2.1 to 17.2.2
+              footer:
+                Change-type: patch
+                change-type: patch
+              author: balena-renovate[bot]
+              nested:
+                - commits:
+                    - subject: Improve issue of very early container logs potentially being dropped
+                      hash: b97dc2bba2ca7c560a88b497ce5a78e1ec77bb61
+                      body: >
+                        It is possible for logs to be received for a container
+                        before we have
+
+                        marked it for attachment and hence cause those logs to
+                        be skipped and
+
+                        never sent to the backend. Waiting for a lock before
+                        attaching makes
+
+                        this more likely to happen and is unnecessary as we are
+                        not directly
+
+                        interacting with/affecting the container and it only
+                        affects the
+
+                        journalctl tailing
+                      footer:
+                        Change-type: patch
+                        change-type: patch
+                      author: Pagan Gazzard
+                      nested: []
+                  version: balena-supervisor-17.2.2
+                  title: ""
+                  date: 2025-12-11T20:44:07.627Z
+          version: meta-balena-6.10.2
+          title: ""
+          date: 2025-12-13T01:27:35.362Z
+        - commits:
+            - subject: "balena-os.inc: Enable firmware compression by default"
+              hash: 67b37d3f74c4e589a195774fb15f5534dc648bae
+              body: >
+                The only requirement is kernel >= 5.3, we should default to
+                compressed
+
+                and opt-out on devices with older kernels.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Michal Toman <michalt@balena.io>
+                signed-off-by: Michal Toman <michalt@balena.io>
+              author: Michal Toman
+              nested: []
+          version: meta-balena-6.10.1
+          title: ""
+          date: 2025-12-11T21:36:10.715Z
+        - commits:
+            - subject: "networkmanager: update to 1.52.0"
+              hash: 2595dd8712d093d8fd4fc9166da2bfc40c77c038
+              body: >
+                This recipe is taken from meta-openembedded commit
+
+                33fec4b4f47ae5b86f274c352939437b641e7f8d with the only changes
+                being
+
+                that we removed the initd configuration which we don't use, and
+                removed
+
+                tag from the GIT URL because yocto spits an error when both tag
+
+                and SRCREV are used at the same time. Remaining tweaks are
+                handled
+
+                in bbappend.
+
+
+                Fixes #3677
+              footer:
+                Change-type: minor
+                change-type: minor
+                Signed-off-by: Michal Toman <michalt@balena.io>
+                signed-off-by: Michal Toman <michalt@balena.io>
+              author: Michal Toman
+              nested: []
+          version: meta-balena-6.10.0
+          title: ""
+          date: 2025-12-11T12:11:50.125Z
+        - commits:
+            - subject: "renovate.json: Remove custom balena-git package rules"
+              hash: 3b143a83bf6693ff42783f0c7a88107418440c12
+              body: >
+                Since 2533a1a we are no longer versioning or tagging balena
+                commits
+
+                to the engine, so this renovate package rule no longer applies.
+
+
+                Going forward, we will manually bump the commit hash unless we
+                are
+
+                moving to a new upstream tag.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: meta-balena-6.9.6
+          title: ""
+          date: 2025-12-11T01:33:51.039Z
+        - commits:
+            - subject: fix initramfs rootfs script wrong indent
+              hash: 4204dd9590e5bfeb740088ad2285edc67a634986
+              body: ""
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+                signed-off-by: Yann CARDAILLAC <yann.cardaillac@balena.io>
+              author: Yann CARDAILLAC
+              nested: []
+          version: meta-balena-6.9.5
+          title: ""
+          date: 2025-12-10T18:36:27.261Z
+  version: 6.10.4
+  title: ""
+  date: 2025-12-22T22:01:24.086Z
+- commits:
     - subject: "balena-yocto-scripts: Update to v1.39.0"
       hash: 32dfcc026e98a5bfe640be97ca5566ece41c65a7
       body: ""
