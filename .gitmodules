@@ -8,8 +8,8 @@
 	branch = master
 [submodule "layers/meta-tegra"]
 	path = layers/meta-tegra
-	url = https://github.com/balena-os/meta-tegra.git
-	branch = master
+	url = https://github.com/OE4T/meta-tegra.git
+	branch = scarthgap
 [submodule "layers/poky"]
 	path = layers/poky
 	url = https://github.com/balena-os/poky.git
