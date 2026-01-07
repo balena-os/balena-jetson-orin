@@ -24,7 +24,7 @@ module.exports =
 		machine: 'jetson-orin-nx-xavier-nx-devkit'
 		image: 'balena-image-flasher'
 		fstype: 'balenaos-img'
-		version: 'yocto-kirkstone'
+		version: 'yocto-scarthgap'
 		deployArtifact: 'balena-image-flasher-jetson-orin-nx-xavier-nx-devkit.balenaos-img'
 		compressed: true
 

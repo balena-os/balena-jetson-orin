@@ -28,7 +28,7 @@ module.exports =
 		machine: 'jetson-agx-orin-devkit'
 		image: 'balena-image'
 		fstype: 'balenaos-img'
-		version: 'yocto-kirkstone'
+		version: 'yocto-scarthgap'
 		deployArtifact: 'balena-image-jetson-agx-orin-devkit.balenaos-img'
 		compressed: true
 
