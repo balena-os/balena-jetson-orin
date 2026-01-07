@@ -25,4 +25,4 @@ PACKAGE_INSTALL:append:jetson-agx-orin-devkit-64gb = " kernel-module-typec-ucsi"
 PACKAGE_INSTALL:append:jetson-agx-orin-devkit-64gb = " kernel-module-typec"
 PACKAGE_INSTALL:append:jetson-agx-orin-devkit-64gb = " kernel-module-ucsi-ccg"
 
-IMAGE_ROOTFS_MAXSIZE="40960"
+IMAGE_ROOTFS_MAXSIZE = "65536"
