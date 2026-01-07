@@ -29,3 +29,6 @@ do_deploy:append:forecr-dsb-ornx-lan() {
         ${WORKDIR}/forecr-dsb-ornx-lan/tegra234-p3767-camera-dsboard-ornx-imx477.dtbo \
         ${DEPLOYDIR}/devicetree/
 }
+
+TEGRA_OOT_WIFI_DRIVERS:remove="${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-rtl8852ce"
+
