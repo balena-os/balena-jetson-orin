@@ -2,6 +2,7 @@ Copy jetson boot artifacts during migration, so that the
 QSPI can be flashed directly or trough an UEFI capsule application
 on the next boot.
 
+Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
 
 Index: 1.0-r4/migrate
