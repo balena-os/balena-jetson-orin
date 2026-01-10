@@ -28,7 +28,7 @@ module.exports =
 		machine: 'forecr-dsb-ornx-orin-nano-8gb'
 		image: 'balena-image-flasher'
 		fstype: 'balenaos-img'
-		version: 'yocto-kirkstone'
+		version: 'yocto-scarthgap'
 		deployArtifact: 'balena-image-flasher-forecr-dsb-ornx-orin-nano-8gb.balenaos-img'
 		compressed: true
 

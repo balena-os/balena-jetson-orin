@@ -21,11 +21,14 @@ fi
 if grep -q "jf_rcm_boot=1" /proc/cmdline ; then
     # Find path to the compressed boot blob image
     # that gets written to the QSPI
-    BOOT_BLOB_PATH=$(find / -xdev -type f -name "${BOOT_BLOB}.gz")
+    BOOT_BLOB_PATH=$(find /tmp -xdev -type f -name "${BOOT_BLOB}.gz")
     if [ ! -f "${BOOT_BLOB_PATH}" ]; then
-        fail "Boot blob not found in rootfs"
-    else
-        log "Found boot blob in ${BOOT_BLOB_PATH}"
+        BOOT_BLOB_PATH=$(find / -xdev -type f -name "${BOOT_BLOB}.gz")
+        if [ ! -f "${BOOT_BLOB_PATH}" ]; then
+            fail "Boot blob not found in rootfs nor in /tmp/"
+        else
+	    log "Found boot blob in ${BOOT_BLOB_PATH}"
+	fi
     fi
 
     log "QSPI is accessible, it will be updated"

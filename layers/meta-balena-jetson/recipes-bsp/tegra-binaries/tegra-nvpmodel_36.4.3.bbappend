@@ -9,6 +9,8 @@ do_install:append() {
     install -m 0644 ${WORKDIR}/nvpmodel-os-deps.conf \
                 ${D}${libdir}/systemd/system/nvpmodel.service.d/
 
+    sed -i 's/Requires=nvstartup.service /Requires=/g' ${D}${systemd_system_unitdir}/nvpmodel.service
+    sed -i 's/After=nvstartup.service /After=/g' ${D}${systemd_system_unitdir}/nvpmodel.service
     sed -i 's|/etc/nvpmodel.conf|/etc/nvpmodel-config/nvpmodel.conf|g' ${D}${systemd_system_unitdir}/nvpmodel.service
 }
 

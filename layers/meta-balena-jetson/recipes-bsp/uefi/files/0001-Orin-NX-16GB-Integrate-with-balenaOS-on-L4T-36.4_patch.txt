@@ -384,7 +384,7 @@ index c905f852..d76902fd 100644
 +
 +        UINTN currentArgsSize = (BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs != NULL) ? StrSize(BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs) : 0;
 +
-+        argsSize = currentArgsSize + StrSize(RootL) + StrSize(BalenaOSRootFs) + 2;
++        argsSize = currentArgsSize + StrSize(RootL) + StrSize(BalenaOSRootFs) + StrSize(flasherArg) + 4;
 +        if (ExtraOsCmdline != NULL) {
 +            argsSize += StrSize(ExtraOsCmdline) + 1; // +1 for a space
 +        }

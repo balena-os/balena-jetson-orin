@@ -8,16 +8,16 @@
 	branch = master
 [submodule "layers/meta-tegra"]
 	path = layers/meta-tegra
-	url = https://github.com/balena-os/meta-tegra.git
-	branch = master
+	url = https://github.com/OE4T/meta-tegra.git
+	branch = scarthgap
 [submodule "layers/poky"]
 	path = layers/poky
 	url = https://github.com/balena-os/poky.git
-	branch = backport_addpylib_0ae3b2bd
+	branch = scarthgap
 [submodule "layers/meta-openembedded"]
 	path = layers/meta-openembedded
 	url = https://github.com/openembedded/meta-openembedded.git
-	branch = kirkstone
+	branch = scarthgap
 [submodule "contracts"]
 	path = contracts
 	url = https://github.com/balena-io/contracts.git
@@ -25,4 +25,4 @@
 [submodule "layers/meta-cyclonedx"]
 	path = layers/meta-cyclonedx
 	url = https://github.com/balena-os/meta-cyclonedx
-	branch = kirkstone
+	branch = scarthgap
