@@ -9,7 +9,7 @@ Index: 1.0-r4/migrate
 ===================================================================
 --- 1.0-r4.orig/migrate
 +++ 1.0-r4/migrate
-@@ -99,6 +99,8 @@ migrate_enabled() {
+@@ -103,6 +103,8 @@ migrate_enabled() {
  
  # Main module function
  migrate_run() {
@@ -18,7 +18,18 @@ Index: 1.0-r4/migrate
      # Find the raw image in the rootfs partition
      image=$(find "${ROOTFS_DIR}" -xdev -type f -name "${BALENA_IMAGE}")
      kernel_images=$(find "${ROOTFS_DIR}" -xdev -type f -name "@@KERNEL_IMAGETYPE@@*")
-@@ -125,6 +127,21 @@ migrate_run() {
+@@ -113,7 +115,9 @@ migrate_run() {
+             _flash_boot_size=$(du -cb ${FLASH_BOOT_MOUNT} | awk '/total/{print $1}')
+             # shellcheck disable=SC2086
+             _kernel_images_size=$(du -cb ${kernel_images} | awk '/total/{print $1}')
+-            _total_size=$(("$_image_size" + "$_flash_boot_size" + "$_kernel_images_size"))
++            _jetson_orin_capsule_size=$(estimate_size_in_zram "${jetson_orin_capsule}")
++            _jetson_orin_boot_artifact_size=$(estimate_size_in_zram "${jetson_orin_boot_artifact}")
++            _total_size=$(("$_image_size" + "$_flash_boot_size" + "$_kernel_images_size" + "$_jetson_orin_capsule_size" + "$_jetson_orin_boot_artifact_size"))
+             memory_check "${_total_size}"
+         else
+             fail "Flash boot partition not found in ${internal_dev}"
+@@ -133,6 +137,21 @@ migrate_run() {
          # shellcheck disable=SC2086
          cp -a ${kernel_images} "/tmp"
  
