@@ -148,7 +148,7 @@ BALENA_CONFIGS[joystick] = " \
 "
 
 BALENA_CONFIGS:append:jetson-orin-nx-seeed-j4012 = " lan743x "
-BALENA_CONFIGS:append:forecr-dsb-ornx-lan = " lan743x "
+BALENA_CONFIGS:append:forecr-dsb-ornx-orin-nano-8gb = " lan743x "
 BALENA_CONFIGS[lan743x] = " \
     CONFIG_LAN743X=m \
 "
