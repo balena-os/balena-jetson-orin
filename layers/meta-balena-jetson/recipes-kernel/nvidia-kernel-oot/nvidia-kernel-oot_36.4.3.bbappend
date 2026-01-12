@@ -4,7 +4,7 @@ SRC_URI += "  \
     file://enable_80211d.patch \
 "
 
-SRC_URI:append:forecr-dsb-ornx-lan = " \
+SRC_URI:append:forecr-dsb-ornx-orin-nano-8gb = " \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0000-dynamic.dtbo \
     file://forecr-dsb-ornx-lan/tegra234-p3767-camera-dsboard-ornx-imx219.dtbo \
     file://forecr-dsb-ornx-lan/tegra234-p3767-camera-dsboard-ornx-imx477.dtbo \
@@ -12,7 +12,7 @@ SRC_URI:append:forecr-dsb-ornx-lan = " \
 
 # Note tegra-...-dynamic.dtbo overwrites a file with the same name from Nvidia,
 # but the camera overlays are new files
-do_install:append:forecr-dsb-ornx-lan() {
+do_install:append:forecr-dsb-ornx-orin-nano-8gb() {
     install -m 0644 \
         ${WORKDIR}/forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0000-dynamic.dtbo \
         ${WORKDIR}/forecr-dsb-ornx-lan/tegra234-p3767-camera-dsboard-ornx-imx219.dtbo \
@@ -22,7 +22,7 @@ do_install:append:forecr-dsb-ornx-lan() {
 
 # Deploying is not necessary for Balena images, but meta-tegra does it
 # so let's do it as well just for consistency.
-do_deploy:append:forecr-dsb-ornx-lan() {
+do_deploy:append:forecr-dsb-ornx-orin-nano-8gb() {
     install -m 0644 \
         ${WORKDIR}/forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0000-dynamic.dtbo \
         ${WORKDIR}/forecr-dsb-ornx-lan/tegra234-p3767-camera-dsboard-ornx-imx219.dtbo \
