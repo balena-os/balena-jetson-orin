@@ -23,7 +23,7 @@ SRC_URI:jetson-orin-nx-seeed-j4012 += " \
     file://tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo \
 "
 
-SRC_URI:append:forecr-dsb-ornx-lan = " \
+SRC_URI:append:forecr-dsb-ornx-orin-nano-8gb = " \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0000-nv.dtb \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv.dtb \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0004-nv.dtb \
@@ -44,7 +44,7 @@ do_install:append:jetson-agx-orin-devkit() {
 
 # Forecr boards come with pre-built device trees.
 # DTBNAME comes from the the machine config
-do_install:forecr-dsb-ornx-lan() {
+do_install:forecr-dsb-ornx-orin-nano-8gb() {
 	install -d ${D}/boot/
 	install -m 0644 "${WORKDIR}/forecr-dsb-ornx-lan/${DTBNAME}" "${D}/boot/${DTBNAME}"
         install -m 0644 "${WORKDIR}/forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb"
@@ -105,10 +105,13 @@ FILES:${PN}:jetson-agx-orin-devkit-64gb += " \
 	/boot/tegra234-p3737-0000+p3701-0005-nv.dtb \
 "
 
-FILES:${PN}:forecr-dsb-ornx-lan += " \
-        /boot/${DTBNAME} \
+FILES:${PN}:forecr-dsb-ornx-orin-nano-8gb += " \
+	/boot/tegra234-p3768-0000+p3767-0003-nv.dtb \
 	/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb \
+	/boot/tegra234-p3768-0000+p3767-0005-nv.dtb \
+	/boot/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb \
 "
+
 FILES:${PN}:jetson-orin-nano-seeed-j3010 += " \
 	/boot/tegra234-p3768-0000+p3767-0004-nv-super.dtb \
 	/boot/tegra234-p3768-0000+p3767-0004-nv.dtb \
