@@ -35,7 +35,7 @@ IMAGE_INSTALL:append = " \
     kernel-module-r8126 kernel-module-r8168 linux-jammy-nvidia-tegra-extlinux \
 "
 
-IMAGE_INSTALL:append:forecr-dsb-ornx-lan = " can-utils "
+IMAGE_INSTALL:append:forecr-dsb-ornx-orin-nano-8gb = " can-utils "
 
 # We don't mount or use the esp partition, so let's
 # remove the systemd mounts that delay booting
