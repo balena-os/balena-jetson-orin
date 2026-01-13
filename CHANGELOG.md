@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.9
+## (2026-01-13)
+
+* layers/meta-openembedded: Update to Scarthgap [Alexandru Costache]
+
 # v6.10.8
 ## (2026-01-02)
 
