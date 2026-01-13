@@ -5,7 +5,7 @@ SRC_URI:append = " \
 "
 
 # Some extra rules from the vendor-provided BSP
-do_install:append:forecr-dsb-ornx-lan() {
+do_install:append:forecr-dsb-ornx-orin-nano-8gb() {
 	# Set names for on-board network interfaces to match the board documentation
 	install -D -m 0644 ${WORKDIR}/forecr-dsb-ornx-lan/70-network.rules ${D}/${base_libdir}/udev/rules.d/70-network.rules
 }
