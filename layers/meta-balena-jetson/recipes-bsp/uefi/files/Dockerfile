@@ -29,6 +29,7 @@ COPY ./0001-edk2-nvidia-Add-changes-for-balenaOS-integration_patch.txt /build/nv
 COPY ./0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow_patch.txt /build/nvidia-uefi/edk2/0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow.patch
 COPY ./0001-edk2-nvidia-Remove-pva-fw-from-required-list_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-edk2-nvidia-Remove-pva-fw-from-required-list.patch
 COPY ./0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe_patch.txt build/nvidia-uefi/edk2-nvidia/0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe.patch
+COPY ./0001-Fix-container-build_patch.txt build/nvidia-uefi/edk2/0001-Fix-container-build.patch
 
 # See https://forums.developer.nvidia.com/t/jetson-orin-nano-ota-35-5-0-36-3-failed-to-boot-after-ota-upgrade-from-35-5-0-to-36-3/296205/16
 COPY ./0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit.patch
