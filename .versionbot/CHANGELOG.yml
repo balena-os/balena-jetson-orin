@@ -1,4 +1,18 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v6.10.25"
+      hash: 80faf7d6913cdee9c802fdb278fb48d7031885cc
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v6.10.25"
+        changelog-entry: "layers/meta-balena: Update to v6.10.25"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.10.25
+  title: ""
+  date: 2026-02-10T17:27:00.846Z
+- commits:
     - subject: "layers/meta-openembedded: Update to Scarthgap"
       hash: 8e01624bb9d934c886fe8700c1c553bb08d48c0c
       body: ""
