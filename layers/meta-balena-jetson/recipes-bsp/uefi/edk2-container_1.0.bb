@@ -36,7 +36,6 @@ SRC_URI = " \
     file://0001-edk2-nvidia-Remove-pva-fw-from-required-list_patch.txt \
     file://0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit_patch.txt \
     file://0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe_patch.txt \
-    file://0001-Fix-container-build_patch.txt \
 "
 
 inherit deploy
