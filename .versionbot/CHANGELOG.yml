@@ -1,4 +1,18 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v6.10.26"
+      hash: d6a9250c754c145ceb9bf5dfeaed9c5f9ec2db6b
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v6.10.26"
+        changelog-entry: "layers/meta-balena: Update to v6.10.26"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.10.26
+  title: ""
+  date: 2026-02-28T09:29:35.978Z
+- commits:
     - subject: "layers/meta-balena: Update to v6.10.25"
       hash: 80faf7d6913cdee9c802fdb278fb48d7031885cc
       body: ""
