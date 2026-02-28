@@ -43,12 +43,5 @@ HOSTAPP_HOOKS:append:forecr-dsb-ornx-orin-nano-8gb = " \
     99-resin-bootfiles-forecr-dsb-ornx-lan-orin-nano-8gb \
 "
 
-HOSTAPP_HOOKS:append:forecr-dsb-ornx-lan-orin-nano-4gb = " \
-    99-resin-uboot \
-    99-resin-bootfiles-forecr-dsb-ornx-lan-orin-nano-4gb \
-"
+HOSTAPP_HOOKS:remove:forecr-dsb-ornx-orin-nano-8gb = "99-resin-bootfiles-orin-nano-devkit-nvme"
 
-HOSTAPP_HOOKS:append:forecr-dsb-ornx-lan-orin-nx-16gb = " \
-    99-resin-uboot \
-    99-resin-bootfiles-forecr-dsb-ornx-lan-orin-nx-16gb \
-"
