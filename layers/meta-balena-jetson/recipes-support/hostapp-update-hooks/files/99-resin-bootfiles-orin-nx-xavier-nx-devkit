@@ -90,7 +90,7 @@ write_jetson_update_efivars() {
         else
             info "PlatformCompatSpec variable already exists"
             if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]]; then
-                info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
+                info "PlatformCompatSpec variable already exists and we are running in L4T 36.X, it needs to be re-written."
                 chattr -i ${platform_compat_spec_efivar}
                 printf "\x07\x00\x00\x00" > ${tmp_file}
                 printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
