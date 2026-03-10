@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v6.10.26+rev1
+## (2026-03-10)
+
+* workflows: workflows: Move testing to BC from BM [Ryan Cooke]
+
 # v6.10.26
 ## (2026-02-28)
 
