@@ -46,3 +46,16 @@ MACHINE_EXTRA_RDEPENDS += " kernel-image-initramfs"
 
 IMAGE_INSTALL:remove = "kernel-image-image"
 
+TEMPORARILY_ALLOWED_PACKAGES ?= " \
+    linux-firmware-ibt-41-41 \
+    linux-firmware-ibt-12-16 \
+    linux-firmware-qca \
+    linux-firmware-rtl8192su \
+    linux-firmware-rtl8723b-bt \
+    linux-firmware-wl12xx \
+    linux-firmware-wl18xx \
+    linux-firmware-wlcommon \
+"
+
+BALENA_ALLOWED_FIRMWARE_PACKAGES:append = " ${TEMPORARILY_ALLOWED_PACKAGES} "
+IMAGE_INSTALL:append = " ${TEMPORARILY_ALLOWED_PACKAGES} "
