@@ -29,6 +29,10 @@ SRC_URI:append:forecr-dsb-ornx-orin-nano-8gb = " \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv-super.dtb \
 "
 
+SRC_URI:append:jetson-agx-orin-devkit-64gb = " \
+    file://avermedia-d315/tegra234-p3737-0000+p3701-0005-nv-d315.dtb \
+"
+
 S = "${WORKDIR}"
 DTBNAME = "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
@@ -39,6 +43,10 @@ do_install() {
 
 do_install:append:jetson-agx-orin-devkit() {
 	install -m 0644 "${WORKDIR}/tegra234-p3737-0000+p3701-0000-nv-spi.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb"
+}
+
+do_install:append:jetson-agx-orin-devkit-64gb() {
+	install -m 0644 "${WORKDIR}/avermedia-d315/tegra234-p3737-0000+p3701-0005-nv-d315.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0005-nv-d315.dtb"
 }
 
 # Forecr boards come with pre-built device trees.
@@ -102,6 +110,7 @@ FILES:${PN}:jetson-orin-nano-4g-devkit += " \
 
 FILES:${PN}:jetson-agx-orin-devkit-64gb += " \
 	/boot/tegra234-p3737-0000+p3701-0005-nv.dtb \
+	/boot/tegra234-p3737-0000+p3701-0005-nv-d315.dtb \
 "
 
 FILES:${PN}:forecr-dsb-ornx-orin-nano-8gb += " \
