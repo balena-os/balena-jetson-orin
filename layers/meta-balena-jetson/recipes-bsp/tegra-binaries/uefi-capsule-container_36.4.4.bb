@@ -25,10 +25,10 @@ SRC_URI = " \
     file://Dockerfile \
     file://build.sh \
     file://${JETSON_BOARD_SPEC} \
-    https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v4.3/release/Jetson_Linux_r36.4.3_aarch64.tbz2;name=l4tbsp;unpack=0 \
+    https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v4.4/release/Jetson_Linux_r36.4.4_aarch64.tbz2;name=l4tbsp;unpack=0 \
 "
 
-SRC_URI[l4tbsp.sha256sum] = "949a44049c4ce6a8efdf572ea0820c874f6ee5d41ca3e4935b9f0e38d11873d2"
+SRC_URI[l4tbsp.sha256sum] = "a6ce11c22100ab0976e419959182417c83d62f4272501bc8714f2e076e010f3b"
 
 inherit deploy l4t_bsp
 
@@ -53,7 +53,7 @@ do_compile () {
     # capsule size at a minimum so it can fit in the
     # boot partition.
     cp ${WORKDIR}/${JETSON_BOARD_SPEC} ${B}/jetson_board_spec.cfg
-    cp ${S}/Jetson_Linux_r36.4.3_aarch64.tbz2 ${B}/
+    cp ${S}/Jetson_Linux_r36.4.4_aarch64.tbz2 ${B}/
 
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
 
