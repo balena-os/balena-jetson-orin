@@ -10,8 +10,9 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y git vim tar lbzip2 binutils xz-utils zstd sudo
 
 COPY ./Jetson_Linux_r36.4.4_aarch64.tbz2 /build_dir/
+COPY ./overlay_mb1bct_36.x.tbz2 /build_dir/
 
-RUN cd /build_dir/ && tar xf Jetson_Linux_r36.4.4_aarch64.tbz2 && ./Linux_for_Tegra/tools/l4t_flash_prerequisites.sh && mkdir -p /build_dir/Linux_for_Tegra/rootfs/boot/ && mkdir -p /build_dir/Linux_for_Tegra/rootfs/usr/local/bin/
+RUN cd /build_dir/ && tar xf Jetson_Linux_r36.4.4_aarch64.tbz2 && tar xf overlay_mb1bct_36.x.tbz2 && ./Linux_for_Tegra/tools/l4t_flash_prerequisites.sh && mkdir -p /build_dir/Linux_for_Tegra/rootfs/boot/ && mkdir -p /build_dir/Linux_for_Tegra/rootfs/usr/local/bin/
 
 COPY ./build.sh /build_dir/build.sh
 COPY ./uefi_jetson.bin /build_dir/Linux_for_Tegra/bootloader/

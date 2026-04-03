@@ -26,9 +26,11 @@ SRC_URI = " \
     file://build.sh \
     file://${JETSON_BOARD_SPEC} \
     https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v4.4/release/Jetson_Linux_r36.4.4_aarch64.tbz2;name=l4tbsp;unpack=0 \
+    https://developer.nvidia.com/downloads/embedded/L4T/overlay_mb1bct_36.x.tbz2;name=overlay_mb1bct;unpack=0; \
 "
 
 SRC_URI[l4tbsp.sha256sum] = "a6ce11c22100ab0976e419959182417c83d62f4272501bc8714f2e076e010f3b"
+SRC_URI[overlay_mb1bct.sha256sum] = "c1b9051493c31168c58b0c3a4560d275a058c06657a580db840fe9a2600a3285"
 
 inherit deploy l4t_bsp
 
@@ -54,11 +56,12 @@ do_compile () {
     # boot partition.
     cp ${WORKDIR}/${JETSON_BOARD_SPEC} ${B}/jetson_board_spec.cfg
     cp ${S}/Jetson_Linux_r36.4.4_aarch64.tbz2 ${B}/
+    cp ${S}/overlay_mb1bct_36.x.tbz2 ${B}/
 
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
 
     DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"
-    DOCKER_API_VERSION=1.24 docker run --rm -v ${B}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build_dir/build.sh && cp /build_dir/Linux_for_Tegra/TEGRA_BL.Cap.gz /out/${UEFI_CAPSULE} && cp /build_dir/Linux_for_Tegra/jetson_board_spec.cfg /out/"
+    DOCKER_API_VERSION=1.24 docker run --rm -v ${B}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build_dir/build.sh && cp /build_dir/Linux_for_Tegra/TEGRA_BL.Cap.gz /out/${UEFI_CAPSULE} && cp /build_dir/Linux_for_Tegra/jetson_board_spec.cfg /out/ && cp /build_dir/Linux_for_Tegra/bootloader/tegra234-firewall-config-base.dtsi /out/"
     DOCKER_API_VERSION=1.24 docker rmi -f ${IMAGETAG}
 }
 
