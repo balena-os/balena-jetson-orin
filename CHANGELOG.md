@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v6.12.3
+## (2026-04-10)
+
+* layers/meta-balena: Update to v6.12.3 [Alexandru Costache]
+* recipes-bsp/uefi: Update to r36.4.4-updates [Alexandru Costache]
+
 # v6.12.2
 ## (2026-03-23)
 
