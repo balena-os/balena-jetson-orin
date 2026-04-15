@@ -11,7 +11,7 @@ do_install:append() {
     sed -i 's|ExecStart=/usr/sbin/nvfancontrol|& -f /etc/nvfancontrol-config/nvfancontrol.conf|g' ${D}${systemd_system_unitdir}/nvfancontrol.service
 
     install -d -m 0755 ${D}${libdir}/systemd/system/nvfancontrol.service.d
-    install -m 0644 ${WORKDIR}/nvfancontrol-deps.conf \
+    install -m 0644 ${UNPACKDIR}/nvfancontrol-deps.conf \
                 ${D}${libdir}/systemd/system/nvfancontrol.service.d
 }
 

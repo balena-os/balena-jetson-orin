@@ -19,13 +19,20 @@ device_specific_patches["forecr-dsb-ornx-orin-nano-8gb"]="$orin_nano_generic_pat
 
 edk2_patch="0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow.patch"
 edk2_nvidia_patches=( "0001-edk2-nvidia-Add-changes-for-balenaOS-integration.patch " \
-	"0001-edk2-nvidia-Remove-pva-fw-from-required-list.patch" \
-	"0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit.patch" )
+	"0001-edk2-nvidia-Remove-pva-fw-from-required-list.patch" )
+
+# TODO: Will need rebasing
+# "0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit.patch"
 
 if [[ "${DEVICE_TYPE}" == "jetson-agx-orin-devkit-64gb" ]]; then
     echo "Applying edk2-nvidia jetson-agx-orin-devkit-64gb NewDeviceHierarchy override patch"
     edk2_nvidia_patches+=("0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe.patch")
 fi	
+
+# TODO: Rework all patches
+/build/nvidia-uefi/edk2-nvidia/Platform/NVIDIA/Tegra/build.sh --init-defconfig /build/nvidia-uefi/edk2-nvidia/Platform/NVIDIA/Tegra/DefConfigs/t23x_general.defconfig
+
+exit 0
 
 cd /build/nvidia-uefi/edk2 && \
     git reset --hard HEAD && \
@@ -51,4 +58,4 @@ cd /build/nvidia-uefi/edk2 && \
 
 # Trigger firmware and bootloader build, that is uefi_jetson.bin
 # and BOOTAA64.efi
-/build/nvidia-uefi/edk2-nvidia/Platform/NVIDIA/Jetson/build.sh
+#/build/nvidia-uefi/edk2-nvidia/Platform/NVIDIA/Jetson/build.sh

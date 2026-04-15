@@ -8,10 +8,10 @@ SRC_URI:append = " \
 
 do_install:append() {
 	install -d -m 0755 ${D}${libdir}/systemd/system/os-fan-profile.service.d
-	install -m 0644 ${WORKDIR}/os-fan-profile-jetson.conf \
+	install -m 0644 ${UNPACKDIR}/os-fan-profile-jetson.conf \
 		${D}${libdir}/systemd/system/os-fan-profile.service.d
 
-	install -m 0644 ${WORKDIR}/etc-nvfancontrol-config.mount ${D}${systemd_unitdir}/system/etc-nvfancontrol\\x2dconfig.mount
+	install -m 0644 ${UNPACKDIR}/etc-nvfancontrol-config.mount ${D}${systemd_unitdir}/system/etc-nvfancontrol\\x2dconfig.mount
 	install -d -m 0755 ${D}/etc/nvfancontrol-config
 }
 

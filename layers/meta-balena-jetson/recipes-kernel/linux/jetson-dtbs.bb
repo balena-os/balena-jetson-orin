@@ -30,7 +30,7 @@ SRC_URI:append:forecr-dsb-ornx-orin-nano-8gb = " \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv-super.dtb \
 "
 
-S = "${WORKDIR}"
+S = "${UNPACKDIR}"
 DTBNAME = "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}"
 
 do_install() {
@@ -39,22 +39,22 @@ do_install() {
 }
 
 do_install:append:jetson-agx-orin-devkit() {
-	install -m 0644 "${WORKDIR}/tegra234-p3737-0000+p3701-0000-nv-spi.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb"
+	install -m 0644 "${UNPACKDIR}/tegra234-p3737-0000+p3701-0000-nv-spi.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb"
 }
 
 # Forecr boards come with pre-built device trees.
 # DTBNAME comes from the the machine config
 do_install:forecr-dsb-ornx-orin-nano-8gb() {
 	install -d ${D}/boot/
-	install -m 0644 "${WORKDIR}/forecr-dsb-ornx-lan/${DTBNAME}" "${D}/boot/${DTBNAME}"
-        install -m 0644 "${WORKDIR}/forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb"
+	install -m 0644 "${UNPACKDIR}/forecr-dsb-ornx-lan/${DTBNAME}" "${D}/boot/${DTBNAME}"
+        install -m 0644 "${UNPACKDIR}/forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb"
 }
 
 do_install:append:jetson-orin-nano-devkit-nvme() {
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/tegra234-p3768-0000+p3767-0005-nv.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0005-nv.dtb"
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/tegra234-p3768-0000+p3767-0003-nv.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0003-nv.dtb"
 	install -m 0644 "${DEPLOY_DIR_IMAGE}/devicetree/tegra234-p3768-0000+p3767-0003-nv-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0003-nv-super.dtb"
-	install -m 0644 "${WORKDIR}/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb"
+	install -m 0644 "${UNPACKDIR}/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb"
 }
 
 do_install:append:jetson-orin-nx-xavier-nx-devkit() {
@@ -65,17 +65,17 @@ do_install:append:jetson-orin-nano-seeed-j3010() {
 	install -d ${D}/boot/devicetree/
 
 	# Obtained from https://github.com/Seeed-Studio/Linux_for_Tegra.git - commit 5b18d7990ca342bbeb70ce5715ea0473d118278f, branch r36.4.3
-	install -m 0644 "${WORKDIR}/tegra234-j401-p3768-0000+p3767-0004-recomputer.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0004-nv.dtb"
-	install -m 0644 "${WORKDIR}/tegra234-j401-p3768-0000+p3767-0004-recomputer-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0004-nv-super.dtb"
-	install -m 0644 "${WORKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo" "${D}/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
+	install -m 0644 "${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-0004-recomputer.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0004-nv.dtb"
+	install -m 0644 "${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-0004-recomputer-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0004-nv-super.dtb"
+	install -m 0644 "${UNPACKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo" "${D}/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
 }
 
 do_install:append:jetson-orin-nx-seeed-j4012() {
 	install -d ${D}/boot/devicetree/
 
         # Obtained from https://github.com/Seeed-Studio/Linux_for_Tegra.git - commit 5b18d7990ca342bbeb70ce5715ea0473d118278f, branch r36.4.3
-        install -m 0644 "${WORKDIR}/tegra234-j401-p3768-0000+p3767-0000-recomputer.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0000-nv.dtb"
-        install -m 0644 "${WORKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo" "${D}/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
+        install -m 0644 "${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-0000-recomputer.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0000-nv.dtb"
+        install -m 0644 "${UNPACKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo" "${D}/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
 }
 
 FILES:${PN}:jetson-agx-orin-devkit += " \

@@ -8,11 +8,12 @@ BBFILES ?= ""
 BBLAYERS ?= " \
     ${TOPDIR}/../layers/meta-balena/meta-balena-rust \
     ${TOPDIR}/../layers/meta-balena/meta-balena-common \
-    ${TOPDIR}/../layers/meta-balena/meta-balena-scarthgap \
+    ${TOPDIR}/../layers/meta-balena/meta-balena-wrynose \
     ${TOPDIR}/../layers/meta-tegra \
     ${TOPDIR}/../layers/meta-balena-jetson \
-    ${TOPDIR}/../layers/poky/meta \
-    ${TOPDIR}/../layers/poky/meta-poky \
+    ${TOPDIR}/../layers/openembedded-core/meta \
+    ${TOPDIR}/../layers/meta-yocto/meta-poky \
+    ${TOPDIR}/../layers/meta-yocto/meta-yocto-bsp \
     ${TOPDIR}/../layers/meta-openembedded/meta-oe \
     ${TOPDIR}/../layers/meta-openembedded/meta-filesystems \
     ${TOPDIR}/../layers/meta-openembedded/meta-networking \

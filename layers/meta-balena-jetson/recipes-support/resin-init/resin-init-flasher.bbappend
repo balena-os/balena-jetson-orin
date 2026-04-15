@@ -2,3 +2,6 @@
 # except for the AGX Orin 64GB
 INTERNAL_DEVICE_KERNEL = "nvme0n1"
 INTERNAL_DEVICE_KERNEL:jetson-agx-orin-devkit-64gb = "mmcblk0"
+
+RDEPENDS:${PN}:remove = "efitools"
+

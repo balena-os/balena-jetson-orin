@@ -16,7 +16,6 @@ IMAGE_INSTALL:append = " \
     uefi-capsule-container \
     tegra-nvfancontrol \
     tegra-nvpower \
-    parted \
     gptfdisk \
     tegra-nvpmodel \
     tegra-configs-nvstartup \

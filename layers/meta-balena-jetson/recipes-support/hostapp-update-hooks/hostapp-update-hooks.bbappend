@@ -45,3 +45,4 @@ HOSTAPP_HOOKS:append:forecr-dsb-ornx-orin-nano-8gb = " \
 
 HOSTAPP_HOOKS:remove:forecr-dsb-ornx-orin-nano-8gb = "99-resin-bootfiles-orin-nano-devkit-nvme"
 
+RDEPENDS:${PN}:remove = "efitools"

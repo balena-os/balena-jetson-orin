@@ -40,15 +40,15 @@ SRC_URI = " \
 do_install() {
     # Ensure install is not executed until
     # do_unpack copies the archive
-    while [ ! -f ${WORKDIR}/${BOOTBLOB} ]
+    while [ ! -f ${UNPACKDIR}/${BOOTBLOB} ]
     do
         sleep 1
-        bbwarn "waiting for ${WORKDIR}/${BOOTBLOB}"
+        bbwarn "waiting for ${UNPACKDIR}/${BOOTBLOB}"
     done
 
     install -d ${D}/${BINARY_INSTALL_PATH}
-    install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
-    install ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
+    install ${UNPACKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
+    install ${UNPACKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
 }
 
 do_deploy() {
@@ -74,8 +74,8 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 
 # need to be redeployed on each build
 # as this path is not cached
-do_install[nostamp]="1"
-do_deploy[nostamp]="1"
-do_unpack[nostamp]="1"
+do_install[nostamp] = "1"
+do_deploy[nostamp] = "1"
+do_unpack[nostamp] = "1"
 
 addtask do_deploy before do_package after do_install

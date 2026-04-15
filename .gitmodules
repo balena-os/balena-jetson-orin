@@ -10,10 +10,6 @@
 	path = layers/meta-tegra
 	url = https://github.com/OE4T/meta-tegra.git
 	branch = scarthgap
-[submodule "layers/poky"]
-	path = layers/poky
-	url = https://github.com/balena-os/poky.git
-	branch = scarthgap
 [submodule "layers/meta-openembedded"]
 	path = layers/meta-openembedded
 	url = https://github.com/openembedded/meta-openembedded.git
@@ -26,3 +22,12 @@
 	path = layers/meta-cyclonedx
 	url = https://github.com/balena-os/meta-cyclonedx
 	branch = scarthgap
+[submodule "layers/bitbake"]
+	path = layers/bitbake
+	url = https://git.openembedded.org/bitbake
+[submodule "layers/openembedded-core"]
+	path = layers/openembedded-core
+	url = https://git.openembedded.org/openembedded-core
+[submodule "layers/meta-yocto"]
+	path = layers/meta-yocto
+	url = https://git.yoctoproject.org/meta-yocto

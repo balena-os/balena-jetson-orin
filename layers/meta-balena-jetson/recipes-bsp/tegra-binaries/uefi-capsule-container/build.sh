@@ -22,31 +22,31 @@ case "${DEVICE_TYPE}" in
 	"jetson-agx-orin-devkit-64gb" | "jetson-agx-orin-devkit")
 		bl_spec="t23x_agx_bl_spec"
 		;;
-	"jetson-orin-nano-seeed-j3010" | "jetson-orin-nx-seeed-j4012")
-		mkdir -p /build_dir/Seeed_36_4_3
-		pushd /build_dir/Seeed_36_4_3
-		git clone https://github.com/Seeed-Studio/Linux_for_Tegra.git -b r36.4.3 --single-branch
-		popd
-		cp -r /build_dir/Seeed_36_4_3/Linux_for_Tegra/* /build_dir/Linux_for_Tegra/
-		cp p3768-0000-p3767-0000-a0.conf p3768-0000-p3767-0000-a0_original.conf
-		if [[ "${DEVICE_TYPE}" = "jetson-orin-nx-seeed-j4012" ]]; then
-			# J4012 Classic does not support the Super mode
-			cat recomputer-orin-j401.conf > p3768-0000-p3767-0000-a0.conf
-		elif [[ "${DEVICE_TYPE}" = "jetson-orin-nano-seeed-j3010" ]]; then
-			cat recomputer-orin-super-j401.conf > p3768-0000-p3767-0000-a0.conf
-			# This dtbo is referenced in recomputer-orin-super-j401.conf but it is not present in the sources,
-			# nor is it compiled at flash time. Only tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo is
-			# is provided by the BSP.
-			sed -i "s#tegra234-p3767-camera-p3768-imx219-quad-seeed#tegra234-p3767-camera-p3768-imx219-dual-seeed#g" p3768-0000-p3767-0000-a0.conf
-		fi
-
-		sed -i "s#p3768-0000-p3767-0000-a0.conf#p3768-0000-p3767-0000-a0_original.conf#g" p3768-0000-p3767-0000-a0.conf
-		;;
+	#"jetson-orin-nano-seeed-j3010" | "jetson-orin-nx-seeed-j4012")
+	#	mkdir -p /build_dir/Seeed_36_4_4
+	#	pushd /build_dir/Seeed_36_4_4
+	#	git clone https://github.com/Seeed-Studio/Linux_for_Tegra.git -b r36.4.4 --single-branch
+	#	popd
+	#	cp -r /build_dir/Seeed_36_4_4/Linux_for_Tegra/* /build_dir/Linux_for_Tegra/
+	#	cp p3768-0000-p3767-0000-a0.conf p3768-0000-p3767-0000-a0_original.conf
+	#	if [[ "${DEVICE_TYPE}" = "jetson-orin-nx-seeed-j4012" ]]; then
+	#		# J4012 Classic does not support the Super mode
+	#		cat recomputer-orin-j401.conf > p3768-0000-p3767-0000-a0.conf
+	#	elif [[ "${DEVICE_TYPE}" = "jetson-orin-nano-seeed-j3010" ]]; then
+	#		cat recomputer-orin-super-j401.conf > p3768-0000-p3767-0000-a0.conf
+	#		# This dtbo is referenced in recomputer-orin-super-j401.conf but it is not present in the sources,
+	#		# nor is it compiled at flash time. Only tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo is
+	#		# is provided by the BSP.
+	#		sed -i "s#tegra234-p3767-camera-p3768-imx219-quad-seeed#tegra234-p3767-camera-p3768-imx219-dual-seeed#g" p3768-0000-p3767-0000-a0.conf
+	#	fi
+	#
+	#	sed -i "s#p3768-0000-p3767-0000-a0.conf#p3768-0000-p3767-0000-a0_original.conf#g" p3768-0000-p3767-0000-a0.conf
+	#	;;
 	"forecr-dsb-ornx-orin-nano-8gb")
-	        wget https://github.com/forecr/dsboard_ornx_lan_orin_bsp/raw/ef040963ff6fa24824d7e65fedbc6f5a46e27aaf/dsboard_ornx_lan_orin_nano_JP6_2_bsp.tar.xz -O /build_dir/dsboard_ornx_lan_orin_nano_JP6_2_bsp.tar.xz
+	        wget https://github.com/forecr/dsboard_ornx_lan_orin_bsp/blob/164c5c81e244d8e83cfb03ae771bdc7fa27c087c/dsboard_ornx_lan_orin_nano_JP6_2_2_bsp.tar.xz -O /build_dir/dsboard_ornx_lan_orin_nano_JP6_2_2_bsp.tar.xz
 		pushd /build_dir/
-		tar xf dsboard_ornx_lan_orin_nano_JP6_2_bsp.tar.xz
-		cp -r ./dsboard_ornx_lan_orin_nano_JP6_2_bsp/* .
+		tar xf dsboard_ornx_lan_orin_nano_JP6_2_2_bsp.tar.xz
+		cp -r ./dsboard_ornx_lan_orin_nano_JP6_2_2_bsp/* .
 		sudo ./replace_bsp_files.sh
 		popd
 		;;

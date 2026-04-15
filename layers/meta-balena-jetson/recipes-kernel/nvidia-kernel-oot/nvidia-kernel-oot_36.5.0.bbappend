@@ -30,7 +30,7 @@ do_deploy:append:forecr-dsb-ornx-orin-nano-8gb() {
         ${DEPLOYDIR}/devicetree/
 }
 
-TEGRA_OOT_WIFI_DRIVERS:remove="${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-rtl8852ce"
+TEGRA_OOT_WIFI_DRIVERS:remove = "${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-rtl8852ce"
 
 TEGRA_OOT_REPLACEMENT_DRIVERS += " lan743x "
 

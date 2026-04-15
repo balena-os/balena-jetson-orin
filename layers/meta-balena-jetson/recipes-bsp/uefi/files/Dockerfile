@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y git vim && \
     mkdir build && cd build && \
     edkrepo manifest-repos add nvidia https://github.com/NVIDIA/edk2-edkrepo-manifest.git main nvidia && \
-    edkrepo clone nvidia-uefi NVIDIA-Platforms r36.4.3-updates
+    edkrepo clone nvidia-uefi NVIDIA-Platforms r36.5-updates
 
 # We created this dockerfile and the corresponding build script using the
 # edk2 container build documentation available at https://github.com/NVIDIA/edk2-nvidia/wiki/Build-with-docker
@@ -31,7 +31,8 @@ COPY ./0001-edk2-nvidia-Remove-pva-fw-from-required-list_patch.txt /build/nvidia
 COPY ./0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe_patch.txt build/nvidia-uefi/edk2-nvidia/0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe.patch
 
 # See https://forums.developer.nvidia.com/t/jetson-orin-nano-ota-35-5-0-36-3-failed-to-boot-after-ota-upgrade-from-35-5-0-to-36-3/296205/16
-COPY ./0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit.patch
+# TODO: Will need rebasing
+#COPY ./0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit_patch.txt /build/nvidia-uefi/edk2-nvidia/0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit.patch
 COPY ./build.sh /build/build.sh
 
 CMD ["bash"]
