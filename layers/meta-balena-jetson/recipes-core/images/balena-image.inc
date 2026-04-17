@@ -13,7 +13,6 @@ IMAGE_INSTALL:append = " \
     tegra-eeprom-tool \
     setup-nv-boot-control \
     edk2-container \
-    uefi-capsule-container \
     tegra-nvfancontrol \
     tegra-nvpower \
     gptfdisk \
