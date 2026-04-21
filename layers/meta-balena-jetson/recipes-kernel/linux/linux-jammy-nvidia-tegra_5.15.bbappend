@@ -105,15 +105,17 @@ BALENA_CONFIGS[iwlwifi] = " \
     CONFIG_IWLMVM=m \
 "
 
-# Policy routing + IPIP + raw netfilter table — required by Calico CNI
-# for Kubernetes networking. Without IP_MULTIPLE_TABLES, `ip rule` returns
-# "Address family not supported by protocol". See
-# https://forums.balena.io/t/kenel-build-flags-for-networking-on-jetson-orin-series/375797
+# Calico CNI kernel requirements
+# https://docs.tigera.io/calico/latest/getting-started/kubernetes/requirements#kernel-dependencies
+# Calico base: policy routing + iptables raw/mark/rpfilter.
+# IPIP overlay support.
 BALENA_CONFIGS:append = " calico"
 BALENA_CONFIGS[calico] = " \
     CONFIG_IP_ADVANCED_ROUTER=y \
     CONFIG_IP_MULTIPLE_TABLES=y \
     CONFIG_IP_NF_RAW=m \
+    CONFIG_IP_NF_MATCH_RPFILTER=m \
+    CONFIG_NETFILTER_XT_MATCH_MARK=m \
     CONFIG_NET_IPIP=m \
 "
 
