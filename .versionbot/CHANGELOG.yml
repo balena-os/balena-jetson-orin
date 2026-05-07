@@ -1,4 +1,40 @@
 - commits:
+    - subject: "balena-yocto-scripts: Update to v1.39.33"
+      hash: d1153882dd4e8f2584ab428b4a4f829135f04a6b
+      body: ""
+      footer:
+        Changelog-entry: "balena-yocto-scripts: Update to v1.39.33"
+        changelog-entry: "balena-yocto-scripts: Update to v1.39.33"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "layers/poky: Update to latest Scarthgap revision"
+      hash: 641e7051b826423f40f2a328a76bc921677f38c3
+      body: ""
+      footer:
+        Changelog-entry: "layers/poky: Update to latest Scarthgap revision"
+        changelog-entry: "layers/poky: Update to latest Scarthgap revision"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "nvidia-kernel-oot/nvidia-kernel-oot: Fix Forecr dtbs"
+      hash: 61b6c7fa963ab8e5ac50225e6b683ddea89cd2f8
+      body: |
+        Ensure the Forecr dtbs which enable host mode for
+        the programming USB port are installed in the image.
+      footer:
+        Changelog-entry: "nvidia-kernel-oot/nvidia-kernel-oot: Fix Forecr dtbs"
+        changelog-entry: "nvidia-kernel-oot/nvidia-kernel-oot: Fix Forecr dtbs"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 6.12.3+rev2
+  title: ""
+  date: 2026-05-07T08:33:24.505Z
+- commits:
     - subject: Update balena-os/github-workflows to
       hash: c1998e3fa9ae35f8972f3a88365eb4bffd8e84cf
       body: Update balena-os/github-workflows

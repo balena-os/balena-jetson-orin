@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v6.12.3+rev2
+## (2026-05-07)
+
+* balena-yocto-scripts: Update to v1.39.33 [Alexandru Costache]
+* layers/poky: Update to latest Scarthgap revision [Alexandru Costache]
+* nvidia-kernel-oot/nvidia-kernel-oot: Fix Forecr dtbs [Alexandru Costache]
+
 # v6.12.3+rev1
 ## (2026-04-10)
 
