@@ -63,7 +63,7 @@ do_install:append:jetson-orin-nx-xavier-nx-devkit() {
 do_install:append:jetson-orin-nano-seeed-j3010() {
 	install -d ${D}/boot/devicetree/
 
-	# Obtained from https://github.com/Seeed-Studio/Linux_for_Tegra.git - commit 5b18d7990ca342bbeb70ce5715ea0473d118278f, branch r36.4.3
+	# Obtained from https://github.com/Seeed-Studio/Linux_for_Tegra.git - commit def3d7ff8fbb34cea0b6b43c89a7aae1872651ef, branch r36.4.4
 	install -m 0644 "${WORKDIR}/tegra234-j401-p3768-0000+p3767-0004-recomputer.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0004-nv.dtb"
 	install -m 0644 "${WORKDIR}/tegra234-j401-p3768-0000+p3767-0004-recomputer-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0004-nv-super.dtb"
 	install -m 0644 "${WORKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo" "${D}/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
@@ -72,7 +72,7 @@ do_install:append:jetson-orin-nano-seeed-j3010() {
 do_install:append:jetson-orin-nx-seeed-j4012() {
 	install -d ${D}/boot/devicetree/
 
-        # Obtained from https://github.com/Seeed-Studio/Linux_for_Tegra.git - commit 5b18d7990ca342bbeb70ce5715ea0473d118278f, branch r36.4.3
+        # Obtained from https://github.com/Seeed-Studio/Linux_for_Tegra.git - commit def3d7ff8fbb34cea0b6b43c89a7aae1872651ef, branch r36.4.4
         install -m 0644 "${WORKDIR}/tegra234-j401-p3768-0000+p3767-0000-recomputer.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0000-nv.dtb"
         install -m 0644 "${WORKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo" "${D}/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
 }
