@@ -105,6 +105,25 @@ BALENA_CONFIGS[iwlwifi] = " \
     CONFIG_IWLMVM=m \
 "
 
+# Calico CNI kernel requirements
+# https://docs.tigera.io/calico/latest/getting-started/kubernetes/requirements#kernel-dependencies
+# Calico base: policy routing + iptables raw/mark/rpfilter.
+# IPIP overlay support.
+BALENA_CONFIGS:append = " calico"
+BALENA_CONFIGS[calico] = " \
+    CONFIG_IP_ADVANCED_ROUTER=y \
+    CONFIG_IP_MULTIPLE_TABLES=y \
+    CONFIG_IP_NF_RAW=m \
+    CONFIG_IP_NF_MATCH_RPFILTER=m \
+    CONFIG_NETFILTER_XT_MATCH_MARK=m \
+    CONFIG_NET_IPIP=m \
+"
+
+BALENA_CONFIGS:append = " wireguard"
+BALENA_CONFIGS[wireguard] = " \
+    CONFIG_WIREGUARD=m \
+"
+
 # Needed starting with Jetpack 6
 # so the initramfs can mount the
 # NVME partitions
