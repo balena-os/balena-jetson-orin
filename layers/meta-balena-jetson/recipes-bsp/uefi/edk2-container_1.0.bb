@@ -21,18 +21,18 @@ DEFAULT_DTB:jetson-agx-orin-devkit-64gb = "tegra234-p3737-0000+p3701-0005-nv.dtb
 DEFAULT_DTB:forecr-dsb-ornx-orin-nano-8gb = "tegra234-p3768-0000+p3767-0003-nv-super.dtb"
 
 SRC_URI = " \
-    https://raw.githubusercontent.com/NVIDIA/edk2/r36.4.3-updates/License.txt;downloadfilename=edk2_License.txt;name=edk2_license \
-    https://raw.githubusercontent.com/NVIDIA/edk2-platforms/r36.4.3-updates/License.txt;downloadfilename=edk2-platforms_License.txt;name=edk2_platforms_license \
-    https://raw.githubusercontent.com/NVIDIA/edk2-nvidia/r36.4.3-updates/LICENSE;downloadfilename=edk2-nvidia_LICENSE;name=edk2_nvidia_license \
-    https://raw.githubusercontent.com/NVIDIA/edk2-nvidia-non-osi/r36.4.3-updates/Silicon/NVIDIA/Drivers/NvGopDriver/NOTICE.nvgop-chips-platform.efi;name=nvgop_chips_platform_license \
+    https://raw.githubusercontent.com/NVIDIA/edk2/r36.5-updates/License.txt;downloadfilename=edk2_License.txt;name=edk2_license \
+    https://raw.githubusercontent.com/NVIDIA/edk2-platforms/r36.5-updates/License.txt;downloadfilename=edk2-platforms_License.txt;name=edk2_platforms_license \
+    https://raw.githubusercontent.com/NVIDIA/edk2-nvidia/r36.5-updates/LICENSE;downloadfilename=edk2-nvidia_LICENSE;name=edk2_nvidia_license \
+    https://raw.githubusercontent.com/NVIDIA/edk2-nvidia-non-osi/r36.5-updates/Silicon/NVIDIA/Drivers/NvGopDriver/NOTICE.nvgop-chips-platform.efi;name=nvgop_chips_platform_license \
     file://Dockerfile \
     file://build.sh \
     file://0001-edk2-nvidia-Add-changes-for-balenaOS-integration_patch.txt \
     file://0001-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow_patch.txt \
-    file://0001-AGX-Orin-32GB-Integrate-with-balenaOS-on-L4T-36.4_patch.txt \
-    file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-36.4_patch.txt \
-    file://0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.4_patch.txt \
-    file://0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-36.4_patch.txt \
+    file://0001-AGX-Orin-32GB-Integrate-with-balenaOS-on-L4T-36.5_patch.txt \
+    file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-36.5_patch.txt \
+    file://0001-Orin-NX-16GB-Integrate-with-balenaOS-on-L4T-36.5_patch.txt \
+    file://0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-36.5_patch.txt \
     file://0001-edk2-nvidia-Remove-pva-fw-from-required-list_patch.txt \
     file://0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit_patch.txt \
     file://0001-TegraPlatformBootManager-TegraPlatformBootManagerDxe_patch.txt \
@@ -56,7 +56,7 @@ do_compile () {
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
 
     DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}" --build-arg "DEFAULT_DTB=${DEFAULT_DTB}"
-    DOCKER_API_VERSION=1.24 docker run --rm -v ${WORKDIR}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" -e "DEFAULT_DTB=${DEFAULT_DTB}" ${IMAGETAG} su /bin/bash -c "/build/build.sh && cp /build/nvidia-uefi/images/uefi_Jetson_DEBUG.bin /out/uefi_jetson.bin && cp /build/nvidia-uefi/images/BOOTAA64_Jetson_DEBUG.efi /out/BOOTAA64.efi"
+    DOCKER_API_VERSION=1.24 docker run --rm -v ${WORKDIR}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" -e "DEFAULT_DTB=${DEFAULT_DTB}" ${IMAGETAG} su /bin/bash -c "/build/build.sh && mkdir -p /out/root_build/ && cp /build/nvidia-uefi/images/uefi_t23x_general_DEBUG.bin /out/uefi_jetson.bin && cp /build/nvidia-uefi//Build/t23x_general/DEBUG_GCC/AARCH64/L4TLauncher.efi /out/BOOTAA64.efi"
     DOCKER_API_VERSION=1.24 docker rmi -f ${IMAGETAG}
 }
 
