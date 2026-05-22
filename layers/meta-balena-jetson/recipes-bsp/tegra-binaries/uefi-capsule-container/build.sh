@@ -43,7 +43,7 @@ case "${DEVICE_TYPE}" in
 		sed -i "s#p3768-0000-p3767-0000-a0.conf#p3768-0000-p3767-0000-a0_original.conf#g" p3768-0000-p3767-0000-a0.conf
 		;;
 	"forecr-dsb-ornx-orin-nano-8gb")
-	        wget https://github.com/forecr/dsboard_ornx_lan_orin_bsp/blob/164c5c81e244d8e83cfb03ae771bdc7fa27c087c/dsboard_ornx_lan_orin_nano_JP6_2_2_bsp.tar.xz -O /build_dir/dsboard_ornx_lan_orin_nano_JP6_2_2_bsp.tar.xz
+	        wget https://github.com/forecr/dsboard_ornx_lan_orin_bsp/raw/164c5c81e244d8e83cfb03ae771bdc7fa27c087c/dsboard_ornx_lan_orin_nano_JP6_2_2_bsp.tar.xz -O /build_dir/dsboard_ornx_lan_orin_nano_JP6_2_2_bsp.tar.xz
 		pushd /build_dir/
 		tar xf dsboard_ornx_lan_orin_nano_JP6_2_2_bsp.tar.xz
 		cp -r ./dsboard_ornx_lan_orin_nano_JP6_2_2_bsp/* .
