@@ -10,7 +10,6 @@ mb2_bct_paths=(
 	"/build_dir/Linux_for_Tegra/bootloader/generic/BCT/tegra234-mb2-bct-misc-p3701-0002-p3711-0000.dts"
 	)
 
-ToT_BSP=$(pwd)
 bl_spec="t23x_3767_bl_spec"
 lines=(2766 2771 2776 2781 2786 2791 2796 2801 2806 2811 2816 2821 2826 2831 25712 25717 25722 25727 25732 25737 25742 25747 25752 25757 25762 25767)
 old_str="exclusion-info = <2>;"
@@ -18,28 +17,36 @@ new_str="exclusion-info = <0>;"
 
 pushd /build_dir/Linux_for_Tegra/
 
+ToT_BSP=$(pwd)
+
 case "${DEVICE_TYPE}" in
 	"jetson-agx-orin-devkit-64gb" | "jetson-agx-orin-devkit")
 		bl_spec="t23x_agx_bl_spec"
 		;;
 	"jetson-orin-nano-seeed-j3010" | "jetson-orin-nx-seeed-j4012")
-		mkdir -p /build_dir/Seeed_36_4_4
-		pushd /build_dir/Seeed_36_4_4
+		mkdir -p /build_dir/Seeed_36_5_0
+		pushd /build_dir/Seeed_36_5_0
 		git clone https://github.com/Seeed-Studio/Linux_for_Tegra.git -b r36.5.0 --single-branch
+		pushd Linux_for_Tegra
+		# Latest revision as of May 22 2026
+		git checkout d51ebf5ff7f21673418bb66bb40c29f9b6040453
 		popd
-		cp -r /build_dir/Seeed_36_4_4/Linux_for_Tegra/* /build_dir/Linux_for_Tegra/
+		popd
+		cp -r /build_dir/Seeed_36_5_0/Linux_for_Tegra/* /build_dir/Linux_for_Tegra/
 		cp p3768-0000-p3767-0000-a0.conf p3768-0000-p3767-0000-a0_original.conf
+
 		if [[ "${DEVICE_TYPE}" = "jetson-orin-nx-seeed-j4012" ]]; then
 			# J4012 Classic does not support the Super mode
 			cat recomputer-orin-j401.conf > p3768-0000-p3767-0000-a0.conf
 		elif [[ "${DEVICE_TYPE}" = "jetson-orin-nano-seeed-j3010" ]]; then
 			cat recomputer-orin-super-j401.conf > p3768-0000-p3767-0000-a0.conf
-			# This dtbo is referenced in recomputer-orin-super-j401.conf but it is not present in the sources,
-			# nor is it compiled at flash time. Only tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo is
-			# is provided by the BSP.
-			sed -i "s#tegra234-p3767-camera-p3768-imx219-quad-seeed#tegra234-p3767-camera-p3768-imx219-dual-seeed#g" p3768-0000-p3767-0000-a0.conf
 		fi
 
+		# This dtbo is referenced in recomputer-orin-j401.conf but it is not present in the BSP archive,
+		# not is it built when creating the UEFI capsule. We comment it out so that the UEFI capsule build
+		# doesn't fail
+		sed -i "s/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo//g" p3768-0000-p3767-0000-a0.conf
+		sed -i "s/tegra234-p3767-camera-p3768-imx219-quad-seeed.dtbo//g" p3768-0000-p3767-0000-a0.conf
 		sed -i "s#p3768-0000-p3767-0000-a0.conf#p3768-0000-p3767-0000-a0_original.conf#g" p3768-0000-p3767-0000-a0.conf
 		;;
 	"forecr-dsb-ornx-orin-nano-8gb")
