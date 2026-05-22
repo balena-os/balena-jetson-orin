@@ -25,12 +25,10 @@ SRC_URI = " \
     file://Dockerfile \
     file://build.sh \
     file://${JETSON_BOARD_SPEC} \
-    https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v4.4/release/Jetson_Linux_r36.4.4_aarch64.tbz2;name=l4tbsp;unpack=0 \
-    https://developer.nvidia.com/downloads/embedded/L4T/overlay_mb1bct_36.x.tbz2;name=overlay_mb1bct;unpack=0; \
+    https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v5.0/release/Jetson_Linux_r36.5.0_aarch64.tbz2;name=l4tbsp;unpack=0 \
 "
 
-SRC_URI[l4tbsp.sha256sum] = "a6ce11c22100ab0976e419959182417c83d62f4272501bc8714f2e076e010f3b"
-SRC_URI[overlay_mb1bct.sha256sum] = "c1b9051493c31168c58b0c3a4560d275a058c06657a580db840fe9a2600a3285"
+SRC_URI[l4tbsp.sha256sum] = "414e58d97ac4b84fb02cbca621d46598f0bc8b811b6b9c3ad778b04e8d321ca7"
 
 inherit deploy l4t_bsp
 
@@ -55,8 +53,7 @@ do_compile () {
     # capsule size at a minimum so it can fit in the
     # boot partition.
     cp ${WORKDIR}/${JETSON_BOARD_SPEC} ${B}/jetson_board_spec.cfg
-    cp ${S}/Jetson_Linux_r36.4.4_aarch64.tbz2 ${B}/
-    cp ${S}/overlay_mb1bct_36.x.tbz2 ${B}/
+    cp ${S}/Jetson_Linux_r36.5.0_aarch64.tbz2 ${B}/
 
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
 
