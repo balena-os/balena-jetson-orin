@@ -56,8 +56,8 @@ write_jetson_update_efivars() {
             info "PlatformCompatSpec variable created"
         else
             info "PlatformCompatSpec variable already exists"
-            if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]]; then
-                info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
+            if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]] || [[ ${kernel_l4t} == "36.5" ]]; then
+                info "PlatformCompatSpec variable already exists and we are running in L4T 36.x - it needs to be re-written."
                 chattr -i ${platform_compat_spec_efivar}
                 printf "\x07\x00\x00\x00" > ${tmp_file}
                 printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
@@ -125,12 +125,12 @@ unload_spi_drivers() {
 
 apply_old_hook_updates() {
     for hook_file in `find /mnt/sysroot/active/ -name "99-resin-bootfiles-forecr-dsb-ornx-lan-orin-nano-8gb" -type f`; do
-        if grep -q "36.4" ${hook_file} ; then
-            info "Old hook already patched for 36.4 rollback support"
+        if grep -q "36.5" ${hook_file} ; then
+            info "Old hook already patched for 36.5 rollback support"
         else
-            info "36.4 not found in old hook, doing fix"
-            sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\]/g' ${hook_file}
-            sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\]/g' ${hook_file}
+            info "36.5 not found in old hook, doing fix"
+            sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\] || \[\[ "$fw_version" == "36.5" \]\]/g' ${hook_file}
+            sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\] || \[\[ ${kernel_l4t} == "36.5" \]\]/g' ${hook_file}
         fi
      done
 
