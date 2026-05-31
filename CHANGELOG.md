@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v7.0.3+rev1
+## (2026-05-31)
+
+* unpin flowzone, track @master [Alexandru Costache]
+* Update CI workflow to allow external contributions [Alexandru Costache]
+* Add AVerMedia D315 DTB - AGX Orin 64GB [mmuhiedd]
+
 # v7.0.3
 ## (2026-05-20)
 

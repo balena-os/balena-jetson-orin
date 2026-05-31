@@ -1,4 +1,43 @@
 - commits:
+    - subject: unpin flowzone, track @master
+      hash: 5d3315feceda008147bb2e71d029b40a6634459f
+      body: |
+        See: https://balena.fibery.io/Security/Information_Security_and_Reliability_Incident/Renovate-infinite-pinning-actions-PRs-198
+      footer:
+        Changelog-entry: unpin flowzone, track @master
+        changelog-entry: unpin flowzone, track @master
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: Update CI workflow to allow external contributions
+      hash: 35c39a8d94e878bbcbc9504d1aa84f08c827fab1
+      body: ""
+      footer:
+        Changelog-entry: Update CI workflow to allow external contributions
+        changelog-entry: Update CI workflow to allow external contributions
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: Add AVerMedia D315 DTB - AGX Orin 64GB
+      hash: b4dd0466d4ff1fd1b018647e5ab11518386ee35e
+      body: |
+        Add avermedia-d315 dtb for AGX Orin 64GB. Update the dtb installation to
+        include avermedia dtb.
+
+        Author: mmuhiedd
+      footer:
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+        Changelog-entry: Add AVerMedia D315 DTB - AGX Orin 64GB
+        changelog-entry: Add AVerMedia D315 DTB - AGX Orin 64GB
+      author: mmuhiedd
+      nested: []
+  version: 7.0.3+rev1
+  title: ""
+  date: 2026-05-31T09:39:21.321Z
+- commits:
     - subject: Update layers/meta-balena to 1dddc5142dd7c41755be8f2ee17bc43014fec9c6
       hash: d2725b147d6a8efa70bdf6bd496d0ae8cf4e9ddd
       body: Update layers/meta-balena
