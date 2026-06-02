@@ -3,9 +3,12 @@ LICENSE = "MIT"
 
 inherit balena-hostapp-extension
 
-# Placeholder rootfs to exercise the build pipeline. Replaced with the
-# actual NVIDIA stack on a follow-on branch. See phase2-extension-plan.md.
-IMAGE_INSTALL = "base-files"
+# Step 1: add L4T driver libs from meta-tegra's tegra-container-passthrough.
+# Stages camera, gstreamer, wayland, weston (+ V4L2 subset of multimedia)
+# at ${datadir}/nvidia-container-passthrough/usr/lib/aarch64-linux-gnu/
+# i.e. /usr/share/nvidia-container-passthrough/usr/lib/... in the image.
+# Total ~365 MB of NVIDIA-redistributed L4T binaries.
+IMAGE_INSTALL = "base-files tegra-container-passthrough"
 
 # Our extension does not ship a kernel — drop kernel-override-hooks that
 # the balena-hostapp-extension bbclass auto-appends. The package's hooks
