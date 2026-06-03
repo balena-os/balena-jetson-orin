@@ -1,0 +1,40 @@
+[Unit]
+Description=Generate nvidia CDI spec + enable balena-engine CDI feature
+# /etc/docker is a bind-mount from the data partition wired up by
+# bind-etc-docker.service; without ordering after that unit, our script
+# writes daemon.json into a read-only overlay and fails with EROFS.
+Requires=bind-etc-docker.service
+After=local-fs.target bind-etc-docker.service
+Before=balena.service balena-engine.service
+
+# Skip the service entirely if nvidia-ctk or nvidia-smi aren't on the host
+# (e.g. extension not installed). Pattern adopted from upstream
+# nvidia-cdi-refresh.service (release-1.19).
+ConditionPathExists=/usr/bin/nvidia-ctk
+ConditionPathExists=|/usr/sbin/nvidia-smi
+ConditionPathExists=|/usr/bin/nvidia-smi
+
+# Retry budget: 5 failures within 10s triggers backoff.
+StartLimitBurst=5
+StartLimitIntervalSec=10s
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+# Driver-readiness probe. nvidia-smi -L talks to libnvidia-ml.so.1 -> NVML
+# -> /dev/nvidia0; it fails until the L4T nvgpu/nvhost kernel modules
+# finish populating devtmpfs. We exit non-zero when not ready and let
+# systemd retry via Restart=on-failure (the L4T device nodes are kernel-
+# direct devtmpfs entries, NOT udev-managed, so the systemd .device-unit
+# dependency pattern is unavailable -- see memory: reference-l4t-devices-
+# bypass-udev). Pattern adopted from upstream nvidia-cdi-refresh.service.
+ExecStartPre=/bin/sh -c '/usr/sbin/nvidia-smi -L || /usr/bin/nvidia-smi -L'
+
+ExecStart=/usr/libexec/balena-nvidia-cdi-setup
+
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=balena.service
