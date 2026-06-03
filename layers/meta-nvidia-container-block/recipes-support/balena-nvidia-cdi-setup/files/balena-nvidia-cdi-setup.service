@@ -1,0 +1,13 @@
+[Unit]
+Description=Generate nvidia CDI spec + enable balena-engine CDI feature
+DefaultDependencies=no
+After=local-fs.target
+Before=balena.service balena-engine.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/libexec/balena-nvidia-cdi-setup
+
+[Install]
+WantedBy=balena.service

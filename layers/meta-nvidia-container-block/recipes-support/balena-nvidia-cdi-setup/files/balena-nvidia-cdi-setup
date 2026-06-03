@@ -1,0 +1,43 @@
+#!/bin/sh
+# Generate the nvidia CDI spec for the running hardware and ensure
+# balena-engine has CDI enabled. Runs as a oneshot Before=balena.service.
+# Total wall time on Jetson Orin Nano: ~60 ms.
+set -e
+
+DAEMON_JSON=/etc/docker/daemon.json
+CDI_DIR=/var/run/cdi
+CDI_SPEC="${CDI_DIR}/nvidia.yaml"
+
+# 1. Ensure CDI feature is enabled in balena-engine daemon config.
+#    Merge into any existing config (preserves other keys / future additions).
+mkdir -p "$(dirname "$DAEMON_JSON")"
+if [ -s "$DAEMON_JSON" ]; then
+    jq '. + {features: ((.features // {}) + {cdi: true})}' "$DAEMON_JSON" > "${DAEMON_JSON}.tmp" \
+        && mv "${DAEMON_JSON}.tmp" "$DAEMON_JSON"
+else
+    echo '{"features":{"cdi":true}}' > "$DAEMON_JSON"
+fi
+
+# 2. Generate the CDI spec for this hardware.
+#    nvidia-ctk does the right filtering — libs not on the host and device
+#    nodes not present (e.g. /dev/fb0 on Orin Nano with no fbdev) are
+#    automatically omitted from the spec.
+mkdir -p "$CDI_DIR"
+/usr/bin/nvidia-ctk cdi generate --mode=csv --output="$CDI_SPEC"
+
+# 3. Phase 1 tegra-path fix, adapted for the Yocto/balenaOS layout:
+#    point /usr/lib/aarch64-linux-gnu/tegra at /usr/lib (absolute) so that
+#    NGC containers that hardcode tegra/ paths can dlopen libcuda et al.
+#    Equivalent semantic to the Phase 1 'nvidia::tegra' fix but adapted to
+#    where our extension actually stages the L4T libs (flat /usr/lib/).
+awk '
+/create-symlinks/ { in_sym = 1 }
+/hookName:/ && in_sym {
+    print "      - --link"
+    print "      - /usr/lib::/usr/lib/aarch64-linux-gnu/tegra"
+    in_sym = 0
+}
+{ print }
+' "$CDI_SPEC" > "${CDI_SPEC}.tmp" && mv "${CDI_SPEC}.tmp" "$CDI_SPEC"
+
+echo "balena-nvidia-cdi-setup: cdi=true; spec=$CDI_SPEC ($(grep ^kind: "$CDI_SPEC"))"

@@ -3,11 +3,11 @@ LICENSE = "MIT"
 
 inherit balena-hostapp-extension
 
-# CUDA-only PoC. Dropped camera/multimedia*/omx recipes which would force
-# us to override PREFERRED_PROVIDER_virtual/{egl,libgl,libgles2} to
-# libglvnd-tegra (balena distro currently uses plain libglvnd which does
-# not provide virtual/libgles2). Add them back once the libglvnd-tegra
-# preferred-provider story is sorted.
+# CUDA-relevant L4T driver stack + the two toolkit binaries + the boot-time
+# CDI setup oneshot. Dropped camera/multimedia/omx recipes here pending
+# the libglvnd-tegra PREFERRED_PROVIDER fix; nvidia-ctk auto-filters those
+# libs from the generated CDI spec, so excluding them is safe — only apps
+# actually exercising camera/multimedia APIs will notice the gap.
 IMAGE_INSTALL = "base-files \
     tegra-container-passthrough \
     tegra-libraries-core \
@@ -22,26 +22,24 @@ IMAGE_INSTALL = "base-files \
     tegra-firmware \
     tegra-configs-container-csv \
     nv-tegra-release \
-    nvidia-container-toolkit-cdi-hook"
+    nvidia-container-toolkit-cdi-hook \
+    nvidia-container-toolkit-ctk \
+    balena-nvidia-cdi-setup"
 
+# Drop kernel-override-hooks bbclass auto-appends — its hooks/create
+# misdetects non-kernel extensions and blocks install. See memory
+# project-extension-install-succeeded.
 IMAGE_INSTALL:remove = "kernel-override-hooks"
-
-# Drop in the patched CDI spec (Phase 1 yaml with hostPaths rewritten to
-# match Yocto's flat /usr/lib/ layout). Image recipes do not have a
-# fetch/unpack step the way normal recipes do, so reference the layer
-# file directly via THISDIR rather than ${WORKDIR}.
-install_cdi_spec() {
-    install -d ${IMAGE_ROOTFS}/etc/cdi
-    install -m 0644 ${THISDIR}/files/balena-gpu-patched-yocto.yaml \
-        ${IMAGE_ROOTFS}/etc/cdi/balena-gpu.yaml
-}
-IMAGE_PREPROCESS_COMMAND += "install_cdi_spec; "
 
 IMAGE_LINGUAS = ""
 VIRTUAL-RUNTIME_init_manager = ""
 INITRAMFS_IMAGE = ""
 IMAGE_FSTYPES = "tar.gz"
 
+# Strip top-level cruft but preserve /etc (we need /etc/nvidia-container-runtime/
+# from tegra-configs-container-csv) and /lib/firmware (we need the GPU firmware
+# blobs from tegra-firmware). /etc/cdi is intentionally NOT shipped any more —
+# the spec is now generated at boot by balena-nvidia-cdi-setup.service.
 remove_unnecessary_files() {
     rm -f ${IMAGE_ROOTFS}/bin ${IMAGE_ROOTFS}/sbin
     rm -rf ${IMAGE_ROOTFS}/run
