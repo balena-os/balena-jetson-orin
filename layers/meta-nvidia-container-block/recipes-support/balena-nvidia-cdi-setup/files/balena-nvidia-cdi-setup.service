@@ -1,7 +1,11 @@
 [Unit]
 Description=Generate nvidia CDI spec + enable balena-engine CDI feature
 DefaultDependencies=no
-After=local-fs.target
+# /etc/docker is a bind-mount from the data partition wired up by
+# bind-etc-docker.service; without ordering after that unit, our script
+# writes daemon.json into a read-only overlay and fails with EROFS.
+Requires=bind-etc-docker.service
+After=local-fs.target bind-etc-docker.service
 Before=balena.service balena-engine.service
 
 [Service]
