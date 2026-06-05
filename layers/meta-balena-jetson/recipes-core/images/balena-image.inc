@@ -5,36 +5,6 @@ DTBFILE ?= "${@os.path.basename(d.getVar('KERNEL_DEVICETREE', True).split()[0])}
 
 do_resin_boot_dirgen_and_deploy[depends] += "l4t-launcher-extlinux:do_install"
 
-IMAGE_INSTALL:append = " \
-    tegra-flash-dry \
-    kernel-image-initramfs \
-    tegra-redundant-boot \
-    tegra-nv-boot-control-config \
-    tegra-eeprom-tool \
-    setup-nv-boot-control \
-    edk2-container \
-    uefi-capsule-container \
-    tegra-nvfancontrol \
-    tegra-nvpower \
-    parted \
-    gptfdisk \
-    tegra-nvpmodel \
-    tegra-configs-nvstartup \
-    tegra-configs-udev \
-    mtd-utils \
-    tegra-bluetooth \
-    tegra-wifi \
-    l4t-launcher-extlinux \
-    dtc \
-    pciutils \
-    jetson-qspi-manager \
-    jetson-dtbs \
-    tegra-tools-tegrastats tegra-tools-jetson-clocks \
-    nvidia-kernel-oot-devicetrees nvidia-kernel-oot-display nvidia-kernel-oot-cameras nvidia-kernel-oot-bluetooth nvidia-kernel-oot-wifi \
-    nvidia-kernel-oot-canbus nvidia-kernel-oot-virtualization nvidia-kernel-oot-base nvidia-drm-loadconf \
-    kernel-module-r8126 kernel-module-r8168 linux-jammy-nvidia-tegra-extlinux \
-"
-
 IMAGE_INSTALL:append:forecr-dsb-ornx-orin-nano-8gb = " can-utils "
 
 # We don't mount or use the esp partition, so let's

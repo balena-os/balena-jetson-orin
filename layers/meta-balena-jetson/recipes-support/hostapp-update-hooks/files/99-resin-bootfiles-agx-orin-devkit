@@ -46,12 +46,12 @@ apply_bs_fix() {
             sed -i '3 i if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi; ' ${hook_file}
             info "Applied spi unbind procedure to ${hook_file}"
         fi
-        if grep -q "36.4" ${hook_file} ; then
-            info "Old hook already patched for 36.4 rollback support"
+        if grep -q "36.5" ${hook_file} ; then
+            info "Old hook already patched for 36.5 rollback support"
         else
-            info "36.4 not found in old hook, doing fix"
-            sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\]/g' ${hook_file}
-            sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\]/g' ${hook_file}
+            info "36.5 not found in old hook, doing fix"
+            sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\] || \[\[ "$fw_version" == "36.5" \]\]/g' ${hook_file}
+            sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\] || \[\[ ${kernel_l4t} == "36.5" \]\]/g' ${hook_file}
         fi
     done
 }
@@ -79,7 +79,7 @@ write_jetson_update_efivars() {
             info "PlatformCompatSpec variable created"
         else
             info "PlatformCompatSpec variable already exists"
-	    if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]]; then
+	    if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]] || [[ ${kernel_l4t} == "36.5" ]]; then
                 info "PlatformCompatSpec variable already exists and we are running in L4T 36.X, it needs to be re-written."
                 chattr -i ${platform_compat_spec_efivar}
                 printf "\x07\x00\x00\x00" > ${tmp_file}
@@ -105,7 +105,7 @@ check_running_l4t() {
     kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
     old_extlinux_file="/mnt/sysroot/inactive/current/boot/extlinux/extlinux.conf"
 
-    if [[ "$fw_version" == "35.5" ]] || [[ "$fw_version" == "36.3" ]] || [[ "$fw_version" == "36.4" ]]; then
+    if [[ "$fw_version" == "35.5" ]] || [[ "$fw_version" == "36.3" ]] || [[ "$fw_version" == "36.4" ]] || [[ ${fw_version} == "36.5" ]]; then
         info "Firmware version $fw_version is suitable for Jetpack 6 upgrade."
 	# mtd may cause interference with sporadic failures when writing efivars
 	if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi;
