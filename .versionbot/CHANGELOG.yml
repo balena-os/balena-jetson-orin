@@ -1,4 +1,38 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v7.0.5"
+      hash: 80d65eda386c9a4aba43cba64584d8dcb076267f
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v7.0.5"
+        changelog-entry: "layers/meta-balena: Update to v7.0.5"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "layers/meta-tegra: Update submodule to use L4T 36.5.0"
+      hash: 2d23a57af8c4bb1ee91be70c7bd59259b69a255a
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-tegra: Update submodule to use L4T 36.5.0"
+        changelog-entry: "layers/meta-tegra: Update submodule to use L4T 36.5.0"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "balena-yocto-scripts: Update to v1.39.34"
+      hash: f20bc6ec5d947cfdaaf5f2218b09e757d36873c3
+      body: ""
+      footer:
+        Changelog-entry: "balena-yocto-scripts: Update to v1.39.34"
+        changelog-entry: "balena-yocto-scripts: Update to v1.39.34"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 7.0.5
+  title: ""
+  date: 2026-06-05T08:53:53.756Z
+- commits:
     - subject: unpin flowzone, track @master
       hash: 5d3315feceda008147bb2e71d029b40a6634459f
       body: |

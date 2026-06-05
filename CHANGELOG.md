@@ -1,6 +1,13 @@
 Change log
 -----------
 
+# v7.0.5
+## (2026-06-05)
+
+* layers/meta-balena: Update to v7.0.5 [Alexandru Costache]
+* layers/meta-tegra: Update submodule to use L4T 36.5.0 [Alexandru Costache]
+* balena-yocto-scripts: Update to v1.39.34 [Alexandru Costache]
+
 # v7.0.3+rev1
 ## (2026-05-31)
 
