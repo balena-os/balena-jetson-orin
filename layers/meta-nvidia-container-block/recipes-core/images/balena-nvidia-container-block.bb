@@ -4,10 +4,14 @@ LICENSE = "MIT"
 inherit balena-hostapp-extension
 
 # CUDA-relevant L4T driver stack + the two toolkit binaries + the boot-time
-# CDI setup oneshot. Dropped camera/multimedia/omx recipes here pending
-# the libglvnd-tegra PREFERRED_PROVIDER fix; nvidia-ctk auto-filters those
-# libs from the generated CDI spec, so excluding them is safe — only apps
-# actually exercising camera/multimedia APIs will notice the gap.
+# CDI setup oneshot + the camera stack (Argus). The libglvnd-tegra
+# PREFERRED_PROVIDER override in our layer.conf lets the camera/multimedia
+# packages resolve virtual/libgles2; without it they were silently
+# excluded by meta-tegra's recipe-resolution machinery.
+# Still dropped: tegra-libraries-multimedia-v4l (V4L2 codec, Orin Nano
+# media block doesn't expose nvenc/nvdec nodes), tegra-libraries-omx
+# (legacy OpenMAX, deprecated), tegra-libraries-glxcore (X11-only, balena
+# is headless), tegra-libraries-vulkan (not needed for camera + CUDA).
 IMAGE_INSTALL = "base-files \
     tegra-container-passthrough \
     tegra-libraries-core \
@@ -24,6 +28,9 @@ IMAGE_INSTALL = "base-files \
     nv-tegra-release \
     nvidia-container-toolkit-cdi-hook \
     nvidia-container-toolkit-ctk \
+    tegra-libraries-multimedia \
+    tegra-libraries-multimedia-utils \
+    tegra-libraries-camera \
     balena-nvidia-cdi-setup"
 
 # Drop kernel-override-hooks bbclass auto-appends — its hooks/create
