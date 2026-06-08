@@ -10,10 +10,33 @@ services:
   kernel-modules:
     x-build: ~
 
+  # nvidia-container hostapp-extension (CDI + legacy --runtime=nvidia path).
+  # Restored after the previous commit's intermediate-no-ext release. This rev
+  # is the "final" target. Workflow:
+  #   1. Provision device
+  #   2. Retag supervisor to v6 (ghcr.io/shaunmulligan/balena-supervisor:cdi-aarch64-v6)
+  #   3. POST /resinhup with target_version=<previous-rev-no-ext-version>
+  #      -> cloud sets should_be_operated_by__release to the no-ext release
+  #      -> master hup-2.x.sh upgrades OS (single-service release; handled
+  #         correctly by master's contains__image[0] lookup)
+  #   4. PATCH should_be_operated_by__release to THIS release
+  #      -> succeeds because target is no longer null
+  #   5. Run alexgg's upgrade-2.x.sh --hostos-version <this-rev-version>
+  #      in quick succession so the supervisor's extension-install path runs
+  #      with the proper stop-supervisor / pull-os / restart-supervisor-with-
+  #      update-lock coordination (the supervisor would otherwise race the
+  #      extension install during OS update).
   nvidia-container:
-    # Opt out for the intermediate release. master hup-2.x.sh has issues
-    # with multi-service releases (picks contains__image[0] blindly);
-    # this rev exists to bridge the cloud's downgrade-check from a fresh
-    # 7.0.3+rev1 device to a real target, so a subsequent PATCH to the
-    # with-ext release succeeds. Restore in the follow-up commit.
-    x-build: ~
+    image: __BUILD_OUTPUT__
+    x-build:
+      recipe: balena-nvidia-container-block
+      build_args:
+        - "-t"
+        - "layers/meta-nvidia-container-block/conf/templates/default"
+      profiles:
+        - nvidia-gpu
+    labels:
+      io.balena.image.class: 'overlay'
+      io.balena.image.store: 'data'
+      io.balena.update.requires-reboot: '1'
+      io.balena.image.override: '200'
