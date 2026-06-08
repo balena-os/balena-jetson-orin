@@ -1,9 +1,10 @@
 #!/bin/sh
-# Boot-time NVIDIA setup for balena-engine:
-#   - enable CDI feature in /etc/docker/daemon.json
-#   - register the legacy `nvidia` OCI runtime (when nvidia-container-runtime ships)
-#   - regenerate /var/run/cdi/nvidia.yaml for the running hardware
-# Runs as a oneshot Before=balena.service.
+# Boot-time NVIDIA setup for balena-engine. Runs as a oneshot Before=balena.service.
+#   1. Configure /etc/docker/daemon.json (enable CDI + register `nvidia` runtime)
+#      via `nvidia-ctk runtime configure`.
+#   2. Regenerate /var/run/cdi/nvidia.yaml for the running hardware.
+#   3. Inject any present camera bits (devnodes, Argus socket, lib mounts) into
+#      the spec's `all` device.
 # Total wall time on Jetson Orin Nano: ~60 ms (GPU only) / ~80 ms (with camera).
 set -e
 
@@ -11,20 +12,26 @@ DAEMON_JSON=/etc/docker/daemon.json
 CDI_DIR=/var/run/cdi
 CDI_SPEC="${CDI_DIR}/nvidia.yaml"
 
-# 1. Ensure CDI feature is enabled in balena-engine daemon config.
-#    Also register the legacy `nvidia` OCI runtime when the binary is shipped,
-#    so customers can pick either `--device=nvidia.com/gpu=all` (CDI path) OR
-#    `--runtime=nvidia` (classic libnvidia-container hook path). Both can
-#    coexist in the daemon; balena-engine just needs to know about both.
+# 1. Configure balena-engine daemon.json. Two independent things wired up:
+#
+#    (a) Register the legacy `nvidia` OCI runtime via the upstream-supported
+#        `nvidia-ctk runtime configure`. NO --cdi.enabled flag: that would
+#        flip the registered runtime into CDI mode (i.e. nvidia-container-
+#        runtime.cdi), which is the wrong shape for us. We want `nvidia` to
+#        stay as the classic libnvidia-container hook path so customers who
+#        opt into `--runtime=nvidia` get the legacy behaviour.
+#
+#    (b) Toggle the engine-level CDI feature (features.cdi=true). This is
+#        what makes balena-engine v25+ accept `--device=nvidia.com/gpu=all`
+#        natively, with NO nvidia runtime involved. Doing this as a separate
+#        jq merge keeps the two paths cleanly independent.
 mkdir -p "$(dirname "$DAEMON_JSON")"
-NVIDIA_RUNTIME_BIN=/usr/bin/nvidia-container-runtime
-if [ -x "$NVIDIA_RUNTIME_BIN" ]; then
-    JQ_PROG='.features = ((.features // {}) + {cdi: true})
-            | .runtimes = ((.runtimes // {}) + {nvidia: {path: "nvidia-container-runtime", runtimeArgs: []}})'
-else
-    JQ_PROG='.features = ((.features // {}) + {cdi: true})'
-fi
+/usr/bin/nvidia-ctk runtime configure \
+    --runtime=docker \
+    --config="$DAEMON_JSON"
 
+# Enable engine-native CDI as a second, independent step.
+JQ_PROG='.features = ((.features // {}) + {cdi: true})'
 if [ -s "$DAEMON_JSON" ]; then
     jq "$JQ_PROG" "$DAEMON_JSON" > "${DAEMON_JSON}.tmp" \
         && mv "${DAEMON_JSON}.tmp" "$DAEMON_JSON"
