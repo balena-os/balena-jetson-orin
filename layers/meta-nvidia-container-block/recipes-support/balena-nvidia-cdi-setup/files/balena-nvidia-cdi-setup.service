@@ -4,7 +4,7 @@ Description=Generate nvidia CDI spec + enable balena-engine CDI feature
 # bind-etc-docker.service; without ordering after that unit, our script
 # writes daemon.json into a read-only overlay and fails with EROFS.
 Requires=bind-etc-docker.service
-After=local-fs.target bind-etc-docker.service
+After=local-fs.target bind-etc-docker.service nvargus-daemon.service
 Before=balena.service balena-engine.service
 
 # Skip the service entirely if nvidia-ctk or nvidia-smi aren't on the host

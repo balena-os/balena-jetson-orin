@@ -1,7 +1,7 @@
 #!/bin/sh
 # Generate the nvidia CDI spec for the running hardware and ensure
 # balena-engine has CDI enabled. Runs as a oneshot Before=balena.service.
-# Total wall time on Jetson Orin Nano: ~60 ms.
+# Total wall time on Jetson Orin Nano: ~60 ms (GPU only) / ~80 ms (with camera).
 set -e
 
 DAEMON_JSON=/etc/docker/daemon.json
@@ -9,7 +9,6 @@ CDI_DIR=/var/run/cdi
 CDI_SPEC="${CDI_DIR}/nvidia.yaml"
 
 # 1. Ensure CDI feature is enabled in balena-engine daemon config.
-#    Merge into any existing config (preserves other keys / future additions).
 mkdir -p "$(dirname "$DAEMON_JSON")"
 if [ -s "$DAEMON_JSON" ]; then
     jq '. + {features: ((.features // {}) + {cdi: true})}' "$DAEMON_JSON" > "${DAEMON_JSON}.tmp" \
@@ -19,25 +18,83 @@ else
 fi
 
 # 2. Generate the CDI spec for this hardware.
-#    nvidia-ctk does the right filtering — libs not on the host and device
-#    nodes not present (e.g. /dev/fb0 on Orin Nano with no fbdev) are
-#    automatically omitted from the spec.
 mkdir -p "$CDI_DIR"
 /usr/bin/nvidia-ctk cdi generate --mode=csv --output="$CDI_SPEC"
 
-# 3. Phase 1 tegra-path fix, adapted for the Yocto/balenaOS layout:
-#    point /usr/lib/aarch64-linux-gnu/tegra at /usr/lib (absolute) so that
-#    NGC containers that hardcode tegra/ paths can dlopen libcuda et al.
-#    Equivalent semantic to the Phase 1 'nvidia::tegra' fix but adapted to
-#    where our extension actually stages the L4T libs (flat /usr/lib/).
-awk '
+# 3. Build conditional camera additions (only if hardware/files are present).
+#    - 3 nvhost-ctrl devnodes only exist if the IMX219 (or compatible) DTBO
+#      is active. Without the DTBO, these paths are absent and we skip the
+#      injection so containers can still use the GPU-only path cleanly.
+#    - /tmp/argus_socket is created by nvargus-daemon (we Order ourselves
+#      After=nvargus-daemon.service so it has had a chance to start).
+#    - 17 camera libs from nvidia-l4t-camera land at /usr/lib/ in our
+#      extension overlay (Yocto-flat) but the container's ldconfig + GST
+#      plugins expect them at /usr/lib/aarch64-linux-gnu/nvidia/. Mount
+#      with explicit host→container path translation.
+CAMERA_DEVNODES=""
+for d in /dev/nvhost-ctrl-nvcsi /dev/nvhost-ctrl-vi0 /dev/nvhost-ctrl-isp; do
+    [ -e "$d" ] && CAMERA_DEVNODES="${CAMERA_DEVNODES}    - path: ${d}
+"
+done
+
+CAMERA_MOUNTS=""
+if [ -S /tmp/argus_socket ]; then
+    CAMERA_MOUNTS="${CAMERA_MOUNTS}    - hostPath: /tmp/argus_socket
+      containerPath: /tmp/argus_socket
+      options:
+      - rw
+      - bind
+"
+fi
+for lib in libnvargus.so libnvargus_socketclient.so libnvargus_socketserver.so \
+           libnvcam_imageencoder.so libnvcameratools.so libnvcamerautils.so \
+           libnvcamlog.so libnvcamv4l2.so libnvcapture.so libnvfusacap.so \
+           libnvfusacapinterface.so libnvisp.so libnvisppg.so \
+           libnvmedia_isp_ext.so libnvodm_imager.so libnvscf.so \
+           libv4l2_nvargus.so; do
+    if [ -e "/usr/lib/${lib}" ]; then
+        CAMERA_MOUNTS="${CAMERA_MOUNTS}    - hostPath: /usr/lib/${lib}
+      containerPath: /usr/lib/aarch64-linux-gnu/nvidia/${lib}
+      options:
+      - ro
+      - bind
+"
+    fi
+done
+
+# 4. Inject into the spec. nvidia-ctk emits exactly two devices in this
+#    order: name: "0" then name: all. The 2nd occurrence of deviceNodes:
+#    and mounts: is the all-device's; that's where we want camera bits.
+#    Also keeps the Phase 1 tegra-path fix (extended to also cover
+#    /usr/lib/aarch64-linux-gnu/nvidia/ since meta-tegra installs camera
+#    libs at /usr/lib/ flat but containers look for them at the deb path).
+awk -v devnodes="$CAMERA_DEVNODES" -v mounts="$CAMERA_MOUNTS" '
+BEGIN { devnodes_seen = 0; mounts_seen = 0 }
+/^    deviceNodes:$/ {
+    print
+    devnodes_seen++
+    if (devnodes_seen == 2 && devnodes != "") printf "%s", devnodes
+    next
+}
+/^    mounts:$/ {
+    print
+    mounts_seen++
+    if (mounts_seen == 2 && mounts != "") printf "%s", mounts
+    next
+}
 /create-symlinks/ { in_sym = 1 }
 /hookName:/ && in_sym {
     print "      - --link"
     print "      - /usr/lib::/usr/lib/aarch64-linux-gnu/tegra"
+    print "      - --link"
+    print "      - /usr/lib::/usr/lib/aarch64-linux-gnu/nvidia"
     in_sym = 0
 }
 { print }
 ' "$CDI_SPEC" > "${CDI_SPEC}.tmp" && mv "${CDI_SPEC}.tmp" "$CDI_SPEC"
 
+# Summary
+N_DEVS=$(grep -c '^    - path: /dev' "$CDI_SPEC" || echo 0)
+N_MOUNTS=$(grep -c '^    - hostPath:' "$CDI_SPEC" || echo 0)
 echo "balena-nvidia-cdi-setup: cdi=true; spec=$CDI_SPEC ($(grep ^kind: "$CDI_SPEC"))"
+echo "                          devices=${N_DEVS} mounts=${N_MOUNTS}"
