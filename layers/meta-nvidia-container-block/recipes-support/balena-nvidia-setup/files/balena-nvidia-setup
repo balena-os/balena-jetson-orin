@@ -1,6 +1,9 @@
 #!/bin/sh
-# Generate the nvidia CDI spec for the running hardware and ensure
-# balena-engine has CDI enabled. Runs as a oneshot Before=balena.service.
+# Boot-time NVIDIA setup for balena-engine:
+#   - enable CDI feature in /etc/docker/daemon.json
+#   - register the legacy `nvidia` OCI runtime (when nvidia-container-runtime ships)
+#   - regenerate /var/run/cdi/nvidia.yaml for the running hardware
+# Runs as a oneshot Before=balena.service.
 # Total wall time on Jetson Orin Nano: ~60 ms (GPU only) / ~80 ms (with camera).
 set -e
 
@@ -9,12 +12,24 @@ CDI_DIR=/var/run/cdi
 CDI_SPEC="${CDI_DIR}/nvidia.yaml"
 
 # 1. Ensure CDI feature is enabled in balena-engine daemon config.
+#    Also register the legacy `nvidia` OCI runtime when the binary is shipped,
+#    so customers can pick either `--device=nvidia.com/gpu=all` (CDI path) OR
+#    `--runtime=nvidia` (classic libnvidia-container hook path). Both can
+#    coexist in the daemon; balena-engine just needs to know about both.
 mkdir -p "$(dirname "$DAEMON_JSON")"
+NVIDIA_RUNTIME_BIN=/usr/bin/nvidia-container-runtime
+if [ -x "$NVIDIA_RUNTIME_BIN" ]; then
+    JQ_PROG='.features = ((.features // {}) + {cdi: true})
+            | .runtimes = ((.runtimes // {}) + {nvidia: {path: "nvidia-container-runtime", runtimeArgs: []}})'
+else
+    JQ_PROG='.features = ((.features // {}) + {cdi: true})'
+fi
+
 if [ -s "$DAEMON_JSON" ]; then
-    jq '. + {features: ((.features // {}) + {cdi: true})}' "$DAEMON_JSON" > "${DAEMON_JSON}.tmp" \
+    jq "$JQ_PROG" "$DAEMON_JSON" > "${DAEMON_JSON}.tmp" \
         && mv "${DAEMON_JSON}.tmp" "$DAEMON_JSON"
 else
-    echo '{"features":{"cdi":true}}' > "$DAEMON_JSON"
+    echo '{}' | jq "$JQ_PROG" > "$DAEMON_JSON"
 fi
 
 # 2. Generate the CDI spec for this hardware.

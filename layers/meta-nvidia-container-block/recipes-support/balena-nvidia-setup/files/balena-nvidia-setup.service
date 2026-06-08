@@ -1,5 +1,5 @@
 [Unit]
-Description=Generate nvidia CDI spec + enable balena-engine CDI feature
+Description=Boot-time NVIDIA setup for balena-engine (CDI feature, nvidia runtime registration, CDI spec gen)
 # /etc/docker is a bind-mount from the data partition wired up by
 # bind-etc-docker.service; without ordering after that unit, our script
 # writes daemon.json into a read-only overlay and fails with EROFS.
@@ -31,7 +31,7 @@ RemainAfterExit=yes
 # bypass-udev). Pattern adopted from upstream nvidia-cdi-refresh.service.
 ExecStartPre=/bin/sh -c '/usr/sbin/nvidia-smi -L || /usr/bin/nvidia-smi -L'
 
-ExecStart=/usr/libexec/balena-nvidia-cdi-setup
+ExecStart=/usr/libexec/balena-nvidia-setup
 
 Restart=on-failure
 RestartSec=1s
