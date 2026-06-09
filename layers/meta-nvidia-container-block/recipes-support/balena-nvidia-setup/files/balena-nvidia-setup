@@ -39,9 +39,35 @@ else
     echo '{}' | jq "$JQ_PROG" > "$DAEMON_JSON"
 fi
 
+# 1.5. Wire balena-engine's low-level runtime into nvidia-container-runtime.
+#      The legacy `--runtime=nvidia` path is a wrapper that exec's a real OCI
+#      runtime; its candidate list defaults to ["docker-runc", "runc", "crun"]
+#      and balena-engine ships its runtime as `balena-runc`, so unmodified
+#      installs fail with "no runtime binary found from candidate list".
+#      `nvidia-ctk config --set` accepts a colon-separated list for list-type
+#      settings. nvidia-container-setup.service (from upstream meta-tegra,
+#      pulled in via After= below) seeds /run/nvidia-container-
+#      runtime/config.toml; we patch the runtimes list in place after it lands.
+NVCT_CFG=/run/nvidia-container-runtime/config.toml
+if [ -e "$NVCT_CFG" ]; then
+    /usr/bin/nvidia-ctk config --in-place \
+        --config="$NVCT_CFG" \
+        --set nvidia-container-runtime.runtimes=balena-runc:docker-runc:runc:crun
+fi
+
 # 2. Generate the CDI spec for this hardware.
+#    --alt-roots tells nvidia-ctk where to look when CSV entries reference
+#    canonical container-side paths (e.g. /usr/lib/aarch64-linux-gnu/
+#    gstreamer-1.0/libgstnvarguscamerasrc.so). Without it, the locator only
+#    searches host's `/` and silently drops ~30 gst/camera/v4l2 entries,
+#    breaking stock NGC camera containers (no nvarguscamerasrc element).
+#    See meta-tegra's nvidia-container-toolkit recipe — `--alt-roots` is
+#    added by their patch on top of upstream nvidia-ctk.
 mkdir -p "$CDI_DIR"
-/usr/bin/nvidia-ctk cdi generate --mode=csv --output="$CDI_SPEC"
+/usr/bin/nvidia-ctk cdi generate \
+    --mode=csv \
+    --alt-roots=/usr/share/nvidia-container-passthrough \
+    --output="$CDI_SPEC"
 
 # 3. Build conditional camera additions (only if hardware/files are present).
 #    - 3 nvhost-ctrl devnodes only exist if the IMX219 (or compatible) DTBO
