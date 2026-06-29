@@ -2,7 +2,7 @@
 
 ## Linux for Tegra (L4T) Support
 
-All Jetson Orin boards in this repository tagged v5.3.23 and newer are using L4T 36.3 - Jetpack 6.
+All Jetson Orin boards in this repository tagged v5.3.23 and newer are using L4T 36.x - Jetpack 6, or newer.
 
 For devices which don't have production releases at versions greater than v5.3.23 in balena-cloud yet,
 draft releases can be accessed using balena CLI.
