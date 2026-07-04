@@ -177,6 +177,7 @@ DTB_OVERLAYS:jetson-agx-orin-devkit="/boot/devicetree/tegra234-p3737-0000+p3701-
 DTB_OVERLAYS="/boot/devicetree/tegra234-p3768-0000+p3767-0000-dynamic.dtbo"
 DTB_OVERLAYS:append:jetson-orin-nano-seeed-j3010="${DEFAULT_SEEED_OVERLAYS}"
 DTB_OVERLAYS:append:jetson-orin-nx-seeed-j4012="${DEFAULT_SEEED_OVERLAYS}"
+DTB_OVERLAYS:append:jetson-orin-nano-devkit-nvme=",/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual.dtbo"
 
 generate_extlinux_conf() {
     mkdir -p ${WORKDIR}/extlinux || true
