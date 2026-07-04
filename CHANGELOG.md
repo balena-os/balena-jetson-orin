@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v7.0.5+rev1
+## (2026-07-04)
+
+* balena-yocto-scripts: Update to v1.41.5 [Alexandru Costache]
+* recipes-kernel/linux: Enable imx219-dual dtb overlay by default for Orin Nano [Alexandru Costache]
+
 # v7.0.5
 ## (2026-06-05)
 

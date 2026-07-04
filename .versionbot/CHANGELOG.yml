@@ -1,4 +1,32 @@
 - commits:
+    - subject: "balena-yocto-scripts: Update to v1.41.5"
+      hash: 26ffb489bdb3540cbfa6c07fe77114d30563785a
+      body: ""
+      footer:
+        Changelog-entry: "balena-yocto-scripts: Update to v1.41.5"
+        changelog-entry: "balena-yocto-scripts: Update to v1.41.5"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "recipes-kernel/linux: Enable imx219-dual dtb overlay by default for
+        Orin Nano"
+      hash: fee9697112504118e2be86a2a199ac8bea511a67
+      body: |
+        ... as per https://balena.zulipchat.com/#narrow/channel/360838-balena-io.2Fos.2Fdevices/topic/enabling.20DTBOs.20on.20Nvidia.20Orin/with/607122118
+      footer:
+        Changelog-entry: "recipes-kernel/linux: Enable imx219-dual dtb overlay by
+          default for Orin Nano"
+        changelog-entry: "recipes-kernel/linux: Enable imx219-dual dtb overlay by
+          default for Orin Nano"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 7.0.5+rev1
+  title: ""
+  date: 2026-07-04T15:16:00.408Z
+- commits:
     - subject: "layers/meta-balena: Update to v7.0.5"
       hash: 80d65eda386c9a4aba43cba64584d8dcb076267f
       body: ""
