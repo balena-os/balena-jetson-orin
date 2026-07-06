@@ -22,3 +22,6 @@
 	path = layers/meta-cyclonedx
 	url = https://github.com/balena-os/meta-cyclonedx
 	branch = scarthgap
+[submodule "layers/meta-yocto"]
+	path = layers/meta-yocto
+	url = https://git.yoctoproject.org/meta-yocto
