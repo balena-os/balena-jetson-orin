@@ -1,0 +1,2 @@
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+
