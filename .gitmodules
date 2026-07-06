@@ -10,10 +10,6 @@
 	path = layers/meta-tegra
 	url = https://github.com/OE4T/meta-tegra.git
 	branch = scarthgap
-[submodule "layers/poky"]
-	path = layers/poky
-	url = https://github.com/balena-os/poky.git
-	branch = scarthgap
 [submodule "layers/meta-openembedded"]
 	path = layers/meta-openembedded
 	url = https://github.com/openembedded/meta-openembedded.git
