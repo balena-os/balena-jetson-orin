@@ -1,0 +1,70 @@
+DESCRIPTION = "Generate UEFI capsule"
+
+require recipes-bsp/tegra-binaries/tegra-binaries-${PV}.inc
+
+inherit deploy l4t_bsp
+
+UEFI_CAPSULE = "TEGRA_BL.Cap"
+
+SRC_URI = " \
+    file://Dockerfile \
+    file://build.sh \
+    ${L4T_URI_BASE}/${L4T_BSP_PREFIX}_Linux_R${L4T_VERSION}_aarch64.tbz2;name=l4tbsp;unpack=0 \
+"
+
+SRC_URI[l4tbsp.sha256sum] = "1626626cd827de0e350b8802033b9da653c69b2290accedb9e5d01f49607e099"
+
+PN = "uefi-capsule-container"
+
+# Upstream uefi capsule recipe
+# cannot be built due to python/rust dependencies
+# and a rust update for all Yocto versions
+# cannot be done at this point. We thus build
+# the UEFI capsule in a container using this recipe.
+PROVIDES = "uefi-capsule-container"
+
+do_compile () {
+    mkdir -p ${B}/out
+    cp ${UNPACKDIR}/Dockerfile ${B}/
+    cp ${UNPACKDIR}/build.sh ${B}/
+
+    cp ${DEPLOY_DIR_IMAGE}/uefi_t26x_general.bin ${B}/
+    cp ${DEPLOY_DIR_IMAGE}/standalonemm_jetson.pkg ${B}/
+    chmod +x ${B}/build.sh
+
+    cp ${UNPACKDIR}/Jetson_Linux_R39.2.0_aarch64.tbz2 ${B}/
+
+    IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
+
+    DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"
+    DOCKER_API_VERSION=1.24 docker run --rm -v ${B}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build_dir/build.sh && cp /build_dir/Linux_for_Tegra/TEGRA_BL.Cap /out/${UEFI_CAPSULE} && cp /build_dir/Linux_for_Tegra/jetson_board_spec.cfg /out/"
+    DOCKER_API_VERSION=1.24 docker rmi -f ${IMAGETAG}
+}
+
+do_compile[network] = "1"
+
+do_install() {
+    install -d ${D}/opt/tegra-binaries/
+    install -m 0644 ${B}/out/${UEFI_CAPSULE} ${D}/opt/tegra-binaries/${UEFI_CAPSULE}
+}
+
+do_deploy () {
+    mkdir -p ${DEPLOY_DIR_IMAGE}/bootfiles/
+}
+
+FILES:${PN} = " /opt/tegra-binaries/ "
+
+do_compile[nostamp] = "1"
+do_deploy[nostamp] = "1"
+do_compile[depends] += "edk2-firmware-tegra:do_deploy edk2-nvidia-standalone-mm:do_deploy"
+do_convert_crlf_to_lf[depends] += " tegra-binaries:do_patch "
+addtask do_deploy before do_package after do_install
+
+# redefine the global reproducible-build function as a no-op
+# for this recipe to prevent shared-work directory race conditions.
+python create_source_date_epoch_stamp() {
+    pass
+}
+
+# fix QA Issue: File ... TEGRA_BL.Cap contains reference to TMPDIR
+INSANE_SKIP:${PN} += "buildpaths"
