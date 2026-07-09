@@ -26,6 +26,7 @@ module.exports =
 		fstype: 'balenaos-img'
 		version: 'yocto-scarthgap'
 		deployArtifact: 'balena-image-flasher-jetson-orin-nano-devkit-nvme.balenaos-img'
+		deployRawArtifact: 'balena-image-jetson-orin-nano-devkit-nvme.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]
