@@ -20,7 +20,7 @@ Options:
         Prepare the UEFI capsule update to be applied on the next boot
 
     -c, --check
-        Check if the QSPI is accessible
+        Check if the QSPI is flashed with balenaOS build
 EOF
 }
 
@@ -37,7 +37,7 @@ else
                 exit 0
                 ;;
             -c|--check)
-                check_qspi_accessible
+                check_qspi_flashed
                 shift
                 ;;
             -u|--prepare-update)

@@ -8,10 +8,10 @@ SRC_URI:append = " \
 
 do_install:append() {
 	install -d -m 0755 ${D}${libdir}/systemd/system/os-power-mode.service.d
-	install -m 0644 ${WORKDIR}/os-power-mode-jetson.conf \
+	install -m 0644 ${UNPACKDIR}/os-power-mode-jetson.conf \
 		${D}${libdir}/systemd/system/os-power-mode.service.d
 
-	install -m 0644 ${WORKDIR}/etc-nvpmodel-config.mount ${D}${systemd_unitdir}/system/etc-nvpmodel\\x2dconfig.mount
+	install -m 0644 ${UNPACKDIR}/etc-nvpmodel-config.mount ${D}${systemd_unitdir}/system/etc-nvpmodel\\x2dconfig.mount
 
 	install -d -m 0755 ${D}/etc/nvpmodel-config
 }

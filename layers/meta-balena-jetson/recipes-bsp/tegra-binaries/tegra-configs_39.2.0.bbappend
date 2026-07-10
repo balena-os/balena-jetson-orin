@@ -5,11 +5,3 @@ do_install:append() {
 }
 
 FILES:${PN}-udev = " ${nonarch_base_libdir}/udev/rules.d ${sysconfdir}/modprobe.d"
-
-do_install:append:tegra264() {
-    # Ubuntu comes with this file, the Yocto build doesn't, so let's
-    # include it too as nvidia.ko is used for the t26x, not nouveau nor nvgpu
-    install -d ${D}${sysconfdir}/modprobe.d/
-    echo "blacklist nouveau" > ${D}${sysconfdir}/modprobe.d/denylist-nouveau.conf
-}
-

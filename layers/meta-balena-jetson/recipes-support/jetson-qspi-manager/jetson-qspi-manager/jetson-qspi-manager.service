@@ -4,11 +4,12 @@ DefaultDependencies=no
 After=resin-boot.service
 Before=umount.target
 Conflicts=umount.target
+ConditionPathExists=!/dev/disk/by-state/flash-rootA
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=@BASE_BINDIR@/sh -c '@BINDIR@/jetson-qspi-manager -u'
-
+ExecStartPre=@BASE_BINDIR@/sh -c '@BINDIR@/setup-nv-boot-control'
 [Install]
 WantedBy=multi-user.target
