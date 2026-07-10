@@ -1,6 +1,6 @@
 include balena-image.inc
 
-do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy l4t-launcher-extlinux:do_install edk2-container:do_package"
+do_image:balenaos-img[depends] += " tegra-flash-dry:do_deploy l4t-launcher-extlinux:do_install "
 
 # Leave some space, just in case future L4Ts add device specific partitions
 # All values are in KiB
@@ -44,27 +44,23 @@ IMAGE_INSTALL:append = " \
     tegra-nv-boot-control-config \
     tegra-eeprom-tool \
     setup-nv-boot-control \
-    edk2-container \
     uefi-capsule-container \
     tegra-nvfancontrol \
     tegra-nvpower \
     parted \
     gptfdisk \
     tegra-nvpmodel \
-    tegra-configs-nvstartup \
     tegra-configs-udev \
     mtd-utils \
     tegra-bluetooth \
     tegra-wifi \
     l4t-launcher-extlinux \
-    dtc \
-    pciutils \
     jetson-qspi-manager \
     jetson-dtbs \
-    tegra-tools-tegrastats tegra-tools-jetson-clocks \
-    nvidia-kernel-oot-devicetrees nvidia-kernel-oot-display nvidia-kernel-oot-cameras nvidia-kernel-oot-bluetooth nvidia-kernel-oot-wifi \
+    tegra-firmware-tegra234 tegra-firmware-vic \
+    nvidia-kernel-oot-dtb nvidia-kernel-oot-dtbo nvidia-kernel-oot-display nvidia-kernel-oot-cameras nvidia-kernel-oot-bluetooth nvidia-kernel-oot-wifi \
     nvidia-kernel-oot-canbus nvidia-kernel-oot-virtualization nvidia-kernel-oot-base nvidia-drm-loadconf \
-    kernel-module-r8126 kernel-module-r8168 linux-jammy-nvidia-tegra-extlinux \
+    kernel-module-r8126 kernel-module-r8168 linux-noble-nvidia-tegra-extlinux nvidia-kernel-oot-compute-nvgpu \
 "
 
 IMAGE_INSTALL:append:forecr-dsb-ornx-orin-nano-8gb = " can-utils "

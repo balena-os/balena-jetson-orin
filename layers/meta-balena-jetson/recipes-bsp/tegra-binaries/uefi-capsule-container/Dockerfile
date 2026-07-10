@@ -23,8 +23,8 @@ RUN cd /build_dir/Linux_for_Tegra/ && dtc -I dtb -O dts ./kernel/dtb/L4TConfigur
     dtc -I dts -O dtb ./kernel/dtb/L4TConfiguration.dts -o ./kernel/dtb/L4TConfiguration.dtbo
 
 COPY ./build.sh /build_dir/build.sh
-
-COPY ./uefi_t26x_general.bin /build_dir/Linux_for_Tegra/bootloader/uefi_bins/
-COPY ./standalonemm_jetson.pkg /build_dir/Linux_for_Tegra/bootloader/standalonemm_jetson.pkg
+COPY ./jetson_board_spec.cfg /build_dir/Linux_for_Tegra/
+COPY ./uefi_t23x_general.bin /build_dir/Linux_for_Tegra/bootloader/uefi_bins/
+COPY ./standalone_mm_optee.bin /build_dir/Linux_for_Tegra/bootloader/standalone_mm_optee.bin
 
 CMD ["bash"]
