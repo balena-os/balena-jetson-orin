@@ -20,8 +20,7 @@ device_type="jetson-orin-nano-devkit-super"
 
 DURING_UPDATE=${DURING_UPDATE:-0}
 bootloader_device="/dev/mtdblock0"
-internal_storage="/dev/nvme0n1"
-use_capsule=1
+internal_storage="/dev/$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/active/" | xargs lsblk -no pkname)"
 bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Forecr_ORNX_LAN_Nano_8gb.Cap.gz"
 boardspec=$(tegra-boardspec 2>/dev/null)
 TegraPlatformSpec="${boardspec}-${device_type}-"
@@ -30,8 +29,6 @@ TegraPlatformCompatSpec="${compatspec}-${device_type}-"
 fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
 kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
 active_sysroot="/mnt/sysroot/active/current/boot/"
-jp6_default_dtb_name="tegra234-p3768-0000+p3767-0003-nv.dtb"
-jp6_2_default_dtb_name="tegra234-p3768-0000+p3767-0003-nv-super.dtb"
 
 write_jetson_update_efivars() {
     info "Writing of jetson efivars triggered from old OS hook"
@@ -54,16 +51,6 @@ write_jetson_update_efivars() {
             tmp_file_size=$(stat -c%s ${tmp_file})
             dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
             info "PlatformCompatSpec variable created"
-        else
-            info "PlatformCompatSpec variable already exists"
-            if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]] || [[ ${kernel_l4t} == "36.5" ]]; then
-                info "PlatformCompatSpec variable already exists and we are running in L4T 36.x - it needs to be re-written."
-                chattr -i ${platform_compat_spec_efivar}
-                printf "\x07\x00\x00\x00" > ${tmp_file}
-                printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
-                tmp_file_size=$(stat -c%s ${tmp_file})
-                dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
-            fi
         fi
 
         printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
@@ -75,6 +62,20 @@ write_jetson_update_efivars() {
     fi
 
     return 0
+}
+
+check_running_l4t() {
+    fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
+    kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+
+    if [[ "$fw_version" == "36.5" ]] || [[ "$fw_version" == "39.2" ]]; then
+        info "Firmware version $fw_version is suitable for Jetpack 7 upgrade."
+	# mtd may cause interference with sporadic failures when writing efivars
+	if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi;
+    else
+        warn "Firmware version $fw_version is not suitable Jetpack 7 upgrade. Please first upgrade to an L4T 36.5.0 based balenaOS image."
+	fail
+    fi
 }
 
 check_and_update_esp_flags() {
@@ -108,7 +109,6 @@ info "Bootloader blob is $bootloader_blob"
 unload_spi_drivers() {
     # mtd may cause interference with sporadic failures when writing efivars
     if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi;
-
     spi_modules=("spi_tegra210_quad" "spi_tegra114" "mtdblock")
 
     for spi_module in "${spi_modules[@]}"
@@ -125,30 +125,26 @@ unload_spi_drivers() {
 
 apply_old_hook_updates() {
     for hook_file in `find /mnt/sysroot/active/ -name "99-resin-bootfiles-forecr-dsb-ornx-lan-orin-nano-8gb" -type f`; do
-        if grep -q "36.5" ${hook_file} ; then
-            info "Old hook already patched for 36.5 rollback support"
+        if grep -q "39.2" ${hook_file} ; then
+            info "Old hook already patched for 39.2 rollback support"
         else
-            info "36.5 not found in old hook, doing fix"
-            sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\] || \[\[ "$fw_version" == "36.5" \]\]/g' ${hook_file}
-            sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\] || \[\[ ${kernel_l4t} == "36.5" \]\]/g' ${hook_file}
+            info "39.2 not found in old hook, doing fix"
+            sed -i 's/\[\[ "$fw_version" == "36.4" \]\]/\[\[ "$fw_version" == "36.4" \]\] || \[\[ "$fw_version" == "36.5" \]\] || \[\[ "$fw_version" == "39.2" \]\]/g' ${hook_file}
+            sed -i 's/\[\[ ${kernel_l4t} == "36.4" \]\]/\[\[ ${kernel_l4t} == "36.4" \]\] || \[\[ ${kernel_l4t} == "36.5" \]\] || \[\[ ${kernel_l4t} == "39.2" \]\]/g' ${hook_file}
         fi
      done
-
-     if [[ ${kernel_l4t} == "36.3" ]] && [ -f ${active_sysroot}${jp6_default_dtb_name} ] ; then
-        info "Updating from in L4T 36.3 - copying JP6 default device-tree to JP6.2 default device-tree for rollback-altboot support"
-        cp ${active_sysroot}${jp6_default_dtb_name} ${active_sysroot}${jp6_2_default_dtb_name}
-     fi
 }
+
 
 # Also unload SPI drivers before any
 # nvbootctrl call. When running in L4T
-# 36.3, this is mandatory to avoid
+# 36 this is mandatory to avoid
 # system hangs.
 do_capsule_update() {
     # Unzip capsule to the boot partition
     info "Will extract UEFI Capsule..."
     mkdir -p /mnt/boot/EFI/UpdateCapsule/
-    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap
+    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap conv=fdatasync
     sync
     info "Extracted UEFI Capsule."
     write_jetson_update_efivars
@@ -159,7 +155,9 @@ info "=========================="
 /usr/sbin/nvbootctrl dump-slots-info || true
 info "=========================="
 
+check_running_l4t
 apply_old_hook_updates
 unload_spi_drivers
 do_capsule_update
 check_and_update_esp_flags
+sync /mnt/boot/
