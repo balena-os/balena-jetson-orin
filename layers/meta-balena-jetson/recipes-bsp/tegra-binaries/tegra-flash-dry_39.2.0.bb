@@ -40,14 +40,14 @@ SRC_URI = " \
 do_install() {
     # Ensure install is not executed until
     # do_unpack copies the archive
-    #while [ ! -f ${UNPACKDIR}/${BOOTBLOB} ]
-    #do
-    #    sleep 1
-    #    bbwarn "waiting for ${UNPACKDIR}/${BOOTBLOB}"
-    #done
+    while [ ! -f ${UNPACKDIR}/${BOOTBLOB} ]
+    do
+        sleep 1
+        bbwarn "waiting for ${UNPACKDIR}/${BOOTBLOB}"
+    done
 
     install -d ${D}/${BINARY_INSTALL_PATH}
-    #install ${UNPACKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
+    install ${UNPACKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
     install ${UNPACKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
 }
 
@@ -57,8 +57,12 @@ do_deploy() {
     cp -r ${D}/${BINARY_INSTALL_PATH}/* ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
 }
 
-FILES:${PN} += " \
-    /opt/tegra-binaries/* \
+FILES:${PN} = " \
+    /opt/tegra-binaries/*.txt \
+"
+
+FILES:${PN}-boot-blob = " \
+    /opt/tegra-binaries/boot0.img.gz \
 "
 
 do_configure(){
@@ -71,6 +75,10 @@ do_compile(){
 
 INHIBIT_PACKAGE_STRIP = "1"
 INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+
+PACKAGES =+ "\
+    ${PN}-boot-blob \
+"
 
 # need to be redeployed on each build
 # as this path is not cached
