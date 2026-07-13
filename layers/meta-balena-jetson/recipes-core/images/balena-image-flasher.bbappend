@@ -10,7 +10,7 @@ BALENA_BOOT_PARTITION_FILES:append = " \
 "
 
 IMAGE_INSTALL:append = " \
-    tegra-flash-dry \
+    tegra-flash-dry-boot-blob \
     kernel-image-initramfs \
     tegra-redundant-boot \
     tegra-nv-boot-control-config \

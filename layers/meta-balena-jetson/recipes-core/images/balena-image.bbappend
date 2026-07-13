@@ -38,7 +38,6 @@ PART_SPEC_FILE:jetson-agx-orin-devkit-64gb = "partition_specification234_orin_na
 PART_SPEC_FILE:forecr-dsb-ornx-orin-nano-8gb = "partition_specification234_orin_nano.txt"
 
 IMAGE_INSTALL:append = " \
-    tegra-flash-dry \
     kernel-image-initramfs \
     tegra-redundant-boot \
     tegra-nv-boot-control-config \
