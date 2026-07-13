@@ -21,7 +21,6 @@ device_type="jetson-orin-nano-devkit-super"
 DURING_UPDATE=${DURING_UPDATE:-0}
 bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/active/" | xargs lsblk -no pkname)"
-use_capsule=1
 bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Orin_Nano.Cap.gz"
 boardspec=$(tegra-boardspec 2>/dev/null)
 TegraPlatformSpec="${boardspec}-${device_type}-"
@@ -30,8 +29,6 @@ TegraPlatformCompatSpec="${compatspec}-${device_type}-"
 fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
 kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
 active_sysroot="/mnt/sysroot/active/current/boot/"
-jp6_default_dtb_name="tegra234-p3768-0000+p3767-0005-nv.dtb"
-jp6_2_default_dtb_name="tegra234-p3768-0000+p3767-0005-nv-super.dtb"
 
 apply_bs_fix() {
     for hook_file in `find /mnt/sysroot/active/ -name "99-resin-bootfiles-orin-nano-devkit-nvme" -type f`; do
@@ -98,7 +95,6 @@ write_jetson_update_efivars() {
 check_running_l4t() {
     fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
     kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
-    old_extlinux_file="/mnt/sysroot/inactive/current/boot/extlinux/extlinux.conf"
 
     if [[ "$fw_version" == "36.5" ]] || [[ "$fw_version" == "39.2" ]]; then
         info "Firmware version $fw_version is suitable for Jetpack 7 upgrade."
