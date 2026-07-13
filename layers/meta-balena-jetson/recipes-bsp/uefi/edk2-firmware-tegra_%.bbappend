@@ -20,9 +20,29 @@ replace_dtb_placeholder_in_source() {
 }
 
 SRC_URI:append = " \
-    file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-39.2.0.patch;patchdir=../edk2-nvidia \
+    file://0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit.patch;patchdir=../edk2-nvidia \
     file://0002-Increase-max-bootchain-retry-so-that-it-does-not-int.patch;patchdir=../edk2-nvidia \
     file://0003-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow.patch;patchdir=../edk2 \
+"
+
+SRC_URI:append:jetson-orin-nano-devkit-nvme = " \
+    file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-39.2.0.patch;patchdir=../edk2-nvidia \
+"
+
+SRC_URI:append:jetson-orin-nano-seeed-j3010 = " \
+    file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-39.2.0.patch;patchdir=../edk2-nvidia \
+"
+
+SRC_URI:append:jetson-orin-nx-xavier-nx-devkit = " \
+    file://0001-Orin-NX-Integrate-with-balenaOS-on-L4T-39.2.patch;patchdir=../edk2-nvidia \
+"
+
+SRC_URI:append:jetson-agx-orin-devkit = " \
+    file://0001-AGX-Orin-32GB-Integrate-with-balenaOS-on-L4T-39.2.patch;patchdir=../edk2-nvidia \
+"
+
+SRC_URI:append:jetson-agx-orin-devkit-64gb = " \
+    file://0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-39.2.patch;patchdir=../edk2-nvidia \
 "
 
 do_deploy:append() {
