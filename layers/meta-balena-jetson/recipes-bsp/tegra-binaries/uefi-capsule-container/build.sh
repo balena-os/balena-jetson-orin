@@ -77,6 +77,32 @@ for mb2_bct_path in "${mb2_bct_paths[@]}"; do
 	sed -i "s#cvb_eeprom_read_size = <0x100>#cvb_eeprom_read_size = <0x0>#g" "${mb2_bct_path}"
 done
 
+# This binary is built using the Yocto recipe
+cp /build_dir/yocto_standalone_mm_optee.bin /build_dir/Linux_for_Tegra/bootloader/standalonemm_optee_t234.bin
+cp /build_dir/Linux_for_Tegra/bootloader/yocto_uefi_jetson.bin /build_dir/Linux_for_Tegra/bootloader/uefi_jetson.bin
+cp /build_dir/Linux_for_Tegra/yocto_jetson_board_spec.cfg /build_dir/Linux_for_Tegra/jetson_board_spec.cfg
+
+# optee, atf and tos build steps are taken from the README in the optee sources
+dtc -I dts -O dtb -o /build_dir/optee/tegra234-optee.dtb /build_dir/optee/tegra234-optee.dts
+
+# build atf
+pushd /build_dir/atf_build
+./nvbuild.sh
+popd
+pushd /build_dir/
+
+# build optee
+./optee_src_build.sh -p t234 -t
+
+
+# build tos.img
+Linux_for_Tegra/nv_tegra/tos-scripts/gen_tos_part_img.py --monitor /build_dir/atf_build/arm-trusted-firmware/generic-t234/tegra/t234/release/bl31.bin --os /build_dir/optee/build/t234/core/tee-raw.bin  --dtb /build_dir/optee/tegra234-optee.dtb --tostype optee /build_dir/tos.img
+
+cp /build_dir/tos.img /build_dir/Linux_for_Tegra/bootloader/tos-optee_t234.img
+
+popd
+
+pushd /build_dir/Linux_for_Tegra/
 sudo ./l4t_generate_soc_bup.sh -e ${bl_spec} t23x
 sudo ./generate_capsule/l4t_generate_soc_capsule.sh -i bootloader/payloads_t23x/bl_only_payload -o ./TEGRA_BL.Cap t234
 

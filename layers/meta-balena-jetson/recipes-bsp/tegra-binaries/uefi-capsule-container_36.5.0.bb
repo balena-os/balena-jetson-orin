@@ -26,9 +26,13 @@ SRC_URI = " \
     file://build.sh \
     file://${JETSON_BOARD_SPEC} \
     https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v5.0/release/Jetson_Linux_r36.5.0_aarch64.tbz2;name=l4tbsp;unpack=0 \
+    https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v5.0/sources/public_sources.tbz2;name=l4tsources;unpack=0 \
+    https://developer.nvidia.com/downloads/embedded/l4t/r36_release_v3.0/toolchain/aarch64--glibc--stable-2022.08-1.tar.bz2;name=l4ttoolchain;unpack=0 \
 "
 
 SRC_URI[l4tbsp.sha256sum] = "414e58d97ac4b84fb02cbca621d46598f0bc8b811b6b9c3ad778b04e8d321ca7"
+SRC_URI[l4tsources.sha256sum] = "d0acb2187786d6ba9f012dd72ee7005309903944c4e8f3d649d7dabd3aebba42"
+SRC_URI[l4ttoolchain.sha256sum] = "8af54f268c462b2d0737df8789b5e35db03a2d1ecbec90e20948f66f9244fcdd"
 
 inherit deploy l4t_bsp
 
@@ -54,8 +58,11 @@ do_compile () {
     # boot partition.
     cp ${WORKDIR}/${JETSON_BOARD_SPEC} ${B}/jetson_board_spec.cfg
     cp ${S}/Jetson_Linux_r36.5.0_aarch64.tbz2 ${B}/
+    cp ${S}/public_sources.tbz2 ${B}/
+    cp ${S}/aarch64--glibc--stable-2022.08-1.tar.bz2 ${B}/
 
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
+    cp ${DEPLOY_DIR_IMAGE}/standalone_mm_optee.bin ${B}/standalone_mm_optee.bin
 
     DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"
     DOCKER_API_VERSION=1.24 docker run --rm -v ${B}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build_dir/build.sh && cp /build_dir/Linux_for_Tegra/TEGRA_BL.Cap.gz /out/${UEFI_CAPSULE} && cp /build_dir/Linux_for_Tegra/jetson_board_spec.cfg /out/ && cp /build_dir/Linux_for_Tegra/bootloader/tegra234-firewall-config-base.dtsi /out/"
@@ -77,6 +84,6 @@ FILES:${PN} = " /opt/tegra-binaries/ "
 
 do_compile[nostamp] = "1"
 do_deploy[nostamp] = "1"
-do_compile[depends] += "edk2-container:do_deploy"
+do_compile[depends] += "edk2-container:do_deploy standalone-mm-optee-tegra:do_deploy"
 
 addtask do_deploy before do_package after do_install
