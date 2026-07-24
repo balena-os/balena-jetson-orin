@@ -4,22 +4,25 @@ DESCRIPTION = "Package for deploying default and custom dtbs to the JP6 rootfs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-# In Jetpack 6.2 the nvidia-kernel-oot-dtb deploys all device-trees
+# In Jetpack 6.2 and newer the nvidia-kernel-oot-dtb deploys all device-trees
 do_install[depends] += " nvidia-kernel-oot-dtb:do_deploy "
+
+inherit deploy
 
 SRC_URI += " \
     file://tegra234-p3737-0000+p3701-0000-nv-spi.dtb \
-	file://tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb \
+    file://tegra234-p3768-0000+p3767-0005-nv-super-ths1-no-dma.dtb \
 "
 
 SRC_URI:jetson-orin-nano-seeed-j3010 += " \
-    file://tegra234-j401-p3768-0000+p3767-0004-recomputer-super.dtb \
     file://tegra234-j401-p3768-0000+p3767-0004-recomputer.dtb \
+    file://tegra234-j401-p3768-0000+p3767-0000-recomputer.dtb \
     file://tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo \
 "
 
 SRC_URI:jetson-orin-nx-seeed-j4012 += " \
     file://tegra234-j401-p3768-0000+p3767-0000-recomputer.dtb \
+    file://tegra234-j401-p3768-0000+p3767-0004-recomputer.dtb \
     file://tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo \
 "
 
@@ -70,10 +73,25 @@ do_install:append:jetson-orin-nx-xavier-nx-devkit() {
 do_install:append:jetson-orin-nano-seeed-j3010() {
 	install -d ${D}/boot/devicetree/
 
-	# Obtained from https://github.com/Seeed-Studio/Linux_for_Tegra.git - commit def3d7ff8fbb34cea0b6b43c89a7aae1872651ef, branch r36.4.4
+	# Obtained from https://github.com/Seeed-Studio/Linux_for_Tegra.git - commit 8fed53ebf5d9cde953de5bb4b9d951e5803da9c7, branch r39.2.0
 	install -m 0644 "${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-0004-recomputer.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0004-nv.dtb"
-	install -m 0644 "${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-0004-recomputer-super.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0004-nv-super.dtb"
+        # In Seeed Jetpack 7.2 39.2.0 there is no super dtb for kernel, only for bpmp
+	install -m 0644 "${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-0004-recomputer.dtb" "${D}/boot/tegra234-p3768-0000+p3767-0004-nv-super.dtb"
 	install -m 0644 "${UNPACKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo" "${D}/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo"
+}
+
+do_deploy() {
+    cp ${DEPLOY_DIR_IMAGE}/devicetree/${DTBNAME} ${DEPLOY_DIR_IMAGE}/
+}
+
+do_deploy:append:jetson-orin-nano-seeed-j3010() {
+	cp ${UNPACKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo ${DEPLOY_DIR_IMAGE}/
+	cp -r ${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-000*-recomputer.dtb ${DEPLOY_DIR_IMAGE}/
+}
+
+do_deploy:append:jetson-orin-nx-seeed-j4012() {
+        cp ${UNPACKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo ${DEPLOY_DIR_IMAGE}/
+        cp -r ${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-000*-recomputer.dtb ${DEPLOY_DIR_IMAGE}/
 }
 
 do_install:append:jetson-orin-nx-seeed-j4012() {
@@ -130,3 +148,5 @@ FILES:${PN}:jetson-orin-nx-seeed-j4012 += " \
         /boot/tegra234-p3768-0000+p3767-0000-nv.dtb \
         /boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo \
 "
+
+addtask do_deploy before do_package after do_install

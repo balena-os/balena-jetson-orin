@@ -23,6 +23,8 @@ SRC_URI:append = " \
     file://0001-StandaloneMmOptee-Don-t-assert-if-var-store-integrit.patch;patchdir=../edk2-nvidia \
     file://0002-Increase-max-bootchain-retry-so-that-it-does-not-int.patch;patchdir=../edk2-nvidia \
     file://0003-edk2-Disable-network-boot-and-allow-UEFI-capsule-dow.patch;patchdir=../edk2 \
+    file://0001-Library-PlatformBm-Update-RootfsRetryCountMax-value.patch;patchdir=../edk2-nvidia \
+    file://0001-L4TConfiguration-Switch-RootfsRetryCountMax-from-3-t.patch;patchdir=../edk2-nvidia \
 "
 
 SRC_URI:append:jetson-orin-nano-devkit-nvme = " \
@@ -45,6 +47,14 @@ SRC_URI:append:jetson-agx-orin-devkit-64gb = " \
     file://0001-AGX-Orin-64GB-Integrate-with-balenaOS-on-L4T-39.2.patch;patchdir=../edk2-nvidia \
 "
 
+# Seeed J4012 uses the Orin Nano partition set
+SRC_URI:remove:jetson-orin-nx-seeed-j4012 = "file://0001-Orin-NX-Integrate-with-balenaOS-on-L4T-39.2.patch;patchdir=../edk2-nvidia"
+
+SRC_URI:append:jetson-orin-nx-seeed-j4012 = " \
+    file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-39.2.0.patch;patchdir=../edk2-nvidia \
+"
+
+
 do_deploy:append() {
     rm -rf ${DEPLOY_DIR_IMAGE}/bootfiles/EFI/BOOT || true
     mkdir -p ${DEPLOY_DIR_IMAGE}/bootfiles/EFI/BOOT/
@@ -56,3 +66,6 @@ do_deploy[nostamp] = "1"
 # do_patch
 do_patch[postfuncs] += "replace_dtb_placeholder_in_source"
 do_patch[nostamp] = "1"
+
+# Uncomment for debug logs
+EDK2_BUILD_RELEASE = "0"

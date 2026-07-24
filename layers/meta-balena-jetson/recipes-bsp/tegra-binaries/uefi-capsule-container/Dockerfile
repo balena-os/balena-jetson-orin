@@ -7,25 +7,35 @@ ARG DEFAULT_DTB
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install -y git vim tar lbzip2 binutils xz-utils zstd sudo device-tree-compiler
+RUN apt-get update && apt-get install -y git vim tar lbzip2 binutils xz-utils zstd sudo build-essential python3 python3-pip device-tree-compiler pkg-config && pip3 install --no-cache-dir cryptography pyelftools
 
 COPY ./Jetson_Linux_R39.2.0_aarch64.tbz2 /build_dir/
+COPY ./public_sources.tbz2 /build_dir/
+COPY ./x-tools.tbz2 /build_dir/
 
 RUN cd /build_dir/ && tar xf Jetson_Linux_R39.2.0_aarch64.tbz2 && \
     ./Linux_for_Tegra/tools/l4t_flash_prerequisites.sh && mkdir -p /build_dir/Linux_for_Tegra/rootfs/boot/ && \
-    mkdir -p /build_dir/Linux_for_Tegra/rootfs/usr/local/bin/
-
-# BalenaOS uses a different mechanism for A/B rootfs selection,
-# so the RootfsRetryCountMax variable can be used by the OS
-# to determine if the UEFI capsule has been applied successfully.
-RUN cd /build_dir/Linux_for_Tegra/ && dtc -I dtb -O dts ./kernel/dtb/L4TConfiguration.dtbo -o ./kernel/dtb/L4TConfiguration.dts && \
-    sed -i '/RootfsRetryCountMax/,/};/ s/0x3000000/0x9000000/' ./kernel/dtb/L4TConfiguration.dts && \
-    dtc -I dts -O dtb ./kernel/dtb/L4TConfiguration.dts -o ./kernel/dtb/L4TConfiguration.dtbo
+    mkdir -p /build_dir/Linux_for_Tegra/rootfs/usr/local/bin/ && \
+    tar xf public_sources.tbz2 && \
+    tar xf x-tools.tbz2 && \
+    cp ./Linux_for_Tegra/source/nvidia-jetson-optee-source.tbz2 . && \
+    tar xf nvidia-jetson-optee-source.tbz2 && \
+    mkdir /build_dir/atf_build && \
+    tar -xpf /build_dir/Linux_for_Tegra/source/atf_t234_src.tbz2 -C /build_dir/atf_build/
 
 COPY ./build.sh /build_dir/build.sh
-COPY ./jetson_board_spec.cfg /build_dir/Linux_for_Tegra/
-COPY ./uefi_t23x_general.bin /build_dir/Linux_for_Tegra/bootloader/uefi_bins/
+COPY ./jetson_board_spec.cfg /build_dir/Linux_for_Tegra/yocto_jetson_board_spec.cfg
 COPY ./uefi_t23x_general.bin /build_dir/Linux_for_Tegra/bootloader/uefi_bins/yocto_uefi_t23x_general.bin
-COPY ./standalone_mm_optee.bin /build_dir/Linux_for_Tegra/bootloader/standalone_mm_optee.bin
+COPY ./standalone_mm_optee.bin /build_dir/Linux_for_Tegra/bootloader/yocto_standalone_mm_optee.bin
+
+#COPY ./tegra234-j401-p3768-0000+p3767-0004-recomputer.dt* ${B}/build_dir/Linux_for_Tegra/bootloader/
+#COPY ./tegra234-j401-p3768-0000+p3767-0000-recomputer.dt* ${B}/build_dir/Linux_for_Tegra/bootloader/
+COPY ./custom_dtbs.tar.gz /build_dir/Linux_for_Tegra/
+
+ENV CROSS_COMPILE_AARCH64_PATH=/build_dir/x-tools/aarch64-none-linux-gnu/
+ENV CROSS_COMPILE_AARCH64=/build_dir/x-tools/aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-
+ENV UEFI_STMM_PATH=/build_dir/Linux_for_Tegra/bootloader/standalonemm_optee_t234.bin
+ENV NV_TARGET_BOARD=generic
+ENV PKG_CONFIG=/usr/bin/pkg-config
 
 CMD ["bash"]

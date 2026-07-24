@@ -17,9 +17,13 @@ SRC_URI = " \
     file://build.sh \
     file://${JETSON_BOARD_SPEC} \
     ${L4T_URI_BASE}/${L4T_BSP_PREFIX}_Linux_R${L4T_VERSION}_aarch64.tbz2;name=l4tbsp;unpack=0 \
+    ${L4T_URI_BASE}/../sources/public_sources.tbz2;name=l4tsources;unpack=0 \
+    https://developer.nvidia.com/downloads/embedded/L4T/r38_Release_v2.0/release/x-tools.tbz2;name=l4txtools;unpack=0 \
 "
 
 SRC_URI[l4tbsp.sha256sum] = "1626626cd827de0e350b8802033b9da653c69b2290accedb9e5d01f49607e099"
+SRC_URI[l4tsources.sha256sum] = "87d2e31ff55beaf2373e2f288538585995b231fd5745ec21f39a668e36efab2f"
+SRC_URI[l4txtools.sha256sum] = "6bf10ad05bc6a5f296e592a78d87771b87f0dc917337ba9f4ab4b0f7aabad889"
 
 PN = "uefi-capsule-container"
 
@@ -38,7 +42,25 @@ UEFI_CAPSULE:forecr-dsb-ornx-orin-nano-8gb = "TEGRA_BL_Forecr_ORNX_LAN_Nano_8gb.
 # the UEFI capsule in a container using this recipe.
 PROVIDES = "uefi-capsule-container"
 
+copy_seed_dtbs() {
+    mkdir -p ${B}/custom_dtbs
+    cp -r ${DEPLOY_DIR_IMAGE}/tegra234-j401-p3768-0000+p3767-000*-recomputer.dtb ${B}/custom_dtbs
+    cp ${DEPLOY_DIR_IMAGE}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo ${B}/custom_dtbs
+}
+
+do_compile:prepend:jetson-orin-nano-seeed-j3010(){
+    copy_seed_dtbs
+}
+
+do_compile:prepend:jetson-orin-nx-seeed-j4012(){
+    copy_seed_dtbs
+}
+
 do_compile () {
+    # Not all boards have custom dtbs
+    # referenced in their BSP machine conf files
+    mkdir -p ${B}/custom_dtbs
+    tar -cvzf ${B}/custom_dtbs.tar.gz -C ${B} custom_dtbs/
     mkdir -p ${B}/out
     cp ${UNPACKDIR}/Dockerfile ${B}/
     cp ${UNPACKDIR}/build.sh ${B}/
@@ -48,7 +70,8 @@ do_compile () {
     chmod +x ${B}/build.sh
     cp ${UNPACKDIR}/${JETSON_BOARD_SPEC} ${B}/jetson_board_spec.cfg
     cp ${UNPACKDIR}/Jetson_Linux_R39.2.0_aarch64.tbz2 ${B}/
-
+    cp ${UNPACKDIR}/public_sources.tbz2 ${B}/
+    cp ${UNPACKDIR}/x-tools.tbz2 ${B}/
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
 
     DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"
@@ -71,7 +94,7 @@ FILES:${PN} = " /opt/tegra-binaries/ "
 
 do_compile[nostamp] = "1"
 do_deploy[nostamp] = "1"
-do_compile[depends] += " edk2-firmware-tegra:do_deploy edk2-nvidia-standalone-mm:do_deploy "
+do_compile[depends] += " edk2-firmware-tegra:do_deploy edk2-nvidia-standalone-mm:do_deploy jetson-dtbs:do_deploy"
 do_convert_crlf_to_lf[depends] += " tegra-binaries:do_patch "
 addtask do_deploy before do_package after do_install
 

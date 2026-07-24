@@ -10,9 +10,7 @@ set -o errexit
 source /usr/bin/uefi_common.func
 
 DURING_UPDATE=${DURING_UPDATE:-0}
-bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/active/" | xargs lsblk -no pkname)"
-use_capsule=1
 bootloader_blob="/opt/tegra-binaries/TEGRA_BL_3701_64.Cap.gz"
 efivars_dir="/sys/firmware/efi/efivars/"
 # See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
@@ -35,13 +33,13 @@ active_sysroot="/mnt/sysroot/active/current/boot/"
 
 # This allows old hooks to run in newer L4T versions
 update_old_hooks() {
-    for hook_file in `find /mnt/sysroot/active/ -name "99-resin-bootfiles-agx-orin-devkit-64gb" -type f`; do	
-        if grep -q "36.5" ${hook_file} ; then
-            info "Old hook already patched for 36.5 rollback support"
+    for hook_file in `find /mnt/sysroot/active/ -name "99-resin-bootfiles-agx-orin-devkit-64gb" -type f`; do
+        if grep -q "39.2" ${hook_file} ; then
+            info "Old hook already patched for 39.x rollback support"
         else
-            info "36.5 not found in old hook, doing fix"
-            sed -i 's/\[\[ "$fw_version" == "36.3" \]\]/\[\[ "$fw_version" == "36.3" \]\] || \[\[ "$fw_version" == "36.4" \]\] || \[\[ "$fw_version" == "36.5" \]\]/g' ${hook_file}
-            sed -i 's/\[\[ ${kernel_l4t} == "36.3" \]\]/\[\[ ${kernel_l4t} == "36.3" \]\] || \[\[ ${kernel_l4t} == "36.4" \]\] || \[\[ ${kernel_l4t} == "36.5" \]\]/g' ${hook_file}
+            info "39.2 not found in old hook, doing fix"
+            sed -i 's/\[\[ "$fw_version" == "36.4" \]\]/\[\[ "$fw_version" == "36.4" \]\] || \[\[ "$fw_version" == "36.5" \]\] || \[\[ "$fw_version" == "39.2" \]\]/g' ${hook_file}
+            sed -i 's/\[\[ ${kernel_l4t} == "36.4" \]\]/\[\[ ${kernel_l4t} == "36.4" \]\] || \[\[ ${kernel_l4t} == "36.5" \]\] || \[\[ ${kernel_l4t} == "39.2" \]\]/g' ${hook_file}
         fi
     done
 }
@@ -67,16 +65,6 @@ write_jetson_update_efivars() {
             tmp_file_size=$(stat -c%s ${tmp_file})
             dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
             info "PlatformCompatSpec variable created"
-        else
-            info "PlatformCompatSpec variable already exists"
-            if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]] || [[ ${kernel_l4t} == "36.5" ]]; then
-                info "PlatformCompatSpec variable already exists and we are running in L4T 36.x, it needs to be re-written."
-                chattr -i ${platform_compat_spec_efivar}
-                printf "\x07\x00\x00\x00" > ${tmp_file}
-                printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
-                tmp_file_size=$(stat -c%s ${tmp_file})
-                dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
-            fi
         fi
 
         printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
@@ -88,6 +76,20 @@ write_jetson_update_efivars() {
     fi
 
     return 0
+}
+
+check_running_l4t() {
+    fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
+    kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+
+    if [[ "$fw_version" == "36.5" ]] || [[ "$fw_version" == "39.2" ]]; then
+        info "Firmware version $fw_version is suitable for Jetpack 7 upgrade."
+        # mtd may cause interference with sporadic failures when writing efivars
+        if [ -e /sys/bus/spi/drivers/qspi_mtd/spi6.0 ]; then echo "spi6.0" > /sys/bus/spi/drivers/qspi_mtd/unbind ; fi;
+    else
+        warn "Firmware version $fw_version is not suitable Jetpack 7 upgrade. Please first upgrade to an L4T 36.5.0 based balenaOS image."
+        fail
+    fi
 }
 
 info "Bootloader blob is $bootloader_blob"
@@ -126,5 +128,7 @@ info "=========================="
 /usr/sbin/nvbootctrl dump-slots-info || true
 info "=========================="
 
+check_running_l4t
+update_old_hooks
 unload_spi_drivers
 do_capsule_update

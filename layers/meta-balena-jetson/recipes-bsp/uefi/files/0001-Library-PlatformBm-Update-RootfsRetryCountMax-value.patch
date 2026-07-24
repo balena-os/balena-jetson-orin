@@ -1,0 +1,55 @@
+From d14b6b5ccc1f0d35f373949bf03f46326bc89e2f Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Fri, 17 Jul 2026 14:24:27 +0000
+Subject: [PATCH] Library/PlatformBm: Update RootfsRetryCountMax value
+
+Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ .../PlatformBootManagerLib/PlatformBm.c       | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+
+diff --git a/Silicon/NVIDIA/Library/PlatformBootManagerLib/PlatformBm.c b/Silicon/NVIDIA/Library/PlatformBootManagerLib/PlatformBm.c
+index 895ae854..33767e98 100644
+--- a/Silicon/NVIDIA/Library/PlatformBootManagerLib/PlatformBm.c
++++ b/Silicon/NVIDIA/Library/PlatformBootManagerLib/PlatformBm.c
+@@ -1991,6 +1991,36 @@ PlatformBootManagerBeforeConsole (
+   EFI_INPUT_KEY                 ShellKey;
+   BOOLEAN                       SingleBoot;
+   EFI_GUID                      *SingleBootAppGuid;
++  EFI_STATUS                    MigrateStatus;
++  UINT32                        CurrentRetryCount;
++  UINTN                         VariableSize;
++
++  VariableSize      = sizeof (UINT32);
++  CurrentRetryCount = 0;
++  // Fetch the active NVRAM value stored in QSPI
++  MigrateStatus = gRT->GetVariable (
++                          L"RootfsRetryCountMax",
++                          &gNVIDIAPublicVariableGuid,
++                          NULL,
++                          &VariableSize,
++                          &CurrentRetryCount
++                          );
++
++  // This variable isn't used when RootfsRedundancyLevel is set to 0,
++  // thus we use its contents to check if the balenaOS UEFI capsule
++  // has been applied
++  if (!EFI_ERROR (MigrateStatus) && (CurrentRetryCount == 3)) {
++      CurrentRetryCount = 9;
++
++      gRT->SetVariable (
++             L"RootfsRetryCountMax",
++             &gNVIDIAPublicVariableGuid,
++             EFI_VARIABLE_BOOTSERVICE_ACCESS | EFI_VARIABLE_RUNTIME_ACCESS | EFI_VARIABLE_NON_VOLATILE,
++             sizeof (UINT32),
++             &CurrentRetryCount
++             );
++      DEBUG ((DEBUG_WARN, "%a: Successfully migrated RootfsRetryCountMax to 9\n", __FUNCTION__));
++   }
+ 
+  #if FixedPcdGetBool (PcdBootAndroidImage) == 1
+   MiscCmdType  MiscCmd;
+-- 
+2.34.1
+

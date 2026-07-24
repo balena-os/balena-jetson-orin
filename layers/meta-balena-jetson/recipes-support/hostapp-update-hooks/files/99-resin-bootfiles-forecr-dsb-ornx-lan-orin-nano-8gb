@@ -19,7 +19,6 @@ tmp_file="/tmp/platformspecfile.bin"
 device_type="jetson-orin-nano-devkit-super"
 
 DURING_UPDATE=${DURING_UPDATE:-0}
-bootloader_device="/dev/mtdblock0"
 internal_storage="/dev/$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/active/" | xargs lsblk -no pkname)"
 bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Forecr_ORNX_LAN_Nano_8gb.Cap.gz"
 boardspec=$(tegra-boardspec 2>/dev/null)
