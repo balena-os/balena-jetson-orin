@@ -1,4 +1,35 @@
 - commits:
+    - subject: "recipes-bsp/uefi-capsule-container: Rebuild tos image using patched
+        standalone_mm_optee"
+      hash: efdf690d4f91365954280b9c1800a0391b8ac3b2
+      body: |
+        We encountered one case in the autokit, in which the prebuilt
+        standalone_mm_optee would assert and refuse to boot, because
+        the prebuilt firmware from upstream keeps this assert enabled.
+
+        However, this implies that the board would need to have its
+        qspi re-flashed with a USB cable.
+
+        We thus disable this assert and rebuild the atf, optee and
+        tos binary. We do this in the uefi capsule recipe to re-use
+        the already downloaded BSP archive. We do this in a container
+        because rebuilding optee, tos and the uefi capsule using Yocto
+        recipes require a newer rust version than meta-balena currently
+        provides - the version currently provided by meta-balena is required
+        to work accross all supported Yocto versions.
+      footer:
+        Changelog-entry: "recipes-bsp/uefi-capsule-container: Rebuild tos image using
+          patched standalone_mm_optee"
+        changelog-entry: "recipes-bsp/uefi-capsule-container: Rebuild tos image using
+          patched standalone_mm_optee"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 7.0.5+rev2
+  title: ""
+  date: 2026-07-24T07:14:09.762Z
+- commits:
     - subject: "balena-yocto-scripts: Update to v1.41.5"
       hash: 26ffb489bdb3540cbfa6c07fe77114d30563785a
       body: ""

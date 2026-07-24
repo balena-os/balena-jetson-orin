@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.0.5+rev2
+## (2026-07-24)
+
+* recipes-bsp/uefi-capsule-container: Rebuild tos image using patched standalone_mm_optee [Alexandru Costache]
+
 # v7.0.5+rev1
 ## (2026-07-04)
 
