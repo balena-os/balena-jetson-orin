@@ -2,38 +2,18 @@
 
 ## Linux for Tegra (L4T) Support
 
-All Jetson Orin boards in this repository tagged v5.3.23 and newer are using L4T 36.x - Jetpack 6, or newer.
-
-For devices which don't have production releases at versions greater than v5.3.23 in balena-cloud yet,
-draft releases can be accessed using balena CLI.
-
-IMPORTANT: Draft releases are meant for testing purposes only and should not be used in production environments
-
-To view the available draft releases for a device-type:
-
-`balena os versions <device_slug> --include-draft`
-
-For example, to check the available production and draft releases for the Jetson Orin Nano 8GB (SD) Devkit NVME device-type, use the following command:
-
-`balena os versions jetson-orin-nano-devkit-nvme --include-draft`
-
-All device type slugs are available in the coffee files present in this repository.
-
-To update a device to a draft release:
-
-`balena device os-update <device_uuid> --include-draft`
-
-The last L4T 35.5.0 - Jetpack 5-based production releases are:
-* v5.3.21+rev3
-* v5.3.21+rev2
-* v5.3.21+rev1
-* v5.3.21
+All Jetson Orin boards in this repository tagged v5.3.23 and newer are using L4T 39.2 - Jetpack 7.2, or newer.
 
 balenaOS production images for Jetson devices at versions greater than v6.0 are based on Jetpack 6.
+balenaOS production images for Jetson devices at versions greater than v7.5.7 are based on Jetpack 7.2.
 
-Given there is a major BSP upgrade from Jetpack 5 to Jetpack 6, prior to updating your devices to an L4T 36.3-based OS release, we recommend you to:
+IMPORTANT:
+
+Updating from Jetpack 6 to Jetpack 7 requires the device to be running L4T 36.5.0 - Jetpack 6.2.2. Please update your
+unit to v7.0.5+rev2 before updating to v7.5.8 or newer, otherwise the OS update will fail.
+
+Given there is a major BSP upgrade from Jetpack 6 to Jetpack 7, prior to updating your devices to an L4T 39.2-based OS release, we recommend you to:
 * Always test any OS update using lab devices first, to ensure the upgrade path is suitable for your devices and that your container applications are in sync with the host OS
-* If your device has been originally provisioned on an L4T version older than 35.5.0, first update to the last two L4T 35.5.0-based releases. This implies updating first to v5.3.21+rev2, then to v5.3.21+rev3, as this ensures both bootchains are updated to L4T 35.5.0, as required by the Jetpack 6 BSP.
 * Avoid interrupting the update process by rebooting or by cutting power to the device
 
 
