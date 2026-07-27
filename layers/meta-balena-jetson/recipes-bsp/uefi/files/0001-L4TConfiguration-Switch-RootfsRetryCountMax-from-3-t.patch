@@ -1,0 +1,35 @@
+From f89f8b0fabb6dd901bb78c7b278da9e4c6fffb71 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Fri, 17 Jul 2026 14:33:23 +0000
+Subject: [PATCH] L4TConfiguration: Switch RootfsRetryCountMax from 3 to 9
+
+... because this is not used in the balenaOS setup
+where the current active rootfs is chosen by the bootloader,
+and this helps us determine if a patched uefi firmware
+has been loaded.
+
+Upstream-Status: Inappropriate [Configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+---
+ Silicon/NVIDIA/Tegra/DeviceTree/L4TConfiguration.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Silicon/NVIDIA/Tegra/DeviceTree/L4TConfiguration.dts b/Silicon/NVIDIA/Tegra/DeviceTree/L4TConfiguration.dts
+index 7e0fe4d8..9b4a839f 100644
+--- a/Silicon/NVIDIA/Tegra/DeviceTree/L4TConfiguration.dts
++++ b/Silicon/NVIDIA/Tegra/DeviceTree/L4TConfiguration.dts
+@@ -33,9 +33,9 @@
+ 								non-volatile;
+ 							};
+ 							RootfsRetryCountMax {
+-								data = [03 00 00 00];
++								data = [09 00 00 00];
+ 								runtime;
+-								locked;
++								non-volatile;
+ 							};
+ 							RootfsRedundancyLevel {
+ 								data = [00 00 00 00];
+-- 
+2.34.1
+

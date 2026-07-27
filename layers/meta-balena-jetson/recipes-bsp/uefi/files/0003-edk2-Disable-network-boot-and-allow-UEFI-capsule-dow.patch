@@ -1,11 +1,7 @@
-From 8ed00ee3c4e5aa9484a8ce60142d0abc11bfde03 Mon Sep 17 00:00:00 2001
+From 3957d0b060a9b8b2c70165355251665380dd7521 Mon Sep 17 00:00:00 2001
 From: Alexandru Costache <alexandru@balena.io>
-Date: Wed, 13 May 2026 12:20:27 +0300
+Date: Fri, 24 Apr 2026 14:45:51 +0000
 Subject: [PATCH] edk2: Disable network boot and allow UEFI capsule downgrades
-
-In this patch we disable network boot to prevent boot delays
-as well as force disable the downgrade capsule checks,
-to allow older UEFI capsules to be apploed by newer UEFI firmware.
 
 Upstream-Status: Inappropriate [configuration]
 Signed-off-by: Alexandru Costache <alexandru@balena.io>
@@ -16,7 +12,7 @@ Signed-off-by: Alexandru Costache <alexandru@balena.io>
  3 files changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/FmpDevicePkg/FmpDxe/FmpDxe.c b/FmpDevicePkg/FmpDxe/FmpDxe.c
-index b04998ba04..07e328cdf4 100644
+index b04998ba04..e07f70a9a1 100644
 --- a/FmpDevicePkg/FmpDxe/FmpDxe.c
 +++ b/FmpDevicePkg/FmpDxe/FmpDxe.c
 @@ -987,13 +987,15 @@ CheckTheImageInternal (
@@ -24,7 +20,7 @@ index b04998ba04..07e328cdf4 100644
      DEBUG (
        (DEBUG_ERROR,
 -       "FmpDxe(%s): CheckTheImage() - Version Lower than lowest supported version. 0x%08X < 0x%08X\n",
-+       "FmpDxe(%s): CheckTheImage() - Version Lower than lowest supported version. 0x%08X < 0x%08X - continuing anyway\n",
++       "FmpDxe(%s): CheckTheImage() - Version Lower than lowest supported version. 0x%08X < 0x%08X\n - continuing anyway\n",
         mImageIdName, Version, Private->Descriptor.LowestSupportedImageVersion)
        );
 +    /* Allow applying a capsule with a version lower than the current running one, for rollback support
@@ -44,7 +40,7 @@ index b4c61925b9..061f89465f 100644
    EFI_STATUS              Status;
    HTTP_BOOT_IMAGE_TYPE    ImageType;
  
-+  AsciiPrint("\n HttpBootDxeLoadFile: Force skip HTTP boot");
++  //AsciiPrint("\n HttpBootDxeLoadFile: Force skip HTTP boot");
 +  return EFI_NO_MEDIA;
 +
    if ((This == NULL) || (BufferSize == NULL) || (FilePath == NULL)) {
@@ -58,12 +54,12 @@ index 0a4baf6f90..1582c4496d 100644
    EFI_STATUS                  Status;
    EFI_STATUS                  MediaStatus;
  
-+  AsciiPrint("\n EfiPxeLoadFile: Force skip PXE boot");
++  //AsciiPrint("\n EfiPxeLoadFile: Force skip PXE boot");
 +  return EFI_NO_MEDIA;
 +
    if ((This == NULL) || (BufferSize == NULL) || (FilePath == NULL) || !IsDevicePathEnd (FilePath)) {
      return EFI_INVALID_PARAMETER;
    }
 -- 
-2.51.0
+2.34.1
 
