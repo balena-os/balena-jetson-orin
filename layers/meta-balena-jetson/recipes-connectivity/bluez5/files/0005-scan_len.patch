@@ -1,0 +1,28 @@
+Increase scan duration and make sure caches are flushed
+to overcome autokit sporadic scan reporting
+
+Upstream-Status: Inappropriate [configuration]
+Signed-off-by: Alexandru Costache <alexandru@balena.io>
+
+Index: bluez-5.66/tools/hcitool.c
+===================================================================
+--- bluez-5.66.orig/tools/hcitool.c
++++ bluez-5.66/tools/hcitool.c
+@@ -571,7 +571,7 @@ static void cmd_scan(int dev_id, int arg
+ 	int extcls = 0, extinf = 0, extoui = 0;
+ 	int i, n, l, opt, dd, cc;
+ 
+-	length  = 8;	/* ~10 seconds */
++	length  = 24;	/* ~30 seconds */
+ 	num_rsp = 0;
+ 	flags   = 0;
+ 
+@@ -641,7 +641,7 @@ static void cmd_scan(int dev_id, int arg
+ 		perror("Can't get device info");
+ 		exit(1);
+ 	}
+-
++	flags |= IREQ_CACHE_FLUSH;
+ 	printf("Scanning ...\n");
+ 	num_rsp = hci_inquiry(dev_id, length, num_rsp, lap, &info, flags);
+ 	if (num_rsp < 0) {
