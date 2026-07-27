@@ -15,33 +15,42 @@ UEFI_CAPSULE_TARGET_MOUNTPOINT="$BOOT_MOUNTPOINT"
 force_capsule_update="n"
 
 efivars_dir="/sys/firmware/efi/efivars/"
-# See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
-platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
-platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
 os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
-tmp_file="/tmp/platformspecfile.bin"
+tmp_file="/tmp/osindications.bin"
+target_l4t_version="@L4T_VER@"
 
-device_type="@ORIN_DEVICE_TYPE@"
-boardspec=$(tegra-boardspec 2>/dev/null)
-TegraPlatformSpec="${boardspec}-${device_type}-"
-compatspec=$(echo "$boardspec" | gen_compat_spec)
-TegraPlatformCompatSpec="${compatspec}-${device_type}-"
-kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+l4t_firmware_match() {
+    fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]+[.]+[0-9]' | awk '{print $3}')
 
-qspi_accessible() {
-    if [ -e /dev/mtd0 ]; then
+    if [ "$target_l4t_version" == "$fw_version" ]; then
         return 0
     else
         return 1
     fi
 }
 
-check_qspi_accessible() {
-    if qspi_accessible ; then
-        info "QSPI is accessible"
+# A/B rootfs switch is handled by balena and not by the UEFI firmware,
+# we thus make use of this existing uefi variable, which is otherwise
+# unsed by the UEFI in this configuration, to check if the UEFI capsule
+# has been applied
+qspi_flashed() {
+    ROOTFS_RETRY_COUNT_VAR="781e084c-a330-417c-b678-38e696380cb9-RootfsRetryCountMax"
+
+    rrcm_res=$(efivar -d -n "$ROOTFS_RETRY_COUNT_VAR" 2>/dev/null | xargs)
+
+    if [ "$rrcm_res" == "9 0 0 0" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+check_qspi_flashed() {
+    if qspi_flashed && l4t_firmware_match; then
+        info "QSPI is flashed with balenaOS build"
         exit 0
     else
-        info "QSPI is inaccessible"
+        info "QSPI is not flashed with balenaOS build"
         exit 1
     fi
 }
@@ -56,33 +65,6 @@ capsule_update_prepared() {
 
 write_jetson_update_efivars() {
     if [ -d $efivars_dir ]; then
-        # If the file already exists, writing to it will fail
-        # causing the entire hook to fail
-        if [ ! -e ${platform_spec_efivar} ]; then
-            printf "\x07\x00\x00\x00" > ${tmp_file}
-            printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
-            tmp_file_size=$(stat -c%s ${tmp_file})
-            dd if=${tmp_file} of=${platform_spec_efivar} bs=${tmp_file_size}
-        fi
-
-        if [ ! -e ${platform_compat_spec_efivar} ]; then
-            printf "\x07\x00\x00\x00" > ${tmp_file}
-            printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
-            tmp_file_size=$(stat -c%s ${tmp_file})
-            dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
-            #info "PlatformCompatSpec variable created"
-        else
-            info "PlatformCompatSpec variable already exists and kernel L4T is ${kernel_l4t}"
-            if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]]; then
-                info "PlatformCompatSpec variable already exists and we are running in L4T 36.3, it needs to be re-written."
-                chattr -i ${platform_compat_spec_efivar}
-                printf "\x07\x00\x00\x00" > ${tmp_file}
-                printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
-                tmp_file_size=$(stat -c%s ${tmp_file})
-                dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
-            fi
-        fi
-
         printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
         dd if=${tmp_file} of=${os_indications_efivar}; bs=12;
     else
@@ -97,12 +79,13 @@ write_jetson_update_efivars() {
 prepare_capsule() {
     uefi_capsule=$(find / -xdev -type f -name "TEGRA_BL*.Cap.gz")
 
-    # Unzip capsule to the boot partition
-    #info "Will extract UEFI Capsule..."
+    # Use boot partition during provisioning
+    # since it is already mounted when called from initramfs
+    # and has the esp flags
     mkdir -p ${1}/EFI/UpdateCapsule/
     gunzip -k -f -c ${uefi_capsule} | dd of=${1}/${CAPSULE_TARGET_PATH}
     sync
-    #info "Extracted UEFI Capsule."
+    info "Extracted UEFI Capsule."
     write_jetson_update_efivars
 }
 
@@ -112,7 +95,7 @@ write_retries_file() {
     tmpfile=$(mktemp)
     echo "jetson_capsule_retries=$1" > $tmpfile
     mv $tmpfile ${2}/${RETRY_COUNT_FILE} && sync
-    info "Attempt $jetson_capsule_retries: The QSPI will be updated on the next boot"                                                      
+    info "Attempt $jetson_capsule_retries: The QSPI will be updated on the next boot"
     info "Please do not power off or reset the device during the next boot, until the device shows up online."
 }
 
@@ -126,7 +109,7 @@ remove_retries_file() {
 
     if [ -f "${retry_count_file_path}" ]; then
         #info "Retry count file found, will be removed"
-        rm $retry_count_file_path 
+        rm $retry_count_file_path
     fi
 }
 
@@ -140,8 +123,8 @@ try_capsule_update() {
         BOOT_MOUNTPOINT=${1}
     fi
 
-    if [ ! -z "${2}" ]; then                                                                                  
-        UEFI_CAPSULE_TARGET_MOUNTPOINT=${2}                                                                                                 
+    if [ ! -z "${2}" ]; then
+        UEFI_CAPSULE_TARGET_MOUNTPOINT=${2}
     fi
 
     # We can only force the capsule update once if
@@ -153,11 +136,11 @@ try_capsule_update() {
         force_capsule_update="y"
     fi
 
-    if qspi_accessible; then
+    if qspi_flashed && l4t_firmware_match; then
         if [[ "y" == "$force_capsule_update" ]]; then
-            info "QSPI is accessible, and forced update was requested"
+            info "QSPI is updated, and forced update was requested"
 	else
-            info "OK: QSPI is accessible, no forced update requested"
+            info "OK: QSPI is updated, no forced update requested"
             remove_retries_file $BOOT_MOUNTPOINT
             exit 0
 	fi
@@ -171,7 +154,7 @@ try_capsule_update() {
     else
         if [ -f ${BOOT_MOUNTPOINT}/${RETRY_COUNT_FILE} ]; then
             source ${BOOT_MOUNTPOINT}/${RETRY_COUNT_FILE}
-            if [ ! -z $jetson_capsule_retries ]; then    
+            if [ ! -z $jetson_capsule_retries ]; then
                 if [ $jetson_capsule_retries -le 3 ]; then
                     prepare_capsule $UEFI_CAPSULE_TARGET_MOUNTPOINT
                     jetson_capsule_retries=$(( $jetson_capsule_retries + 1 ))
