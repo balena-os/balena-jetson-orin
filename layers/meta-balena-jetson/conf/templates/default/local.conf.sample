@@ -1,7 +1,13 @@
 # Supported machines
-#MACHINE ?= "jetson-nano"
+#MACHINE ?= "forecr-dsb-ornx-orin-nano-8gb"
+#MACHINE ?= "jetson-agx-orin-devkit-64gb"
+#MACHINE ?= "jetson-agx-orin-devkit"
+#MACHINE ?= "jetson-orin-nano-devkit-nvme"
+#MACHINE ?= "jetson-orin-nano-seeed-j3010"
+#MACHINE ?= "jetson-orin-nx-seeed-j4012"
+#MACHINE ?= "jetson-orin-nx-xavier-nx-devkit"
 
-# We use the overlayfs docker storage driver on the Nvidia Jetson Nano
+# We use the overlayfs docker storage driver on the Nvidia Boards
 BALENA_STORAGE = "overlay2"
 
 # More info meta-resin/README.md
