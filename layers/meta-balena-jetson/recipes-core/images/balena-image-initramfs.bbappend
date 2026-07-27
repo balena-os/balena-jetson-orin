@@ -1,5 +1,8 @@
-PACKAGE_INSTALL:remove = " mdraid"
-PACKAGE_INSTALL:remove = " initramfs-module-recovery"
+PACKAGE_INSTALL:remove = "mdraid"
+PACKAGE_INSTALL:remove = "initramfs-module-recovery"
+
+# All these devices have a debug uart port
+PACKAGE_INSTALL:remove = "initramfs-module-debug"
 
 # These in-tree and oot modules are needed
 # in the initramfs, so that the nvme can be
