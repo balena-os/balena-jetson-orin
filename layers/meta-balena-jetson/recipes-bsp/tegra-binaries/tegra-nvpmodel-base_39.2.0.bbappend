@@ -14,3 +14,4 @@ NVPMODEL_CONFIG_DEFAULT:jetson-orin-nx-xavier-nx-devkit="2"
 
 # AGX Orin 32GB & 64GB default power modes are the same in JP6.0 and 6.2,
 # hence no default needs to be set
+
