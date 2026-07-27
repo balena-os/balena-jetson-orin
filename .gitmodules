@@ -9,11 +9,11 @@
 [submodule "layers/meta-tegra"]
 	path = layers/meta-tegra
 	url = https://github.com/OE4T/meta-tegra.git
-	branch = scarthgap
+	branch = master
 [submodule "layers/meta-openembedded"]
 	path = layers/meta-openembedded
 	url = https://github.com/openembedded/meta-openembedded.git
-	branch = scarthgap
+	branch = wrynose
 [submodule "contracts"]
 	path = contracts
 	url = https://github.com/balena-io/contracts.git
@@ -21,7 +21,7 @@
 [submodule "layers/meta-cyclonedx"]
 	path = layers/meta-cyclonedx
 	url = https://github.com/balena-os/meta-cyclonedx
-	branch = scarthgap
+	branch = main
 [submodule "layers/meta-yocto"]
 	path = layers/meta-yocto
 	url = https://git.yoctoproject.org/meta-yocto
