@@ -1,0 +1,11 @@
+The device trees here come from the BSP packages found at:
+
+https://www.forecr.io/blogs/installation/jetpack-6-x-installation-for-dsboard-ornx-lan
+
+Note the BSP overlays (dtbo) go to nvidia-kernel-oot instead.
+
+DSBOARD-ORNX-LAN (but not the base DSBOARD-ORNX) uses slightly different
+device trees for the kernel and the bootloader.
+In the BSP, the 0_tegra_*.dtb are for the kernel, while tegra_*.dtb end
+up in the bootloader. The difference between them is minor, and seems to only
+affect the recovery USB port. For consistency, we stick to the BSP logic here.
