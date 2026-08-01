@@ -28,5 +28,5 @@ IMAGE_INSTALL:append = " \
     jetson-dtbs \
     nvidia-kernel-oot-dtb nvidia-kernel-oot-dtbo nvidia-kernel-oot-display nvidia-kernel-oot-wifi \
     nvidia-kernel-oot-base nvidia-drm-loadconf \
-    kernel-module-r8126 kernel-module-r8168 linux-noble-nvidia-tegra-extlinux \
+    kernel-module-r8126 kernel-module-r8168 linux-noble-nvidia-tegra-extlinux kernel-module-rtl8822ce tegra-firmware-rtl8822 \
 "

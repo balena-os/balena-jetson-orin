@@ -56,10 +56,10 @@ IMAGE_INSTALL:append = " \
     l4t-launcher-extlinux \
     jetson-qspi-manager \
     jetson-dtbs \
-    tegra-firmware-tegra234 tegra-firmware-vic \
+    tegra-firmware-tegra234 tegra-firmware-vic kernel-module-rtl8822ce tegra-firmware-rtl8822 \
     nvidia-kernel-oot-dtb nvidia-kernel-oot-dtbo nvidia-kernel-oot-display nvidia-kernel-oot-cameras nvidia-kernel-oot-bluetooth nvidia-kernel-oot-wifi \
     nvidia-kernel-oot-canbus nvidia-kernel-oot-virtualization nvidia-kernel-oot-base nvidia-drm-loadconf \
-    kernel-module-r8126 kernel-module-r8168 linux-noble-nvidia-tegra-extlinux nvidia-kernel-oot-compute-nvgpu \
+    kernel-module-r8126 kernel-module-r8168 linux-firmware-rtl8168 linux-noble-nvidia-tegra-extlinux nvidia-kernel-oot-compute-nvgpu \
 "
 
 IMAGE_INSTALL:append:forecr-dsb-ornx-orin-nano-8gb = " can-utils "
