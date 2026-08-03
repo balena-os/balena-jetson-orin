@@ -101,3 +101,10 @@ device_specific_configuration() {
       START=$(expr ${END} \+ 1)
     done
 }
+
+BALENA_STATE_SIZE:jetson-agx-orin-devkit-64gb = "20480"
+BALENA_BOOT_SIZE:jetson-agx-orin-devkit = "40960"
+BALENA_STATE_SIZE:jetson-agx-orin-devkit = "20480"
+BALENA_STATE_SIZE:jetson-orin-nano-devkit-nvme = "20480"
+BALENA_STATE_SIZE:jetson-orin-nano-seeed-j3010 = "20480"
+BALENA_STATE_SIZE:jetson-orin-nx-xavier-nx-devkit = "20480"
