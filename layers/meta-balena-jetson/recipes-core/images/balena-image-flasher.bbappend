@@ -10,7 +10,7 @@ BALENA_BOOT_PARTITION_FILES:append = " \
 "
 
 IMAGE_INSTALL:append = " \
-    tegra-flash-dry \
+    tegra-flash-dry-boot-blob \
     kernel-image-initramfs \
     tegra-redundant-boot \
     tegra-nv-boot-control-config \
@@ -29,6 +29,6 @@ IMAGE_INSTALL:append = " \
     jetson-qspi-manager \
     jetson-dtbs \
     nvidia-kernel-oot-devicetrees nvidia-kernel-oot-display nvidia-kernel-oot-wifi \
-    nvidia-kernel-oot-virtualization nvidia-kernel-oot-base nvidia-drm-loadconf \
+    nvidia-kernel-oot-base nvidia-drm-loadconf \
     kernel-module-r8126 kernel-module-r8168 linux-jammy-nvidia-tegra-extlinux \
 "
