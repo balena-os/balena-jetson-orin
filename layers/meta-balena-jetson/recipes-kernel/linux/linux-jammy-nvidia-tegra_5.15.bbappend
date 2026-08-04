@@ -179,6 +179,85 @@ DTB_OVERLAYS:append:jetson-orin-nano-seeed-j3010="${DEFAULT_SEEED_OVERLAYS}"
 DTB_OVERLAYS:append:jetson-orin-nx-seeed-j4012="${DEFAULT_SEEED_OVERLAYS}"
 DTB_OVERLAYS:append:jetson-orin-nano-devkit-nvme=",/boot/devicetree/tegra234-p3767-camera-p3768-imx219-dual.dtbo"
 
+# Switch some configs to modules so they can be compressed,
+# and disable the ones which are not present on the Orins.
+BALENA_CONFIGS:append = " kernel_misc_size_reduction "
+BALENA_CONFIGS[kernel_misc_size_reduction] = " \
+    CONFIG_E1000=m \
+    CONFIG_E1000E=m \
+    CONFIG_IGB=m \
+    CONFIG_ICE=m \
+    CONFIG_MLX5_CORE_EN=m \
+    CONFIG_AMD_XGBE=m \
+    CONFIG_BNX2X_SRIOV=m \
+    CONFIG_FEC=m \
+    CONFIG_NET_VENDOR_CAVIUM=n \
+    CONFIG_NET_VENDOR_CHELSIO=n \
+    CONFIG_NET_VENDOR_CISCO=n \
+    CONFIG_NET_VENDOR_HISILICON=n \
+    CONFIG_NET_VENDOR_HUAWEI=n \
+    CONFIG_NET_VENDOR_MELLANOX=n \
+    CONFIG_DRM_EXYNOS5433_DECON=n \
+    CONFIG_ROCKCHIP_VOP=n \
+    CONFIG_DRM_RCAR_VSP=n \
+    CONFIG_DRM_MSM=n \
+"
+
+BALENA_CONFIGS:append = " kernel_arch_size_reduction "
+BALENA_CONFIGS[kernel_arch_size_reduction] = " \
+    CONFIG_ARCH_ACTIONS=n \
+    CONFIG_ARCH_SUNXI=n \
+    CONFIG_ARCH_ALPINE=n \
+    CONFIG_ARCH_APPLE=n \
+    CONFIG_ARCH_BCM=n \
+    CONFIG_ARCH_BCM2835=n \
+    CONFIG_ARCH_BCM_IPROC=n \
+    CONFIG_ARCH_BCMBCA=n \
+    CONFIG_ARCH_BRCMSTB=n \
+    CONFIG_ARCH_BERLIN=n \
+    CONFIG_ARCH_EXYNOS=n \
+    CONFIG_ARCH_SPARX5=n \
+    CONFIG_ARCH_K3=n \
+    CONFIG_ARCH_LG1K=n \
+    CONFIG_ARCH_HISI=n \
+    CONFIG_ARCH_KEEMBAY=n \
+    CONFIG_ARCH_MEDIATEK=n \
+    CONFIG_ARCH_MESON=n \
+    CONFIG_ARCH_MVEBU=n \
+    CONFIG_ARCH_NXP=n \
+    CONFIG_ARCH_LAYERSCAPE=n \
+    CONFIG_ARCH_MXC=n \
+    CONFIG_ARCH_S32=n \
+    CONFIG_ARCH_MA35=n \
+    CONFIG_ARCH_NPCM=n \
+    CONFIG_ARCH_QCOM=n \
+    CONFIG_ARCH_REALTEK=n \
+    CONFIG_ARCH_RENESAS=n \
+    CONFIG_ARCH_ROCKCHIP=n \
+    CONFIG_ARCH_SEATTLE=n \
+    CONFIG_ARCH_INTEL_SOCFPGA=n \
+    CONFIG_ARCH_STM32=n \
+    CONFIG_ARCH_SYNQUACER=n \
+    CONFIG_ARCH_TESLA_FSD=n \
+    CONFIG_ARCH_SPRD=n \
+    CONFIG_ARCH_THUNDER=n \
+    CONFIG_ARCH_THUNDER2=n \
+    CONFIG_ARCH_UNIPHIER=n \
+    CONFIG_ARCH_VEXPRESS=n \
+    CONFIG_ARCH_VISCONTI=n \
+    CONFIG_ARCH_XGENE=n \
+    CONFIG_ARCH_ZYNQMP=n \
+"
+
+# Orins use nvgpu driver
+BALENA_CONFIGS:append = " kernel_nouveau_size_reduction "
+BALENA_CONFIGS[kernel_nouveau_size_reduction] = " \
+    CONFIG_DRM_NOUVEAU=n \
+    CONFIG_NOUVEAU_PLATFORM_DRIVER=n \
+    CONFIG_DRM_NOUVEAU_BACKLIGHT=n \
+"
+
+
 generate_extlinux_conf() {
     mkdir -p ${WORKDIR}/extlinux || true
     kernelRootspec="${KERNEL_ARGS}" ; cat >${WORKDIR}/extlinux/extlinux.conf << EOF

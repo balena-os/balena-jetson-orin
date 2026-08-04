@@ -38,7 +38,6 @@ PART_SPEC_FILE:jetson-agx-orin-devkit-64gb = "partition_specification234_orin_na
 PART_SPEC_FILE:forecr-dsb-ornx-orin-nano-8gb = "partition_specification234_orin_nano.txt"
 
 IMAGE_INSTALL:append = " \
-    tegra-flash-dry \
     kernel-image-initramfs \
     tegra-redundant-boot \
     tegra-nv-boot-control-config \
@@ -58,10 +57,9 @@ IMAGE_INSTALL:append = " \
     tegra-wifi \
     l4t-launcher-extlinux \
     dtc \
-    pciutils \
     jetson-qspi-manager \
     jetson-dtbs \
-    tegra-tools-tegrastats tegra-tools-jetson-clocks \
+    tegra-tools-jetson-clocks \
     nvidia-kernel-oot-devicetrees nvidia-kernel-oot-display nvidia-kernel-oot-cameras nvidia-kernel-oot-bluetooth nvidia-kernel-oot-wifi \
     nvidia-kernel-oot-canbus nvidia-kernel-oot-virtualization nvidia-kernel-oot-base nvidia-drm-loadconf \
     kernel-module-r8126 kernel-module-r8168 linux-jammy-nvidia-tegra-extlinux \

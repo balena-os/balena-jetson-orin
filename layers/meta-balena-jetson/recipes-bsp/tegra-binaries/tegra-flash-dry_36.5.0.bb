@@ -58,7 +58,15 @@ do_deploy() {
 }
 
 FILES:${PN} += " \
-    /opt/tegra-binaries/* \
+    /opt/tegra-binaries/*.txt \
+"
+
+FILES:${PN}-boot-blob = " \
+    /opt/tegra-binaries/boot0.img.gz \
+"
+
+PACKAGES =+ "\
+    ${PN}-boot-blob \
 "
 
 do_configure(){
