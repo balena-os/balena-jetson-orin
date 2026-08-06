@@ -73,7 +73,16 @@ write_jetson_update_efivars() {
             dd if=${tmp_file} of=${platform_spec_efivar} bs=${tmp_file_size}
             info "PlatformSpec variable created"
         else
-            info "PlatformSpec variable already exists"
+            current_platform_spec=$(tr -d '\0' < "${platform_spec_efivar}")
+            info "PlatformSpec variable already exists - ${current_platform_spec}"
+	    if grep -q "recomputer-orin-super-j401" ${platform_spec_efivar}; then
+                device_type="recomputer-orin-super-j401"
+            elif grep -q "recomputer-orin-j401" ${platform_spec_efivar}; then
+                device_type="recomputer-orin-j401"
+	    fi
+
+            TegraPlatformCompatSpec="${compatspec}-${device_type}-"
+            info "TegraPlatformCompatSpec set to: ${TegraPlatformCompatSpec}"
         fi
 
         if [ ! -e ${platform_compat_spec_efivar} ]; then
@@ -84,14 +93,6 @@ write_jetson_update_efivars() {
             info "PlatformCompatSpec variable created"
         else
             info "PlatformCompatSpec variable already exists"
-            if [[ ${kernel_l4t} == "36.3" ]] || [[ ${kernel_l4t} == "36.4" ]] || [[ ${kernel_l4t} == "36.5" ]] ; then
-                info "PlatformCompatSpec variable already exists and we are running in L4T 36.x, it needs to be re-written."
-                chattr -i ${platform_compat_spec_efivar}
-                printf "\x07\x00\x00\x00" > ${tmp_file}
-                printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
-                tmp_file_size=$(stat -c%s ${tmp_file})
-                dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
-            fi
         fi
 
         printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
