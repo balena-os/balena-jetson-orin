@@ -38,15 +38,20 @@ case "${DEVICE_TYPE}" in
 		if [[ "${DEVICE_TYPE}" = "jetson-orin-nx-seeed-j4012" ]]; then
 			# J4012 Classic does not support the Super mode
 			cat recomputer-orin-j401.conf > p3768-0000-p3767-0000-a0.conf
+			echo "ext_target_board=recomputer-orin-j401" >> recomputer-orin-j401.conf
 		elif [[ "${DEVICE_TYPE}" = "jetson-orin-nano-seeed-j3010" ]]; then
 			cat recomputer-orin-super-j401.conf > p3768-0000-p3767-0000-a0.conf
+			echo "ext_target_board=recomputer-orin-super-j401" >> recomputer-orin-super-j401.conf
 		fi
 
 		# This dtbo is referenced in recomputer-orin-j401.conf but it is not present in the BSP archive,
 		# not is it built when creating the UEFI capsule. We comment it out so that the UEFI capsule build
 		# doesn't fail
-		sed -i "s/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo//g" p3768-0000-p3767-0000-a0.conf
-		sed -i "s/tegra234-p3767-camera-p3768-imx219-quad-seeed.dtbo//g" p3768-0000-p3767-0000-a0.conf
+		machines=('p3768-0000-p3767-0000-a0.conf' 'recomputer-orin-j401.conf' 'recomputer-orin-super-j401.conf')
+		for machine in "${machines[@]}"; do
+			sed -i "s/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo//g" ${machine}
+			sed -i "s/tegra234-p3767-camera-p3768-imx219-quad-seeed.dtbo//g" ${machine}
+		done
 		sed -i "s#p3768-0000-p3767-0000-a0.conf#p3768-0000-p3767-0000-a0_original.conf#g" p3768-0000-p3767-0000-a0.conf
 		;;
 	"forecr-dsb-ornx-orin-nano-8gb")
