@@ -24,7 +24,7 @@ case "${DEVICE_TYPE}" in
 		git clone https://github.com/Seeed-Studio/Linux_for_Tegra.git -b r39.2.0 --single-branch
 		pushd Linux_for_Tegra
 		# Latest revision as of July 13 2026
-		git checkout 8fed53ebf5d9cde953de5bb4b9d951e5803da9c7
+		git checkout 4e249916677315bc63f4dc585c76b8f4434fc230
 		popd
 		popd
 		cp -r /build_dir/Seeed_39_2_0/Linux_for_Tegra/* /build_dir/Linux_for_Tegra/
@@ -42,9 +42,17 @@ case "${DEVICE_TYPE}" in
 		# to prevent the UEFI capsule creation from failing when it tries to copy the dtbs specified in the machine.conf
 		machines=('p3768-0000-p3767-0000-a0.conf' 'p3768-0000-p3767-0000-a0_original.conf' 'recomputer-orin-j401.conf' 'recomputer-orin-super-j401.conf')
 		for machine in "${machines[@]}"; do
-			sed -i 's/tegra234-j401-p3768-0000+p3767-0001-recomputer.dtb/tegra234-p3768-0000+p3767-0001-nv.dtb/g' ${machine}
-			sed -i 's/tegra234-j401-p3768-0000+p3767-0003-recomputer.dtb/tegra234-p3768-0000+p3767-0003-nv.dtb/g' ${machine}
-			sed -i 's/tegra234-j401-p3768-0000+p3767-0005-recomputer.dtb/tegra234-p3768-0000+p3767-0005-nv.dtb/g' ${machine}
+			sed -i 's/-recomputer-super.dtb/-recomputer.dtb/g' ${machine}
+			# Orin NX 8GB, Nano 8GB Production module and Nano SD-Card are not supported in these Seeed J4012/J3010 images
+			for i in 1 3 5; do
+				sed -i "s/tegra234-j401-p3768-0000+p3767-000${i}-recomputer.dtb/tegra234-p3768-0000+p3767-000${i}-nv.dtb/g" ${machine}
+			done
+			# Orin NX 8GB, Orin NX16 GB, Nano 8GB Production module and Nano SD-Card do not support super mode in these Seeed J4012/J3010 images
+			for i in 0 1 3 5; do
+				sed -i "s/tegra234-j401-p3768-0000+p3767-000${i}-recomputer-super.dtb/tegra234-p3768-0000+p3767-000${i}-nv.dtb/g" ${machine}
+			done
+
+			sed -i 's/tegra234-p3767-camera-p3768-imx219-quad-seeed.dtbo//g' ${machine}
 		done
 		sed -i "s#p3768-0000-p3767-0000-a0.conf#p3768-0000-p3767-0000-a0_original.conf#g" p3768-0000-p3767-0000-a0.conf
 		tar xf /build_dir/Linux_for_Tegra/custom_dtbs.tar.gz -C /build_dir/Linux_for_Tegra/
