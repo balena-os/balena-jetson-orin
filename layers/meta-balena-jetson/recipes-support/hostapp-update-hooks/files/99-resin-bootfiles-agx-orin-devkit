@@ -52,6 +52,20 @@ apply_bs_fix() {
             sed -i 's/\[\[ ${kernel_l4t} == "36.4" \]\]/\[\[ ${kernel_l4t} == "36.4" \]\] || \[\[ ${kernel_l4t} == "36.5" \]\] || \[\[ ${kernel_l4t} == "39.2" \]\]/g' ${hook_file}
         fi
     done
+
+    kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+    current_extlinux_path="/mnt/sysroot/active/current/boot/extlinux/extlinux.conf"
+    if [[ "$kernel_l4t" == "36.4" ]] || [[ "$kernel_l4t" == "36.5" ]]; then
+        info "Updating from L4T 36.x - checking if patching of extlinux.conf is necessary for rollback-altboot"
+        if grep -q "module_blacklist=tegra_dce" "${current_extlinux_path}" ; then
+            info "Old extlinux.conf already patched for rollback-altboot - tegra_dce, hsp_mailbox_client and tegra_camera_rtcpu modules were blackslisted in the old OS during HUP"
+        else
+            info "Patching old extlinux.conf for rollback-altboot"
+            sed -i 's/\brootwait\b/rootwait module_blacklist=tegra_dce module_blacklist=hsp_mailbox_client/g' "${current_extlinux_path}"
+        fi
+    fi
+
+
 }
 
 write_jetson_update_efivars() {
