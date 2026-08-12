@@ -117,10 +117,10 @@ cp /build_dir/tos.img /build_dir/Linux_for_Tegra/bootloader/tos-optee_t234.img
 pushd /build_dir/Linux_for_Tegra/
 
 dtc -I dtb -O dts ./kernel/dtb/L4TConfiguration.dtbo -o ./kernel/dtb/L4TConfiguration.dts && \
-    sed -i -i '/RootfsRetryCountMax[[:space:]]*{/,/};/ { s/data = <0x3/data = <0x9/; s/locked;/non-volatile;/ }' ./kernel/dtb/L4TConfiguration.dts && \
+    sed -i '/RootfsRetryCountMax[[:space:]]*{/,/};/ { s/data = <0x3/data = <0x9/; s/locked;/non-volatile;/ }' ./kernel/dtb/L4TConfiguration.dts && \
     dtc -I dts -O dtb ./kernel/dtb/L4TConfiguration.dts -o ./kernel/dtb/L4TConfiguration.dtbo && \
     dtc -I dtb -O dts ./bootloader/L4TConfiguration.dtbo -o ./bootloader/L4TConfiguration.dts && \
-    sed -i -i '/RootfsRetryCountMax[[:space:]]*{/,/};/ { s/data = <0x3/data = <0x9/; s/locked;/non-volatile;/ }' ./bootloader/L4TConfiguration.dts && \
+    sed -i '/RootfsRetryCountMax[[:space:]]*{/,/};/ { s/data = <0x3/data = <0x9/; s/locked;/non-volatile;/ }' ./bootloader/L4TConfiguration.dts && \
     dtc -I dts -O dtb ./bootloader/L4TConfiguration.dts -o ./bootloader/L4TConfiguration.dtbo
 
 sudo ./l4t_generate_soc_bup.sh -e ${bl_spec} t23x

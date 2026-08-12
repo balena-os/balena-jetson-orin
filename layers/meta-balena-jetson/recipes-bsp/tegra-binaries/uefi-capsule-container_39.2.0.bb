@@ -75,7 +75,7 @@ do_compile () {
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
 
     DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"
-    DOCKER_API_VERSION=1.24 docker run --rm -v ${B}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build_dir/build.sh && cp /build_dir/Linux_for_Tegra/TEGRA_BL.Cap.gz /out/${UEFI_CAPSULE} && cp /build_dir/Linux_for_Tegra/jetson_board_spec.cfg /out/"
+    DOCKER_API_VERSION=1.24 docker run --rm -v ${B}/out:/out -v "${HOME}":"${HOME}" -e EDK2_DOCKER_USER_HOME="${HOME}" -e DEVICE_TYPE="${MACHINE}" ${IMAGETAG} su /bin/bash -c "/build_dir/build.sh && cp /build_dir/Linux_for_Tegra/TEGRA_BL.Cap.gz /out/${UEFI_CAPSULE} && cp /build_dir/Linux_for_Tegra/jetson_board_spec.cfg /out/ && cp /build_dir/Linux_for_Tegra/bootloader/tos-optee_t234.img /out && cp ./build_dir/Linux_for_Tegra/kernel/dtb/L4TConfiguration.dtbo /out/"
     DOCKER_API_VERSION=1.24 docker rmi -f ${IMAGETAG}
 }
 
