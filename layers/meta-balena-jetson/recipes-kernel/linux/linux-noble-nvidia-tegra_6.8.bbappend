@@ -342,6 +342,54 @@ BALENA_CONFIGS[kernel_nouveau_size_reduction] = " \
     CONFIG_DRM_NOUVEAU_BACKLIGHT=n \
 "
 
+# LOCAL WORKAROUND - drop once fixed upstream on wip_jp_7.
+#
+# CSI camera capture is broken on this branch: no /dev/video0, and
+# /dev/nvhost-ctrl-{vi0,nvcsi} never appear, even with the IMX219 DTBO correctly
+# applied (which fee9697 enables by default for this machine). tegra_camera bails
+# during probe:
+#
+#   WARNING: .../videobuf2-core.c:2499 vb2_core_queue_init+0x1bc/0x1f4
+#     vb2_queue_init [videobuf2_v4l2] / tegra_channel_init [tegra_camera] / ...
+#   tegra-camrtc-capture-vi tegra-capture-vi: failed to initialize VB2 queue
+#   tegra-camrtc-capture-vi tegra-capture-vi: channel init failed
+#
+# Line 2499 is WARN_ON(!q->mem_ops) - the vb2 memory ops are NULL. The 6.8 config
+# builds only CONFIG_VIDEOBUF2_VMALLOC; CONFIG_VIDEOBUF2_DMA_CONTIG is absent
+# entirely, and videobuf2_dma_contig is correspondingly missing from the loaded
+# modules. Tegra VI capture wants vb2_dma_contig_memops.
+#
+# Most likely collateral from 27ada66 ("Update from linux 5.15 to 6.8", which
+# "cut down the kernel size by disabling unnecessary configs") - nothing here
+# disables it explicitly, so it appears to be missing from the 6.8 defconfig.
+#
+# Reported to acostach; this is a temporary local patch so camera validation of
+# the NVIDIA runtime extension is not blocked.
+#
+# NOTE: CONFIG_VIDEOBUF2_DMA_CONTIG cannot be set directly. In
+# drivers/media/common/videobuf2/Kconfig it is declared `tristate` with NO
+# prompt, making it a select-only symbol - kconfig silently discards it from a
+# defconfig or fragment. (Verified: setting it directly had no effect on the
+# generated .config.) It has to be pulled in by a driver that selects it.
+#
+# VIDEO_MEM2MEM_DEINTERLACE is the least invasive lever available here:
+#   depends on V4L_MEM2MEM_DRIVERS  (=y already)
+#   depends on VIDEO_DEV            (=m already)
+#   depends on HAS_DMA              (arm64)
+#   select VIDEOBUF2_DMA_CONTIG
+# It is a generic software m2m driver that claims no Tegra hardware.
+#
+# VIDEO_TEGRA_VDE also selects it, but that is the *in-tree* Tegra video decoder
+# and would bind hardware NVIDIA's out-of-tree stack already drives (the OOT
+# decoder shows up as /dev/v4l2-nvdec), so it is deliberately not used here.
+#
+# The proper fix belongs upstream: NVIDIA's JetPack 7.2 reference defconfig will
+# say which driver is meant to pull the allocator in.
+BALENA_CONFIGS:append = " videobuf2_dma_contig "
+BALENA_CONFIGS[videobuf2_dma_contig] = " \
+    CONFIG_VIDEO_MEM2MEM_DEINTERLACE=m \
+"
+
 
 generate_extlinux_conf() {
     mkdir -p ${UNPACKDIR}/extlinux || true
