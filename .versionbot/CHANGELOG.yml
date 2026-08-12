@@ -1,4 +1,23 @@
 - commits:
+    - subject: "tegra-binaries/uefi-capsule-container: Add new J4012/J3010 compat specs"
+      hash: f33528ac1f74593123eeec35423aafbb5ec630fa
+      body: |
+        Manufacturer started shipping boards which use a spec which
+        is now different from the devkit. Initially the devkit
+        machine was used.
+      footer:
+        Changelog-entry: "tegra-binaries/uefi-capsule-container: Add new J4012/J3010
+          compat specs"
+        changelog-entry: "tegra-binaries/uefi-capsule-container: Add new J4012/J3010
+          compat specs"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 7.9.2+rev1
+  title: ""
+  date: 2026-08-12T10:21:16.043Z
+- commits:
     - subject: Update layers/meta-balena to 669cd979a6d181271989e268bdb334c600b16955
       hash: e64b35561d2a5f2c8da10817bb3d445c1aa4b9d4
       body: Update layers/meta-balena

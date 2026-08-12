@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.9.2+rev1
+## (2026-08-12)
+
+* tegra-binaries/uefi-capsule-container: Add new J4012/J3010 compat specs [Alexandru Costache]
+
 # v7.9.2
 ## (2026-08-08)
 
