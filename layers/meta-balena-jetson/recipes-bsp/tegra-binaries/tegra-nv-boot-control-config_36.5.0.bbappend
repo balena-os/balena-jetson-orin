@@ -17,7 +17,7 @@ EOF
 
 do_compile:jetson-orin-nx-xavier-nx-devkit() {
         cat > ${B}/nv_boot_control.conf <<EOF
-TNSPEC 3767-ES1-0000-A.3-1-0-jetson-orin-nx-xavier-nx-devkit-nvme0n1p1
+TNSPEC 3767-ES1-0000-A.3-1-0-jetson-orin-nano-devkit-
 COMPATIBLE_SPEC 3767-000-0000--1-0-jetson-orin-nano-devkit-
 TEGRA_CHIPID 0x23
 TEGRA_OTA_BOOT_DEVICE /dev/mtdblock0

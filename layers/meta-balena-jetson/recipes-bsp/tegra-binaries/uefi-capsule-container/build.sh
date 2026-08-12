@@ -38,15 +38,20 @@ case "${DEVICE_TYPE}" in
 		if [[ "${DEVICE_TYPE}" = "jetson-orin-nx-seeed-j4012" ]]; then
 			# J4012 Classic does not support the Super mode
 			cat recomputer-orin-j401.conf > p3768-0000-p3767-0000-a0.conf
+			echo "ext_target_board=recomputer-orin-j401" >> recomputer-orin-j401.conf
 		elif [[ "${DEVICE_TYPE}" = "jetson-orin-nano-seeed-j3010" ]]; then
 			cat recomputer-orin-super-j401.conf > p3768-0000-p3767-0000-a0.conf
+			echo "ext_target_board=recomputer-orin-super-j401" >> recomputer-orin-super-j401.conf
 		fi
 
 		# This dtbo is referenced in recomputer-orin-j401.conf but it is not present in the BSP archive,
 		# not is it built when creating the UEFI capsule. We comment it out so that the UEFI capsule build
 		# doesn't fail
-		sed -i "s/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo//g" p3768-0000-p3767-0000-a0.conf
-		sed -i "s/tegra234-p3767-camera-p3768-imx219-quad-seeed.dtbo//g" p3768-0000-p3767-0000-a0.conf
+		machines=('p3768-0000-p3767-0000-a0.conf' 'recomputer-orin-j401.conf' 'recomputer-orin-super-j401.conf')
+		for machine in "${machines[@]}"; do
+			sed -i "s/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo//g" ${machine}
+			sed -i "s/tegra234-p3767-camera-p3768-imx219-quad-seeed.dtbo//g" ${machine}
+		done
 		sed -i "s#p3768-0000-p3767-0000-a0.conf#p3768-0000-p3767-0000-a0_original.conf#g" p3768-0000-p3767-0000-a0.conf
 		;;
 	"forecr-dsb-ornx-orin-nano-8gb")
@@ -57,7 +62,11 @@ case "${DEVICE_TYPE}" in
 		sudo ./replace_bsp_files.sh
 		popd
 		;;
-
+	"jetson-orin-nx-xavier-nx-devkit")
+		# Orin NX in Xavier NX Devkit uses the same Orin Nano Devkit machine and only overrides 4 configs
+		tail -n 4 p3509-a02-p3767-0000.conf >> jetson-orin-nano-devkit.conf
+		tail -n 4 p3509-a02-p3767-0000.conf >> jetson-orin-nano-devkit-super.conf
+		;;
 	*)
 	        :
 		;;
@@ -81,6 +90,11 @@ done
 cp /build_dir/yocto_standalone_mm_optee.bin /build_dir/Linux_for_Tegra/bootloader/standalonemm_optee_t234.bin
 cp /build_dir/Linux_for_Tegra/bootloader/yocto_uefi_jetson.bin /build_dir/Linux_for_Tegra/bootloader/uefi_jetson.bin
 cp /build_dir/Linux_for_Tegra/yocto_jetson_board_spec.cfg /build_dir/Linux_for_Tegra/jetson_board_spec.cfg
+
+# Also support jetson-orin-nx-xavier-nx-devkit if the
+# uefi compat spec variables have been set with this spec
+cp /build_dir/Linux_for_Tegra/p3509-a02-p3767-0000.conf /build_dir/Linux_for_Tegra/jetson-orin-nx-xavier-nx-devkit.conf
+echo "ext_target_board=jetson-orin-nx-xavier-nx-devkit" >> /build_dir/Linux_for_Tegra/jetson-orin-nx-xavier-nx-devkit.conf
 
 # optee, atf and tos build steps are taken from the README in the optee sources
 dtc -I dts -O dtb -o /build_dir/optee/tegra234-optee.dtb /build_dir/optee/tegra234-optee.dts
