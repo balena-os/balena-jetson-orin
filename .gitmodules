@@ -26,3 +26,7 @@
 	path = layers/meta-cyclonedx
 	url = https://github.com/balena-os/meta-cyclonedx
 	branch = scarthgap
+[submodule "layers/meta-tegra-compulab"]
+	path = layers/meta-tegra-compulab
+	url = https://github.com/compulab-yokneam/meta-tegra-compulab.git
+	branch = edgeai-orn-balena
