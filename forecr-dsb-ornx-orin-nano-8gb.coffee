@@ -30,6 +30,7 @@ module.exports =
 		fstype: 'balenaos-img'
 		version: 'yocto-scarthgap'
 		deployArtifact: 'balena-image-flasher-forecr-dsb-ornx-orin-nano-8gb.balenaos-img'
+		deployRawArtifact: 'balena-image-forecr-dsb-ornx-orin-nano-8gb.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]
