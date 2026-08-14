@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v7.9.4+rev1
+## (2026-08-14)
+
+* coffee: Publish raw image for all flasher types [Alexandru Costache]
+
 # v7.9.4
 ## (2026-08-13)
 

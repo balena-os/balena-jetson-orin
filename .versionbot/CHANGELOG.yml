@@ -1,4 +1,18 @@
 - commits:
+    - subject: "coffee: Publish raw image for all flasher types"
+      hash: 7bd3854caf81ddcd2bac86558c554a6ac8641a3a
+      body: ""
+      footer:
+        Changelog-entry: "coffee: Publish raw image for all flasher types"
+        changelog-entry: "coffee: Publish raw image for all flasher types"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 7.9.4+rev1
+  title: ""
+  date: 2026-08-14T10:24:38.931Z
+- commits:
     - subject: Update layers/meta-balena to 5463b02b0ad994f9823194c7be374580ff632958
       hash: 6102724aa3a8abb67206a33fc53b59929190b29e
       body: Update layers/meta-balena
