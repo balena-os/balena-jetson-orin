@@ -30,6 +30,7 @@ module.exports =
 		fstype: 'balenaos-img'
 		version: 'yocto-scarthgap'
 		deployArtifact: 'balena-image-flasher-jetson-orin-nano-seeed-j3010.balenaos-img'
+		deployRawArtifact: 'balena-image-jetson-orin-nano-seeed-j3010.balenaos-img'
 		compressed: true
 
 	options: [ networkOptions.group ]
