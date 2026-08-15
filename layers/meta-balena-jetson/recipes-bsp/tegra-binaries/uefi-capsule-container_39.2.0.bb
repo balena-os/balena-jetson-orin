@@ -19,11 +19,13 @@ SRC_URI = " \
     ${L4T_URI_BASE}/${L4T_BSP_PREFIX}_Linux_R${L4T_VERSION}_aarch64.tbz2;name=l4tbsp;unpack=0 \
     ${L4T_URI_BASE}/../sources/public_sources.tbz2;name=l4tsources;unpack=0 \
     https://developer.nvidia.com/downloads/embedded/L4T/r38_Release_v2.0/release/x-tools.tbz2;name=l4txtools;unpack=0 \
+    https://developer.nvidia.com/downloads/embedded/l4t/overlay/overlay_pcie.tbz2;name=overlay_pcie;unpack=0; \
 "
 
 SRC_URI[l4tbsp.sha256sum] = "1626626cd827de0e350b8802033b9da653c69b2290accedb9e5d01f49607e099"
 SRC_URI[l4tsources.sha256sum] = "87d2e31ff55beaf2373e2f288538585995b231fd5745ec21f39a668e36efab2f"
 SRC_URI[l4txtools.sha256sum] = "6bf10ad05bc6a5f296e592a78d87771b87f0dc917337ba9f4ab4b0f7aabad889"
+SRC_URI[overlay_pcie.sha256sum] = "308ea3df5fec6fbc3966e74b3dde7a6eab5f3acc7cc3c6e1ef7bf702e8f2114b"
 
 PN = "uefi-capsule-container"
 
@@ -72,6 +74,7 @@ do_compile () {
     cp ${UNPACKDIR}/Jetson_Linux_R39.2.0_aarch64.tbz2 ${B}/
     cp ${UNPACKDIR}/public_sources.tbz2 ${B}/
     cp ${UNPACKDIR}/x-tools.tbz2 ${B}/
+    cp ${UNPACKDIR}/overlay_pcie.tbz2 ${B}/
     IMAGETAG="${PN}:$(date +%s)-${MACHINE}"
 
     DOCKER_API_VERSION=1.24 docker build --tag ${IMAGETAG} ${B}/ --build-arg "DEVICE_TYPE=${MACHINE}"

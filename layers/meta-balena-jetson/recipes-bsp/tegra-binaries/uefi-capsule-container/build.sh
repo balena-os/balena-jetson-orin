@@ -23,7 +23,7 @@ case "${DEVICE_TYPE}" in
 		pushd /build_dir/Seeed_39_2_0
 		git clone https://github.com/Seeed-Studio/Linux_for_Tegra.git -b r39.2.0 --single-branch
 		pushd Linux_for_Tegra
-		# Latest revision as of July 13 2026
+		# Latest revision as of Aug 10 2026
 		git checkout 4e249916677315bc63f4dc585c76b8f4434fc230
 		popd
 		popd
@@ -118,10 +118,7 @@ pushd /build_dir/Linux_for_Tegra/
 
 dtc -I dtb -O dts ./kernel/dtb/L4TConfiguration.dtbo -o ./kernel/dtb/L4TConfiguration.dts && \
     sed -i '/RootfsRetryCountMax[[:space:]]*{/,/};/ { s/data = <0x3/data = <0x9/; s/locked;/non-volatile;/ }' ./kernel/dtb/L4TConfiguration.dts && \
-    dtc -I dts -O dtb ./kernel/dtb/L4TConfiguration.dts -o ./kernel/dtb/L4TConfiguration.dtbo && \
-    dtc -I dtb -O dts ./bootloader/L4TConfiguration.dtbo -o ./bootloader/L4TConfiguration.dts && \
-    sed -i '/RootfsRetryCountMax[[:space:]]*{/,/};/ { s/data = <0x3/data = <0x9/; s/locked;/non-volatile;/ }' ./bootloader/L4TConfiguration.dts && \
-    dtc -I dts -O dtb ./bootloader/L4TConfiguration.dts -o ./bootloader/L4TConfiguration.dtbo
+    dtc -I dts -O dtb ./kernel/dtb/L4TConfiguration.dts -o ./kernel/dtb/L4TConfiguration.dtbo
 
 sudo ./l4t_generate_soc_bup.sh -e ${bl_spec} t23x
 sudo ./generate_capsule/l4t_generate_soc_capsule.sh -i bootloader/payloads_t23x/bl_only_payload -o ./TEGRA_BL.Cap t234

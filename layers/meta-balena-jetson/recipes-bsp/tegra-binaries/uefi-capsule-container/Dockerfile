@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y git vim tar lbzip2 binutils xz-utils zs
 COPY ./Jetson_Linux_R39.2.0_aarch64.tbz2 /build_dir/
 COPY ./public_sources.tbz2 /build_dir/
 COPY ./x-tools.tbz2 /build_dir/
+COPY ./overlay_pcie.tbz2 /build_dir/
 
 RUN cd /build_dir/ && tar xf Jetson_Linux_R39.2.0_aarch64.tbz2 && \
     ./Linux_for_Tegra/tools/l4t_flash_prerequisites.sh && mkdir -p /build_dir/Linux_for_Tegra/rootfs/boot/ && \
@@ -21,7 +22,9 @@ RUN cd /build_dir/ && tar xf Jetson_Linux_R39.2.0_aarch64.tbz2 && \
     cp ./Linux_for_Tegra/source/nvidia-jetson-optee-source.tbz2 . && \
     tar xf nvidia-jetson-optee-source.tbz2 && \
     mkdir /build_dir/atf_build && \
-    tar -xpf /build_dir/Linux_for_Tegra/source/atf_t234_src.tbz2 -C /build_dir/atf_build/
+    tar -xpf /build_dir/Linux_for_Tegra/source/atf_t234_src.tbz2 -C /build_dir/atf_build/ && \
+    tar -xpf /build_dir/overlay_pcie.tbz2 -C /build_dir/ && \
+    cp -r /build_dir/overlay_pcie/Linux_for_Tegra/bootloader/*.bin /build_dir/Linux_for_Tegra/bootloader/
 
 COPY ./build.sh /build_dir/build.sh
 COPY ./jetson_board_spec.cfg /build_dir/Linux_for_Tegra/yocto_jetson_board_spec.cfg
