@@ -13,8 +13,19 @@ current_fan_profile=""
 nvfancontrol_restart_needed=true
 
 print_applied_profile() {
-    running_profile=$(/usr/sbin/nvfancontrol -q | grep FAN_PROFILE | cut -d ":" -f3)
-    if [[ "$running_profile" == null ]] || [[ -z "$running_profile" ]]; then
+    local retries=5
+    local running_profile=""
+
+    while [ $retries -gt 0 ]; do
+        running_profile=$(/usr/sbin/nvfancontrol -q 2>/dev/null | grep FAN_PROFILE | cut -d ":" -f3 | tr -d ' ')
+        if [[ -n "$running_profile" ]] && [[ "$running_profile" != "null" ]]; then
+            break
+        fi
+        sleep 1
+        retries=$((retries - 1))
+    done
+
+    if [[ "$running_profile" == "null" ]] || [[ -z "$running_profile" ]]; then
         fail "Fan profile '${target_fan_profile}' could not be applied!"
     else
         info "Fan profile '$running_profile' is active"
