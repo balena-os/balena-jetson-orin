@@ -1,0 +1,9 @@
+FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
+
+SRC_URI += "  \
+    file://enable_80211d.patch \
+"
+
+TEGRA_OOT_WIFI_DRIVERS:remove="${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-rtl8852ce"
+TEGRA_OOT_VIRTUALIZATION_DRIVERS:remove = "${KERNEL_MODULE_PACKAGE_PREFIX}kernel-module-hvc-sysfs"
+TEGRA_OOT_REPLACEMENT_DRIVERS += " lan743x "
