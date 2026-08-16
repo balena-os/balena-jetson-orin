@@ -40,15 +40,15 @@ SRC_URI = " \
 do_install() {
     # Ensure install is not executed until
     # do_unpack copies the archive
-    while [ ! -f ${WORKDIR}/${BOOTBLOB} ]
+    while [ ! -f ${UNPACKDIR}/${BOOTBLOB} ]
     do
         sleep 1
-        bbwarn "waiting for ${WORKDIR}/${BOOTBLOB}"
+        bbwarn "waiting for ${UNPACKDIR}/${BOOTBLOB}"
     done
 
     install -d ${D}/${BINARY_INSTALL_PATH}
-    install ${WORKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
-    install ${WORKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
+    install ${UNPACKDIR}/${BOOTBLOB} ${D}/${BINARY_INSTALL_PATH}/boot0.img.gz
+    install ${UNPACKDIR}/${PARTSPEC} ${D}/${BINARY_INSTALL_PATH}/
 }
 
 do_deploy() {
@@ -57,7 +57,7 @@ do_deploy() {
     cp -r ${D}/${BINARY_INSTALL_PATH}/* ${DEPLOY_DIR_IMAGE}/$(basename ${BINARY_INSTALL_PATH})
 }
 
-FILES:${PN} += " \
+FILES:${PN} = " \
     /opt/tegra-binaries/*.txt \
 "
 
