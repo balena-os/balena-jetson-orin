@@ -1,0 +1,32 @@
+From 489dd384c0f3dcd7f00f037e8093583bbe85a9f4 Mon Sep 17 00:00:00 2001
+From: Alexandru Costache <alexandru@balena.io>
+Date: Tue, 7 Jul 2026 09:22:08 +0000
+Subject: [PATCH] Revert "UBUNTU: SAUCE: Support but do not require compressed
+ modules"
+
+This reverts commit 14463ba6a4afe20b360a4cea6a7a713c61342d71.
+to allow zstd kernel module compression on Orin Devices.
+
+Upstream-Status: Inappropriate [configuration]
+---
+ scripts/Makefile.modinst | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/scripts/Makefile.modinst b/scripts/Makefile.modinst
+index f573ec14e9ae..b220e33787ac 100644
+--- a/scripts/Makefile.modinst
++++ b/scripts/Makefile.modinst
+@@ -53,9 +53,7 @@ $(foreach x, % :, $(if $(findstring $x, $(dst)), \
+ suffix-y				:=
+ suffix-$(CONFIG_MODULE_COMPRESS_GZIP)	:= .gz
+ suffix-$(CONFIG_MODULE_COMPRESS_XZ)	:= .xz
+-## UBUNTU: Support, but do not require zstd compressed modules
+-# Many external dkms and signing rely on uncompressed modules
+-# suffix-$(CONFIG_MODULE_COMPRESS_ZSTD)	:= .zst
++suffix-$(CONFIG_MODULE_COMPRESS_ZSTD)	:= .zst
+ 
+ modules := $(patsubst $(extmod_prefix)%.o, $(dst)/%.ko$(suffix-y), $(modules))
+ install-$(CONFIG_MODULES) += $(modules)
+-- 
+2.34.1
+
