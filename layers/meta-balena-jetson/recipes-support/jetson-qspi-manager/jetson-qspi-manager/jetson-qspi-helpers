@@ -65,6 +65,8 @@ capsule_update_prepared() {
 
 write_jetson_update_efivars() {
     if [ -d $efivars_dir ]; then
+        # Set TegraPlatformSpec and TegraPlatformCompatSpec
+        /usr/bin/setup-nv-boot-control
         printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
         dd if=${tmp_file} of=${os_indications_efivar}; bs=12;
     else
