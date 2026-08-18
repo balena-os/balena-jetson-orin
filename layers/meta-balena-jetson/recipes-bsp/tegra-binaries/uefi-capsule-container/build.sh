@@ -23,8 +23,8 @@ case "${DEVICE_TYPE}" in
 		pushd /build_dir/Seeed_39_2_0
 		git clone https://github.com/Seeed-Studio/Linux_for_Tegra.git -b r39.2.0 --single-branch
 		pushd Linux_for_Tegra
-		# Latest revision as of Aug 10 2026
-		git checkout 4e249916677315bc63f4dc585c76b8f4434fc230
+		# Latest revision as of Aug 18 2026
+		git checkout ee01f87bc92cf814ed3fc5db0de9e7e5f32c98e2
 		popd
 		popd
 		cp -r /build_dir/Seeed_39_2_0/Linux_for_Tegra/* /build_dir/Linux_for_Tegra/
