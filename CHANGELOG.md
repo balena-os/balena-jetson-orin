@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v8.0.0
+## (2026-08-24)
+
+* layers/meta-balena: Update to v8.0.0 [Alexandru Costache]
+* recipes-core/images: Update image recipes for Jetpack 7.2 [Alexandru Costache]
+
 # v7.9.4+rev2
 ## (2026-08-20)
 

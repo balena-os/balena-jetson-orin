@@ -1,4 +1,28 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v8.0.0"
+      hash: de9ea78304339c7aa216b8197f0818cda856386e
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v8.0.0"
+        changelog-entry: "layers/meta-balena: Update to v8.0.0"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "recipes-core/images: Update image recipes for Jetpack 7.2"
+      hash: 991bfa66661ae93fca88ef1c6192ae31169889b6
+      body: ""
+      footer:
+        Changelog-entry: "recipes-core/images: Update image recipes for Jetpack 7.2"
+        changelog-entry: "recipes-core/images: Update image recipes for Jetpack 7.2"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 8.0.0
+  title: ""
+  date: 2026-08-24T15:43:54.555Z
+- commits:
     - subject: Update balena-yocto-scripts to 94f7d206fb6ed31e000b10cd15e8468991707cca
       hash: eab307784eb8a1334948bc7ed46e59afc32c113b
       body: Update balena-yocto-scripts
