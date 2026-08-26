@@ -46,7 +46,7 @@ PROVIDES = "uefi-capsule-container"
 
 copy_seed_dtbs() {
     mkdir -p ${B}/custom_dtbs
-    cp -r ${DEPLOY_DIR_IMAGE}/tegra234-j401-p3768-0000+p3767-000*-recomputer.dtb ${B}/custom_dtbs
+    cp -r ${DEPLOY_DIR_IMAGE}/tegra234-j401-p3768-0000+p3767-000*-recomputer*.dtb ${B}/custom_dtbs
     cp ${DEPLOY_DIR_IMAGE}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo ${B}/custom_dtbs
 }
 
