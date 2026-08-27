@@ -1,4 +1,74 @@
 - commits:
+    - subject: Update layers/meta-balena to 7dbf3fe8ce198bc7b88be72bb30791223716c39c
+      hash: 1af119ca9c4dc224472485830b6b08fa3f367eda
+      body: Update layers/meta-balena
+      footer:
+        Changelog-entry: Update layers/meta-balena to 7dbf3fe8ce198bc7b88be72bb30791223716c39c
+        changelog-entry: Update layers/meta-balena to 7dbf3fe8ce198bc7b88be72bb30791223716c39c
+      author: balena-renovate[bot]
+      nested:
+        - commits:
+            - subject: "balena-bootloader.bbclass: Move common bits from devices to class"
+              hash: f0b0c9843b896451123a6e41e7d8e5421608b20b
+              body: >
+                After adding the balena bootloader to a handful of devices, some
+                stuff
+
+                keeps getting copy/pasted into the bootloader recipes.
+
+
+                This patch moves the common bits to balena-bootloader.bbclass to
+                avoid
+
+                duplication and make it easier to use.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Michal Toman <michalt@balena.io>
+                signed-off-by: Michal Toman <michalt@balena.io>
+              author: Michal Toman
+              nested: []
+          version: meta-balena-8.0.3
+          title: ""
+          date: 2026-08-24T19:29:40.404Z
+        - commits:
+            - subject: "distro:balena-os.inc: Remove gobject-introspection-data from
+                DISTRO_FEATURES"
+              hash: 049d1a5bf38786fa1d2d50ac563234d4aa742645
+              body: >
+                We do not use GObject Introspection typelib files in the hostOS
+                so let's
+
+                remove them in order to help shrink the rootfs.
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Florin Sarbu <florin@balena.io>
+                signed-off-by: Florin Sarbu <florin@balena.io>
+              author: Florin Sarbu
+              nested: []
+          version: meta-balena-8.0.2
+          title: ""
+          date: 2026-08-21T20:43:55.785Z
+        - commits:
+            - subject: "balena: use AtomicWriteFile to save volume options"
+              hash: 130aa0d717e5a2eaf970718a819fb44d86d53a2d
+              body: |
+                Backport moby/moby#48034 to balenaEngine v25
+              footer:
+                Change-type: patch
+                change-type: patch
+                Signed-off-by: Kyle Harding <kyle@balena.io>
+                signed-off-by: Kyle Harding <kyle@balena.io>
+              author: Kyle Harding
+              nested: []
+          version: meta-balena-8.0.1
+          title: ""
+          date: 2026-08-20T16:35:41.933Z
+  version: 8.0.3
+  title: ""
+  date: 2026-08-27T20:20:00.372Z
+- commits:
     - subject: "layers/meta-balena: Update to v8.0.0"
       hash: de9ea78304339c7aa216b8197f0818cda856386e
       body: ""
