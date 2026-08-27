@@ -80,17 +80,20 @@ do_install:append:jetson-orin-nano-seeed-j3010() {
 }
 
 do_deploy() {
-    cp ${DEPLOY_DIR_IMAGE}/devicetree/${DTBNAME} ${DEPLOY_DIR_IMAGE}/
+	cp ${DEPLOY_DIR_IMAGE}/devicetree/${DTBNAME} ${DEPLOY_DIR_IMAGE}/
+}
+
+deploy_seeed_dtbs() {
+        cp ${UNPACKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo ${DEPLOY_DIR_IMAGE}/
+        cp -r ${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-000*-recomputer*dtb ${DEPLOY_DIR_IMAGE}/
 }
 
 do_deploy:append:jetson-orin-nano-seeed-j3010() {
-	cp ${UNPACKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo ${DEPLOY_DIR_IMAGE}/
-	cp -r ${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-000*-recomputer*dtb ${DEPLOY_DIR_IMAGE}/
+	deploy_seeed_dtbs
 }
 
 do_deploy:append:jetson-orin-nx-seeed-j4012() {
-        cp ${UNPACKDIR}/tegra234-p3767-camera-p3768-imx219-dual-seeed.dtbo ${DEPLOY_DIR_IMAGE}/
-        cp -r ${UNPACKDIR}/tegra234-j401-p3768-0000+p3767-000*-recomputer*dtb ${DEPLOY_DIR_IMAGE}/
+	deploy_seeed_dtbs
 }
 
 do_install:append:jetson-orin-nx-seeed-j4012() {
@@ -149,3 +152,4 @@ FILES:${PN}:jetson-orin-nx-seeed-j4012 += " \
 "
 
 addtask do_deploy before do_package after do_install
+do_deploy[nostamp] = "1"
