@@ -1,4 +1,29 @@
 - commits:
+    - subject: ".gitmodules: Declare a branch for every submodule"
+      hash: a048171f66647ecb1fd6f2f032bdb9d75423a3b7
+      body: >
+        check_gitmodules_branches fails while any submodule has no branch
+
+        declared. 3 submodules had none here. Every branch declared
+
+        contains the current pin, verified against the remote.
+
+
+        meta-tegra already declared master, which does not contain its pin. It
+        is on
+
+        wrynose, so correct that too.
+      footer:
+        Changelog-entry: ".gitmodules: Declare a branch for every submodule"
+        changelog-entry: ".gitmodules: Declare a branch for every submodule"
+        Signed-off-by: Kyle Harding <kyle@balena.io>
+        signed-off-by: Kyle Harding <kyle@balena.io>
+      author: Kyle Harding
+      nested: []
+  version: 8.0.7+rev1
+  title: ""
+  date: 2026-09-07T07:07:59.339Z
+- commits:
     - subject: Update layers/meta-balena to bbcd3913050a44c7271906cbc3550146ed2ecb2c
       hash: 25ce37c4df549e614b9a431b7056d3cb99c8a637
       body: Update layers/meta-balena
