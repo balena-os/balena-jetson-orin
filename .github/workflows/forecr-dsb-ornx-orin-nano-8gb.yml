@@ -113,3 +113,5 @@ jobs:
       force-finalize: ${{ inputs.force-finalize || false }}
       # Default to balena-staging.com for workflow dispatch, but balena-cloud.com for other events
       deploy-environment: ${{ inputs.deploy-environment || 'balena-cloud.com' }}
+      # Allow overriding the meta-balena ref for workflow dispatch events
+      meta-balena-ref: ${{ inputs.meta-balena-ref || '' }}

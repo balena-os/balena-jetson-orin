@@ -9,7 +9,7 @@
 [submodule "layers/meta-tegra"]
 	path = layers/meta-tegra
 	url = https://github.com/OE4T/meta-tegra.git
-	branch = master
+	branch = wrynose
 [submodule "layers/meta-openembedded"]
 	path = layers/meta-openembedded
 	url = https://github.com/openembedded/meta-openembedded.git
@@ -25,9 +25,12 @@
 [submodule "layers/meta-yocto"]
 	path = layers/meta-yocto
 	url = https://git.yoctoproject.org/meta-yocto
+	branch = master
 [submodule "layers/bitbake"]
 	path = layers/bitbake
 	url = https://git.openembedded.org/bitbake
+	branch = master
 [submodule "layers/openembedded-core"]
 	path = layers/openembedded-core
 	url = https://git.openembedded.org/openembedded-core
+	branch = master
