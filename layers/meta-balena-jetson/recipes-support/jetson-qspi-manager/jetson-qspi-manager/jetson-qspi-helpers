@@ -79,8 +79,16 @@ write_jetson_update_efivars() {
 
 # $1 - target path for unpacking UEFI capsule
 prepare_capsule() {
-    uefi_capsule=$(find / -xdev -type f -name "TEGRA_BL*.Cap.gz")
-
+    # See meta-balena commit 7741fcee4b3
+    # Check /tmp separately from /, as when migrating, we have the UEFI capsule copied to
+    # a separate filesystem, and -xdev prohibits crossing filesystem boundaries
+    uefi_capsule=$(find /tmp -xdev -type f -name "TEGRA_BL*.Cap.gz")
+    if [ ! -f "${uefi_capsule}" ]; then
+        uefi_capsule=$(find / -xdev -type f -name "TEGRA_BL*.Cap.gz")
+        if [ ! -f "${uefi_capsule}" ]; then
+            fail "UEFI capsule not found in rootfs nor in /tmp/"
+        fi
+    fi
     # Use boot partition during provisioning
     # since it is already mounted when called from initramfs
     # and has the esp flags

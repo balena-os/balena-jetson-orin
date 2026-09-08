@@ -4,13 +4,13 @@ require recipes-bsp/tegra-binaries/tegra-binaries-${PV}.inc
 
 inherit deploy l4t_bsp
 
-JETSON_BOARD_SPEC:jetson-orin-nano-devkit-nvme="jetson_board_spec_nano.cfg"
-JETSON_BOARD_SPEC:jetson-orin-nx-xavier-nx-devkit="jetson_board_spec_nx.cfg"
-JETSON_BOARD_SPEC:jetson-agx-orin-devkit="jetson_board_spec_agx_32gb.cfg"
-JETSON_BOARD_SPEC:jetson-agx-orin-devkit-64gb="jetson_board_spec_agx_64gb.cfg"
-JETSON_BOARD_SPEC:jetson-orin-nano-seeed-j3010="jetson_board_spec_j3010_j4012.cfg"
-JETSON_BOARD_SPEC:jetson-orin-nx-seeed-j4012="jetson_board_spec_j3010_j4012.cfg"
-JETSON_BOARD_SPEC:forecr-dsb-ornx-orin-nano-8gb="jetson_board_spec_forecr.cfg"
+JETSON_BOARD_SPEC:jetson-orin-nano-devkit-nvme = "jetson_board_spec_nano.cfg"
+JETSON_BOARD_SPEC:jetson-orin-nx-xavier-nx-devkit = "jetson_board_spec_nx.cfg"
+JETSON_BOARD_SPEC:jetson-agx-orin-devkit = "jetson_board_spec_agx_32gb.cfg"
+JETSON_BOARD_SPEC:jetson-agx-orin-devkit-64gb = "jetson_board_spec_agx_64gb.cfg"
+JETSON_BOARD_SPEC:jetson-orin-nano-seeed-j3010 = "jetson_board_spec_j3010_j4012.cfg"
+JETSON_BOARD_SPEC:jetson-orin-nx-seeed-j4012 = "jetson_board_spec_j3010_j4012.cfg"
+JETSON_BOARD_SPEC:forecr-dsb-ornx-orin-nano-8gb = "jetson_board_spec_forecr.cfg"
 
 SRC_URI = " \
     file://Dockerfile \
@@ -101,11 +101,11 @@ do_compile[depends] += " edk2-firmware-tegra:do_deploy edk2-nvidia-standalone-mm
 do_convert_crlf_to_lf[depends] += " tegra-binaries:do_patch "
 addtask do_deploy before do_package after do_install
 
-# redefine the global reproducible-build function as a no-op
+# Redefine the global reproducible-build function as a no-op
 # for this recipe to prevent shared-work directory race conditions.
 python create_source_date_epoch_stamp() {
     pass
 }
 
-# fix QA Issue: File ... TEGRA_BL.Cap contains reference to TMPDIR
+# Fixes QA Issue: File ... TEGRA_BL.Cap contains reference to TMPDIR
 INSANE_SKIP:${PN} += "buildpaths"
