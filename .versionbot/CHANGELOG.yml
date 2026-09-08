@@ -1,4 +1,18 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v8.0.9"
+      hash: 412aa884df56ddbf7134136e20999373ccc09f77
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v8.0.9"
+        changelog-entry: "layers/meta-balena: Update to v8.0.9"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 8.0.9
+  title: ""
+  date: 2026-09-08T10:32:55.351Z
+- commits:
     - subject: ".gitmodules: Declare a branch for every submodule"
       hash: a048171f66647ecb1fd6f2f032bdb9d75423a3b7
       body: >

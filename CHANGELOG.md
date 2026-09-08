@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.9
+## (2026-09-08)
+
+* layers/meta-balena: Update to v8.0.9 [Alexandru Costache]
+
 # v8.0.7+rev1
 ## (2026-09-07)
 
