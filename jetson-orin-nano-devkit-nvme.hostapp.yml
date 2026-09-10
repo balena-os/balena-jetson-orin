@@ -1,0 +1,45 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/balena-os/balena-yocto-scripts/refs/heads/master/schemas/hostapp-composition.json
+#
+# Device overlay for jetson-orin-nano-devkit-nvme. Deep-merged over
+# layers/meta-balena/hostapp.yml, which contributes the `hostapp` service.
+version: '2.4'
+services:
+
+  # NVIDIA container runtime hostapp-extension, legacy `--runtime=nvidia` route.
+  # Built from layers/meta-nvidia-container-runtime, vendored in this repo for
+  # review. Its canonical home is a standalone layer repo intended to be
+  # consumed as a submodule; the swap is a follow-up.
+  nvidia-runtime:
+    image: __BUILD_OUTPUT__
+
+    # Behind a compose profile, so a fleet opts in after provisioning rather
+    # than every device carrying a ~400 MB extension it may not want. The
+    # pipeline treats `profiles` as pass-through; activation is a POST to
+    # /resin/application_profile with activates__profile_name: nvidia.
+    profiles:
+      - nvidia
+
+    x-build:
+      recipe: balena-nvidia-runtime
+      # The extension needs DISTRO_FEATURES += "virtualization opengl", which
+      # would perturb the base OS build if it were in the default template.
+      # See the header of the referenced bblayers.conf.sample for the full
+      # reasoning and for why the template cannot live under
+      # layers/meta-balena-jetson/.
+      build_args:
+        - "-t"
+        - "layers/meta-nvidia-container-runtime/conf/templates/wrynose"
+
+    # No `labels:` block on purpose. The io.balena.image.* labels are stamped
+    # onto the image by balena-hostapp-extension.bbclass, driven by the
+    # HOSTAPP_EXTENSION_LABEL_* variables in balena-nvidia-runtime.bb
+    # (class=overlay, store=data, requires-reboot=1, override=200), plus an
+    # os-version minor-line glob. The pipeline is agnostic to how labels reach
+    # the image; keeping them in the recipe means the layer carries its own
+    # install semantics and every consuming device repo gets them for free.
+
+  # NOTE: the PoC carried a `kernel-modules: {x-build: ~}` opt-out here. It is
+  # deliberately absent now. meta-balena's base composition declares only the
+  # `hostapp` service, so there is nothing to opt out of - and under the current
+  # spec, a service with `x-build: ~` and no concrete `image:` fails composition
+  # validation outright.
