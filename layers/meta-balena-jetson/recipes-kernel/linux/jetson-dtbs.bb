@@ -31,6 +31,11 @@ SRC_URI:append:forecr-dsb-ornx-orin-nano-8gb = " \
     file://forecr-dsb-ornx-lan/tegra234-p3768-0000+p3767-0003-nv-super.dtb \
 "
 
+SRC_URI:append:jetson-agx-orin-devkit = " \
+    file://avermedia-d315/tegra234-p3737-0000+p3701-0000-nv-d315.dtb \
+    file://avermedia-d315/tegra234-p3737-0000+p3701-0004-nv-d315.dtb \
+"
+
 SRC_URI:append:jetson-agx-orin-devkit-64gb = " \
     file://avermedia-d315/tegra234-p3737-0000+p3701-0005-nv-d315.dtb \
 "
@@ -44,6 +49,8 @@ do_install() {
 
 do_install:append:jetson-agx-orin-devkit() {
 	install -m 0644 "${UNPACKDIR}/tegra234-p3737-0000+p3701-0000-nv-spi.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb"
+	install -m 0644 "${UNPACKDIR}/avermedia-d315/tegra234-p3737-0000+p3701-0000-nv-d315.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0000-nv-d315.dtb"
+	install -m 0644 "${UNPACKDIR}/avermedia-d315/tegra234-p3737-0000+p3701-0004-nv-d315.dtb" "${D}/boot/tegra234-p3737-0000+p3701-0004-nv-d315.dtb"
 }
 
 do_install:append:jetson-agx-orin-devkit-64gb() {
@@ -107,6 +114,8 @@ do_install:append:jetson-orin-nx-seeed-j4012() {
 FILES:${PN}:jetson-agx-orin-devkit += " \
 	/boot/tegra234-p3737-0000+p3701-0000-nv.dtb \
 	/boot/tegra234-p3737-0000+p3701-0000-nv-spi.dtb \
+	/boot/tegra234-p3737-0000+p3701-0000-nv-d315.dtb \
+	/boot/tegra234-p3737-0000+p3701-0004-nv-d315.dtb \
 "
 
 FILES:${PN}:jetson-orin-nx-xavier-nx-devkit += " \
