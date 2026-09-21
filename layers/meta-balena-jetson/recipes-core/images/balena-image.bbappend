@@ -25,6 +25,11 @@ IMAGE_ROOTFS_SIZE:jetson-orin-nano-seeed-j3010 = "733184"
 IMAGE_ROOTFS_SIZE:jetson-agx-orin-devkit-64gb = "827392"
 IMAGE_ROOTFS_SIZE:forecr-dsb-ornx-orin-nano-8gb = "733184"
 
+# Use larger boot and root partitions
+# for the EdgeAI Orin NX16GB starting with the first release
+BALENA_BOOT_SIZE:edgeai-orn-nx:forcevariable = "194560"
+IMAGE_ROOTFS_SIZE:edgeai-orn-nx:forcevariable = "1474560"
+
 BALENA_BOOT_PARTITION_FILES:append = " \
     bootfiles/EFI/BOOT/BOOTAA64.efi:/EFI/BOOT/BOOTAA64.efi \
     extra_uEnv.txt:/extra_uEnv.txt \
