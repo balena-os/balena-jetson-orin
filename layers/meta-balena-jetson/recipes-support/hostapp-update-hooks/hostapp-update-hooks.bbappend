@@ -45,3 +45,11 @@ HOSTAPP_HOOKS:append:forecr-dsb-ornx-orin-nano-8gb = " \
 
 HOSTAPP_HOOKS:remove:forecr-dsb-ornx-orin-nano-8gb = "99-resin-bootfiles-orin-nano-devkit-nvme"
 
+# Below hook will look for the wrong UEFI capsule,
+# let's remove it and use a new hook which handles L4T 39.2 and newer
+HOSTAPP_HOOKS:remove:edgeai-orn-nx = "99-resin-bootfiles-orin-nano-devkit-nvme"
+
+HOSTAPP_HOOKS:append:edgeai-orn-nx = " \
+    99-resin-uboot \
+    99-resin-bootfiles-edgeai-orin-nx \
+"
