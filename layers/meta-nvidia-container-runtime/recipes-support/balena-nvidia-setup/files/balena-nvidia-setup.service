@@ -1,0 +1,38 @@
+[Unit]
+Description=Boot-time NVIDIA setup for balena-engine (legacy nvidia runtime registration)
+
+# /etc/docker is a bind-mount from the data partition wired up by
+# bind-etc-docker.service; without ordering after that unit, the script writes
+# daemon.json into a read-only overlay and fails with EROFS.
+Requires=bind-etc-docker.service
+# nvidia-container-setup.service (meta-tegra, from the nvidia-container-toolkit
+# recipe) seeds /run/nvidia-container-runtime/config.toml, which step 3 of the
+# script patches.
+After=local-fs.target bind-etc-docker.service nvidia-container-setup.service
+Before=balena.service balena-engine.service
+
+# Skip entirely if the toolkit is not on the host - i.e. the extension is not
+# installed/merged. Pattern adopted from upstream nvidia-cdi-refresh.service.
+ConditionPathExists=/usr/bin/nvidia-ctk
+
+# Retry budget: 5 failures within 10s triggers backoff.
+StartLimitBurst=5
+StartLimitIntervalSec=10s
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+
+# No ExecStartPre driver probe. The PoC used `nvidia-smi -L` here with
+# Restart=on-failure to wait out driver bring-up, but on the legacy-only path
+# nothing this unit does needs the GPU, and the script polls for the devnodes
+# itself (L4T devnodes bypass udev, so a .device unit dependency is not an
+# option). Keeping the probe here would only turn a GPU-less boot into a
+# 5x-retry delay in front of balena.service.
+ExecStart=/usr/libexec/balena-nvidia-setup
+
+Restart=on-failure
+RestartSec=1s
+
+[Install]
+WantedBy=balena.service
