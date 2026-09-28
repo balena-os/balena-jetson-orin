@@ -1,0 +1,38 @@
+# Build configuration for the NVIDIA runtime hostapp-extension, wrynose series.
+#
+# Separate from the device repo's default template because conf/layer.conf
+# changes DISTRO_FEATURES, which would otherwise alter what the base OS image
+# builds. See docs/integration.md for that and for why it lives here.
+#
+# Keep this list in sync with the device repo's own
+# conf/templates/default/bblayers.conf.sample for the same series.
+
+# LAYER_CONF_VERSION is increased each time build/conf/bblayers.conf
+# changes incompatibly
+POKY_BBLAYERS_CONF_VERSION = "3"
+
+BBPATH = "${TOPDIR}"
+BBFILES ?= ""
+
+# The device repo's BSP integration layer (meta-balena-jetson, meta-balena-thor,
+# ...) is resolved by glob rather than named, so this template is not tied to
+# one device-type repo. Everything else is series-specific and stays explicit:
+# wrynose replaced poky with openembedded-core + meta-yocto, and meta-balena's
+# series layer is meta-balena-wrynose.
+BBLAYERS ?= " \
+    ${TOPDIR}/../layers/meta-balena/meta-balena-rust \
+    ${TOPDIR}/../layers/meta-balena/meta-balena-common \
+    ${TOPDIR}/../layers/meta-balena/meta-balena-wrynose \
+    ${TOPDIR}/../layers/meta-tegra \
+    ${@' '.join(sorted(os.path.join(d.getVar('TOPDIR'), '..', 'layers', name) for name in os.listdir(os.path.join(d.getVar('TOPDIR'), '..', 'layers')) if name.startswith('meta-balena-')))} \
+    ${TOPDIR}/../layers/openembedded-core/meta \
+    ${TOPDIR}/../layers/meta-yocto/meta-poky \
+    ${TOPDIR}/../layers/meta-yocto/meta-yocto-bsp \
+    ${TOPDIR}/../layers/meta-openembedded/meta-oe \
+    ${TOPDIR}/../layers/meta-openembedded/meta-filesystems \
+    ${TOPDIR}/../layers/meta-openembedded/meta-networking \
+    ${TOPDIR}/../layers/meta-openembedded/meta-python \
+    ${TOPDIR}/../layers/meta-openembedded/meta-perl \
+    ${TOPDIR}/../layers/meta-cyclonedx \
+    ${TOPDIR}/../layers/meta-nvidia-container-runtime \
+    "
