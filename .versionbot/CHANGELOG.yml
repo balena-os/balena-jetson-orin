@@ -1,4 +1,28 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v8.0.11"
+      hash: 98bdbde79ada18b20b30ee403b50d51276031923
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v8.0.11"
+        changelog-entry: "layers/meta-balena: Update to v8.0.11"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "contracts: Update to v2.0.150"
+      hash: d1824806c469f208ccd8995d6843d7f35ec8b323
+      body: ""
+      footer:
+        Changelog-entry: "contracts: Update to v2.0.150"
+        changelog-entry: "contracts: Update to v2.0.150"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 8.0.11
+  title: ""
+  date: 2026-10-01T08:20:01.106Z
+- commits:
     - subject: Update flowzonify to 0.4.11
       hash: 3d3fdc246183aa5fdde8cf4d67c1d85f8bd30d6e
       body: Update flowzonify

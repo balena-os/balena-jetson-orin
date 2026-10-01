@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v8.0.11
+## (2026-10-01)
+
+* layers/meta-balena: Update to v8.0.11 [Alexandru Costache]
+* contracts: Update to v2.0.150 [Alexandru Costache]
+
 # v8.0.9+rev1
 ## (2026-09-23)
 
