@@ -1,0 +1,127 @@
+#!/bin/sh
+set -o errexit
+
+# Script which writes the appropriate
+# device tree with embedded cmdline
+# and updates the kernel, as well as
+# the rest of the bootloader binaries
+. /usr/libexec/os-helpers-fs
+. /usr/sbin/balena-config-vars
+source /usr/bin/uefi_common.func
+
+efivars_dir="/sys/firmware/efi/efivars/"
+# See https://github.com/OE4T/meta-tegra/blob/master/recipes-bsp/tools/setup-nv-boot-control/setup-nv-boot-control.sh.in
+platform_spec_efivar="${efivars_dir}TegraPlatformSpec-781e084c-a330-417c-b678-38e696380cb9"
+platform_compat_spec_efivar="${efivars_dir}TegraPlatformCompatSpec-781e084c-a330-417c-b678-38e696380cb9"
+os_indications_efivar="${efivars_dir}OsIndications-8be4df61-93ca-11d2-aa0d-00e098032b8c"
+tmp_file="/tmp/platformspecfile.bin"
+
+device_type="jetson-orin-nano-devkit-super"
+
+DURING_UPDATE=${DURING_UPDATE:-0}
+bootloader_device="/dev/mtdblock0"
+internal_storage="/dev/$(findmnt --noheadings --canonicalize --output SOURCE "/mnt/sysroot/active/" | xargs lsblk -no pkname)"
+bootloader_blob="/opt/tegra-binaries/TEGRA_BL_Orin_NX.Cap.gz"
+boardspec=$(tegra-boardspec 2>/dev/null)
+TegraPlatformSpec="${boardspec}-${device_type}-"
+compatspec=$(echo "$boardspec" | gen_compat_spec)
+TegraPlatformCompatSpec="${compatspec}-${device_type}-"
+fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
+kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+active_sysroot="/mnt/sysroot/active/current/boot/"
+
+write_jetson_update_efivars() {
+    info "Writing of jetson efivars triggered from old OS hook"
+    if [ -d $efivars_dir ]; then
+        # If the file already exists, writing to it will fail
+        # causing the entire hook to fail
+        if [ ! -e ${platform_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformSpec}" >> ${tmp_file}
+            tmp_file_size=$(stat -c%s ${tmp_file})
+            dd if=${tmp_file} of=${platform_spec_efivar} bs=${tmp_file_size}
+            info "PlatformSpec variable created"
+        else
+            info "PlatformSpec variable already exists"
+        fi
+
+        if [ ! -e ${platform_compat_spec_efivar} ]; then
+            printf "\x07\x00\x00\x00" > ${tmp_file}
+            printf "%s" "${TegraPlatformCompatSpec}" >> ${tmp_file}
+            tmp_file_size=$(stat -c%s ${tmp_file})
+            dd if=${tmp_file} of=${platform_compat_spec_efivar} bs=${tmp_file_size}
+            info "PlatformCompatSpec variable created"
+        else
+            info "PlatformCompatSpec variable already exists"
+        fi
+
+        printf "%b" '\x07\x00\x00\x00\x04\x00\x00\x00\x00\x00\x00\x00' > ${tmp_file}
+        dd if=${tmp_file} of=${os_indications_efivar}; bs=12;
+        info "OsIndications variable written"
+    else
+        fail "sysfs not accessible!"
+        return 1
+    fi
+
+    return 0
+}
+
+check_running_l4t() {
+    fw_version=$(/usr/sbin/nvbootctrl dump-slots-info | grep -E -o 'Current version: [0-9]+[.]+[0-9]' | awk '{print $3}')
+    kernel_l4t=$(uname -r | grep -E -o 'l4t-r[0-9]+[.]+[0-9]' | cut -d "r" -f 2)
+
+    if [[ "$fw_version" == "39.2" ]]; then
+        info "Firmware version $fw_version is suitable for Jetpack 7 upgrade."
+    else
+        warn "Firmware version $fw_version is not suitable Jetpack 7 upgrade. Please first upgrade to an L4T 36.5.0 based balenaOS image."
+	fail
+    fi
+}
+
+check_and_update_esp_flags() {
+    data_type="EBD0A0A2-B9E5-4433-87C0-68B6B72699C7"
+    esp_type="C12A7328-F81F-11D2-BA4B-00A0C93EC93B"
+    esp_index="10"
+    resin_boot_index="14"
+
+    esp_part_type=$(sfdisk --part-type $internal_storage $esp_index)
+    resin_boot_part_type=$(sfdisk --part-type $internal_storage $resin_boot_index)
+
+    if [ "$esp_type" = "$esp_part_type" ]; then
+        info "esp partition has esp flag, will be cleared"
+        sfdisk --part-type $internal_storage $esp_index $data_type
+        sync
+    else
+        info "ok - esp partition does not have esp flag"
+    fi
+
+    if [ "$resin_boot_part_type" != "$esp_type" ]; then
+        info "resin-boot partition does not have esp type, must be added"
+        sfdisk --part-type $internal_storage $resin_boot_index $esp_type
+        sync
+    else
+        info "no type change needed on resin-boot partition"
+    fi
+}
+
+info "Bootloader blob is $bootloader_blob"
+
+do_capsule_update() {
+    # Unzip capsule to the boot partition
+    info "Will extract UEFI Capsule..."
+    mkdir -p /mnt/boot/EFI/UpdateCapsule/
+    gunzip -k -c ${bootloader_blob} | dd of=/mnt/boot/EFI/UpdateCapsule/TEGRA_BL.Cap conv=fdatasync
+    sync
+    info "Extracted UEFI Capsule."
+    write_jetson_update_efivars
+}
+
+info "Pre-update A/B slots info:"
+info "=========================="
+/usr/sbin/nvbootctrl dump-slots-info || true
+info "=========================="
+
+check_running_l4t
+do_capsule_update
+check_and_update_esp_flags
+sync /mnt/boot/
