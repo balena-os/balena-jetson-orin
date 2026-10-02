@@ -1,6 +1,61 @@
 Change log
 -----------
 
+# v8.0.11+rev1
+## (2026-10-02)
+
+
+<details>
+<summary> Update balena-yocto-scripts to f493532250022bcf723bddd055c3c8cb770ae649 [balena-renovate[bot]] </summary>
+
+> ## balena-yocto-scripts-1.42.16
+> ### (2026-10-02)
+> 
+> * Update ubuntu:22.04 Docker digest to b8b6ee6 [balena-renovate[bot]]
+> 
+> ## balena-yocto-scripts-1.42.15
+> ### (2026-09-15)
+> 
+> * Update actions/download-artifact action to v8 [balena-renovate[bot]]
+> 
+> ## balena-yocto-scripts-1.42.14
+> ### (2026-09-14)
+> 
+> * Fix ESR tagging step [Ryan Cooke]
+> 
+> ## balena-yocto-scripts-1.42.13
+> ### (2026-09-03)
+> 
+> * yocto-build-deploy: Use authenticated user to update submodules [Kyle Harding]
+> 
+> ## balena-yocto-scripts-1.42.12
+> ### (2026-09-02)
+> 
+> * Update actions/upload-artifact action to v7 [balena-renovate[bot]]
+> 
+> ## balena-yocto-scripts-1.42.11
+> ### (Invalid date)
+> 
+> * Update GitHub Actions [balena-renovate[bot]]
+> 
+> ## balena-yocto-scripts-1.42.10
+> ### (2026-08-28)
+> 
+> * Update aws/aws-cli to v2.36.33 [balena-renovate[bot]]
+> 
+> ## balena-yocto-scripts-1.42.9
+> ### (2026-08-28)
+> 
+> * Update flowzonify to v0.4.2 [balena-renovate[bot]]
+> 
+> ## balena-yocto-scripts-1.42.8
+> ### (2026-08-20)
+> 
+> * Update balena-io/upload-balena-release-asset action to v0.2.0 [balena-renovate[bot]]
+> 
+
+</details>
+
 # v8.0.11
 ## (2026-10-01)
 
