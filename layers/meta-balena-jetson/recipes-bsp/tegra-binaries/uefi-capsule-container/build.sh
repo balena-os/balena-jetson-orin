@@ -16,7 +16,7 @@ ToT_BSP=$(pwd)
 
 case "${DEVICE_TYPE}" in
 	"jetson-agx-orin-devkit-64gb" | "jetson-agx-orin-devkit")
-		bl_spec="t23x_agx_bl_spec"
+		bl_spec="t23x_3701_bl_spec"
 		;;
 	"jetson-orin-nano-seeed-j3010" | "jetson-orin-nx-seeed-j4012")
 		mkdir -p /build_dir/Seeed_39_2_0
