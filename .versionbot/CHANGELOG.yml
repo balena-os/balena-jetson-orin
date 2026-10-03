@@ -1,4 +1,47 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v8.0.14"
+      hash: 4f7f1b794f6e518c6f00162e6c9693b610489829
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v8.0.14"
+        changelog-entry: "layers/meta-balena: Update to v8.0.14"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: "gitmodules: Set branch for meta-tegra-compulab"
+      hash: b2a817b3cc55f44675fa158cf77aad6ba2f8a968
+      body: ""
+      footer:
+        Changelog-entry: "gitmodules: Set branch for meta-tegra-compulab"
+        changelog-entry: "gitmodules: Set branch for meta-tegra-compulab"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: Update AVerMedia D315 DTB - AGX Orin 64GB (L4T 39.2.0)
+      hash: bbb47549b8682980fa695e119a3e9f642b47a8ec
+      body: |
+        Update AVerMedia D315 - AGX Orin 64Gb DTB to be compatible with L4T
+        39.2.0
+      footer:
+        Changelog-entry: Update AVerMedia D315 DTB - AGX Orin 64GB (L4T 39.2.0)
+        changelog-entry: Update AVerMedia D315 DTB - AGX Orin 64GB (L4T 39.2.0)
+      author: Marin Muhieddine
+      nested: []
+    - subject: Add AVerMedia D315 DTB - AGX Orin 32GB
+      hash: dbcf126630fc295b5d7e06799895d2426d96defa
+      body: |
+        Add AVerMedia D315 DTB for the AGX Orin 32Gb.
+      footer:
+        Changelog-entry: Add AVerMedia D315 DTB - AGX Orin 32GB
+        changelog-entry: Add AVerMedia D315 DTB - AGX Orin 32GB
+      author: Marin Muhieddine
+      nested: []
+  version: 8.0.14
+  title: ""
+  date: 2026-10-03T08:28:13.312Z
+- commits:
     - subject: Update balena-yocto-scripts to f493532250022bcf723bddd055c3c8cb770ae649
       hash: 33ea3073c62f29ac68ac09071af0ae0d46fb7170
       body: Update balena-yocto-scripts

@@ -1,6 +1,14 @@
 Change log
 -----------
 
+# v8.0.14
+## (2026-10-03)
+
+* layers/meta-balena: Update to v8.0.14 [Alexandru Costache]
+* gitmodules: Set branch for meta-tegra-compulab [Alexandru Costache]
+* Update AVerMedia D315 DTB - AGX Orin 64GB (L4T 39.2.0) [Marin Muhieddine]
+* Add AVerMedia D315 DTB - AGX Orin 32GB [Marin Muhieddine]
+
 # v8.0.11+rev1
 ## (2026-10-02)
 
