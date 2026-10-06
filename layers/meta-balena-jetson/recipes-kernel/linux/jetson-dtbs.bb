@@ -1,4 +1,4 @@
-FILESEXTRAPATHS:append := ":${THISDIR}/linux-noble-nvidia-tegra"
+FILESEXTRAPATHS:append := ":${THISDIR}/files"
 
 DESCRIPTION = "Package for deploying default and custom dtbs to the JP6 rootfs"
 LICENSE = "MIT"
