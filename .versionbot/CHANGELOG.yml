@@ -1,4 +1,21 @@
 - commits:
+    - subject: "layers/meta-tegra-compulab: Switch to linux-yocto 6.18.48 for EdgeAI
+        Orin NX 16GB"
+      hash: 26b53d8e517d2414075acb1407ece9cd8dae0206
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-tegra-compulab: Switch to linux-yocto 6.18.48 for
+          EdgeAI Orin NX 16GB"
+        changelog-entry: "layers/meta-tegra-compulab: Switch to linux-yocto 6.18.48 for
+          EdgeAI Orin NX 16GB"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 8.0.14+rev1
+  title: ""
+  date: 2026-10-13T14:30:31.368Z
+- commits:
     - subject: "layers/meta-balena: Update to v8.0.14"
       hash: 4f7f1b794f6e518c6f00162e6c9693b610489829
       body: ""

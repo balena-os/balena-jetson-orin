@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v8.0.14+rev1
+## (2026-10-13)
+
+* layers/meta-tegra-compulab: Switch to linux-yocto 6.18.48 for EdgeAI Orin NX 16GB [Alexandru Costache]
+
 # v8.0.14
 ## (2026-10-03)
 
