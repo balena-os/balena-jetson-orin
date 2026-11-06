@@ -1,0 +1,167 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Michal Toman <michalt@balena.io>
+Date: Sun, 1 Nov 2026 08:03:27 +0100
+Subject: [PATCH] L4TLauncher: Boot the balena bootloader from the boot
+ partition
+
+If resin-boot contains boot/extlinux/extlinux.conf, load it together
+with the device-tree and overlays it references from resin-boot and
+boot the kernel it points to, which is the balena bootloader. The
+balena bootloader selects the root partition, handles rollbacks and
+kexecs into the kernel of the selected root partition, so the
+resinOS_uEnv.txt and bootcount.env handling is skipped and no root=
+argument is appended to the command line.
+
+If the balena bootloader is not present the launcher falls back to
+selecting the root partition itself, as before. The flasher image
+is not affected.
+
+Upstream-Status: Inappropriate [Configuration]
+Signed-off-by: Michal Toman <michalt@balena.io>
+---
+ .../Application/L4TLauncher/L4TLauncher.c     | 103 +++++++++++-------
+ 1 file changed, 62 insertions(+), 41 deletions(-)
+
+diff --git a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+index 29990f7..c903ace 100644
+--- a/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
++++ b/Silicon/NVIDIA/Application/L4TLauncher/L4TLauncher.c
+@@ -1658,7 +1658,10 @@ ProcessExtLinuxConfig (
+         }
+ 
+         /* Append root label to cmdline that has been read from the extlinux.conf read from the active rootfs */
+-        if (0 == StrnCmp(BalenaOSRootFs, BALENA_FLASHER_ROOT_PARTITION, StrLen(BalenaOSRootFs))) {
++        if (0 == StrCmp(BalenaOSRootFs, BALENA_BOOT_PARTITION)) {
++          /* The balena bootloader selects the root partition itself */
++          UnicodeSPrint (UpdatedCmdline, argsSize, L"%s\0", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs);
++        } else if (0 == StrnCmp(BalenaOSRootFs, BALENA_FLASHER_ROOT_PARTITION, StrLen(BalenaOSRootFs))) {
+           Print(L"%a: Flasher image detected, appending flasher arg...\r\n", __FUNCTION__);
+           UnicodeSPrint (UpdatedCmdline, argsSize, L"%s %s%s %s\0", BootConfig->BootOptions[BootConfig->NumberOfBootOptions-1].BootArgs, RootL, BalenaOSRootFs, flasherArg);
+         } else {
+@@ -3327,6 +3330,7 @@ L4TLauncher (
+   UINTN                      RootFsIndex = BALENA_ROOTFS_INDEX_A;
+   BOOLEAN                    BootLimitReached = FALSE;
+   BOOLEAN                    IsBalenaImageFlasher = FALSE;
++  BOOLEAN                    IsBalenaBootloader = FALSE;
+ 
+   Status = gBS->HandleProtocol (ImageHandle, &gEfiLoadedImageProtocolGuid, (VOID **)&LoadedImage);
+   if (EFI_ERROR (Status)) {
+@@ -3432,58 +3436,75 @@ L4TLauncher (
+       if (EFI_ERROR (Status)) {
+         Print(L"balena-image-flasher flag not present.\r\n");
+ 
+-        Status = ProcessResinOSuEnv (DeviceHandle, BootParams.BootChain, &RootFsIndex, &UpgradeAvailable);
+-        if (EFI_ERROR (Status)) {
+-          ErrorPrint(L"resinOS_uEnv.txt does not exist\r\n");
++        /*
++         * Prefer the balena bootloader shipped in the boot partition. It
++         * selects the root partition and handles rollbacks itself, so the
++         * resinOS_uEnv.txt and bootcount.env processing below is skipped.
++         */
++        Status = ProcessExtLinuxConfig (DeviceHandle, BootParams.BootChain, BALENA_BOOT_PARTITION, &ExtLinuxConfig, &RootFsDeviceHandle);
++        if (!EFI_ERROR (Status)) {
++          Print(L"Found balena bootloader in %s\r\n", BALENA_BOOT_PARTITION);
++          IsBalenaBootloader = TRUE;
++          BalenaOSRootFs = BALENA_BOOT_PARTITION;
++        } else {
++          ErrorPrint(L"%a: balena bootloader not found in %s: %r - falling back to legacy boot\r\n", __FUNCTION__, BALENA_BOOT_PARTITION, Status);
+         }
++      } else {
++         ErrorPrint(L"Found balena-image-flasher\n");
++         IsBalenaImageFlasher = TRUE;
++      }
+ 
+-        Print(L"Current resin_root_part=%d - upgrade_available=%d\r\n", RootFsIndex, UpgradeAvailable);
+-        if (1 == UpgradeAvailable) {
+-          Status = ProcessBootCountValue (DeviceHandle, BootParams.BootChain, &BootCountValue);
++      if (!IsBalenaBootloader) {
++        if (!IsBalenaImageFlasher) {
++          Status = ProcessResinOSuEnv (DeviceHandle, BootParams.BootChain, &RootFsIndex, &UpgradeAvailable);
+           if (EFI_ERROR (Status)) {
+-            ErrorPrint(L"%a: Error while processing bootcount value\r\n", __FUNCTION__);
++            ErrorPrint(L"resinOS_uEnv.txt does not exist\r\n");
++          }
++
++          Print(L"Current resin_root_part=%d - upgrade_available=%d\r\n", RootFsIndex, UpgradeAvailable);
++          if (1 == UpgradeAvailable) {
++            Status = ProcessBootCountValue (DeviceHandle, BootParams.BootChain, &BootCountValue);
++            if (EFI_ERROR (Status)) {
++              ErrorPrint(L"%a: Error while processing bootcount value\r\n", __FUNCTION__);
++            }
++            Print (L"%a: BootCountValue is %d\r\n", __FUNCTION__, BootCountValue);
+           }
+-          Print (L"%a: BootCountValue is %d\r\n", __FUNCTION__, BootCountValue);
+         }
+ 
+-      } else {
+-         ErrorPrint(L"Found balena-image-flasher\n");
+-         IsBalenaImageFlasher = TRUE;
+-      }
++        /* If boot limit is reached while upgrade_available=1, switch partitions */
++        if (BALENA_OS_BC_LIM <= BootCountValue && !IsBalenaImageFlasher) {
++          if (BALENA_ROOTFS_INDEX_B == RootFsIndex) {
++            RootFsIndex = BALENA_ROOTFS_INDEX_A;
++          } else {
++            RootFsIndex = BALENA_ROOTFS_INDEX_B;
++          }
++          BootLimitReached = TRUE;
++          ErrorPrint(L"%a: Reached bootcount limit, will switch partitions... New index is %d\r\n", __FUNCTION__, RootFsIndex);
+ 
+-      /* If boot limit is reached while upgrade_available=1, switch partitions */
+-      if (BALENA_OS_BC_LIM <= BootCountValue && !IsBalenaImageFlasher) {
+-        if (BALENA_ROOTFS_INDEX_B == RootFsIndex) {
+-          RootFsIndex = BALENA_ROOTFS_INDEX_A;
+-        } else {
+-          RootFsIndex = BALENA_ROOTFS_INDEX_B;
++        } else if (1 == UpgradeAvailable && !IsBalenaImageFlasher) {
++           ErrorPrint(L"%a: UpgradeAvailable: 1, BootChain: %u\r\n", __FUNCTION__, BootParams.BootChain);
++        } else if (IsBalenaImageFlasher) {
++          RootFsIndex = BALENA_FLASHER_ROOTFS_INDEX;
+         }
+-	 BootLimitReached = TRUE;
+-        ErrorPrint(L"%a: Reached bootcount limit, will switch partitions... New index is %d\r\n", __FUNCTION__, RootFsIndex);
+ 
+-      } else if (1 == UpgradeAvailable && !IsBalenaImageFlasher) {
+-         ErrorPrint(L"%a: UpgradeAvailable: 1, BootChain: %u\r\n", __FUNCTION__, BootParams.BootChain);
+-      } else if (IsBalenaImageFlasher) {
+-        RootFsIndex = BALENA_FLASHER_ROOTFS_INDEX;
+-      }
++        switch (RootFsIndex) {
++          case BALENA_ROOTFS_INDEX_A:
++            BalenaOSRootFs = BALENA_ROOTFS_BASE_NAME_A;
++            break;
++          case BALENA_ROOTFS_INDEX_B:
++            BalenaOSRootFs = BALENA_ROOTFS_BASE_NAME_B;
++            break;
++          case BALENA_FLASHER_ROOTFS_INDEX:
++            BalenaOSRootFs = BALENA_FLASHER_ROOT_PARTITION;
++            break;
++          default:
++            ErrorPrint(L"%a: Unexpected root filesystem index %d! Will default to rootA.\r\n", __FUNCTION__, RootFsIndex);
++            BalenaOSRootFs = BALENA_ROOTFS_BASE_NAME_A;
++        }
+ 
+-      switch (RootFsIndex) {
+-        case BALENA_ROOTFS_INDEX_A:
+-          BalenaOSRootFs = BALENA_ROOTFS_BASE_NAME_A;
+-          break;
+-        case BALENA_ROOTFS_INDEX_B:
+-          BalenaOSRootFs = BALENA_ROOTFS_BASE_NAME_B;
+-          break;
+-        case BALENA_FLASHER_ROOTFS_INDEX:
+-          BalenaOSRootFs = BALENA_FLASHER_ROOT_PARTITION;
+-          break;
+-        default:
+-          ErrorPrint(L"%a: Unexpected root filesystem index %d! Will default to rootA.\r\n", __FUNCTION__, RootFsIndex);
+-          BalenaOSRootFs = BALENA_ROOTFS_BASE_NAME_A;
++        Status = ProcessExtLinuxConfig (DeviceHandle, BootParams.BootChain, BalenaOSRootFs, &ExtLinuxConfig, &RootFsDeviceHandle);
+       }
+ 
+-      Status = ProcessExtLinuxConfig (DeviceHandle, BootParams.BootChain, BalenaOSRootFs, &ExtLinuxConfig, &RootFsDeviceHandle);
+-
+         if (EFI_ERROR (Status)) {
+           ErrorPrint (L"%a: ProcessExtLinuxConfig failed on partition %s: %r\r\n", __FUNCTION__, BalenaOSRootFs, Status);
+           BootParams.BootMode = NVIDIA_L4T_BOOTMODE_BOOTIMG;
+-- 
+2.47.3
+
