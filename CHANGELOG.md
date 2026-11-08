@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v9.0.5+rev1
+## (2026-11-08)
+
+* recipes-bsp/tegra-binaries: Update AGX Orin 64GB boot blob [Alexandru Costache]
+
 # v9.0.5
 ## (2026-11-06)
 

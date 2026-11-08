@@ -1,4 +1,20 @@
 - commits:
+    - subject: "recipes-bsp/tegra-binaries: Update AGX Orin 64GB boot blob"
+      hash: 97b784938985dae49cb5bf747b59493120d98795
+      body: |
+        ... to include overlay with mb2 fix for specific eMMCs - related
+        to ticket 6737
+      footer:
+        Changelog-entry: "recipes-bsp/tegra-binaries: Update AGX Orin 64GB boot blob"
+        changelog-entry: "recipes-bsp/tegra-binaries: Update AGX Orin 64GB boot blob"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+  version: 9.0.5+rev1
+  title: ""
+  date: 2026-11-08T11:50:35.118Z
+- commits:
     - subject: Update layers/meta-balena to a89848c3869823b40be382158dc4ad3ac1ab20c4
       hash: dcb0f8bc6d3f27a388f6bc76651dbbbeec16e0f0
       body: Update layers/meta-balena
