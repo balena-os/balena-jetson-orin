@@ -29,6 +29,7 @@ SRC_URI:append = " \
 
 SRC_URI:append:jetson-orin-nano-devkit-nvme = " \
     file://0001-Orin-Nano-Integrate-with-balenaOS-on-L4T-39.2.0.patch;patchdir=../edk2-nvidia \
+    file://0002-L4TLauncher-Boot-the-balena-bootloader-from-the-boot.patch;patchdir=../edk2-nvidia \
 "
 
 SRC_URI:append:jetson-orin-nano-seeed-j3010 = " \
