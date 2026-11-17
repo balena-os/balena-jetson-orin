@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/balena-os/balena-yocto-scripts/refs/heads/master/schemas/hostapp-composition.json
+#
+# Device overlay for jetson-orin-nano-devkit-nvme. Deep-merged over
+# layers/meta-balena/hostapp.yml, which contributes the `hostapp` service.
+version: '2.4'
+# Every service must set network_mode. See layers/meta-balena/hostapp.yml.
+services:
+
+  # NVIDIA container runtime hostapp-extension, legacy `--runtime=nvidia` route.
+  # Built from layers/meta-nvidia-container-runtime, vendored in this repo for
+  # review. Its canonical home is a standalone layer repo intended to be
+  # consumed as a submodule; the swap is a follow-up.
+  nvidia-runtime:
+    image: __BUILD_OUTPUT__
+    network_mode: none
+    runtime: extension
+
+    # Must agree with the labels balena-nvidia-runtime.bb stamps at import.
+    labels:
+      io.balena.image.class: 'overlay'
+      io.balena.image.override: '200'
+
+    # Behind a compose profile, so a fleet opts in after provisioning rather
+    # than every device carrying an extension it may not want. Activation is a
+    # POST to /resin/application_profile with activates__profile_name: nvidia.
+    profiles:
+      - nvidia
+
+    x-build:
+      recipe: balena-nvidia-runtime
+      # The extension needs DISTRO_FEATURES += "virtualization opengl", which
+      # would perturb the base OS build if it were in the default template.
+      # See the header of the referenced bblayers.conf.sample for the full
+      # reasoning and for why the template cannot live under
+      # layers/meta-balena-jetson/.
+      build_args:
+        - "-t"
+        - "layers/meta-nvidia-container-runtime/conf/templates/wrynose"
