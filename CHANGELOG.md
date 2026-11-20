@@ -1,6 +1,11 @@
 Change log
 -----------
 
+# v9.0.5+rev2
+## (2026-11-20)
+
+* Update AGX Orin SPI DTB for JetPack 7 [Cy Tamanaha]
+
 # v9.0.5+rev1
 ## (2026-11-08)
 

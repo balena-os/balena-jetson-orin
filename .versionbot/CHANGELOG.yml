@@ -1,4 +1,20 @@
 - commits:
+    - subject: Update AGX Orin SPI DTB for JetPack 7
+      hash: 2f139dc39f3922d01fb9f7fba8740f54753239bd
+      body: >
+        The new Linux Kernel 6.8 compatible *nv-spi.dtb file replaces the
+        existing Linux Kernel 5.15 compatible one. It has been tested
+        successfully on balenaOS v9.0.5+rev1 with a Jetson AGX Orin Devkit 32GB
+        device.
+      footer:
+        Changelog-entry: Update AGX Orin SPI DTB for JetPack 7
+        changelog-entry: Update AGX Orin SPI DTB for JetPack 7
+      author: Cy Tamanaha
+      nested: []
+  version: 9.0.5+rev2
+  title: ""
+  date: 2026-11-20T02:27:31.734Z
+- commits:
     - subject: "recipes-bsp/tegra-binaries: Update AGX Orin 64GB boot blob"
       hash: 97b784938985dae49cb5bf747b59493120d98795
       body: |
