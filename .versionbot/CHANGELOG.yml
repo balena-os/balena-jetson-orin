@@ -1,4 +1,19 @@
 - commits:
+    - subject: Update balena-os/github-workflows to
+        ab3dfdb723d81d9f3c25b67fee68a74eeb9ac48b
+      hash: 958c0723da285a4f2f6422d4cd96f1976dde782b
+      body: Update balena-os/github-workflows
+      footer:
+        Changelog-entry: Update balena-os/github-workflows to
+          ab3dfdb723d81d9f3c25b67fee68a74eeb9ac48b
+        changelog-entry: Update balena-os/github-workflows to
+          ab3dfdb723d81d9f3c25b67fee68a74eeb9ac48b
+      author: balena-renovate[bot]
+      nested: []
+  version: 9.0.5+rev3
+  title: ""
+  date: 2026-11-21T07:51:43.896Z
+- commits:
     - subject: Update AGX Orin SPI DTB for JetPack 7
       hash: 2f139dc39f3922d01fb9f7fba8740f54753239bd
       body: >
