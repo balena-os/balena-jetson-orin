@@ -1,4 +1,36 @@
 - commits:
+    - subject: "layers/meta-balena: Update to v9.1.1"
+      hash: dfe5d594b9ba68669cd351440f677654c3ee525e
+      body: ""
+      footer:
+        Changelog-entry: "layers/meta-balena: Update to v9.1.1"
+        changelog-entry: "layers/meta-balena: Update to v9.1.1"
+        Signed-off-by: Alexandru Costache <alexandru@balena.io>
+        signed-off-by: Alexandru Costache <alexandru@balena.io>
+      author: Alexandru Costache
+      nested: []
+    - subject: Add EdgeAI carrier peripherals and camera support
+      hash: 8fc11944de5fffbeaef6c069d3982615a7b631be
+      body: |
+        Update meta-tegra-compulab from 74596fe to 89d85bd.
+
+        Add carrier peripherals, USB/PCIe fixes and fixed USB-role DTBs
+        for the EdgeAI NX and Nano families. Include RK628/ADV7280 capture,
+        ADI GMSL2/3 and TEVS/Framos camera support on Linux 6.18.
+
+        Exclude duplicate device-tree artifacts from unsigned boot packages
+        to keep host OS updates within the existing partition size limit.
+      footer:
+        Changelog-entry: Add EdgeAI carrier peripherals and camera support
+        changelog-entry: Add EdgeAI carrier peripherals and camera support
+        Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+        signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+      author: Valentin Raevsky
+      nested: []
+  version: 9.1.1
+  title: ""
+  date: 2026-11-21T22:58:35.551Z
+- commits:
     - subject: Update balena-os/github-workflows to
         ab3dfdb723d81d9f3c25b67fee68a74eeb9ac48b
       hash: 958c0723da285a4f2f6422d4cd96f1976dde782b

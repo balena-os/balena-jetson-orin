@@ -1,6 +1,12 @@
 Change log
 -----------
 
+# v9.1.1
+## (2026-11-21)
+
+* layers/meta-balena: Update to v9.1.1 [Alexandru Costache]
+* Add EdgeAI carrier peripherals and camera support [Valentin Raevsky]
+
 # v9.0.5+rev3
 ## (2026-11-21)
 
