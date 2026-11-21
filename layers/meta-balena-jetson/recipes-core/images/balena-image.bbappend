@@ -35,6 +35,12 @@ BALENA_BOOT_PARTITION_FILES:append = " \
     extra_uEnv.txt:/extra_uEnv.txt \
 "
 
+BALENA_BOOT_PARTITION_FILES:append:jetson-orin-nano-devkit-nvme = " \
+    balena-bootloader/${BALENA_BOOTLOADER_KERNEL_IMAGETYPE}-initramfs-${MACHINE}.bin:/boot/${BALENA_BOOTLOADER_KERNEL_IMAGETYPE} \
+    balena-bootloader/extlinux.conf:/boot/extlinux/extlinux.conf \
+    balena-bootloader/bootenv:/bootenv \
+"
+
 PART_SPEC_FILE = "partition_specification234.txt"
 PART_SPEC_FILE:jetson-orin-nano-devkit-nvme = "partition_specification234_orin_nano.txt"
 PART_SPEC_FILE:jetson-orin-nx-seeed-j4012 = "partition_specification234_orin_nano.txt"
@@ -68,6 +74,24 @@ IMAGE_INSTALL:append = " \
 "
 
 IMAGE_INSTALL:append:forecr-dsb-ornx-orin-nano-8gb = " can-utils "
+IMAGE_INSTALL:append:jetson-orin-nano-devkit-nvme = " grub-editenv "
+
+BALENA_BOOTLOADER_DEPLOY = ""
+BALENA_BOOTLOADER_DEPLOY:jetson-orin-nano-devkit-nvme = "virtual/balena-bootloader:do_deploy"
+do_rootfs[depends] += "${BALENA_BOOTLOADER_DEPLOY}"
+do_image_balenaos_img[depends] += "${BALENA_BOOTLOADER_DEPLOY}"
+
+python balena_bootloader_dtbs_handler () {
+    import glob
+    rootfs = d.getVar('IMAGE_ROOTFS')
+    for pattern in ['boot/*.dtb', 'boot/devicetree/*.dtbo']:
+        for path in sorted(glob.glob(os.path.join(rootfs, pattern))):
+            d.appendVar('BALENA_BOOT_PARTITION_FILES', ' %s:/%s' % (path, os.path.relpath(path, rootfs)))
+}
+
+BALENA_BOOTLOADER_PREFUNCS = ""
+BALENA_BOOTLOADER_PREFUNCS:jetson-orin-nano-devkit-nvme = "balena_bootloader_dtbs_handler"
+do_resin_boot_dirgen_and_deploy[prefuncs] += "${BALENA_BOOTLOADER_PREFUNCS}"
 
 check_size() {
     file_path=${1}
