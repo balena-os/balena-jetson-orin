@@ -23,6 +23,9 @@ HOSTAPP_HOOKS:append:jetson-orin-nano-devkit-nvme = " \
      99-resin-bootfiles-orin-nano-devkit-nvme \
 "
 
+HOSTAPP_HOOKS:remove:jetson-orin-nano-devkit-nvme = "99-resin-uboot"
+HOSTAPP_HOOKS:append:jetson-orin-nano-devkit-nvme = " 99-balena-bootloader"
+
 # Ensure there's no leftover capsule in the boot partition,
 # taking up space
 HOSTAPP_HOOKS_DIRS:append:jetson-agx-orin-devkit = " 98-clear-agx-orin-unused-capsule"
