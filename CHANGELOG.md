@@ -1,6 +1,52 @@
 Change log
 -----------
 
+# v9.1.1+rev1
+## (2026-11-22)
+
+
+<details>
+<summary> Update balena-yocto-scripts to ff4bd1ead1e0ae80007c5fa7edc695d91e3974c2 [balena-renovate[bot]] </summary>
+
+> ## balena-yocto-scripts-1.43.2
+> ### (2026-11-20)
+> 
+> * Update aws/aws-cli to v2.41.2 [balena-renovate[bot]]
+> 
+> ## balena-yocto-scripts-1.43.1
+> ### (2026-11-20)
+> 
+> * Update ubuntu:22.04 Docker digest to f64b2ff [balena-renovate[bot]]
+> 
+> ## balena-yocto-scripts-1.43.0
+> ### (2026-11-19)
+> 
+> * yocto-build-deploy: Build hostapp and extensions in one bitbake invocation [Kyle Harding]
+> * yocto-build-deploy: Match built images to services by name [Kyle Harding]
+> 
+> ## balena-yocto-scripts-1.42.20
+> ### (2026-11-18)
+> 
+> * Update Lock file maintenance [balena-renovate[bot]]
+> 
+> ## balena-yocto-scripts-1.42.19
+> ### (2026-11-18)
+> 
+> * hostapp-deploy: Stop depending on s3-deploy [Kyle Harding]
+> 
+> ## balena-yocto-scripts-1.42.18
+> ### (2026-11-13)
+> 
+> * build/barys: Follow symlinks when looking for conf sample files [Florin Sarbu]
+> 
+> ## balena-yocto-scripts-1.42.17
+> ### (2026-10-13)
+> 
+> * hostapp-composition(overlays): extend schema to check for runtime [Alex Gonzalez]
+> 
+
+</details>
+
 # v9.1.1
 ## (2026-11-21)
 
