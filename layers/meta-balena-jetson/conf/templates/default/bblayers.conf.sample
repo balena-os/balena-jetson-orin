@@ -12,6 +12,7 @@ BBLAYERS ?= " \
     ${TOPDIR}/../layers/meta-tegra \
     ${TOPDIR}/../layers/meta-balena-jetson \
     ${TOPDIR}/../layers/meta-tegra-compulab \
+    ${TOPDIR}/../layers/meta-nvidia-container-runtime \
     ${TOPDIR}/../layers/openembedded-core/meta \
     ${TOPDIR}/../layers/meta-yocto/meta-poky \
     ${TOPDIR}/../layers/meta-yocto/meta-yocto-bsp \
