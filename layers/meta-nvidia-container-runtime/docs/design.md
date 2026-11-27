@@ -105,6 +105,9 @@ and **neither failure is visible at build or merge time**:
 `nvidia-container-runtime/host-files-for-container.d/{drivers,devices}.csv`, the
 `config.toml` symlink, and `/etc/nv_tegra_release` (which the toolkit's own
 platform detection keys off). Without it nothing is mounted into any container.
+It is not kept wholesale, though: with `override=200` everything else in it
+(`ld.so.cache`, `fstab`, `nsswitch.conf`, ...) would shadow the base OS copy — see
+[rootfs-assembly.md](rootfs-assembly.md#strip_etc_except_nvidia).
 
 **`/var`** holds `/var/nvidia/nvcam/settings`, the ISP tuning data (`.nito` files)
 installed by `tegra-libraries-camera`. Deleting it makes `nvargus-daemon` abort the

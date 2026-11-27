@@ -1,14 +1,14 @@
 # Rootfs assembly
 
-Five `IMAGE_PREPROCESS_COMMAND` functions in
-`recipes-core/images/balena-nvidia-runtime.bb` shape the extension rootfs. Each
-exists because of a failure that produced **no build error and no merge error**,
+The `IMAGE_PREPROCESS_COMMAND` functions in
+`recipes-core/images/balena-nvidia-runtime.bb` shape the extension rootfs. Most
+exist because of a failure that produced **no build error and no merge error**,
 and a runtime symptom pointing somewhere else entirely. That is why several of
 them log `bbnote` lines that would otherwise look like noise.
 
-They run in this order; `assert_no_kernel_modules` must come after
-`strip_kernel_modules`, and `link_passthrough_canonical_paths` must come after
-anything that removes files.
+They run in the order they are listed in the recipe; `assert_no_kernel_modules`
+must come after `strip_kernel_modules`, and `link_passthrough_canonical_paths`
+must come after anything that removes files.
 
 ## `strip_var_except_nvidia`
 
@@ -20,6 +20,39 @@ but nothing else under it should ship: the hostapp underneath owns `/var/log`,
 The before/after `bbnote` pair is deliberate. This content going missing is
 invisible until a camera client connects, so having the build log state what
 survived is worth two lines.
+
+## `strip_etc_except_nvidia`
+
+`/etc` is kept out of `HOSTAPP_EXTENSION_REMOVE_PATHS` because it holds the
+container mount spec (see [design.md](design.md#paths-kept-out-of-the-strip-list)),
+but kept wholesale it also carries everything `base-files`, glibc and `ldconfig`
+put there. Because the extension sets `io.balena.image.override=200`, those files
+**shadow** the base OS copies rather than sitting beside them. Comparing the
+extension rootfs with the base OS rootfs found five such files that differ:
+
+| Path | Effect if shadowed |
+|---|---|
+| `/etc/ld.so.cache` | generated over the extension's files only; base OS libraries outside the default search directories stop resolving |
+| `/etc/fstab` | stock `base-files` version replaces the base OS one |
+| `/etc/nsswitch.conf` | name-service lookup order replaced |
+| `/etc/shells` | stock list replaced |
+
+So keep only:
+
+- `nvidia-container-runtime/` — the CSVs and the `config.toml` symlink
+- `nv_tegra_release` — the toolkit's platform detection keys off it
+- `systemd/system/` — enablement symlinks for the units the payload ships
+
+The function `bbfatal`s if `nvidia-container-runtime` or `nv_tegra_release` is
+missing afterwards, and logs `/etc` before and after like
+`strip_var_except_nvidia` does. A future package that needs something else in
+`/etc` must be added to the keep list explicitly.
+
+## `strip_package_metadata`
+
+Drops `/usr/lib/opkg`. It describes the extension's packages rather than the
+device's, and the base OS ships its own copy at the same path, so it would only
+ever shadow it.
 
 ## `strip_kernel_modules`
 

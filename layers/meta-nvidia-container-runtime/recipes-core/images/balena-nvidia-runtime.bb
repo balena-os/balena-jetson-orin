@@ -55,6 +55,43 @@ strip_var_except_nvidia() {
 }
 IMAGE_PREPROCESS_COMMAND += "strip_var_except_nvidia;"
 
+# /etc is kept for the container mount spec, but with override=200 every other
+# file in it shadows the base OS copy: ld.so.cache, fstab, nsswitch.conf, shells.
+# Keep only what the extension needs. See docs/rootfs-assembly.md.
+strip_etc_except_nvidia() {
+    etc="${IMAGE_ROOTFS}${sysconfdir}"
+    if [ ! -d "$etc" ]; then
+        bbfatal "balena-nvidia-runtime: no ${sysconfdir} in rootfs - the container mount spec is missing"
+    fi
+    bbnote "balena-nvidia-runtime: ${sysconfdir} before strip: [$(ls -A $etc 2>&1 | tr '\n' ' ')]"
+    find "$etc" -mindepth 1 -maxdepth 1 \
+        ! -name nvidia-container-runtime \
+        ! -name nv_tegra_release \
+        ! -name systemd \
+        -exec rm -rf {} +
+    # Only the unit enablement symlinks under systemd/system belong here.
+    if [ -d "$etc/systemd" ]; then
+        find "$etc/systemd" -mindepth 1 -maxdepth 1 ! -name system -exec rm -rf {} +
+    fi
+    bbnote "balena-nvidia-runtime: ${sysconfdir} after strip:  [$(ls -A $etc 2>&1 | tr '\n' ' ')]"
+    for required in nvidia-container-runtime nv_tegra_release; do
+        if [ ! -e "$etc/$required" ] && [ ! -L "$etc/$required" ]; then
+            bbfatal "balena-nvidia-runtime: ${sysconfdir}/$required missing after strip"
+        fi
+    done
+}
+IMAGE_PREPROCESS_COMMAND += "strip_etc_except_nvidia;"
+
+# opkg's package database describes the extension's packages, not the device,
+# and the base OS ships its own copy under the same path.
+strip_package_metadata() {
+    if [ -e "${IMAGE_ROOTFS}${libdir}/opkg" ]; then
+        bbnote "balena-nvidia-runtime: dropping ${libdir}/opkg"
+        rm -rf "${IMAGE_ROOTFS}${libdir}/opkg"
+    fi
+}
+IMAGE_PREPROCESS_COMMAND += "strip_package_metadata;"
+
 # tegra-libraries-camera drags in V4L2 kernel modules via RDEPENDS. Their mere
 # presence makes mobynit silently refuse to merge the extension, with the install
 # still exiting 0. See docs/rootfs-assembly.md#strip_kernel_modules.
